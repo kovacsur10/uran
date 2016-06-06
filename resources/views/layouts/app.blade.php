@@ -76,7 +76,11 @@
 						
 						<li class="btn-group dropdown dropdown-notifications sw-open">
 							<button style="margin-top:8px;" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-								<i data-count="{{ $user->unseenNotificationCount() }}" class="glyphicon glyphicon-bell notification-icon"></i>
+								@if($user->unseenNotificationCount() > 0)
+									<i data-count="{{ $user->unseenNotificationCount() }}" class="glyphicon glyphicon-envelope notification-icon"></i>
+								@else
+									<i class="glyphicon glyphicon-envelope"></i>
+								@endif
 								<span class="caret"></span>
 							</button>
 
