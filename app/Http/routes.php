@@ -30,6 +30,7 @@ Route::group(['middleware' => 'web'], function () {
 
 	// User data routes
 	Route::get('data/show', 'User\UserController@showData')->middleware('auth.logged');
+	Route::get('data/{username}', 'User\UserController@showPublicData')->middleware('auth.logged');
 	
 	// Eir routes
 	Route::get('ecnet/account', 'Eir\EirController@showAccount')->middleware('auth.logged');
@@ -43,8 +44,12 @@ Route::group(['middleware' => 'web'], function () {
 	Route::post('ecnet/getslot', 'Eir\EirController@getSlot')->middleware('auth.logged');
 	Route::post('ecnet/allowordenyorder', 'Eir\EirController@allowOrDenyOrder')->middleware('auth.logged');
 	
+	// Notification routes
+	Route::get('notification/list/{first}', 'Notification\NotificationController@listNotifications')->middleware('auth.logged');
+	Route::get('notification/show/{id}', 'Notification\NotificationController@showNotification')->middleware('auth.logged');
+	
 	// Basic routes
     Route::get('/', 'HomeController@index');
 
-    Route::get('/home', 'HomeController@index');
+    Route::get('home', 'HomeController@index');
 });
