@@ -13,6 +13,7 @@
 
     <!-- Styles -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+	<link href="/bootstrap-notifications.min.css" rel="stylesheet">
     {{-- <link href="{{ elixir('css/app.css') }}" rel="stylesheet"> --}}
 
     <style>
@@ -72,8 +73,53 @@
 				<ul class="nav navbar-nav navbar-right">
 					@if (!$logged)
                     @else
+						
+						<li class="btn-group dropdown dropdown-notifications sw-open">
+							<button style="margin-top:8px;" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+								<i data-count="{{ $user->unseenNotificationCount() }}" class="glyphicon glyphicon-bell notification-icon"></i>
+								<span class="caret"></span>
+							</button>
+
+							<div class="dropdown-container">
+								<div class="dropdown-toolbar">
+									<div class="dropdown-toolbar-actions">
+										<a href="#"><i class="glyphicon glyphicon-search"></i> View All</a>
+									</div>
+									<h3 class="dropdown-toolbar-title">Legutóbbi értesítések ({{ $user->unseenNotificationCount() }})</h3>
+								</div><!-- /dropdown-toolbar -->
+
+								<ul class="dropdown-menu notifications">
+								
+									@if($user->latestNotifications() == null)
+										
+									@else
+										@foreach($user->latestNotifications() as $notification)
+										<li class="notification">
+											<div class="media">
+												<div class="media-left">
+													<div class="media-object">
+														<img data-src="holder.js/50x50?bg=cccccc" class="img-circle" alt="">
+													</div>
+												</div>
+												<div class="media-body">
+													<strong class="notification-title"><a href="#">{{ $notification->name }}</a>: {{ $notification->subject }}</strong>
+													<p class="notification-desc">{{ $notification->message }}</p>
+
+													<div class="notification-meta">
+														<small class="timestamp">{{ str_replace("-", ". ", str_replace(" ", ". ", $notification->time)) }}</small>
+													</div>
+												</div>
+											</div>
+										</li>
+										@endforeach
+									@endif
+								
+								</ul>
+							</div>
+						</li>				
+					
                         <li class="dropdown">
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                                 Profilom <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu" role="menu">
