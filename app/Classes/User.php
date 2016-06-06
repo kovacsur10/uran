@@ -6,11 +6,15 @@ use DB;
 
 class User{
 	protected $user;
-    protected $permissions;
+	protected $permissions;
+	protected $notifications;
+	protected $unseenNotificationCount;
 	
 	public function __construct($id){
 		$this->user = $this->getUserData($id);
 		$this->permissions = $this->getPermissions($id);
+		$this->notifications = $this->getNotifications($id);
+		$this->unseenNotificationCount = $this->getUnseenNotificationCount($id);
 	}
 	
 	public function user(){
@@ -19,6 +23,19 @@ class User{
 	
 	public function permissions(){
 		return $this->permissions;
+	}
+	
+	public function unseenNotificationCount(){
+		return $this->unseenNotificationCount;
+	}
+	
+	public function latestNotifications(){
+		if($this->notifications == null)
+			return null;
+		else if(count($this->notifications) <= 5)
+			return $this->notifications;
+		else
+			return array_slice($this->notifications, 0, 5);
 	}
 	
 	public function permitted($what){
@@ -39,5 +56,21 @@ class User{
 									   ->select('permission_name')
 									   ->where('user_permissions.user_id', '=', $id)
 									   ->get();
+	}
+	
+	protected function getNotifications($id){
+		return DB::table('notifications')
+			->join('users', 'users.id', '=', 'notifications.from')
+			->select('users.name as name', 'notifications.id as id', 'notifications.subject as subject', 'notifications.message as message', 'notifications.time as time', 'notifications.seen as seen')
+			->where('user_id', '=', $id)
+			->orderBy('id', 'desc')
+			->get();
+	}
+	
+	protected function getUnseenNotificationCount($id){
+		return DB::table('notifications')
+			->where('user_id', '=', $id)
+			->where('seen', '=', 'false')
+			->count('id');
 	}
 }
