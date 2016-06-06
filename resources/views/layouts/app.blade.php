@@ -83,26 +83,32 @@
 							<div class="dropdown-container">
 								<div class="dropdown-toolbar">
 									<div class="dropdown-toolbar-actions">
-										<a href="#"><i class="glyphicon glyphicon-search"></i> View All</a>
+										<a href="{{ url('/notification/list/0') }}"><i class="glyphicon glyphicon-search"></i> Mutasd mindet</a>
 									</div>
-									<h3 class="dropdown-toolbar-title">Legutóbbi értesítések ({{ $user->unseenNotificationCount() }})</h3>
+									<h3 class="dropdown-toolbar-title">Olvasatlan értesítések ({{ $user->unseenNotificationCount() }})</h3>
 								</div><!-- /dropdown-toolbar -->
 
 								<ul class="dropdown-menu notifications">
 								
 									@if($user->latestNotifications() == null)
-										
-									@else
-										@foreach($user->latestNotifications() as $notification)
 										<li class="notification">
 											<div class="media">
-												<div class="media-left">
-													<div class="media-object">
-														<img data-src="holder.js/50x50?bg=cccccc" class="img-circle" alt="">
+												<div class="media-body">
+													<strong class="notification-title">Rendszer: Semmi probléma</strong>
+													<p class="notification-desc">Jelenleg nincsenek értesítéseid!</p>
+
+													<div class="notification-meta">
+														<small class="timestamp"></small>
 													</div>
 												</div>
+											</div>
+										</li>
+									@else
+										@foreach($user->latestNotifications() as $notification)
+										<li style="{{ $notification->seen ? '' : 'background-color:#E0FFFF;' }}" class="notification">
+											<div style="cursor: pointer;" class="media" onclick="window.location='{{ url('notification/show/'.$notification->id) }}';">
 												<div class="media-body">
-													<strong class="notification-title"><a href="#">{{ $notification->name }}</a>: {{ $notification->subject }}</strong>
+													<strong class="notification-title"><a href="{{ url('/data/'.$notification->username) }}">{{ $notification->name }}</a>: {{ $notification->subject }}</strong>
 													<p class="notification-desc">{{ $notification->message }}</p>
 
 													<div class="notification-meta">

@@ -18,4 +18,20 @@ class UserController extends Controller{
 									  "user" => new User(Session::get('user')->id),
 									  "country" => $country->name]);
 	}
+	
+	public function showPublicData($username){
+		$targetId = DB::table('users')
+						->where('username', '=', $username)
+						->select('id')
+						->first();
+		if($targetId == null)
+			return view('errors.error', ["logged" => Session::has('user'),
+										 "user" => new User(Session::get('user')->id),
+										 "message" => 'A felhasználó nem található, vagy nem publikus az oldala!',
+										 "url" => '/home']);
+		else
+			return view('user.showpublicdata', ["logged" => Session::has('user'),
+												"user" => new User(Session::get('user')->id),
+												"target" => new User($targetId->id)]);
+	}
 }

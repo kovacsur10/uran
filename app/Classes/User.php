@@ -38,6 +38,17 @@ class User{
 			return array_slice($this->notifications, 0, 5);
 	}
 	
+	public function notifications($from, $count){
+		if($this->notifications == null)
+			return null;
+		else if($from < 0 || count($this->notifications) < $from || $count < 0)
+			return null;
+		else if(count($this->notifications) < $from + $count)
+			return array_slice($this->notifications, $from, count($this->notifications) - $from);
+		else
+			return array_slice($this->notifications, $from, $count);
+	}
+	
 	public function permitted($what){
 		$i = 0;
 		while($i < count($this->permissions) && $this->permissions[$i]->permission_name != $what){
@@ -61,7 +72,7 @@ class User{
 	protected function getNotifications($id){
 		return DB::table('notifications')
 			->join('users', 'users.id', '=', 'notifications.from')
-			->select('users.name as name', 'notifications.id as id', 'notifications.subject as subject', 'notifications.message as message', 'notifications.time as time', 'notifications.seen as seen')
+			->select('users.name as name', 'users.username as username', 'notifications.id as id', 'notifications.subject as subject', 'notifications.message as message', 'notifications.time as time', 'notifications.seen as seen')
 			->where('user_id', '=', $id)
 			->orderBy('id', 'desc')
 			->get();

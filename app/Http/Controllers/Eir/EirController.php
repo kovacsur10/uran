@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Eir;
 
 use App\Classes\EirUser;
+use App\Classes\Notify;
 use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
@@ -77,6 +78,7 @@ class EirController extends Controller{
 											 "message" => 'Valami probléma merült fel a pénz hozzáadásánál!',
 											 "url" => '/ecnet/account']);
 			}
+			$oldmoney = $money->money;
 			if($request->money == 0){
 				$money = $request->reset;
 			}else{
@@ -84,6 +86,7 @@ class EirController extends Controller{
 			}
 			DB::table('eir_user_data')->where('user_id', '=', $request->account)
 									  ->update(['money' => $money]);
+			Notify::notify($user, $request->account, 'Egyenleg módosítva!', 'A nyomtatószámlád egyenlege megváltozott '.$oldmoney.' forintról '.$money.' forintra!', 'ecnet/account');
 			return view('success.success', ["logged" => Session::has('user'),
 											"user" => $user,
 											"message" => 'Sikeresen átállítottad a célszámla pénzösszegét!',
