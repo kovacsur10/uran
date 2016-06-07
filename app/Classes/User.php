@@ -29,6 +29,10 @@ class User{
 		return $this->unseenNotificationCount;
 	}
 	
+	public function notificationCount(){
+		return count($this->notifications);
+	}
+	
 	public function latestNotifications(){
 		if($this->notifications == null)
 			return null;
