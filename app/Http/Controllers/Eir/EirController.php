@@ -136,7 +136,8 @@ class EirController extends Controller{
 			}
 			DB::table('eir_user_data')->where('user_id', '=', $request->account)
 									  ->update(['valid_time' => $new_time]);
-
+			
+			Notify::notify($user, $request->account, 'Internethozzáférés módosítva!', 'Az internethozzáférésed lejárati ideje módosítva lett erre a dátumra: '.str_replace("-", ". ", str_replace(" ", ". ", $new_time)), 'ecnet/access');
 			return view('success.success', ["logged" => Session::has('user'),
 											"user" => $user,
 											"message" => 'Sikeresen módosítottuk a felhasználó internethozzáférésének idejét!',
@@ -222,21 +223,21 @@ class EirController extends Controller{
 			'slot' => 'required',
 		]);
 		if($user->permitted('ecnet_slot_verify')){
+			$target = DB::table('eir_user_data')->join('eir_mac_slot_orders', 'eir_mac_slot_orders.user_id', '=', 'eir_user_data.user_id')
+												->where('eir_mac_slot_orders.id', '=', $request->input('slot'))
+												->first();
+			if($target == null){
+				return view('errors.error', ["logged" => Session::has('user'),
+											 "user" => $user,
+											 "message" => 'Valami probléma merült fel a slot jóváhagyásánál!',
+											 "url" => '/ecnet/order']);
+			}
 			if($request->input('optradio') == "allow"){
-				$target = DB::table('eir_user_data')->join('eir_mac_addresses', 'eir_mac_addresses.user_id', '=', 'eir_user_data.user_id')
-													->where('eir_mac_addresses.id', '=', $request->input('slot'))
-													->first();
-				if($target == null){
-					return view('errors.error', ["logged" => Session::has('user'),
-												 "user" => $user,
-												 "message" => 'Valami probléma merült fel a slot jóváhagyásánál!',
-												 "url" => '/ecnet/order']);
-				}
 				DB::table('eir_user_data')->where('user_id', '=', $target->user_id)
 										  ->update(['mac_slots' => $target->mac_slots+1]);
-				//TODO: értesítés
+				Notify::notify($user, $target->user_id, 'MAC slot igénylés', 'MAC slot igénylésed el lett fogadva! Kérelem: '.$target->reason, 'ecnet/access');
 			}else{
-				//TODO: értesítés
+				Notify::notify($user, $target->user_id, 'MAC slot igénylés', 'MAC slot igénylésed el lett utasítva! Kérelem: '.$target->reason, 'ecnet/order');
 			}
 			DB::table('eir_mac_slot_orders')->where('id', '=', $request->input('slot'))->delete();
 			return view('success.success', ["logged" => Session::has('user'),

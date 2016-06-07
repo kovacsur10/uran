@@ -38,6 +38,18 @@
 							@endforeach
 						@endif
 					</ul>
+					<div class="row">
+						@if(0 < $notificationId)
+							<div class="col-md-6"><a href="{{ url('notification/list/'.($notificationId - 10 >= 0 ? $notificationId - 10 : 0)) }}">Frissebb értesítések</a></div>
+						@else
+							<div class="col-md-6"></div>
+						@endif
+						@if($notificationId+10 < $user->notificationCount())
+							<div style="text-align:right;" class="col-md-6"><a href="{{ url('notification/list/'.($notificationId + 10)) }}">Korábbi értesítések</a></div>
+						@else
+							<div class="col-md-6"></div>
+						@endif
+					</div>
                 </div>
             </div>
         </div>
