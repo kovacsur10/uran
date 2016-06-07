@@ -210,6 +210,7 @@ class EirController extends Controller{
 			'reason' => 'required',
 		]);
 		DB::table('eir_mac_slot_orders')->insert(['user_id' => Session::get('user')->id, 'reason' => $request->input('reason'), 'order_time' => $time->toDateTimeString()]);
+		Notify::notifyAdmin($user, 'ecnet_slot_verify', 'MAC slot igénylés', 'MAC slot lett igényelve! Kérelem: '.$request->input('reason'), 'ecnet/order');
 		return view('success.success', ["logged" => Session::has('user'),
 										"user" => $user,
 										"message" => 'A MAC slot igénylésed le lett adva!',
