@@ -52,7 +52,8 @@ class EirController extends Controller{
 	}
 	
 	public function showUsers(){
-		
+		return view('ecnet.showusers', ["logged" => Session::has('user'),
+										"user" => new EirUser(Session::get('user')->id)]);
 	}
 	
 	public function getUsers(){
