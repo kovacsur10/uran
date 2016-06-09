@@ -33,10 +33,15 @@ Route::group(['middleware' => 'web'], function () {
 	Route::get('data/{username}', 'User\UserController@showPublicData')->middleware('auth.logged');
 	
 	// Eir routes
+	Route::any('ecnet/users/listactives', 'Eir\EirController@showActiveUsers')->middleware('auth.logged');
 	Route::get('ecnet/account', 'Eir\EirController@showAccount')->middleware('auth.logged');
 	Route::get('ecnet/access', 'Eir\EirController@showInternet')->middleware('auth.logged');
 	Route::get('ecnet/order', 'Eir\EirController@showMACOrderForm')->middleware('auth.logged');
 	Route::get('ecnet/users', 'Eir\EirController@showUsers')->middleware('auth.logged');
+	Route::get('ecnet/users/resetfilter', 'Eir\EirController@resetFilterUsers')->middleware('auth.logged');
+	Route::get('ecnet/users/{count}', 'Eir\EirController@showUsers')->middleware('auth.logged');
+	Route::get('ecnet/users/{count}/{first}', 'Eir\EirController@showUsers')->middleware('auth.logged');
+	Route::post('ecnet/users', 'Eir\EirController@filterUsers')->middleware('auth.logged');
 	Route::post('ecnet/addmoney', 'Eir\EirController@addMoney')->middleware('auth.logged');
 	Route::post('ecnet/setvalidtime', 'Eir\EirController@updateValidationTime')->middleware('auth.logged');
 	Route::post('ecnet/activate', 'Eir\EirController@activate')->middleware('auth.logged');
