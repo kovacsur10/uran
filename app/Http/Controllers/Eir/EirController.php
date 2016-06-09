@@ -51,15 +51,46 @@ class EirController extends Controller{
 										   "orders" => $orders]);
 	}
 	
-	public function showUsers(){
+	public function showUsers($count = 50, $first = 0){
+		$user = new EirUser(Session::get('user')->id);
+		if(Session::has('ecnet_username_filter') && Session::has('ecnet_name_filter')){
+			$user->filterUsers(Session::get('ecnet_username_filter'), Session::get('ecnet_name_filter'));
+		}
 		return view('ecnet.showusers', ["logged" => Session::has('user'),
-										"user" => new EirUser(Session::get('user')->id)]);
+										"user" => $user,
+										"usersToShow" => $count,
+										"firstUser" => $first]);
+	}
+	
+	public function showActiveUsers(){
+		return view('ecnet.showactiveusers', ["logged" => Session::has('user'),
+											  "user" => new EirUser(Session::get('user')->id)]);
 	}
 	
 	public function getUsers(){
 		return DB::table('users')->select('id', 'username', 'name')
 								 ->orderBy('name', 'asc')
 								 ->get();
+	}
+	
+	public function filterUsers(Request $request){
+		if($request->input('username') == null){
+			Session::put('ecnet_username_filter', '');
+		}else{
+			Session::put('ecnet_username_filter', $request->input('username'));
+		}
+		if($request->input('name') == null){
+			Session::put('ecnet_name_filter', '');
+		}else{
+			Session::put('ecnet_name_filter', $request->input('name'));
+		}
+		return redirect('ecnet/users');
+	}
+	
+	public function resetFilterUsers(){
+		Session::forget('ecnet_username_filter');
+		Session::forget('ecnet_name_filter');
+		return redirect('ecnet/users');
 	}
 	
 	public function addMoney(Request $request){
