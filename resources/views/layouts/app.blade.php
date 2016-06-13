@@ -66,6 +66,14 @@
 								@endif
                             </ul>
                         </li>
+						<li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                Ügykezelő <span class="caret"></span>
+                            </a>
+							<ul class="dropdown-menu" role="menu">
+								<li><a href="{{ url('/rooms/map/2') }}">Szobabeosztás</a></li>
+                            </ul>
+                        </li>
                     @endif
                 </ul>
 				
