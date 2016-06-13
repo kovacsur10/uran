@@ -95,6 +95,29 @@
 							</div>
 						</div>
 					
+						<ul class="list-inline">
+							<li><a href="{{ url('ecnet/users/10/'.$firstUser) }}" class="btn btn-primary" role="button">10</a></li>
+							<li><a href="{{ url('ecnet/users/20/'.$firstUser) }}" class="btn btn-primary" role="button">20</a></li>
+							<li><a href="{{ url('ecnet/users/50/'.$firstUser) }}" class="btn btn-primary" role="button">50</a></li>
+							<li><a href="{{ url('ecnet/users/100/'.$firstUser) }}" class="btn btn-primary" role="button">100</a></li>
+							<li><a href="{{ url('ecnet/users/500/'.$firstUser) }}" class="btn btn-primary" role="button">500</a></li>
+						</ul>
+					
+						<nav>
+							<ul class="pager">
+								@if(0 < $firstUser)
+									<li class="previous"><a href="{{ url('ecnet/users/'.$usersToShow.'/'.($firstUser - $usersToShow >= 0 ? $firstUser - $usersToShow : 0)) }}">Előző oldal</a></li>
+								@else
+									<li class="previous disabled"><a href="#">Előző oldal</a></li>
+								@endif
+								@if($firstUser+$usersToShow < count($layout->user()->eirUsers()))
+									<li class="next"><a href="{{ url('ecnet/users/'.$usersToShow.'/'.($firstUser+$usersToShow)) }}">Következő oldal</a></li>
+								@else
+									<li class="next disabled"><a href="#">Következő oldal</a></li>
+								@endif
+							</ul>
+						</nav>
+					
 						@if($layout->user()->eirUsers($firstUser, $usersToShow) != null)
 							@foreach($layout->user()->eirUsers($firstUser, $usersToShow) as $eirUser)
 							<div class="panel panel-default {{ $eirUser->valid_time > Carbon\Carbon::now()->toDateTimeString() ? 'panel-success' : 'panel-danger' }}">
@@ -125,6 +148,30 @@
 							</div>
 							@endforeach
 						@endif
+						
+						<nav>
+							<ul class="pager">
+								@if(0 < $firstUser)
+									<li class="previous"><a href="{{ url('ecnet/users/'.$usersToShow.'/'.($firstUser - $usersToShow >= 0 ? $firstUser - $usersToShow : 0)) }}">Előző oldal</a></li>
+								@else
+									<li class="previous disabled"><a href="#">Előző oldal</a></li>
+								@endif
+								@if($firstUser+$usersToShow < count($layout->user()->eirUsers()))
+									<li class="next"><a href="{{ url('ecnet/users/'.$usersToShow.'/'.($firstUser+$usersToShow)) }}">Következő oldal</a></li>
+								@else
+									<li class="next disabled"><a href="#">Következő oldal</a></li>
+								@endif
+							</ul>
+						</nav>
+						
+						<ul class="list-inline">
+							<li><a href="{{ url('ecnet/users/10/'.$firstUser) }}" class="btn btn-primary" role="button">10</a></li>
+							<li><a href="{{ url('ecnet/users/20/'.$firstUser) }}" class="btn btn-primary" role="button">20</a></li>
+							<li><a href="{{ url('ecnet/users/50/'.$firstUser) }}" class="btn btn-primary" role="button">50</a></li>
+							<li><a href="{{ url('ecnet/users/100/'.$firstUser) }}" class="btn btn-primary" role="button">100</a></li>
+							<li><a href="{{ url('ecnet/users/500/'.$firstUser) }}" class="btn btn-primary" role="button">500</a></li>
+						</ul>
+						
 					@endif
                 </div>
             </div>
