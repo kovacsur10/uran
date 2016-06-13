@@ -1,10 +1,10 @@
-@extends('ecnet.showactiveusers.layout', ['logged' => $logged, 'user' => $user])
+@extends('ecnet.showactiveusers.layout', ['data' => $layout])
 
 @section('listcontent')
 				
-@if($user->permitted('ecnet_user_handling'))
+@if($layout->user()->permitted('ecnet_user_handling'))
 	<ul>
-	@foreach($user->eirUsers(0, 0) as $eirUser)
+	@foreach($layout->user()->eirUsers(0, 0) as $eirUser)
 		@if($eirUser->valid_time > Carbon\Carbon::now()->toDateTimeString())
 			<li>{{$eirUser->username}} ({{$eirUser->name}})</li>
 		@endif

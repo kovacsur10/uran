@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Classes\User;
+use App\Classes\LayoutData;
 use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
@@ -14,8 +15,7 @@ use Mail;
 class PasswordController extends Controller{
 	
 	public function showResetForm(){
-        return view('auth.password.reset', ["logged" => Session::has('user'),
-											"user" => null]);
+        return view('auth.password.reset', ["layout" => new LayoutData()]);
     }
 	
 	public function reset(Request $request){
@@ -26,8 +26,7 @@ class PasswordController extends Controller{
 		$user = DB::table('users')->where('username', 'LIKE', $request->input('username'))
 								  ->first();
 		if($user == null){ 
-			return view('auth.password.error', ["logged" => Session::has('user'),
-												"user" => null]);
+			return view('auth.password.error', ["layout" => new LayoutData()]);
 		}
 		$day = Carbon::now()->dayOfYear;
 		$string = sha1($request->input('username').$user->registration_date.$user->name.$day);
@@ -36,16 +35,14 @@ class PasswordController extends Controller{
 			$m->subject('Elfelejtett jelszó');
         });
 		
-		return view('auth.password.sent', ["logged" => Session::has('user'),
-										   "user" => null]);
+		return view('auth.password.sent', ["layout" => new LayoutData()]);
 	}
 	
 	public function showPasswordForm($username, $code){
 		$user = DB::table('users')->where('username', 'LIKE', $username)
 								  ->first();
 		if($user == null){ 
-			return view('auth.password.error', ["logged" => Session::has('user'),
-												"user" => null]);
+			return view('auth.password.error', ["layout" => new LayoutData()]);
 		}
 		$day = Carbon::now()->dayOfYear;
 		$i = 0;
@@ -56,12 +53,10 @@ class PasswordController extends Controller{
 			$i++;
 		}
 		if($i < 5){
-			return view('auth.password.email', ["logged" => Session::has('user'),
-											    "username" => $username,
-												"user" => null]);
+			return view('auth.password.email', ["layout" => new LayoutData(),
+											    "username" => $username]);
 		}else{
-			return view('auth.password.error', ["logged" => Session::has('user'),
-												"user" => null]);
+			return view('auth.password.error', ["layout" => new LayoutData()]);
 		}
     }
 	
@@ -75,7 +70,6 @@ class PasswordController extends Controller{
             ->where('username', 'LIKE', $request->input('username'))
             ->update(array('password' => password_hash($request->input('password'), PASSWORD_DEFAULT)));
 			
-		return view('auth.password.ok', ["logged" => Session::has('user'),
-										 "user" => null]);
+		return view('auth.password.ok', ["layout" => new LayoutData()]);
 	}
 }
