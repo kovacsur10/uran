@@ -49,7 +49,7 @@
                 <!-- Left Side Of Navbar -->
                 <ul class="nav navbar-nav">
                     <!-- Authentication Links -->
-                    @if (!$logged)
+                    @if (!$data->logged())
                         <li><a href="{{ url('/login') }}">Belépés</a></li>
                         <li><a href="{{ url('/register') }}">Regisztráció</a></li>
                     @else
@@ -61,7 +61,7 @@
                                 <li><a href="{{ url('/ecnet/account') }}">Nyomtatószámla</a></li>
 								<li><a href="{{ url('/ecnet/access') }}">Internet hozzáférés</a></li>
 								<li><a href="{{ url('/ecnet/order') }}">MAC slot igénylése</a></li>
-								@if($user->permitted('ecnet_user_handling'))
+								@if($data->user()->permitted('ecnet_user_handling'))
 								<li><a href="{{ url('/ecnet/users') }}">Felhasználók kezelése</a></li>
 								@endif
                             </ul>
@@ -71,13 +71,13 @@
 				
 				<!-- Right Side Of Navbar -->
 				<ul class="nav navbar-nav navbar-right">
-					@if (!$logged)
+					@if (!$data->logged())
                     @else
 						
 						<li class="btn-group dropdown dropdown-notifications sw-open">
 							<button style="margin-top:8px;" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-								@if($user->unseenNotificationCount() > 0)
-									<i data-count="{{ $user->unseenNotificationCount() }}" class="glyphicon glyphicon-envelope notification-icon"></i>
+								@if($data->user()->unseenNotificationCount() > 0)
+									<i data-count="{{ $data->user()->unseenNotificationCount() }}" class="glyphicon glyphicon-envelope notification-icon"></i>
 								@else
 									<i class="glyphicon glyphicon-envelope"></i>
 								@endif
@@ -89,12 +89,12 @@
 									<div class="dropdown-toolbar-actions">
 										<a href="{{ url('/notification/list/0') }}"><i class="glyphicon glyphicon-search"></i> Mutasd mindet</a>
 									</div>
-									<h3 class="dropdown-toolbar-title">Olvasatlan értesítések ({{ $user->unseenNotificationCount() }})</h3>
+									<h3 class="dropdown-toolbar-title">Olvasatlan értesítések ({{ $data->user()->unseenNotificationCount() }})</h3>
 								</div><!-- /dropdown-toolbar -->
 
 								<ul class="dropdown-menu notifications">
 								
-									@if($user->latestNotifications() == null)
+									@if($data->user()->latestNotifications() == null)
 										<li class="notification">
 											<div class="media">
 												<div class="media-body">
@@ -108,7 +108,7 @@
 											</div>
 										</li>
 									@else
-										@foreach($user->latestNotifications() as $notification)
+										@foreach($data->user()->latestNotifications() as $notification)
 										<li style="{{ $notification->seen ? '' : 'background-color:#E0FFFF;' }}" class="notification">
 											<div style="cursor: pointer;" class="media" onclick="window.location='{{ url('notification/show/'.$notification->id) }}';">
 												<div class="media-body">

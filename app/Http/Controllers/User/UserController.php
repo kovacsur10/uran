@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Classes\LayoutData;
 use App\Classes\User;
 use Validator;
 use App\Http\Controllers\Controller;
@@ -14,8 +15,7 @@ class UserController extends Controller{
     public function showData(){
 		$country = DB::table('country')->where('id', 'LIKE', Session::get('country'))
 									   ->first();;
-		return view('user.showdata', ["logged" => Session::has('user'),
-									  "user" => new User(Session::get('user')->id),
+		return view('user.showdata', ["layout" => new LayoutData(),
 									  "country" => $country->name]);
 	}
 	
@@ -25,13 +25,11 @@ class UserController extends Controller{
 						->select('id')
 						->first();
 		if($targetId == null)
-			return view('errors.error', ["logged" => Session::has('user'),
-										 "user" => new User(Session::get('user')->id),
+			return view('errors.error', ["layout" => new LayoutData(),
 										 "message" => 'A felhasználó nem található, vagy nem publikus az oldala!',
 										 "url" => '/home']);
 		else
-			return view('user.showpublicdata', ["logged" => Session::has('user'),
-												"user" => new User(Session::get('user')->id),
+			return view('user.showpublicdata', ["layout" => new LayoutData(),
 												"target" => new User($targetId->id)]);
 	}
 }

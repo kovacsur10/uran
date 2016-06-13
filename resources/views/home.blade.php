@@ -1,4 +1,4 @@
-@extends('layouts.app', ['logged' => $logged, 'user' => $user])
+@extends('layouts.app', ['data' => $layout])
 
 @section('content')
 <div class="container">
@@ -8,7 +8,7 @@
                 <div class="panel-heading">Dashboard</div>
 
                 <div class="panel-body">
-				@if($logged)
+				@if($layout->logged())
                     You are logged in!
 				@else
 					Please log in!

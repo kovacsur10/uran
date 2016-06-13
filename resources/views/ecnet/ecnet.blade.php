@@ -1,4 +1,4 @@
-@extends('layouts.app', ['logged' => $logged, 'user' => $user])
+@extends('layouts.app', ['data' => $layout])
 
 @section('content')
 <div class="container">
@@ -10,7 +10,7 @@
 					@if($active)
 					<div class="alert alert-success">
 						<p>Az interneted aktív!</p>
-						<p>Lejárati dátum: {{ str_replace("-", ". ", str_replace(" ", ". ", $user->eirUser()->valid_time)) }}</p>
+						<p>Lejárati dátum: {{ str_replace("-", ". ", str_replace(" ", ". ", $layout->user()->eirUser()->valid_time)) }}</p>
 					</div>
 					@else
 					<div class="alert alert-danger">
@@ -21,7 +21,7 @@
 						<strong>Megjegyzés:</strong> Az internet regisztrációról érdeklődj egy rendszergazdánál! 
 					</div>
 					
-					@if($user->permitted('ecnet_set_valid_time'))
+					@if($layout->user()->permitted('ecnet_set_valid_time'))
 					<div class="panel panel-default">
 						<div class="panel-heading">Admin panel - érvényesítés</div>
 						<div class="panel-body">
@@ -72,8 +72,8 @@
 								<p>Ha a dátum nincsen kitöltve, akkor az alapértelmezett dátum lesz az érvényesség vége!</p>
 								<p>Hajnali 5 óra állítódik be időként!</p>
 								<p>Az alapértelmezett dátum jelenleg: <strong>
-								@if($user->validationTime() != null)
-									{{ $user->validationTime()->valid_date }}
+								@if($layout->user()->validationTime() != null)
+									{{ $layout->user()->validationTime()->valid_date }}
 								@else
 									Hiba! Nincsen beállított alapértelmezett idő!
 								@endif
@@ -112,8 +112,8 @@
 							</form>
 							<div class="alert alert-warning">
 								<p>Az alapértelmezett dátum jelenleg: <strong>
-								@if($user->validationTime() != null)
-									{{ $user->validationTime()->valid_date }}
+								@if($layout->user()->validationTime() != null)
+									{{ $layout->user()->validationTime()->valid_date }}
 								@else
 									Hiba! Nincsen beállított alapértelmezett idő!
 								@endif
@@ -130,7 +130,7 @@
 							<form class="form-horizontal" role="form" method="POST" action="{{ url('/ecnet/setmacs') }}">
 								{!! csrf_field() !!}
 								
-								@foreach($user->macAddresses() as $address)
+								@foreach($layout->user()->macAddresses() as $address)
 								<div class="form-group{{ $errors->has('mac_address_'.$address->id) ? ' has-error' : '' }}">
 									<label class="col-md-4 control-label">MAC cím</label>
 
@@ -146,7 +146,7 @@
 								</div>
 								@endforeach
 								
-								@for($i = 0; $i < $user->eirUser()->mac_slots - count($user->macAddresses()); $i++)
+								@for($i = 0; $i < $layout->user()->eirUser()->mac_slots - count($layout->user()->macAddresses()); $i++)
 								<div class="form-group{{ $errors->has('new_mac_address_'.$i) ? ' has-error' : '' }}">
 									<label class="col-md-4 control-label">MAC cím</label>
 

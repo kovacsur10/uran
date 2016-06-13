@@ -1,4 +1,4 @@
-@extends('layouts.app', ['logged' => $logged, 'user' => $user])
+@extends('layouts.app', ['data' => $layout])
 
 @section('content')
 <div class="container">
@@ -36,7 +36,7 @@
 						<strong>Segítség:</strong> Vezetékes internet regisztrációhoz lehet igényelni még további számítógép MAC cím helyeket. Az okot kérjük írjad le, az elfogadásához egy rendszergazda szükséges, erről értesítést fogsz kapni.
 					</div>
 					
-					@if($user->permitted('ecnet_slot_verify'))
+					@if($layout->user()->permitted('ecnet_slot_verify'))
 					<div class="panel panel-default">
 						<div class="panel-heading">Admin panel</div>
 						<div class="panel-body">

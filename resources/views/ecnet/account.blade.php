@@ -1,4 +1,4 @@
-@extends('layouts.app', ['logged' => $logged, 'user' => $user])
+@extends('layouts.app', ['data' => $layout])
 
 @section('content')
 <div class="container">
@@ -7,12 +7,12 @@
             <div class="panel panel-default">
                 <div class="panel-heading">Nyomtatószámla</div>
                 <div class="panel-body">
-					<div class="well well-sm">Rendelkezésre álló összeg: {{ $user->eirUser()->money }} HUF</div>
+					<div class="well well-sm">Rendelkezésre álló összeg: {{ $layout->user()->eirUser()->money }} HUF</div>
 					<div class="alert alert-info">
 						<strong>Megjegyzés:</strong> A számlára pénzt feltölteni egy rendszergazdánál tudsz.
 					</div>
 					
-					@if($user->permitted('ecnet_set_print_account'))
+					@if($layout->user()->permitted('ecnet_set_print_account'))
 					<div class="panel panel-default">
 						<div class="panel-heading">Admin panel</div>
 						<div class="panel-body">
