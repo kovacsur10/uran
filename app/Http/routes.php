@@ -49,6 +49,10 @@ Route::group(['middleware' => 'web'], function () {
 	Route::post('ecnet/getslot', 'Eir\EirController@getSlot')->middleware('auth.logged');
 	Route::post('ecnet/allowordenyorder', 'Eir\EirController@allowOrDenyOrder')->middleware('auth.logged');
 	
+	// Rooms routes
+	Route::get('rooms/map/{level}', 'Rooms\RoomsController@showMap')->middleware('auth.logged');
+	Route::get('rooms/room/{id}', 'Rooms\RoomsController@listRoomMembers')->middleware('auth.logged');
+	
 	// Notification routes
 	Route::get('notification/list/{first}', 'Notification\NotificationController@listNotifications')->middleware('auth.logged');
 	Route::get('notification/show/{id}', 'Notification\NotificationController@showNotification')->middleware('auth.logged');
