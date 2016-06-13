@@ -1,4 +1,4 @@
-@extends('layouts.app', ['logged' => false, 'user' => null])
+@extends('layouts.app', ['data' => $layout])
 
 @section('content')
 <div class="container">

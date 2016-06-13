@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Notification;
 
-use App\Classes\User;
+use App\Classes\LayoutData;
 use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
@@ -13,8 +13,7 @@ use DB;
 class NotificationController extends Controller{	
 	
 	public function listNotifications($firstId){
-		return view('notification.list', ["logged" => Session::has('user'),
-										  "user" => new User(Session::get('user')->id),
+		return view('notification.list', ["layout" => new LayoutData(),
 										  "notificationId" => $firstId]);
 	}
 	
@@ -24,8 +23,7 @@ class NotificationController extends Controller{
 					->where('user_id', '=', Session::get('user')->id)
 					->first();
 		if($exist == null){
-			return view('errors.error', ["logged" => Session::has('user'),
-										 "user" => new User(Session::get('user')->id),
+			return view('errors.error', ["layout" => new LayoutData(),
 										 "message" => 'Nincsen jogod ezt az értesítést megtekinteni!',
 										 "url" => '/notification/list/0']);
 		}else{
