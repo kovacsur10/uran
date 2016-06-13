@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Classes\User;
+use App\Classes\LayoutData;
 use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
@@ -13,8 +14,7 @@ use Mail;
 
 class AuthController extends Controller{	
     public function showLoginForm(){
-        return view('auth.login', ["logged" => Session::has('user'),
-								   "user" => null]);
+        return view('auth.login', ["layout" => new LayoutData()]);
     }
 	
 	public function login(Request $request){
@@ -27,22 +27,18 @@ class AuthController extends Controller{
 					->where('username', 'LIKE', $user->username)
 					->update(['last_online' => Carbon::now()->toDateTimeString()]);
 				Session::put('user', $user);
-				return view('home', ["logged" => Session::has('user'),
-								     "user" => new User(Session::get('user')->id)]);
+				return view('home', ["layout" => new LayoutData()]);
 			}else{ //password doesn't match
-				return view('auth.login.error', ["logged" => Session::has('user'),
-												 "user" => null]);
+				return view('auth.login.error', ["layout" => new LayoutData()]);
 			}
 		}else{ //username not found
-			return view('auth.login.error', ["logged" => Session::has('user'),
-											 "user" => null]);
+			return view('auth.login.error', ["layout" => new LayoutData()]);
 		}
 	}
 	
 	public function logout(){
 		Session::forget('user');
-		return view('auth.login', ["logged" => Session::has('user'),
-								   "user" => null]);
+		return view('auth.login', ["layout" => new LayoutData()]);
 	}
 	
     public function validateLogin(Request $request){
@@ -53,8 +49,7 @@ class AuthController extends Controller{
     }
 	
 	public function showRegistrationForm(){
-        return view('auth.register', ["logged" => Session::has('user'),
-									  "user" => null]);
+        return view('auth.register', ["layout" => new LayoutData()]);
     }
 	
 	public function register(Request $request){
@@ -92,8 +87,7 @@ class AuthController extends Controller{
 			$m->subject('Regisztráció megerősítése');
         });
 		
-		return view('auth.register.ok', ["logged" => Session::has('user'),
-										 "user" => null]);
+		return view('auth.register.ok', ["layout" => new LayoutData()]);
     }
 	
 	public function vefify($code){
@@ -105,11 +99,9 @@ class AuthController extends Controller{
 				->update(['verified' => 1,
 						  'verification_date' => $regTime]);
 			
-			return view('auth.verification.ok', ["logged" => Session::has('user'),
-												 "user" => null]);
+			return view('auth.verification.ok', ["layout" => new LayoutData()]);
 		}else{
-			return view('auth.verification.error', ["logged" => Session::has('user'),
-													"user" => null]);
+			return view('auth.verification.error', ["layout" => new LayoutData()]);
 		}
 	}
 }
