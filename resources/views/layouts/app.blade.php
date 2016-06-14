@@ -25,6 +25,14 @@
             margin-right: 6px;
         }
     </style>
+	
+	<!-- Scripts -->
+	<script type="text/javascript" src="/jquery-3.0.0.min.js"></script>
+	<script type="text/javascript">
+		$('document').ready(function(){
+			$('[data-toggle="tooltip"]').tooltip();
+		});
+	</script>
 </head>
 <body id="app-layout">
     <nav class="navbar navbar-default navbar-static-top">
