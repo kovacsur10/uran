@@ -8,7 +8,7 @@ class Room{
 	protected $rooms;
 	
 	public function __construct(){
-		$this->user = $this->getRooms();
+		$this->rooms = $this->getRooms();
 	}
 	
 	public function rooms(){
@@ -24,9 +24,32 @@ class Room{
 			->get();
 	}
 	
+	public function getFreePlaceCount($room_number){
+		$max_count = DB::table('rooms_rooms')
+			->select('max_collegist_count as count')
+			->where('room_number', 'LIKE', $room_number)
+			->first();
+		$residents = count($this->getResidents($room_number));
+		return $max_count->count - $residents;
+	}
+	
+	public function getFreePlaces(){
+		$freePlaces = [];
+		if($this->rooms != null){
+			foreach($this->rooms as $room){
+				$countOfPlaces = $this->getFreePlaceCount($room->room);
+				if($countOfPlaces > 0){
+					array_push($freePlaces, [$room->room, $countOfPlaces]);
+				}
+			}
+		}
+		return $freePlaces;
+	}
+	
 	protected function getRooms(){
 		return DB::table('rooms_rooms')
 			->select('room_number as room', 'max_collegist_count')
 			->get();
 	}
+	
 }

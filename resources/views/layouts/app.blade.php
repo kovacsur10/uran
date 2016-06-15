@@ -79,7 +79,9 @@
                                 Ügykezelő <span class="caret"></span>
                             </a>
 							<ul class="dropdown-menu" role="menu">
+								@if($data->user()->permitted('rooms_observe_assignment'))
 								<li><a href="{{ url('/rooms/map/2') }}">Szobabeosztás</a></li>
+								@endif
                             </ul>
                         </li>
                     @endif
