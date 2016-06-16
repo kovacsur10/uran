@@ -82,7 +82,15 @@ class AuthController extends Controller{
 			'reason' => $request->input('reason'),
 			'phone' => $request->input('phone'),
 		]);
-		Mail::send('mails.verification', ['name' => $request->input('name'), 'link' => 'http://host59.collegist.eotvos.elte.hu/register/'.$string], function ($m) use ($request) {
+		if(Session::has('lang')){
+			if(Session::get('lang') == "hu_HU" || Session::get('lang') == "en_US")
+				$lang = Session::get('lang');
+			else
+				$lang = "hu_HU";
+		}else{
+			$lang = "hu_HU";
+		}
+		Mail::send('mails.verification_'.$lang, ['name' => $request->input('name'), 'link' => 'http://host59.collegist.eotvos.elte.hu/register/'.$string], function ($m) use ($request) {
             $m->to($request->input('email'), $request->input('name'));
 			$m->subject('Regisztráció megerősítése');
         });

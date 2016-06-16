@@ -5,13 +5,13 @@
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
             <div class="panel panel-default">
-                <div class="panel-heading">Dashboard</div>
+                <div class="panel-heading">{{ $layout->language('home') }}</div>
 
                 <div class="panel-body">
 				@if($layout->logged())
-                    You are logged in!
+                    {{ $layout->language('logged_in_home_message') }}
 				@else
-					Please log in!
+					{{ $layout->language('not_logged_in_home_message') }}
 				@endif
                 </div>
             </div>

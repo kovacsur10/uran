@@ -5,7 +5,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="panel panel-default">
-                <div class="panel-heading">Szobabeosztás</div>
+                <div class="panel-heading">{{ $layout->language('room_assignment') }}</div>
                 <div class="panel-body">
 					@if($layout->user()->permitted('rooms_observe_assignment'))
 						<div style="position:relative;width:964px;height:527px;background-image: url('{{ url('images/level'.$level.'.png') }}')">
@@ -102,47 +102,47 @@
 							@endif
 							<div style="text-align:right;position:absolute;left:314px;top:233px;width:100px;height:80px;">
 								@if($level == -2)
-									Pince
+									{{ $layout->language('cellar') }}
 								@else
-									<a href="{{ url('rooms/map/-2') }}">Pince</a>
+									<a href="{{ url('rooms/map/-2') }}">{{ $layout->language('cellar') }}</a>
 								@endif
 								<br>
 								@if($level == -1)
-									Alagsor
+									{{ $layout->language('basement') }}
 								@else
-									<a href="{{ url('rooms/map/-1') }}">Alagsor</a>
+									<a href="{{ url('rooms/map/-1') }}">{{ $layout->language('basement') }}</a>
 								@endif
 								<br>
 								@if($level == 0)
-									Földszint
+									{{ $layout->language('ground_floor') }}
 								@else
-									<a href="{{ url('rooms/map/0') }}">Földszint</a>
+									<a href="{{ url('rooms/map/0') }}">{{ $layout->language('ground_floor') }}</a>
 								@endif
 							</div>
 							<div style="position:absolute;left:550px;top:233px;width:100px;height:80px;">
 								@if($level == 1)
-									1. emelet
+									1. {{ $layout->language('floor') }}
 								@else
-									<a href="{{ url('rooms/map/1') }}">1. emelet</a>
+									<a href="{{ url('rooms/map/1') }}">1. {{ $layout->language('floor') }}</a>
 								@endif
 								<br>
 								@if($level == 2)
-									2. emelet
+									2. {{ $layout->language('floor') }}
 								@else
-									<a href="{{ url('rooms/map/2') }}">2. emelet</a>
+									<a href="{{ url('rooms/map/2') }}">2. {{ $layout->language('floor') }}</a>
 								@endif
 								<br>
 								@if($level == 3)
-									3. emelet
+									3. {{ $layout->language('floor') }}
 								@else
-									<a href="{{ url('rooms/map/3') }}">3. emelet</a>
+									<a href="{{ url('rooms/map/3') }}">3. {{ $layout->language('floor') }}</a>
 								@endif
 							</div>
 						</div>
 						
 						@if($layout->user()->permitted('rooms_assign'))
 							<div class="panel panel-default">
-								<div class="panel-heading">Admin panel - Szabad helyek</div>
+								<div class="panel-heading">{{ $layout->language('admin_panel') }} - {{ $layout->language('free_spots') }}</div>
 								<div class="panel-body">
 									<?php
 										$i = 0;

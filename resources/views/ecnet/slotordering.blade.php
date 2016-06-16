@@ -5,13 +5,13 @@
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
             <div class="panel panel-default">
-                <div class="panel-heading">MAC slot igénylése</div>
+                <div class="panel-heading">{{ $layout->language('mac_slot_ordering') }}</div>
                 <div class="panel-body">
 					<form class="form-horizontal" role="form" method="POST" action="{{ url('/ecnet/getslot') }}">
 						{!! csrf_field() !!}
 						
 						<div class="form-group{{ $errors->has('reason') ? ' has-error' : '' }}">
-							<label class="col-md-4 control-label">Igénylés oka</label>
+							<label class="col-md-4 control-label">{{ $layout->language('reason_of_ordering') }}</label>
 
 							<div class="col-md-6">
 								<input type="text" class="form-control" name="reason" required="true" value="{{ old('reason') }}">
@@ -27,24 +27,24 @@
 						<div class="form-group">
 							<div class="col-md-6 col-md-offset-4">
 								<button type="submit" class="btn btn-primary">
-									Slot igénylése
+									{{ $layout->language('order_slot') }}
 								</button>
 							</div>
 						</div>
 					</form>
 					<div class="alert alert-info">
-						<strong>Segítség:</strong> Vezetékes internet regisztrációhoz lehet igényelni még további számítógép MAC cím helyeket. Az okot kérjük írjad le, az elfogadásához egy rendszergazda szükséges, erről értesítést fogsz kapni.
+						<strong>{{ $layout->language('help') }}:</strong> {{ $layout->language('mac_slot_ordering_description') }}
 					</div>
 					
 					@if($layout->user()->permitted('ecnet_slot_verify'))
 					<div class="panel panel-default">
-						<div class="panel-heading">Admin panel</div>
+						<div class="panel-heading">{{ $layout->language('admin_panel') }}</div>
 						<div class="panel-body">
 							<form class="form-horizontal" role="form" method="POST" action="{{ url('/ecnet/allowordenyorder') }}">
 								{!! csrf_field() !!}
 								
 								<div class="form-group{{ $errors->has('slot') ? ' has-error' : '' }}">
-									<label  class="col-md-4 control-label" for="slot_select">Kérelem</label>
+									<label  class="col-md-4 control-label" for="slot_select">{{ $layout->language('request') }}</label>
 									<div class="col-md-6">
 										<select class="form-control"  name="slot"  id="slot_select" required="true">
 											@foreach($orders as $order)
@@ -61,16 +61,16 @@
 								</div>
 								
 								<div class="radio">
-									<label><input type="radio" name="optradio" value="deny">Kérelem elutasítása</label>
+									<label><input type="radio" name="optradio" value="deny">{{ $layout->language('deny_request') }}</label>
 								</div>
 								<div class="radio">
-									<label><input type="radio" name="optradio" value="allow">Kérelem elfogadása</label>
+									<label><input type="radio" name="optradio" value="allow">{{ $layout->language('allow_request') }}</label>
 								</div>
 								
 								<div class="form-group">
 									<div class="col-md-6 col-md-offset-4">
 										<button type="submit" class="btn btn-primary">
-											Jóváhagy
+											{{ $layout->language('approve') }}
 										</button>
 									</div>
 								</div>

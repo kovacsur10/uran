@@ -26,23 +26,40 @@ class PasswordController extends Controller{
 		$user = DB::table('users')->where('username', 'LIKE', $request->input('username'))
 								  ->first();
 		if($user == null){ 
-			return view('auth.password.error', ["layout" => new LayoutData()]);
+			$layout = new LayoutData();
+			return view('errors.error', ["layout" => $layout,
+										 "message" => $layout->language('error_at_reseting_password'),
+										 "url" => '/password/reset']);
 		}
 		$day = Carbon::now()->dayOfYear;
 		$string = sha1($request->input('username').$user->registration_date.$user->name.$day);
-		Mail::send('mails.resetpwd', ['name' => $user->name, 'link' => 'http://host59.collegist.eotvos.elte.hu/password/reset/'.$user->username.'/'.$string], function ($m) use ($user) {
+		if(Session::has('lang')){
+			if(Session::get('lang') == "hu_HU" || Session::get('lang') == "en_US")
+				$lang = Session::get('lang');
+			else
+				$lang = "hu_HU";
+		}else{
+			$lang = "hu_HU";
+		}
+		Mail::send('mails.resetpwd'.$lang, ['name' => $user->name, 'link' => 'http://host59.collegist.eotvos.elte.hu/password/reset/'.$user->username.'/'.$string], function ($m) use ($user) {
             $m->to($user->email, $user->name);
 			$m->subject('Elfelejtett jelszó');
         });
 		
-		return view('auth.password.sent', ["layout" => new LayoutData()]);
+		$layout = new LayoutData();
+		return view('success.success', ["layout" => $layout,
+										"message" => $layout->language('success_send_email_about_what_to_do'),
+										"url" => '/']);
 	}
 	
 	public function showPasswordForm($username, $code){
 		$user = DB::table('users')->where('username', 'LIKE', $username)
 								  ->first();
 		if($user == null){ 
-			return view('auth.password.error', ["layout" => new LayoutData()]);
+			$layout = new LayoutData();
+			return view('errors.error', ["layout" => $layout,
+										 "message" => $layout->language('error_at_reseting_password'),
+										 "url" => '/password/reset']);
 		}
 		$day = Carbon::now()->dayOfYear;
 		$i = 0;
@@ -56,7 +73,10 @@ class PasswordController extends Controller{
 			return view('auth.password.email', ["layout" => new LayoutData(),
 											    "username" => $username]);
 		}else{
-			return view('auth.password.error', ["layout" => new LayoutData()]);
+			$layout = new LayoutData();
+			return view('errors.error', ["layout" => $layout,
+										 "message" => $layout->language('error_at_reseting_password'),
+										 "url" => '/password/reset']);
 		}
     }
 	
@@ -70,6 +90,8 @@ class PasswordController extends Controller{
             ->where('username', 'LIKE', $request->input('username'))
             ->update(array('password' => password_hash($request->input('password'), PASSWORD_DEFAULT)));
 			
-		return view('auth.password.ok', ["layout" => new LayoutData()]);
+		return view('success.success', ["layout" => $layout,
+										"message" => $layout->language('success_at_reset_password'),
+										"url" => '/']);
 	}
 }

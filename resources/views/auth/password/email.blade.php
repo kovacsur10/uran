@@ -6,7 +6,7 @@
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default">
-                <div class="panel-heading">Jelszó módosítása</div>
+                <div class="panel-heading">{{ $layout->language('modify_password') }}</div>
                 <div class="panel-body">
                     @if (session('status'))
                         <div class="alert alert-success">
@@ -18,7 +18,7 @@
                         {!! csrf_field() !!}
 
                         <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
-                            <label class="col-md-4 control-label">Új jelszó</label>
+                            <label class="col-md-4 control-label">{{ $layout->language('new_password') }}</label>
 
                             <div class="col-md-6">
                                 <input type="password" class="form-control" name="password">
@@ -34,7 +34,7 @@
 						<input type="hidden" name="username" value="{{ $username }}">
 
                         <div class="form-group{{ $errors->has('password_confirmation') ? ' has-error' : '' }}">
-                            <label class="col-md-4 control-label">Jelszó újra</label>
+                            <label class="col-md-4 control-label">{{ $layout->language('password_again') }}</label>
                             <div class="col-md-6">
                                 <input type="password" class="form-control" name="password_confirmation">
 
@@ -49,7 +49,7 @@
                         <div class="form-group">
                             <div class="col-md-6 col-md-offset-4">
                                 <button type="submit" class="btn btn-primary">
-                                    <i class="fa fa-btn fa-envelope"></i>Send Password Reset Link
+                                    <i class="fa fa-btn fa-envelope"></i>{{ $layout->language('send_password_reset_link') }}
                                 </button>
                             </div>
                         </div>

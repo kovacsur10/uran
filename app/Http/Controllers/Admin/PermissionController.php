@@ -50,7 +50,7 @@ class PermissionController extends Controller{
 			if($error){
 				DB::rollback();
 				return view('errors.error', ["layout" => $layout,
-											 "message" => 'Hiba a jogosultságok beállításakor!',
+											 "message" => $layout->language('error_at_setting_the_permissions'),
 											 "url" => '/admin/permissions']);
 			}else{
 				DB::commit();

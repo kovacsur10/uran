@@ -5,7 +5,7 @@
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
             <div class="panel panel-default">
-                <div class="panel-heading"><a href="{{ url('/admin/permissions') }}">Jogok kezelése</a></div>
+                <div class="panel-heading"><a href="{{ url('/admin/permissions') }}">{{ $layout->language('permissions_handling') }}</a></div>
                 <div class="panel-body">
 				@if($layout->user()->permitted('permission_admin'))
 					<div class="panel panel-default">

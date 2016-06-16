@@ -5,14 +5,14 @@
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default">
-                <div class="panel-heading">Register</div>
+                <div class="panel-heading">{{ $layout->language('registration') }}</div>
                 <div class="panel-body">
                     <form class="form-horizontal" role="form" method="POST" action="{{ url('/register') }}">
 						<input type="hidden" name="_method" value="PUT">
                         {!! csrf_field() !!}
 
                         <div class="form-group{{ $errors->has('username') ? ' has-error' : '' }}">
-                            <label class="col-md-4 control-label">Username</label>
+                            <label class="col-md-4 control-label">{{ $layout->language('username') }}</label>
 
                             <div class="col-md-6">
                                 <input type="text" class="form-control" name="username" value="{{ old('username') }}" required="true">
@@ -26,7 +26,7 @@
                         </div>
                         
                         <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
-                            <label class="col-md-4 control-label">Name</label>
+                            <label class="col-md-4 control-label">{{ $layout->language('name') }}</label>
 
                             <div class="col-md-6">
                                 <input type="text" class="form-control" name="name" value="{{ old('name') }}" required="true">
@@ -40,7 +40,7 @@
                         </div>
 
                         <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-                            <label class="col-md-4 control-label">E-Mail Address</label>
+                            <label class="col-md-4 control-label">{{ $layout->language('email_address') }}</label>
 
                             <div class="col-md-6">
                                 <input type="email" class="form-control" name="email" value="{{ old('email') }}" required="true">
@@ -54,7 +54,7 @@
                         </div>
 
                         <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
-                            <label class="col-md-4 control-label">Password</label>
+                            <label class="col-md-4 control-label">{{ $layout->language('password') }}</label>
 
                             <div class="col-md-6">
                                 <input type="password" class="form-control" name="password" required="true">
@@ -68,7 +68,7 @@
                         </div>
 
                         <div class="form-group{{ $errors->has('password_confirmation') ? ' has-error' : '' }}">
-                            <label class="col-md-4 control-label">Confirm Password</label>
+                            <label class="col-md-4 control-label">{{ $layout->language('confirm_password') }}</label>
 
                             <div class="col-md-6">
                                 <input type="password" class="form-control" name="password_confirmation" required="true">
@@ -82,10 +82,10 @@
                         </div>
 
 						<div class="form-group{{ $errors->has('country') ? ' has-error' : '' }}">
-                            <label  class="col-md-4 control-label" for="country_select">Ország</label>
+                            <label  class="col-md-4 control-label" for="country_select">{{ $layout->language('country') }}</label>
 							<div class="col-md-6">
 								<select class="form-control"  name="country"  id="country_select" required="true">
-									<option value="HUN" selected="selected">Hungary</option>
+									<option value="HUN" selected="selected">{{ $layout->language('hungary') }}</option>
 									<option value="AFG">Afghanistan</option>
 									<option value="ALA">Åland Islands</option>
 									<option value="ALB">Albania</option>
@@ -345,7 +345,7 @@
                         </div>
 						
 						<div class="form-group{{ $errors->has('shire') ? ' has-error' : '' }}">
-                            <label class="col-md-4 control-label">Megye</label>
+                            <label class="col-md-4 control-label">{{ $layout->language('shire') }}</label>
 
                             <div class="col-md-6">
                                 <input type="text" class="form-control" name="shire" value="{{ old('shire') }}" required="true">
@@ -359,7 +359,7 @@
                         </div>
 						
 						<div class="form-group{{ $errors->has('postalcode') ? ' has-error' : '' }}">
-                            <label class="col-md-4 control-label">Irányítószám</label>
+                            <label class="col-md-4 control-label">{{ $layout->language('postalcode') }}</label>
 
                             <div class="col-md-6">
                                 <input type="text" class="form-control" name="postalcode" value="{{ old('postalcode') }}" required="true">
@@ -373,7 +373,7 @@
                         </div>
 						
 						<div class="form-group{{ $errors->has('city') ? ' has-error' : '' }}">
-                            <label class="col-md-4 control-label">Város</label>
+                            <label class="col-md-4 control-label">{{ $layout->language('city') }}</label>
 
                             <div class="col-md-6">
                                 <input type="text" class="form-control" name="city" value="{{ old('city') }}" required="true">
@@ -387,7 +387,7 @@
                         </div>
 						
 						<div class="form-group{{ $errors->has('address') ? ' has-error' : '' }}">
-                            <label class="col-md-4 control-label">Lakcím</label>
+                            <label class="col-md-4 control-label">{{ $layout->language('address') }}</label>
 
                             <div class="col-md-6">
                                 <input type="text" class="form-control" name="address" value="{{ old('address') }}" required="true">
@@ -401,7 +401,7 @@
                         </div>
 						
 						<div class="form-group{{ $errors->has('reason') ? ' has-error' : '' }}">
-                            <label class="col-md-4 control-label">Regisztráció oka</label>
+                            <label class="col-md-4 control-label">{{ $layout->language('reason_of_registration') }}</label>
 
                             <div class="col-md-6">
                                 <input type="text" class="form-control" name="reason" value="{{ old('reason') }}" required="true">
@@ -415,7 +415,7 @@
                         </div>
 						
 						<div class="form-group{{ $errors->has('phone') ? ' has-error' : '' }}">
-                            <label class="col-md-4 control-label">Telefonszám</label>
+                            <label class="col-md-4 control-label">{{ $layout->language('phone_number') }}</label>
 
                             <div class="col-md-6">
                                 <input type="text" class="form-control" name="phone" value="{{ old('phone') }}">
@@ -431,7 +431,7 @@
                         <div class="form-group">
                             <div class="col-md-6 col-md-offset-4">
                                 <button type="submit" class="btn btn-primary">
-                                    <i class="fa fa-btn fa-user"></i>Register
+                                    <i class="fa fa-btn fa-user"></i>{{ $layout->language('register') }}
                                 </button>
                             </div>
                         </div>

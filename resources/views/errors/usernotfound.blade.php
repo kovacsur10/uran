@@ -5,9 +5,9 @@
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default">
-                <div class="panel-heading">Hiba</div>
+                <div class="panel-heading">{{ $layout->language('error') }}</div>
                 <div class="panel-body">
-                    <p>Ajajj, valami baj van!</p>
+                    <p>{{ $layout->language('oops_something_went_wrong') }}</p>
                 </div>
             </div>
         </div>

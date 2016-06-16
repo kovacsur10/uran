@@ -12,6 +12,9 @@
 */
 
 Route::group(['middleware' => 'web'], function () {
+	// Language router
+	Route::get('lang/set/{language}', 'Language\LanguageController@set');
+	
 	// Admin routes
 	Route::get('admin/permissions', 'Admin\PermissionController@showPermissions')->middleware('auth.logged');
 	Route::post('admin/permissions', 'Admin\PermissionController@modifyPermissions')->middleware('auth.logged');

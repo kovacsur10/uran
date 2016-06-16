@@ -5,17 +5,17 @@
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
             <div class="panel panel-default">
-                <div class="panel-heading">Jogok kezelése</div>
+                <div class="panel-heading">{{ $layout->language('permissions_handling') }}</div>
                 <div class="panel-body">
 				@if($layout->user()->permitted('permission_admin'))
 					<div class="panel panel-default">
-						<div class="panel-heading">Jogok hozzárendelése</div>
+						<div class="panel-heading">{{ $layout->language('assign_permissions') }}</div>
 						<div class="panel-body">
 							<form class="form-horizontal" role="form" method="POST" action="{{ url('/admin/permissions') }}">
 								{!! csrf_field() !!}
 								
 								<div class="form-group{{ $errors->has('user') ? ' has-error' : '' }}">
-									<label  class="col-md-4 control-label" for="user">Felhasználó</label>
+									<label  class="col-md-4 control-label" for="user">{{ $layout->language('user') }}</label>
 									<div class="col-md-6">
 										<select class="form-control"  name="user"  id="user">
 											@foreach($layout->user()->users() as $user)
@@ -34,7 +34,7 @@
 								<div class="form-group">
 									<div class="col-md-6 col-md-offset-4">
 										<button type="submit" class="btn btn-primary">
-											Módosítás kezdése
+											{{ $layout->language('start_of_modification') }}
 										</button>
 									</div>
 								</div>
@@ -43,13 +43,13 @@
 					</div>
 					
 					<div class="panel panel-default">
-						<div class="panel-heading">Jogok listázása</div>
+						<div class="panel-heading">{{ $layout->language('list_permissions') }}</div>
 						<div class="panel-body">
 							<form class="form-horizontal" role="form" method="POST" action="{{ url('/admin/permissions/list') }}">
 								{!! csrf_field() !!}
 								
 								<div class="form-group">
-									<label  class="col-md-4 control-label" for="permission">Jog</label>
+									<label  class="col-md-4 control-label" for="permission">{{ $layout->language('permission') }}</label>
 									<div class="col-md-6">
 										<select class="form-control" name="permission" id="permission">
 											@foreach($layout->user()->getAvailablePermissions() as $permission)
@@ -62,7 +62,7 @@
 								<div class="form-group">
 									<div class="col-md-6 col-md-offset-4">
 										<button type="submit" class="btn btn-primary">
-											Listázás
+											{{ $layout->language('list') }}
 										</button>
 									</div>
 								</div>

@@ -23,8 +23,9 @@ class NotificationController extends Controller{
 					->where('user_id', '=', Session::get('user')->id)
 					->first();
 		if($exist == null){
-			return view('errors.error', ["layout" => new LayoutData(),
-										 "message" => 'Nincsen jogod ezt az értesítést megtekinteni!',
+			$layout = new LayoutData();
+			return view('errors.error', ["layout" => $layout,
+										 "message" => $layout->language('error_notification_view_insufficient_permission'),
 										 "url" => '/notification/list/0']);
 		}else{
 			DB::table('notifications')

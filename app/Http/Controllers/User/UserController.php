@@ -25,8 +25,9 @@ class UserController extends Controller{
 						->select('id')
 						->first();
 		if($targetId == null)
-			return view('errors.error', ["layout" => new LayoutData(),
-										 "message" => 'A felhasználó nem található, vagy nem publikus az oldala!',
+			$layout = new LayoutData();
+			return view('errors.error', ["layout" => $layout,
+										 "message" => $layout->language('error_at_finding_the_user'),
 										 "url" => '/home']);
 		else
 			return view('user.showpublicdata', ["layout" => new LayoutData(),

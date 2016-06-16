@@ -26,7 +26,7 @@ class ModuleController extends Controller{
 					->insert(['module_id' => $request->module]);
 			}catch(\Illuminate\Database\QueryException $e){
 				return view('errors.error', ["layout" => $layout,
-											 "message" => 'Hiba a modul aktiválásakor!',
+											 "message" => $layout->language('error_at_module_activation'),
 											 "url" => '/admin/modules']);
 			}
 			return view('admin.modules', ["layout" => $layout]);

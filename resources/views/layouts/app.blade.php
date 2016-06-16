@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Urán - EJC</title>
+    <title>{{ $layout->language('uran') }} - {{ $layout->language('ejc') }}</title>
 
     <!-- Fonts -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" rel='stylesheet' type='text/css'>
@@ -38,18 +38,9 @@
     <nav class="navbar navbar-default navbar-static-top">
         <div class="container">
             <div class="navbar-header">
-
-                <!-- Collapsed Hamburger -->
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#app-navbar-collapse">
-                    <span class="sr-only">Toggle Navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-
                 <!-- Branding Image -->
                 <a class="navbar-brand" href="{{ url('/') }}">
-                    Urán
+                    {{ $layout->language('uran') }}
                 </a>
             </div>
 
@@ -58,43 +49,43 @@
                 <ul class="nav navbar-nav">
                     <!-- Authentication Links -->
                     @if (!$data->logged())
-                        <li><a href="{{ url('/login') }}">Belépés</a></li>
-                        <li><a href="{{ url('/register') }}">Regisztráció</a></li>
+                        <li><a href="{{ url('/login') }}">{{ $layout->language('login') }}</a></li>
+                        <li><a href="{{ url('/register') }}">{{ $layout->language('registration') }}</a></li>
                     @else
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                ECNET <span class="caret"></span>
+                                {{ $layout->language('ecnet') }} <span class="caret"></span>
                             </a>
 							<ul class="dropdown-menu" role="menu">
-                                <li><a href="{{ url('/ecnet/account') }}">Nyomtatószámla</a></li>
-								<li><a href="{{ url('/ecnet/access') }}">Internet hozzáférés</a></li>
-								<li><a href="{{ url('/ecnet/order') }}">MAC slot igénylése</a></li>
+                                <li><a href="{{ url('/ecnet/account') }}">{{ $layout->language('printing_account') }}</a></li>
+								<li><a href="{{ url('/ecnet/access') }}">{{ $layout->language('internet_access') }}</a></li>
+								<li><a href="{{ url('/ecnet/order') }}">{{ $layout->language('mac_slot_ordering') }}</a></li>
 								@if($data->user()->permitted('ecnet_user_handling'))
-								<li><a href="{{ url('/ecnet/users') }}">Felhasználók kezelése</a></li>
+								<li><a href="{{ url('/ecnet/users') }}">{{ $layout->language('user_administration') }}</a></li>
 								@endif
                             </ul>
                         </li>
 						<li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                Ügykezelő <span class="caret"></span>
+                                TODO <span class="caret"></span>
                             </a>
 							<ul class="dropdown-menu" role="menu">
 								@if($data->user()->permitted('rooms_observe_assignment'))
-								<li><a href="{{ url('/rooms/map/2') }}">Szobabeosztás</a></li>
+								<li><a href="{{ url('/rooms/map/2') }}">{{ $layout->language('room_assignment') }}</a></li>
 								@endif
                             </ul>
                         </li>
 						@if($data->user()->permitted('permission_admin') || $data->user()->permitted('module_admin'))
 						<li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                ADMIN <span class="caret"></span>
+                                {{ $layout->language('admin') }} <span class="caret"></span>
                             </a>
 							<ul class="dropdown-menu" role="menu">
 								@if($data->user()->permitted('permission_admin'))
-								<li><a href="{{ url('/admin/permissions') }}">Jogok kezelése</a></li>
+								<li><a href="{{ url('/admin/permissions') }}">{{ $layout->language('permissions_handling') }}</a></li>
 								@endif
 								@if($data->user()->permitted('module_admin'))
-								<li><a href="{{ url('/admin/modules') }}">Modulok kezelése</a></li>
+								<li><a href="{{ url('/admin/modules') }}">{{ $layout->language('modules_handling') }}</a></li>
 								@endif
                             </ul>
                         </li>
@@ -120,9 +111,9 @@
 							<div class="dropdown-container">
 								<div class="dropdown-toolbar">
 									<div class="dropdown-toolbar-actions">
-										<a href="{{ url('/notification/list/0') }}"><i class="glyphicon glyphicon-search"></i> Mutasd mindet</a>
+										<a href="{{ url('/notification/list/0') }}"><i class="glyphicon glyphicon-search"></i> {{ $layout->language('show_all') }}</a>
 									</div>
-									<h3 class="dropdown-toolbar-title">Olvasatlan értesítések ({{ $data->user()->unseenNotificationCount() }})</h3>
+									<h3 class="dropdown-toolbar-title">{{ $layout->language('unread_notifications') }} ({{ $data->user()->unseenNotificationCount() }})</h3>
 								</div><!-- /dropdown-toolbar -->
 
 								<ul class="dropdown-menu notifications">
@@ -131,8 +122,8 @@
 										<li class="notification">
 											<div class="media">
 												<div class="media-body">
-													<strong class="notification-title">Rendszer: Semmi probléma</strong>
-													<p class="notification-desc">Jelenleg nincsenek értesítéseid!</p>
+													<strong class="notification-title">{{ $layout->language('system_no_problem') }}</strong>
+													<p class="notification-desc">{{ $layout->language('no_notification_to_show') }}</p>
 
 													<div class="notification-meta">
 														<small class="timestamp"></small>
@@ -163,14 +154,18 @@
 					
                         <li class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                Profilom <span class="caret"></span>
+                                {{ $layout->language('my_profile') }} <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu" role="menu">
-								<li><a href="{{ url('/data/show') }}">Adataim</a></li>
-                                <li><a href="{{ url('/logout') }}"><i class="fa fa-btn fa-sign-out"></i>Kilépés</a></li>
+								<li><a href="{{ url('/data/show') }}">{{ $layout->language('my_data') }}</a></li>
+                                <li><a href="{{ url('/logout') }}"><i class="fa fa-btn fa-sign-out"></i>{{ $layout->language('logout') }}</a></li>
                             </ul>
                         </li>
                     @endif
+					<li>
+						<a style="padding: 0px 0px;" href="{{ url('lang/set/hu_HU') }}"><img style="height:18px;" src="/images/lang_hu.png" alt="Hungarian Flag"></a>
+						<a style="padding: 0px 0px;" href="{{ url('lang/set/en_US') }}"><img style="height:18px;" src="/images/lang_en.png" alt="UK Flag"></a>
+					</li>
 				</ul>
             </div>
         </div>
