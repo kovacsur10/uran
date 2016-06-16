@@ -21,6 +21,13 @@ class User{
 		return $this->user;
 	}
 	
+	public function users(){
+		return DB::table('users')
+			->select('id', 'username', 'name')
+			->orderBy('name', 'asc')
+			->get();
+	}
+	
 	public function permissions(){
 		return $this->permissions;
 	}

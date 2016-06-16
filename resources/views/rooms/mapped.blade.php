@@ -144,10 +144,24 @@
 							<div class="panel panel-default">
 								<div class="panel-heading">Admin panel - Szabad helyek</div>
 								<div class="panel-body">
-									<ul class="col-md-2 col-md-offset-5 list-group">
-									@foreach($layout->room()->getFreePlaces() as $place)
-										<li class="list-group-item"><span class="badge"> {{ $place[1] }}</span> {{ $place[0] }}</li>
-									@endforeach
+									<?php
+										$i = 0;
+										$places = $layout->room()->getFreePlaces();
+									?>
+									<ul class="col-md-2 col-md-offset-2 list-group">
+									@for(; $i < count($places) / 3; $i++)
+										<li class="list-group-item"><span class="badge"> {{ $places[$i][1] }}</span> {{ $places[$i][0] }}</li>
+									@endfor
+									</ul>
+									<ul class="col-md-2 col-md-offset-1 list-group">
+									@for(; $i < 2* count($places) / 3; $i++)
+										<li class="list-group-item"><span class="badge"> {{ $places[$i][1] }}</span> {{ $places[$i][0] }}</li>
+									@endfor
+									</ul>
+									<ul class="col-md-2 col-md-offset-1 list-group">
+									@for(; $i < count($places); $i++)
+										<li class="list-group-item"><span class="badge"> {{ $places[$i][1] }}</span> {{ $places[$i][0] }}</li>
+									@endfor
 									</ul>
 								</div>
 							</div>

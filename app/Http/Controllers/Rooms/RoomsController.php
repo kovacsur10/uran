@@ -8,6 +8,7 @@ use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
+use Illuminate\Database\QueryException;
 use Carbon\Carbon;
 use DB;
 use Mail;
@@ -28,5 +29,43 @@ class RoomsController extends Controller{
 	public function listRoomMembers($id){
 		return view('rooms.showroom', ["layout" => new LayoutData(),
 									   "room" => $id]);
+	}
+	
+	public function assignResidents(Request $request){
+		$layout = new LayoutData();
+		if($layout->user()->permitted('rooms_assign')){
+			$error = false;
+			$roomid = DB::table('rooms_rooms')
+				->where('room_number', 'LIKE', $request->room)
+				->select('id')
+				->first();
+			DB::beginTransaction(); //DATABASE TRANSACTION STARTS HERE
+			DB::table('rooms_room_assignments')
+				->where('roomid', '=', $roomid->id)
+				->delete();
+			for($i = 0; $i < $request->count; $i++){
+				if($request->input('resident'.$i) != 0){
+					try{
+						DB::table('rooms_room_assignments')
+							->insert(['roomid' => $roomid->id, 'userid' => $request->input('resident'.$i)]);
+					}catch(\Illuminate\Database\QueryException $e) {
+						$error = true;
+					}
+				}
+			}
+			
+			if($error){
+				DB::rollback();
+				return view('errors.error', ["layout" => $layout,
+											 "message" => 'Már másik szobában lakik ez a személy!',
+											 "url" => '/rooms/room/'.$request->room]);
+			}else{
+				DB::commit();
+				return view('rooms.showroom', ["layout" => new LayoutData(),
+											   "room" => $request->room]);
+			} //DATABASE TRANSACTION ENDS HERE
+		}else{
+			return view('errors.authentication', ["layout" => $layout]);
+		}
 	}
 }

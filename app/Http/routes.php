@@ -52,6 +52,7 @@ Route::group(['middleware' => 'web'], function () {
 	// Rooms routes
 	Route::get('rooms/map/{level}', 'Rooms\RoomsController@showMap')->middleware('auth.logged');
 	Route::get('rooms/room/{id}', 'Rooms\RoomsController@listRoomMembers')->middleware('auth.logged');
+	Route::post('rooms/assign', 'Rooms\RoomsController@assignResidents')->middleware('auth.logged');
 	
 	// Notification routes
 	Route::get('notification/list/{first}', 'Notification\NotificationController@listNotifications')->middleware('auth.logged');
