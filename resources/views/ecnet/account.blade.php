@@ -5,22 +5,22 @@
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
             <div class="panel panel-default">
-                <div class="panel-heading">Nyomtatószámla</div>
+                <div class="panel-heading">{{ $layout->language('printing_account') }}</div>
                 <div class="panel-body">
-					<div class="well well-sm">Rendelkezésre álló összeg: {{ $layout->user()->ecnetUser()->money }} HUF</div>
+					<div class="well well-sm">{{ $layout->language('available_money') }}: {{ $layout->user()->ecnetUser()->money }} HUF</div>
 					<div class="alert alert-info">
-						<strong>Megjegyzés:</strong> A számlára pénzt feltölteni egy rendszergazdánál tudsz.
+						<strong>{{ $layout->language('note') }}:</strong> {{ $layout->language('money_upload_note_description') }}
 					</div>
 					
 					@if($layout->user()->permitted('ecnet_set_print_account'))
 					<div class="panel panel-default">
-						<div class="panel-heading">Admin panel</div>
+						<div class="panel-heading">{{ $layout->language('admin_panel') }}</div>
 						<div class="panel-body">
 							<form class="form-horizontal" role="form" method="POST" action="{{ url('/ecnet/addmoney') }}">
 								{!! csrf_field() !!}
 								
 								<div class="form-group{{ $errors->has('money') ? ' has-error' : '' }}">
-									<label class="col-md-4 control-label">Hozzáadandó pénz</label>
+									<label class="col-md-4 control-label">{{ $layout->language('money_to_add') }}</label>
 
 									<div class="col-md-6">
 										<input type="number" class="form-control" min="0" step="1" value="0" name="money" required="true" value="{{ old('money') }}">
@@ -34,7 +34,7 @@
 								</div>
 									
 								<div class="form-group{{ $errors->has('reset') ? ' has-error' : '' }}">
-									<label class="col-md-4 control-label">Pénz a számlán</label>
+									<label class="col-md-4 control-label">{{ $layout->language('money_on_account') }}</label>
 
 									<div class="col-md-6">
 										<input type="number" class="form-control" min="0" step="1" value="0" name="reset" required="true" value="{{ old('reset') }}">
@@ -48,7 +48,7 @@
 								</div>
 								
 								<div class="form-group{{ $errors->has('account') ? ' has-error' : '' }}">
-									<label  class="col-md-4 control-label" for="country_select">Felhasználó</label>
+									<label  class="col-md-4 control-label" for="country_select">{{ $layout->language('user') }}</label>
 									<div class="col-md-6">
 										<select class="form-control"  name="account"  id="country_select" required="true">
 											@foreach($users as $us)
@@ -67,14 +67,14 @@
 								<div class="form-group">
 									<div class="col-md-6 col-md-offset-4">
 										<button type="submit" class="btn btn-primary">
-											<i class="fa fa-btn fa-money"></i>Módosít
+											<i class="fa fa-btn fa-money"></i>{{ $layout->language('modify') }}
 										</button>
 									</div>
 								</div>
 							</form>
 							
 							<div class="alert alert-warning">
-								Ha a hozzáadandó mező 0-val egyenlő, akkor a "Pénz a számlán" értéke lesz figyelembe véve, különben a hozzáadandó érték! 
+								{{ $layout->language('money_add_admin_note_description') }}
 							</div>
 						</div>
 					</div>

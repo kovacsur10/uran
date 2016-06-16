@@ -5,11 +5,11 @@
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
             <div class="panel panel-default">
-                <div class="panel-heading">Adataim</div>
+                <div class="panel-heading">{{ $layout->language('my_data') }}</div>
                 <div class="panel-body">
-					<div class="well well-sm">Név: {{ $target->user()->name }}</div>
-					<div class="well well-sm">Felhasználói azonosító: {{ $target->user()->username }}</div>
-					<div class="well well-sm">Regisztráció időpontja: {{ str_replace("-", ". ", str_replace(" ", ". ", $target->user()->registration_date)) }}</div>
+					<div class="well well-sm">{{ $layout->language('name') }}: {{ $target->user()->name }}</div>
+					<div class="well well-sm">{{ $layout->language('username') }}: {{ $target->user()->username }}</div>
+					<div class="well well-sm">{{ $layout->language('registration_date') }}: {{ str_replace("-", ". ", str_replace(" ", ". ", $target->user()->registration_date)) }}</div>
                 </div>
             </div>
         </div>

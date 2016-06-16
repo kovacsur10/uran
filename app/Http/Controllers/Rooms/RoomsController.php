@@ -21,7 +21,7 @@ class RoomsController extends Controller{
 										 "level" => $level]);
 		}else{
 			return view('errors.error', ["layout" => $layout,
-										 "message" => 'Nincsen ilyen emelet a Collegiumban!',
+										 "message" => $layout->language('error_floor_not_found'),
 										 "url" => '/rooms/assigned/'.$level]);
 		}
 	}
@@ -57,7 +57,7 @@ class RoomsController extends Controller{
 			if($error){
 				DB::rollback();
 				return view('errors.error', ["layout" => $layout,
-											 "message" => 'Már másik szobában lakik ez a személy!',
+											 "message" => $layout->language('error_already_lives_somewhere'),
 											 "url" => '/rooms/room/'.$request->room]);
 			}else{
 				DB::commit();

@@ -72,9 +72,14 @@ class EcnetController extends Controller{
 			return view('ecnet.showactiveusers.'.$type, ["logged" => Session::has('user'),
 												  "user" => new EirUser(Session::get('user')->id)]);
 		}else{
+<<<<<<< HEAD
 			return view('errors.error', ["logged" => Session::has('user'),
 										 "user" => new EirUser(Session::get('user')->id),
 										 "message" => 'Nincsen ilyen oldal!',
+=======
+			return view('errors.error', ["layout" => $layout,
+										 "message" => $layout->language('error_page_not_found'),
+>>>>>>> ba2ceb3... Language support is added. Need to do more!
 										 "url" => '/ecnet/users']);
 		}
 =======
@@ -125,7 +130,7 @@ class EcnetController extends Controller{
 											   ->first();
 			if($money == null){
 				return view('errors.error', ["layout" => $layout,
-											 "message" => 'Valami probléma merült fel a pénz hozzáadásánál!',
+											 "message" => $layout->language('error_at_money_adding'),
 											 "url" => '/ecnet/account']);
 			}
 			$oldmoney = $money->money;
@@ -138,7 +143,7 @@ class EcnetController extends Controller{
 									  ->update(['money' => $money]);
 			Notify::notify($layout->user(), $request->account, 'Egyenleg módosítva!', 'A nyomtatószámlád egyenlege megváltozott '.$oldmoney.' forintról '.$money.' forintra!', 'ecnet/account');
 			return view('success.success', ["layout" => $layout,
-											"message" => 'Sikeresen átállítottad a célszámla pénzösszegét!',
+											"message" => $layout->language('success_set_money'),
 											"url" => '/ecnet/account']);
 		}else{
 			return view('errors.authentication', ["layout" => $layout]);
@@ -157,7 +162,7 @@ class EcnetController extends Controller{
 			DB::table('ecnet_valid_date')->insert(['valid_date' => $new_time]);
 
 			return view('success.success', ["layout" => $layout,
-											"message" => 'Sikeresen át lett állítva az alapértelmezett idő erre: '.$new_time,
+											"message" => $layout->language('success_at_setting_the_default_time_to').$new_time,
 											"url" => '/ecnet/access']);
 		}else{
 			return view('errors.authentication', ["layout" => $layout]);
@@ -174,7 +179,7 @@ class EcnetController extends Controller{
 			if($request->custom_valid_date == null){
 				if($layout->user()->validationTime() == null){
 					return view('errors.error', ["layout" => $layout,
-												 "message" => 'Nem találtunk alapértelmezett időt!',
+												 "message" => $layout->language('error_no_default_time_set'),
 												 "url" => '/ecnet/access']);
 				}
 				$new_time = $layout->user()->validationTime()->valid_date;
@@ -186,7 +191,7 @@ class EcnetController extends Controller{
 			
 			Notify::notify($layout->user(), $request->account, 'Internethozzáférés módosítva!', 'Az internethozzáférésed lejárati ideje módosítva lett erre a dátumra: '.str_replace("-", ". ", str_replace(" ", ". ", $new_time)), 'ecnet/access');
 			return view('success.success', ["layout" => $layout,
-											"message" => 'Sikeresen módosítottuk a felhasználó internethozzáférésének idejét!',
+											"message" => $layout->language('success_at_setting_users_internet_access_time'),
 											"url" => '/ecnet/access']);
 		}else{
 			return view('errors.authentication', ["layout" => $layout]);
@@ -244,7 +249,7 @@ class EcnetController extends Controller{
 		}
 		
 		return view('success.success', ["layout" => $layout,
-										"message" => 'A MAC címek sikeresen frissítve!',
+										"message" => $layout->language('success_at_updating_mac_addresses'),
 										"url" => '/ecnet/access']);
 	}
 	
@@ -258,7 +263,7 @@ class EcnetController extends Controller{
 		DB::table('ecnet_mac_slot_orders')->insert(['user_id' => Session::get('user')->id, 'reason' => $request->input('reason'), 'order_time' => $time->toDateTimeString()]);
 		Notify::notifyAdmin($layout->user(), 'ecnet_slot_verify', 'MAC slot igénylés', 'MAC slot lett igényelve! Kérelem: '.$request->input('reason'), 'ecnet/order');
 		return view('success.success', ["layout" => $layout,
-										"message" => 'A MAC slot igénylésed le lett adva!',
+										"message" => $layout->language('success_at_sending_mac_slot_order'),
 										"url" => '/ecnet/order']);
 	}
 	
@@ -275,7 +280,7 @@ class EcnetController extends Controller{
 												->first();
 			if($target == null){
 				return view('errors.error', ["layout" => $layout,
-											 "message" => 'Valami probléma merült fel a slot jóváhagyásánál!',
+											 "message" => $layout->language('error_at_allowing_mac_slot_order'),
 											 "url" => '/ecnet/order']);
 			}
 			if($request->input('optradio') == "allow"){
@@ -287,7 +292,7 @@ class EcnetController extends Controller{
 			}
 			DB::table('ecnet_mac_slot_orders')->where('id', '=', $request->input('slot'))->delete();
 			return view('success.success', ["layout" => $layout,
-											"message" => 'Sikeresen jóvá lett hagyva a slot igénylés!',
+											"message" => $layout->language('success_at_allowing_mac_slot_order'),
 											"url" => '/ecnet/order']);
 		}else{
 			return view('errors.authentication', ["layout" => $layout]);

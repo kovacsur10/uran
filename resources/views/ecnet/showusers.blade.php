@@ -5,7 +5,7 @@
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
             <div class="panel panel-default">
-                <div class="panel-heading">Admin panel - felhasználók kezelése</div>
+                <div class="panel-heading">{{ $layout->language('admin_panel') }} - {{ $layout->language('user_administration_LC') }}</div>
                 <div class="panel-body">				
 <<<<<<< HEAD
 					@if($user->permitted('ecnet_user_handling'))
@@ -19,14 +19,18 @@
 					@if($layout->user()->permitted('ecnet_user_handling'))
 >>>>>>> d8c9872... LayoutData data handling was added to the project.
 						<div class="panel panel-default">
+<<<<<<< HEAD
 							<div class="panel-heading">Felhasználó keresése</div>
 >>>>>>> 39d2186... ECNET userhandling: filter is working.
+=======
+							<div class="panel-heading">{{ $layout->language('find_user') }}</div>
+>>>>>>> ba2ceb3... Language support is added. Need to do more!
 							<div class="panel-body">
 								<form class="form-horizontal" role="form" method="POST" action="{{ url('/ecnet/users') }}">
 									{!! csrf_field() !!}
 									
 									<div class="form-group{{ $errors->has('username') ? ' has-error' : '' }}">
-										<label class="col-md-4 control-label">Felhasználói név</label>
+										<label class="col-md-4 control-label">{{ $layout->language('username') }}</label>
 
 										<div class="col-md-6">
 											<input type="date" class="form-control" name="username" value="{{ $layout->user()->getUsernameFilter() }}">
@@ -40,7 +44,7 @@
 									</div>
 																	
 									<div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
-										<label class="col-md-4 control-label">Név</label>
+										<label class="col-md-4 control-label">{{ $layout->language('name') }}</label>
 
 										<div class="col-md-6">
 											<input type="date" class="form-control" name="name" value="{{ $layout->user()->getNameFilter() }}">
@@ -56,9 +60,9 @@
 									<div class="form-group">
 										<div class="col-md-6 col-md-offset-4">
 											<button type="submit" class="btn btn-primary">
-												Keres
+												{{ $layout->language('find') }}
 											</button>
-											<a href="{{ url('ecnet/users/resetfilter') }}" class="btn btn-danger" role="button">Szűrés törlése</a>
+											<a href="{{ url('ecnet/users/resetfilter') }}" class="btn btn-danger" role="button">{{ $layout->language('delete_filter') }}</a>
 										</div>
 									</div>
 <<<<<<< HEAD
@@ -79,17 +83,17 @@
 						</div>
 						
 						<div class="panel panel-default">
-							<div class="panel-heading">Internettel rendelkezők listázása</div>
+							<div class="panel-heading">{{ $layout->language('list_internet_users') }}</div>
 							<div class="panel-body">
 								<div class="row">
 									<div class="col-md-2 col-md-offset-2">
-										<a href="{{ url('ecnet/users/listactives/name') }}" class="btn btn-primary" role="button">Csak nevek</a>
+										<a href="{{ url('ecnet/users/listactives/name') }}" class="btn btn-primary" role="button">{{ $layout->language('list_internet_users_only_name') }}</a>
 									</div>
 									<div class="col-md-2 col-md-offset-1">
-										<a href="{{ url('ecnet/users/listactives/username') }}" class="btn btn-primary" role="button">Csak felh. nevek</a>
+										<a href="{{ url('ecnet/users/listactives/username') }}" class="btn btn-primary" role="button">{{ $layout->language('list_internet_users_only_username') }}</a>
 									</div>
 									<div class="col-md-2 col-md-offset-1">
-										<a href="{{ url('ecnet/users/listactives/both') }}" class="btn btn-primary" role="button">Mindkettő adat</a>
+										<a href="{{ url('ecnet/users/listactives/both') }}" class="btn btn-primary" role="button">{{ $layout->language('list_internet_users_both') }}</a>
 									</div>
 								</div>
 							</div>
@@ -106,14 +110,14 @@
 						<nav>
 							<ul class="pager">
 								@if(0 < $firstUser)
-									<li class="previous"><a href="{{ url('ecnet/users/'.$usersToShow.'/'.($firstUser - $usersToShow >= 0 ? $firstUser - $usersToShow : 0)) }}">Előző oldal</a></li>
+									<li class="previous"><a href="{{ url('ecnet/users/'.$usersToShow.'/'.($firstUser - $usersToShow >= 0 ? $firstUser - $usersToShow : 0)) }}">{{ $layout->language('previous_page') }}</a></li>
 								@else
-									<li class="previous disabled"><a href="#">Előző oldal</a></li>
+									<li class="previous disabled"><a href="#">{{ $layout->language('previous_page') }}</a></li>
 								@endif
 								@if($firstUser+$usersToShow < count($layout->user()->ecnetUsers()))
-									<li class="next"><a href="{{ url('ecnet/users/'.$usersToShow.'/'.($firstUser+$usersToShow)) }}">Következő oldal</a></li>
+									<li class="next"><a href="{{ url('ecnet/users/'.$usersToShow.'/'.($firstUser+$usersToShow)) }}">{{ $layout->language('next_page') }}</a></li>
 								@else
-									<li class="next disabled"><a href="#">Következő oldal</a></li>
+									<li class="next disabled"><a href="#">{{ $layout->language('next_page') }}</a></li>
 								@endif
 							</ul>
 						</nav>
@@ -123,18 +127,18 @@
 							<div class="panel panel-default {{ $ecnetUser->valid_time > Carbon\Carbon::now()->toDateTimeString() ? 'panel-success' : 'panel-danger' }}">
 								<div class="panel-heading">{{ $ecnetUser->name }} - {{ $ecnetUser->username }} - #{{ $ecnetUser->id }}</div>
 								<div class="panel-body">
-									<p>Egyenleg: {{ $ecnetUser->money }} <i class="fa fa-btn fa-money"></i></p>
-									<p>Érvényességi idő: {{ $ecnetUser->valid_time }} <i class="fa fa-btn {{ $ecnetUser->valid_time > Carbon\Carbon::now()->toDateTimeString() ? 'fa-calendar-check-o' : 'fa-calendar-times-o' }}"></i></p>
-									<p>MAC slotok száma: {{ $ecnetUser->mac_slots }} darab
+									<p>{{ $layout->language('balance') }}: {{ $ecnetUser->money }} <i class="fa fa-btn fa-money"></i></p>
+									<p>{{ $layout->language('validation_date') }}: {{ $ecnetUser->valid_time }} <i class="fa fa-btn {{ $ecnetUser->valid_time > Carbon\Carbon::now()->toDateTimeString() ? 'fa-calendar-check-o' : 'fa-calendar-times-o' }}"></i></p>
+									<p>{{ $layout->language('mac_slots_count') }}: {{ $ecnetUser->mac_slots }} {{ $layout->language('count') }}
 									@if($layout->user()->hasMACSlotOrder($ecnetUser->id))
-										- <i style="color:gold;" class="fa fa-btn fa-flash"></i><a href="{{ url('ecnet/order') }}">SLOT kérelem</a> <i style="color:gold;" class="fa fa-btn fa-flash"></i>
+										- <i style="color:gold;" class="fa fa-btn fa-flash"></i><a href="{{ url('ecnet/order') }}">{{ $layout->language('mac_slot_order') }}</a> <i style="color:gold;" class="fa fa-btn fa-flash"></i>
 									@endif
 									@if(count($layout->user()->macAddresses($ecnetUser->id)) < $ecnetUser->mac_slots)
-										- <span style="color:red;">KEVESEBB SLOTOT HASZNÁL (diff: {{ $ecnetUser->mac_slots - count($layout->user()->macAddresses($ecnetUser->id)) }})</span>
+										- <span style="color:red;">{{ $layout->language('low_mac_slot_usage') }} (diff: {{ $ecnetUser->mac_slots - count($layout->user()->macAddresses($ecnetUser->id)) }})</span>
 									@endif
 									@if($ecnetUser->mac_slots != 0)						
 										<div class="dropdown">
-											<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Regisztrált MAC címek
+											<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">{{ $layout->language('registrated_mac_addresses') }}
 											<span class="caret"></span></button>
 											<ul class="dropdown-menu">
 											@foreach($layout->user()->macAddresses($ecnetUser->id) as $macAddress)
@@ -152,14 +156,14 @@
 						<nav>
 							<ul class="pager">
 								@if(0 < $firstUser)
-									<li class="previous"><a href="{{ url('ecnet/users/'.$usersToShow.'/'.($firstUser - $usersToShow >= 0 ? $firstUser - $usersToShow : 0)) }}">Előző oldal</a></li>
+									<li class="previous"><a href="{{ url('ecnet/users/'.$usersToShow.'/'.($firstUser - $usersToShow >= 0 ? $firstUser - $usersToShow : 0)) }}">{{ $layout->language('previous_page') }}</a></li>
 								@else
-									<li class="previous disabled"><a href="#">Előző oldal</a></li>
+									<li class="previous disabled"><a href="#">{{ $layout->language('previous_page') }}</a></li>
 								@endif
 								@if($firstUser+$usersToShow < count($layout->user()->ecnetUsers()))
-									<li class="next"><a href="{{ url('ecnet/users/'.$usersToShow.'/'.($firstUser+$usersToShow)) }}">Következő oldal</a></li>
+									<li class="next"><a href="{{ url('ecnet/users/'.$usersToShow.'/'.($firstUser+$usersToShow)) }}">{{ $layout->language('next_page') }}</a></li>
 								@else
-									<li class="next disabled"><a href="#">Következő oldal</a></li>
+									<li class="next disabled"><a href="#">{{ $layout->language('next_page') }}</a></li>
 								@endif
 							</ul>
 						</nav>

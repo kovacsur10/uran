@@ -3,6 +3,8 @@
 namespace App\Classes;
 
 use DB;
+use App\Classes\Permissions;
+use App\Classes\Notifications;
 
 class User{
 	protected $user;
@@ -10,11 +12,11 @@ class User{
 	protected $notifications;
 	protected $unseenNotificationCount;
 	
-	public function __construct($id){
-		$this->user = $this->getUserData($id);
-		$this->permissions = $this->getPermissions($id);
-		$this->notifications = $this->getNotifications($id);
-		$this->unseenNotificationCount = $this->getUnseenNotificationCount($id);
+	public function __construct($userId){
+		$this->user = $this->getUserData($userId);
+		$this->permissions = Permissions::get($userId);
+		$this->notifications = Notifications::getNotifications($userId);
+		$this->unseenNotificationCount = Notifications::getUnseenNotificationCount($userId);
 	}
 	
 	public function user(){
@@ -68,17 +70,8 @@ class User{
 		return $i < count($this->permissions);
 	}
 	
-	public function permittedToUser($who, $what){
-		$permissions = $this->getPermissions($who);
-		$i = 0;
-		while($i < count($permissions) && $permissions[$i]->permission_name != $what){
-			$i++;
-		}
-		return $i < count($permissions);
-	}
-	
-	public function getUserData($id){
-		return DB::table('users')->where('id', '=', $id)
+	public function getUserData($userId){
+		return DB::table('users')->where('id', '=', $userId)
 								 ->first();
 	}
 	
@@ -88,27 +81,4 @@ class User{
 		return $permissions == null ? [] : $permissions;
 	}
 	
-	protected function getPermissions($id){
-		$permissions = DB::table('permissions')->join('user_permissions', 'permissions.id', '=', 'user_permissions.permission_id')
-			->select('permissions.id as id', 'permission_name', 'permissions.description as description')
-			->where('user_permissions.user_id', '=', $id)
-			->get();
-		return $permissions == null ? [] : $permissions;
-	}
-	
-	protected function getNotifications($id){
-		return DB::table('notifications')
-			->join('users', 'users.id', '=', 'notifications.from')
-			->select('users.name as name', 'users.username as username', 'notifications.id as id', 'notifications.subject as subject', 'notifications.message as message', 'notifications.time as time', 'notifications.seen as seen')
-			->where('user_id', '=', $id)
-			->orderBy('id', 'desc')
-			->get();
-	}
-	
-	protected function getUnseenNotificationCount($id){
-		return DB::table('notifications')
-			->where('user_id', '=', $id)
-			->where('seen', '=', 'false')
-			->count('id');
-	}
 }

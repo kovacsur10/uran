@@ -5,31 +5,31 @@
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
             <div class="panel panel-default">
-                <div class="panel-heading">Internet hozzáférés</div>
+                <div class="panel-heading">{{ $layout->language('internet_access') }}</div>
                 <div class="panel-body">
 					@if($active)
 					<div class="alert alert-success">
-						<p>Az interneted aktív!</p>
-						<p>Lejárati dátum: {{ str_replace("-", ". ", str_replace(" ", ". ", $layout->user()->ecnetUser()->valid_time)) }}</p>
+						<p>{{ $layout->language('internet_is_active') }}</p>
+						<p>{{ $layout->language('expiration_date') }}: {{ str_replace("-", ". ", str_replace(" ", ". ", $layout->user()->ecnetUser()->valid_time)) }}</p>
 					</div>
 					@else
 					<div class="alert alert-danger">
-						<p>Az interneted nem aktív!</p>
+						<p>{{ $layout->language('internet_in_not_active') }}</p>
 					</div>
 					@endif
 					<div class="alert alert-info">
-						<strong>Megjegyzés:</strong> Az internet regisztrációról érdeklődj egy rendszergazdánál! 
+						<strong>{{ $layout->language('note') }}:</strong> {{ $layout->language('internet_registartion_description') }}
 					</div>
 					
 					@if($layout->user()->permitted('ecnet_set_valid_time'))
 					<div class="panel panel-default">
-						<div class="panel-heading">Admin panel - érvényesítés</div>
+						<div class="panel-heading">{{ $layout->language('admin_panel') }} - {{ $layout->language('validation') }}</div>
 						<div class="panel-body">
 							<form class="form-horizontal" role="form" method="POST" action="{{ url('/ecnet/activate') }}">
 								{!! csrf_field() !!}
 								
 								<div class="form-group{{ $errors->has('custom_valid_date') ? ' has-error' : '' }}">
-									<label class="col-md-4 control-label">Egyedi érvényességi dátum</label>
+									<label class="col-md-4 control-label">{{ $layout->language('custom_validation_date') }}</label>
 
 									<div class="col-md-6">
 										<input type="date" class="form-control" name="custom_valid_date" value="{{ old('custom_valid_date') }}">
@@ -43,7 +43,7 @@
 								</div>
 																
 								<div class="form-group{{ $errors->has('account') ? ' has-error' : '' }}">
-									<label  class="col-md-4 control-label" for="user_select">Felhasználó</label>
+									<label  class="col-md-4 control-label" for="user_select">{{ $layout->language('user') }}</label>
 									<div class="col-md-6">
 										<select class="form-control"  name="account"  id="user_select" required="true">
 											@foreach($users as $us)
@@ -62,20 +62,20 @@
 								<div class="form-group">
 									<div class="col-md-6 col-md-offset-4">
 										<button type="submit" class="btn btn-primary">
-											Érvényesít
+											{{ $layout->language('validate') }}
 										</button>
 									</div>
 								</div>
 							</form>
 							
 							<div class="alert alert-warning">
-								<p>Ha a dátum nincsen kitöltve, akkor az alapértelmezett dátum lesz az érvényesség vége!</p>
-								<p>Hajnali 5 óra állítódik be időként!</p>
-								<p>Az alapértelmezett dátum jelenleg: <strong>
+								<p>{{ $layout->language('validation_time_set_admin_description') }}</p>
+								<p>{{ $layout->language('default_time_set_note_description') }}</p>
+								<p>{{ $layout->language('default_time_now_description') }}: <strong>
 								@if($layout->user()->validationTime() != null)
 									{{ $layout->user()->validationTime()->valid_date }}
 								@else
-									Hiba! Nincsen beállított alapértelmezett idő!
+									{{ $layout->language('error_no_default_time_description') }}
 								@endif
 								</strong></p>
 							</div>
@@ -83,13 +83,13 @@
 					</div>
 					
 					<div class="panel panel-default">
-						<div class="panel-heading">Admin panel - alapértelmezett időpont</div>
+						<div class="panel-heading">{{ $layout->language('admin_panel') }} - {{ $layout->language('default_time') }}</div>
 						<div class="panel-body">
 							<form class="form-horizontal" role="form" method="POST" action="{{ url('/ecnet/setvalidtime') }}">
 								{!! csrf_field() !!}
 								
 								<div class="form-group{{ $errors->has('new_valid_date') ? ' has-error' : '' }}">
-									<label class="col-md-4 control-label">Érvényességi dátum</label>
+									<label class="col-md-4 control-label">{{ $layout->language('validation_date') }}</label>
 
 									<div class="col-md-6">
 										<input type="date" class="form-control" name="new_valid_date" value="{{ old('new_valid_date') }}">
@@ -105,34 +105,34 @@
 								<div class="form-group">
 									<div class="col-md-6 col-md-offset-4">
 										<button type="submit" class="btn btn-primary">
-											Módosítás
+											{{ $layout->language('modify') }}
 										</button>
 									</div>
 								</div>
 							</form>
 							<div class="alert alert-warning">
-								<p>Az alapértelmezett dátum jelenleg: <strong>
+								<p>{{ $layout->language('default_time_now_description') }}: <strong>
 								@if($layout->user()->validationTime() != null)
 									{{ $layout->user()->validationTime()->valid_date }}
 								@else
-									Hiba! Nincsen beállított alapértelmezett idő!
+									{{ $layout->language('error_no_default_time_description') }}
 								@endif
 								</strong></p>
-								<p>Hajnali 5 óra állítódik be időként!</p>
+								<p>{{ $layout->language('default_time_set_note_description') }}</p>
 							</div>
 						</div>
 					</div>
 					@endif
 					
 					<div class="panel panel-default">
-						<div class="panel-heading">MAC címek</div>
+						<div class="panel-heading">{{ $layout->language('mac_addresses') }}</div>
 						<div class="panel-body">
 							<form class="form-horizontal" role="form" method="POST" action="{{ url('/ecnet/setmacs') }}">
 								{!! csrf_field() !!}
 								
 								@foreach($layout->user()->macAddresses() as $address)
 								<div class="form-group{{ $errors->has('mac_address_'.$address->id) ? ' has-error' : '' }}">
-									<label class="col-md-4 control-label">MAC cím</label>
+									<label class="col-md-4 control-label">{{ $layout->language('mac_address') }}</label>
 
 									<div class="col-md-6">
 										<input type="text" class="form-control" name="mac_address_{{ $address->id }}" value="{{ old('mac_address_'.$address->id) != null ? old('mac_address_'.$address->id) : $address->mac_address }}">
@@ -148,7 +148,7 @@
 								
 								@for($i = 0; $i < $layout->user()->ecnetUser()->mac_slots - count($layout->user()->macAddresses()); $i++)
 								<div class="form-group{{ $errors->has('new_mac_address_'.$i) ? ' has-error' : '' }}">
-									<label class="col-md-4 control-label">MAC cím</label>
+									<label class="col-md-4 control-label">{{ $layout->language('mac_address') }}</label>
 
 									<div class="col-md-6">
 										<input type="text" class="form-control" name="new_mac_address_{{ $i }}" value="{{ old('new_mac_address_'.$i) }}">
@@ -165,7 +165,7 @@
 								<div class="form-group">
 									<div class="col-md-6 col-md-offset-4">
 										<button type="submit" class="btn btn-primary">
-											MAC címek beállítása
+											{{ $layout->language('set_mac_address') }}
 										</button>
 									</div>
 								</div>

@@ -5,15 +5,15 @@
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
             <div class="panel panel-default">
-                <div class="panel-heading">Értesítések</div>
+                <div class="panel-heading">{{ $layout->language('notifications') }}</div>
                 <div class="panel-body">
                     <ul class="notifications">	
 						@if($layout->user()->notifications($notificationId, 10) == null)
 							<li class="notification">
 								<div class="media">
 									<div class="media-body">
-										<strong class="notification-title">Rendszer: Semmi probléma</strong>
-										<p class="notification-desc">Nincsen megjeleníthető értesítés!</p>
+										<strong class="notification-title">{{ $layout->language('system_no_problem') }}</strong>
+										<p class="notification-desc">{{ $layout->language('no_notification_to_show') }}</p>
 
 										<div class="notification-meta">
 											<small class="timestamp"></small>
@@ -43,14 +43,14 @@
 					<nav class="col-md-10 col-md-offset-1">
 						<ul class="pager">
 							@if(0 < $notificationId)
-								<li class="previous"><a href="{{ url('notification/list/'.($notificationId - 10 >= 0 ? $notificationId - 10 : 0)) }}">Frissebb értesítések</a></li>
+								<li class="previous"><a href="{{ url('notification/list/'.($notificationId - 10 >= 0 ? $notificationId - 10 : 0)) }}">{{ $layout->language('newer_notifications') }}</a></li>
 							@else
-								<li class="previous disabled"><a href="#">Frissebb értesítések</a></li>
+								<li class="previous disabled"><a href="#">{{ $layout->language('newer_notifications') }}</a></li>
 							@endif
-							@if($notificationId+10 < $user->notificationCount())
-								<li class="next"><a href="{{ url('notification/list/'.($notificationId + 10)) }}">Régebbi értesítések</a></li>
+							@if($notificationId+10 < $layout->user()->notificationCount())
+								<li class="next"><a href="{{ url('notification/list/'.($notificationId + 10)) }}">{{ $layout->language('older_notifications') }}</a></li>
 							@else
-								<li class="next disabled"><a href="#">Régebbi értesítések</a></li>
+								<li class="next disabled"><a href="#">{{ $layout->language('older_notifications') }}</a></li>
 							@endif
 						</ul>
 					</nav>
