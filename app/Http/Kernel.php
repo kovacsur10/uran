@@ -49,5 +49,7 @@ class Kernel extends HttpKernel
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
+		'modules.rooms' => \App\Http\Middleware\Modules\RoomsMiddleware::class,
+		'modules.ecnet' => \App\Http\Middleware\Modules\EcnetMiddleware::class,
     ];
 }

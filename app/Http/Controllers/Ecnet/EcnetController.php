@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\Eir;
+namespace App\Http\Controllers\Ecnet;
 
 use App\Classes\LayoutData;
-use App\Classes\EirUser;
+use App\Classes\EcnetUser;
 use App\Classes\Notify;
 use Validator;
 use App\Http\Controllers\Controller;
@@ -13,12 +13,12 @@ use Carbon\Carbon;
 use DB;
 use Mail;
 
-class EirController extends Controller{	
+class EcnetController extends Controller{	
     public function showAccount(){
 		$layout = new LayoutData();
-		$layout->setUser(new EirUser(Session::get('user')->id));
+		$layout->setUser(new EcnetUser(Session::get('user')->id));
 		$users = $this->getUsers();
-		if($layout->user()->eirUser() == null){
+		if($layout->user()->ecnetUser() == null){
 			return view('errors.usernotfound', ["layout" => $layout]);
 		}else{
 			return view('ecnet.account', ["layout" => $layout,
@@ -28,23 +28,23 @@ class EirController extends Controller{
 	
 	public function showInternet(){
 		$layout = new LayoutData();
-		$layout->setUser(new EirUser(Session::get('user')->id));
+		$layout->setUser(new EcnetUser(Session::get('user')->id));
 		$now = Carbon::now();
 		$users = $this->getUsers();
-		if($layout->user()->eirUser() == null){
+		if($layout->user()->ecnetUser() == null){
 			return view('errors.usernotfound', ["layout" => $layout]);
 		}else{
 			return view('ecnet.ecnet', ["layout" => $layout,
-										"active" => $now->toDateTimeString() < $layout->user()->eirUser()->valid_time,
+										"active" => $now->toDateTimeString() < $layout->user()->ecnetUser()->valid_time,
 										"users" => $users]);
 		}
 	}
 	
 	public function showMACOrderForm(){
 		$layout = new LayoutData();
-		$layout->setUser(new EirUser(Session::get('user')->id));
-		$orders = DB::table('eir_mac_slot_orders')->join('users', 'users.id', '=', 'eir_mac_slot_orders.user_id')
-												  ->select('eir_mac_slot_orders.id', 'users.username', 'eir_mac_slot_orders.reason', 'eir_mac_slot_orders.order_time')
+		$layout->setUser(new EcnetUser(Session::get('user')->id));
+		$orders = DB::table('ecnet_mac_slot_orders')->join('users', 'users.id', '=', 'ecnet_mac_slot_orders.user_id')
+												  ->select('ecnet_mac_slot_orders.id', 'users.username', 'ecnet_mac_slot_orders.reason', 'ecnet_mac_slot_orders.order_time')
 												  ->get();
 		return view('ecnet.slotordering', ["layout" => $layout,
 										   "orders" => $orders]);
@@ -52,7 +52,7 @@ class EirController extends Controller{
 	
 	public function showUsers($count = 50, $first = 0){
 		$layout = new LayoutData();
-		$layout->setUser(new EirUser(Session::get('user')->id));
+		$layout->setUser(new EcnetUser(Session::get('user')->id));
 		if(Session::has('ecnet_username_filter') && Session::has('ecnet_name_filter')){
 			$user->filterUsers(Session::get('ecnet_username_filter'), Session::get('ecnet_name_filter'));
 		}
@@ -63,6 +63,11 @@ class EirController extends Controller{
 	
 <<<<<<< HEAD
 	public function showActiveUsers($type){
+<<<<<<< HEAD:app/Http/Controllers/Eir/EirController.php
+=======
+		$layout = new LayoutData();
+		$layout->setUser(new EcnetUser(Session::get('user')->id));
+>>>>>>> 215d55e... Module Middlewares were added.:app/Http/Controllers/Ecnet/EcnetController.php
 		if($type == "name" || $type == "username" || $type == "both"){
 			return view('ecnet.showactiveusers.'.$type, ["logged" => Session::has('user'),
 												  "user" => new EirUser(Session::get('user')->id)]);
@@ -108,14 +113,14 @@ class EirController extends Controller{
 	
 	public function addMoney(Request $request){
 		$layout = new LayoutData();
-		$layout->setUser(new EirUser(Session::get('user')->id));
+		$layout->setUser(new EcnetUser(Session::get('user')->id));
         $this->validate($request, [
 			'money' => 'required',
 			'reset' => 'required',
             'account' => 'required',
 		]);
 		if($layout->user()->permitted('ecnet_set_print_account')){
-			$money = DB::table('eir_user_data')->where('user_id', '=', $request->account)
+			$money = DB::table('ecnet_user_data')->where('user_id', '=', $request->account)
 											   ->select('money')
 											   ->first();
 			if($money == null){
@@ -129,7 +134,7 @@ class EirController extends Controller{
 			}else{
 				$money = $money->money + $request->money;
 			}
-			DB::table('eir_user_data')->where('user_id', '=', $request->account)
+			DB::table('ecnet_user_data')->where('user_id', '=', $request->account)
 									  ->update(['money' => $money]);
 			Notify::notify($layout->user(), $request->account, 'Egyenleg módosítva!', 'A nyomtatószámlád egyenlege megváltozott '.$oldmoney.' forintról '.$money.' forintra!', 'ecnet/account');
 			return view('success.success', ["layout" => $layout,
@@ -142,14 +147,14 @@ class EirController extends Controller{
 	
 	public function updateValidationTime(Request $request){
 		$layout = new LayoutData();
-		$layout->setUser(new EirUser(Session::get('user')->id));
+		$layout->setUser(new EcnetUser(Session::get('user')->id));
         $this->validate($request, [
 			'new_valid_date' => 'required',
 		]);
 		if($layout->user()->permitted('ecnet_set_valid_time')){
 			$new_time = $request->new_valid_date.' 05:00:00';
-			DB::table('eir_valid_date')->delete();
-			DB::table('eir_valid_date')->insert(['valid_date' => $new_time]);
+			DB::table('ecnet_valid_date')->delete();
+			DB::table('ecnet_valid_date')->insert(['valid_date' => $new_time]);
 
 			return view('success.success', ["layout" => $layout,
 											"message" => 'Sikeresen át lett állítva az alapértelmezett idő erre: '.$new_time,
@@ -161,7 +166,7 @@ class EirController extends Controller{
 	
 	public function activate(Request $request){
 		$layout = new LayoutData();
-		$layout->setUser(new EirUser(Session::get('user')->id));
+		$layout->setUser(new EcnetUser(Session::get('user')->id));
         $this->validate($request, [
 			'account' => 'required',
 		]);
@@ -176,7 +181,7 @@ class EirController extends Controller{
 			}else{
 				$new_time = $request->custom_valid_date.' 05:00:00';
 			}
-			DB::table('eir_user_data')->where('user_id', '=', $request->account)
+			DB::table('ecnet_user_data')->where('user_id', '=', $request->account)
 									  ->update(['valid_time' => $new_time]);
 			
 			Notify::notify($layout->user(), $request->account, 'Internethozzáférés módosítva!', 'Az internethozzáférésed lejárati ideje módosítva lett erre a dátumra: '.str_replace("-", ". ", str_replace(" ", ". ", $new_time)), 'ecnet/access');
@@ -190,7 +195,7 @@ class EirController extends Controller{
 	
 	public function setMACAddresses(Request $request){
 		$layout = new LayoutData();
-		$layout->setUser(new EirUser(Session::get('user')->id));
+		$layout->setUser(new EcnetUser(Session::get('user')->id));
 		$addresses = [];
 		$newAddresses = [];
 		$existingAddresses = [];
@@ -204,7 +209,7 @@ class EirController extends Controller{
 				array_push($addresses, $request->input('mac_address_'.$address->id));
 			}
 		}
-		for($i = 0; $i < $layout->user()->eirUser()->mac_slots - count($layout->user()->macAddresses()); $i++){
+		for($i = 0; $i < $layout->user()->ecnetUser()->mac_slots - count($layout->user()->macAddresses()); $i++){
 			if($request->input('new_mac_address_'.$i) != null){
 				$this->validate($request, [
 					'new_mac_address_'.$i => 'required|regex:/(^(?:[A-Fa-f0-9]{2}[\-:]){5}[A-Fa-f0-9]{2}$)/',
@@ -214,7 +219,7 @@ class EirController extends Controller{
 		}
 		//calculate existing and new addresses
 		foreach($addresses as $address){
-			if(DB::table('eir_mac_addresses')->where('mac_address', 'LIKE', $address)->first() == null){
+			if(DB::table('ecnet_mac_addresses')->where('mac_address', 'LIKE', $address)->first() == null){
 				array_push($newAddresses, $address);
 			}else{
 				array_push($existingAddresses, $address);
@@ -232,10 +237,10 @@ class EirController extends Controller{
 		
 		//commit the changes
 		foreach($deletableAddresses as $address){
-			DB::table('eir_mac_addresses')->where('mac_address', 'LIKE', $address)->delete();
+			DB::table('ecnet_mac_addresses')->where('mac_address', 'LIKE', $address)->delete();
 		}
 		foreach($newAddresses as $address){
-			DB::table('eir_mac_addresses')->insert(['user_id' => $layout->user()->user()->id, 'mac_address' => $address]);
+			DB::table('ecnet_mac_addresses')->insert(['user_id' => $layout->user()->user()->id, 'mac_address' => $address]);
 		}
 		
 		return view('success.success', ["layout" => $layout,
@@ -245,12 +250,12 @@ class EirController extends Controller{
 	
 	public function getSlot(Request $request){
 		$layout = new LayoutData();
-		$layout->setUser(new EirUser(Session::get('user')->id));
+		$layout->setUser(new EcnetUser(Session::get('user')->id));
 		$time = Carbon::now();
         $this->validate($request, [
 			'reason' => 'required',
 		]);
-		DB::table('eir_mac_slot_orders')->insert(['user_id' => Session::get('user')->id, 'reason' => $request->input('reason'), 'order_time' => $time->toDateTimeString()]);
+		DB::table('ecnet_mac_slot_orders')->insert(['user_id' => Session::get('user')->id, 'reason' => $request->input('reason'), 'order_time' => $time->toDateTimeString()]);
 		Notify::notifyAdmin($layout->user(), 'ecnet_slot_verify', 'MAC slot igénylés', 'MAC slot lett igényelve! Kérelem: '.$request->input('reason'), 'ecnet/order');
 		return view('success.success', ["layout" => $layout,
 										"message" => 'A MAC slot igénylésed le lett adva!',
@@ -259,14 +264,14 @@ class EirController extends Controller{
 	
 	public function allowOrDenyOrder(Request $request){
 		$layout = new LayoutData();
-		$layout->setUser(new EirUser(Session::get('user')->id));
+		$layout->setUser(new EcnetUser(Session::get('user')->id));
         $this->validate($request, [
 			'optradio' => 'required',
 			'slot' => 'required',
 		]);
 		if($user->permitted('ecnet_slot_verify')){
-			$target = DB::table('eir_user_data')->join('eir_mac_slot_orders', 'eir_mac_slot_orders.user_id', '=', 'eir_user_data.user_id')
-												->where('eir_mac_slot_orders.id', '=', $request->input('slot'))
+			$target = DB::table('ecnet_user_data')->join('ecnet_mac_slot_orders', 'ecnet_mac_slot_orders.user_id', '=', 'ecnet_user_data.user_id')
+												->where('ecnet_mac_slot_orders.id', '=', $request->input('slot'))
 												->first();
 			if($target == null){
 				return view('errors.error', ["layout" => $layout,
@@ -274,13 +279,13 @@ class EirController extends Controller{
 											 "url" => '/ecnet/order']);
 			}
 			if($request->input('optradio') == "allow"){
-				DB::table('eir_user_data')->where('user_id', '=', $target->user_id)
+				DB::table('ecnet_user_data')->where('user_id', '=', $target->user_id)
 										  ->update(['mac_slots' => $target->mac_slots+1]);
 				Notify::notify($user, $target->user_id, 'MAC slot igénylés', 'MAC slot igénylésed el lett fogadva! Kérelem: '.$target->reason, 'ecnet/access');
 			}else{
 				Notify::notify($user, $target->user_id, 'MAC slot igénylés', 'MAC slot igénylésed el lett utasítva! Kérelem: '.$target->reason, 'ecnet/order');
 			}
-			DB::table('eir_mac_slot_orders')->where('id', '=', $request->input('slot'))->delete();
+			DB::table('ecnet_mac_slot_orders')->where('id', '=', $request->input('slot'))->delete();
 			return view('success.success', ["layout" => $layout,
 											"message" => 'Sikeresen jóvá lett hagyva a slot igénylés!',
 											"url" => '/ecnet/order']);

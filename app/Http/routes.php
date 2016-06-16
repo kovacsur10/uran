@@ -12,6 +12,15 @@
 */
 
 Route::group(['middleware' => 'web'], function () {
+	// Admin routes
+	Route::get('admin/permissions', 'Admin\PermissionController@showPermissions')->middleware('auth.logged');
+	Route::post('admin/permissions', 'Admin\PermissionController@modifyPermissions')->middleware('auth.logged');
+	Route::post('admin/permissions/set', 'Admin\PermissionController@setPermissions')->middleware('auth.logged');
+	Route::post('admin/permissions/list', 'Admin\PermissionController@getUsersWithPermission')->middleware('auth.logged');
+	Route::get('admin/modules', 'Admin\ModuleController@show')->middleware('auth.logged');
+	Route::post('admin/modules/activate', 'Admin\ModuleController@activate')->middleware('auth.logged');
+	Route::post('admin/modules/deactivate', 'Admin\ModuleController@deactivate')->middleware('auth.logged');
+	
 	// Login and logout routes
 	Route::get('login', 'Auth\AuthController@showLoginForm')->middleware('auth.notlogged');
 	Route::post('login', 'Auth\AuthController@login')->middleware('auth.notlogged');
@@ -32,27 +41,27 @@ Route::group(['middleware' => 'web'], function () {
 	Route::get('data/show', 'User\UserController@showData')->middleware('auth.logged');
 	Route::get('data/{username}', 'User\UserController@showPublicData')->middleware('auth.logged');
 	
-	// Eir routes
-	Route::get('ecnet/account', 'Eir\EirController@showAccount')->middleware('auth.logged');
-	Route::get('ecnet/access', 'Eir\EirController@showInternet')->middleware('auth.logged');
-	Route::get('ecnet/order', 'Eir\EirController@showMACOrderForm')->middleware('auth.logged');
-	Route::get('ecnet/users', 'Eir\EirController@showUsers')->middleware('auth.logged');
-	Route::get('ecnet/users/resetfilter', 'Eir\EirController@resetFilterUsers')->middleware('auth.logged');
-	Route::get('ecnet/users/listactives/{type}', 'Eir\EirController@showActiveUsers')->middleware('auth.logged');
-	Route::get('ecnet/users/{count}', 'Eir\EirController@showUsers')->middleware('auth.logged');
-	Route::get('ecnet/users/{count}/{first}', 'Eir\EirController@showUsers')->middleware('auth.logged');
-	Route::post('ecnet/users', 'Eir\EirController@filterUsers')->middleware('auth.logged');
-	Route::post('ecnet/addmoney', 'Eir\EirController@addMoney')->middleware('auth.logged');
-	Route::post('ecnet/setvalidtime', 'Eir\EirController@updateValidationTime')->middleware('auth.logged');
-	Route::post('ecnet/activate', 'Eir\EirController@activate')->middleware('auth.logged');
-	Route::post('ecnet/setmacs', 'Eir\EirController@setMACAddresses')->middleware('auth.logged');
-	Route::post('ecnet/getslot', 'Eir\EirController@getSlot')->middleware('auth.logged');
-	Route::post('ecnet/allowordenyorder', 'Eir\EirController@allowOrDenyOrder')->middleware('auth.logged');
+	// ECNET routes
+	Route::get('ecnet/account', 'Ecnet\EcnetController@showAccount')->middleware('auth.logged')->middleware('modules.ecnet');
+	Route::get('ecnet/access', 'Ecnet\EcnetController@showInternet')->middleware('auth.logged')->middleware('modules.ecnet');
+	Route::get('ecnet/order', 'Ecnet\EcnetController@showMACOrderForm')->middleware('auth.logged')->middleware('modules.ecnet');
+	Route::get('ecnet/users', 'Ecnet\EcnetController@showUsers')->middleware('auth.logged')->middleware('modules.ecnet');
+	Route::get('ecnet/users/resetfilter', 'Ecnet\EcnetController@resetFilterUsers')->middleware('auth.logged')->middleware('modules.ecnet');
+	Route::get('ecnet/users/listactives/{type}', 'Ecnet\EcnetController@showActiveUsers')->middleware('auth.logged')->middleware('modules.ecnet');
+	Route::get('ecnet/users/{count}', 'Ecnet\EcnetController@showUsers')->middleware('auth.logged')->middleware('modules.ecnet');
+	Route::get('ecnet/users/{count}/{first}', 'Ecnet\EcnetController@showUsers')->middleware('auth.logged')->middleware('modules.ecnet');
+	Route::post('ecnet/users', 'Ecnet\EcnetController@filterUsers')->middleware('auth.logged')->middleware('modules.ecnet');
+	Route::post('ecnet/addmoney', 'Ecnet\EcnetController@addMoney')->middleware('auth.logged')->middleware('modules.ecnet');
+	Route::post('ecnet/setvalidtime', 'Ecnet\EcnetController@updateValidationTime')->middleware('auth.logged')->middleware('modules.ecnet');
+	Route::post('ecnet/activate', 'Ecnet\EcnetController@activate')->middleware('auth.logged')->middleware('modules.ecnet');
+	Route::post('ecnet/setmacs', 'Ecnet\EcnetController@setMACAddresses')->middleware('auth.logged')->middleware('modules.ecnet');
+	Route::post('ecnet/getslot', 'Ecnet\EcnetController@getSlot')->middleware('auth.logged')->middleware('modules.ecnet');
+	Route::post('ecnet/allowordenyorder', 'Ecnet\EcnetController@allowOrDenyOrder')->middleware('auth.logged')->middleware('modules.ecnet');
 	
 	// Rooms routes
-	Route::get('rooms/map/{level}', 'Rooms\RoomsController@showMap')->middleware('auth.logged');
-	Route::get('rooms/room/{id}', 'Rooms\RoomsController@listRoomMembers')->middleware('auth.logged');
-	Route::post('rooms/assign', 'Rooms\RoomsController@assignResidents')->middleware('auth.logged');
+	Route::get('rooms/map/{level}', 'Rooms\RoomsController@showMap')->middleware('auth.logged')->middleware('modules.rooms');
+	Route::get('rooms/room/{id}', 'Rooms\RoomsController@listRoomMembers')->middleware('auth.logged')->middleware('modules.rooms');
+	Route::post('rooms/assign', 'Rooms\RoomsController@assignResidents')->middleware('auth.logged')->middleware('modules.rooms');
 	
 	// Notification routes
 	Route::get('notification/list/{first}', 'Notification\NotificationController@listNotifications')->middleware('auth.logged');

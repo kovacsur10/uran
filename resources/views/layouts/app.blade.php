@@ -84,6 +84,21 @@
 								@endif
                             </ul>
                         </li>
+						@if($data->user()->permitted('permission_admin') || $data->user()->permitted('module_admin'))
+						<li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                ADMIN <span class="caret"></span>
+                            </a>
+							<ul class="dropdown-menu" role="menu">
+								@if($data->user()->permitted('permission_admin'))
+								<li><a href="{{ url('/admin/permissions') }}">Jogok kezelése</a></li>
+								@endif
+								@if($data->user()->permitted('module_admin'))
+								<li><a href="{{ url('/admin/modules') }}">Modulok kezelése</a></li>
+								@endif
+                            </ul>
+                        </li>
+						@endif
                     @endif
                 </ul>
 				

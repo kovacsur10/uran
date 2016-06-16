@@ -68,16 +68,32 @@ class User{
 		return $i < count($this->permissions);
 	}
 	
-	protected function getUserData($id){
+	public function permittedToUser($who, $what){
+		$permissions = $this->getPermissions($who);
+		$i = 0;
+		while($i < count($permissions) && $permissions[$i]->permission_name != $what){
+			$i++;
+		}
+		return $i < count($permissions);
+	}
+	
+	public function getUserData($id){
 		return DB::table('users')->where('id', '=', $id)
 								 ->first();
 	}
 	
+	public function getAvailablePermissions(){
+		$permissions = DB::table('permissions')
+			->get();
+		return $permissions == null ? [] : $permissions;
+	}
+	
 	protected function getPermissions($id){
-		return DB::table('permissions')->join('user_permissions', 'permissions.id', '=', 'user_permissions.permission_id')
-									   ->select('permission_name')
-									   ->where('user_permissions.user_id', '=', $id)
-									   ->get();
+		$permissions = DB::table('permissions')->join('user_permissions', 'permissions.id', '=', 'user_permissions.permission_id')
+			->select('permissions.id as id', 'permission_name', 'permissions.description as description')
+			->where('user_permissions.user_id', '=', $id)
+			->get();
+		return $permissions == null ? [] : $permissions;
 	}
 	
 	protected function getNotifications($id){

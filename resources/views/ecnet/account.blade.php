@@ -7,7 +7,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">Nyomtatószámla</div>
                 <div class="panel-body">
-					<div class="well well-sm">Rendelkezésre álló összeg: {{ $layout->user()->eirUser()->money }} HUF</div>
+					<div class="well well-sm">Rendelkezésre álló összeg: {{ $layout->user()->ecnetUser()->money }} HUF</div>
 					<div class="alert alert-info">
 						<strong>Megjegyzés:</strong> A számlára pénzt feltölteni egy rendszergazdánál tudsz.
 					</div>
