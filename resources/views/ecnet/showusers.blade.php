@@ -110,7 +110,7 @@
 								@else
 									<li class="previous disabled"><a href="#">Előző oldal</a></li>
 								@endif
-								@if($firstUser+$usersToShow < count($layout->user()->eirUsers()))
+								@if($firstUser+$usersToShow < count($layout->user()->ecnetUsers()))
 									<li class="next"><a href="{{ url('ecnet/users/'.$usersToShow.'/'.($firstUser+$usersToShow)) }}">Következő oldal</a></li>
 								@else
 									<li class="next disabled"><a href="#">Következő oldal</a></li>
@@ -118,26 +118,26 @@
 							</ul>
 						</nav>
 					
-						@if($layout->user()->eirUsers($firstUser, $usersToShow) != null)
-							@foreach($layout->user()->eirUsers($firstUser, $usersToShow) as $eirUser)
-							<div class="panel panel-default {{ $eirUser->valid_time > Carbon\Carbon::now()->toDateTimeString() ? 'panel-success' : 'panel-danger' }}">
-								<div class="panel-heading">{{ $eirUser->name }} - {{ $eirUser->username }} - #{{ $eirUser->id }}</div>
+						@if($layout->user()->ecnetUsers($firstUser, $usersToShow) != null)
+							@foreach($layout->user()->ecnetUsers($firstUser, $usersToShow) as $ecnetUser)
+							<div class="panel panel-default {{ $ecnetUser->valid_time > Carbon\Carbon::now()->toDateTimeString() ? 'panel-success' : 'panel-danger' }}">
+								<div class="panel-heading">{{ $ecnetUser->name }} - {{ $ecnetUser->username }} - #{{ $ecnetUser->id }}</div>
 								<div class="panel-body">
-									<p>Egyenleg: {{ $eirUser->money }} <i class="fa fa-btn fa-money"></i></p>
-									<p>Érvényességi idő: {{ $eirUser->valid_time }} <i class="fa fa-btn {{ $eirUser->valid_time > Carbon\Carbon::now()->toDateTimeString() ? 'fa-calendar-check-o' : 'fa-calendar-times-o' }}"></i></p>
-									<p>MAC slotok száma: {{ $eirUser->mac_slots }} darab
-									@if($layout->user()->hasMACSlotOrder($eirUser->id))
+									<p>Egyenleg: {{ $ecnetUser->money }} <i class="fa fa-btn fa-money"></i></p>
+									<p>Érvényességi idő: {{ $ecnetUser->valid_time }} <i class="fa fa-btn {{ $ecnetUser->valid_time > Carbon\Carbon::now()->toDateTimeString() ? 'fa-calendar-check-o' : 'fa-calendar-times-o' }}"></i></p>
+									<p>MAC slotok száma: {{ $ecnetUser->mac_slots }} darab
+									@if($layout->user()->hasMACSlotOrder($ecnetUser->id))
 										- <i style="color:gold;" class="fa fa-btn fa-flash"></i><a href="{{ url('ecnet/order') }}">SLOT kérelem</a> <i style="color:gold;" class="fa fa-btn fa-flash"></i>
 									@endif
-									@if(count($layout->user()->macAddresses($eirUser->id)) < $eirUser->mac_slots)
-										- <span style="color:red;">KEVESEBB SLOTOT HASZNÁL (diff: {{ $eirUser->mac_slots - count($layout->user()->macAddresses($eirUser->id)) }})</span>
+									@if(count($layout->user()->macAddresses($ecnetUser->id)) < $ecnetUser->mac_slots)
+										- <span style="color:red;">KEVESEBB SLOTOT HASZNÁL (diff: {{ $ecnetUser->mac_slots - count($layout->user()->macAddresses($ecnetUser->id)) }})</span>
 									@endif
-									@if($eirUser->mac_slots != 0)						
+									@if($ecnetUser->mac_slots != 0)						
 										<div class="dropdown">
 											<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Regisztrált MAC címek
 											<span class="caret"></span></button>
 											<ul class="dropdown-menu">
-											@foreach($layout->user()->macAddresses($eirUser->id) as $macAddress)
+											@foreach($layout->user()->macAddresses($ecnetUser->id) as $macAddress)
 												<li>{{ $macAddress->mac_address }}</li>
 											@endforeach
 											</ul>
@@ -156,7 +156,7 @@
 								@else
 									<li class="previous disabled"><a href="#">Előző oldal</a></li>
 								@endif
-								@if($firstUser+$usersToShow < count($layout->user()->eirUsers()))
+								@if($firstUser+$usersToShow < count($layout->user()->ecnetUsers()))
 									<li class="next"><a href="{{ url('ecnet/users/'.$usersToShow.'/'.($firstUser+$usersToShow)) }}">Következő oldal</a></li>
 								@else
 									<li class="next disabled"><a href="#">Következő oldal</a></li>

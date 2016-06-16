@@ -10,7 +10,7 @@
 					@if($active)
 					<div class="alert alert-success">
 						<p>Az interneted aktív!</p>
-						<p>Lejárati dátum: {{ str_replace("-", ". ", str_replace(" ", ". ", $layout->user()->eirUser()->valid_time)) }}</p>
+						<p>Lejárati dátum: {{ str_replace("-", ". ", str_replace(" ", ". ", $layout->user()->ecnetUser()->valid_time)) }}</p>
 					</div>
 					@else
 					<div class="alert alert-danger">
@@ -146,7 +146,7 @@
 								</div>
 								@endforeach
 								
-								@for($i = 0; $i < $layout->user()->eirUser()->mac_slots - count($layout->user()->macAddresses()); $i++)
+								@for($i = 0; $i < $layout->user()->ecnetUser()->mac_slots - count($layout->user()->macAddresses()); $i++)
 								<div class="form-group{{ $errors->has('new_mac_address_'.$i) ? ' has-error' : '' }}">
 									<label class="col-md-4 control-label">MAC cím</label>
 
