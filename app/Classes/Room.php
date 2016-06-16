@@ -16,12 +16,13 @@ class Room{
 	}
 	
 	public function getResidents($room_number){
-		return DB::table('rooms_rooms')
+		$ret = DB::table('rooms_rooms')
 			->join('rooms_room_assignments', 'rooms_room_assignments.roomid', '=', 'rooms_rooms.id')
 			->join('users', 'users.id', '=', 'rooms_room_assignments.userid')
 			->select('users.id as id', 'users.name as name')
 			->where('rooms_rooms.room_number', 'LIKE', $room_number)
 			->get();
+		return $ret == null ? [] : $ret;
 	}
 	
 	public function getFreePlaceCount($room_number){
@@ -44,6 +45,13 @@ class Room{
 			}
 		}
 		return $freePlaces;
+	}
+	
+	public function userHasResidence($userid){
+		$ret = DB::table('rooms_room_assignments')
+			->where('userid', '=', $userid)
+			->first();
+		return $ret == null ? false : true;
 	}
 	
 	protected function getRooms(){
