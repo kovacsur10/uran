@@ -141,7 +141,7 @@ class EcnetController extends Controller{
 			}
 			DB::table('ecnet_user_data')->where('user_id', '=', $request->account)
 									  ->update(['money' => $money]);
-			Notify::notify($layout->user(), $request->account, 'Egyenleg módosítva!', 'A nyomtatószámlád egyenlege megváltozott '.$oldmoney.' forintról '.$money.' forintra!', 'ecnet/account');
+			Notify::notify($layout->user(), $request->account, $layout->language('balance_was_modified'), layout->language('balance_was_modified_description').' '.$oldmoney.' '.$layout->language('from_forint').' '.$money.' '.$layout->language('to_forint').'!', 'ecnet/account');
 			return view('success.success', ["layout" => $layout,
 											"message" => $layout->language('success_set_money'),
 											"url" => '/ecnet/account']);
@@ -189,7 +189,7 @@ class EcnetController extends Controller{
 			DB::table('ecnet_user_data')->where('user_id', '=', $request->account)
 									  ->update(['valid_time' => $new_time]);
 			
-			Notify::notify($layout->user(), $request->account, 'Internethozzáférés módosítva!', 'Az internethozzáférésed lejárati ideje módosítva lett erre a dátumra: '.str_replace("-", ". ", str_replace(" ", ". ", $new_time)), 'ecnet/access');
+			Notify::notify($layout->user(), $request->account, $layout->language('internet_access_was_modified'), $layout->language('internet_access_was_modified_to_description').str_replace("-", ". ", str_replace(" ", ". ", $new_time)), 'ecnet/access');
 			return view('success.success', ["layout" => $layout,
 											"message" => $layout->language('success_at_setting_users_internet_access_time'),
 											"url" => '/ecnet/access']);
@@ -261,7 +261,7 @@ class EcnetController extends Controller{
 			'reason' => 'required',
 		]);
 		DB::table('ecnet_mac_slot_orders')->insert(['user_id' => Session::get('user')->id, 'reason' => $request->input('reason'), 'order_time' => $time->toDateTimeString()]);
-		Notify::notifyAdmin($layout->user(), 'ecnet_slot_verify', 'MAC slot igénylés', 'MAC slot lett igényelve! Kérelem: '.$request->input('reason'), 'ecnet/order');
+		Notify::notifyAdmin($layout->user(), 'ecnet_slot_verify', $layout->language('mac_slot_ordering'), $layout->language('mac_slot_was_ordered_description').$request->input('reason'), 'ecnet/order');
 		return view('success.success', ["layout" => $layout,
 										"message" => $layout->language('success_at_sending_mac_slot_order'),
 										"url" => '/ecnet/order']);
@@ -286,9 +286,9 @@ class EcnetController extends Controller{
 			if($request->input('optradio') == "allow"){
 				DB::table('ecnet_user_data')->where('user_id', '=', $target->user_id)
 										  ->update(['mac_slots' => $target->mac_slots+1]);
-				Notify::notify($user, $target->user_id, 'MAC slot igénylés', 'MAC slot igénylésed el lett fogadva! Kérelem: '.$target->reason, 'ecnet/access');
+				Notify::notify($user, $target->user_id, $layout->language('mac_slot_ordering'), $layout->language('mac_slot_order_was_accepted_description').$target->reason, 'ecnet/access');
 			}else{
-				Notify::notify($user, $target->user_id, 'MAC slot igénylés', 'MAC slot igénylésed el lett utasítva! Kérelem: '.$target->reason, 'ecnet/order');
+				Notify::notify($user, $target->user_id, $layout->language('mac_slot_ordering'), $layout->language('mac_slot_order_was_denied_description').$target->reason, 'ecnet/order');
 			}
 			DB::table('ecnet_mac_slot_orders')->where('id', '=', $request->input('slot'))->delete();
 			return view('success.success', ["layout" => $layout,

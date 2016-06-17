@@ -22,7 +22,7 @@ class PasswordController extends Controller{
 		$this->validate($request, [
             'username' => 'required',
 		]);
-		
+		$layout = new LayoutData();
 		$user = DB::table('users')->where('username', 'LIKE', $request->input('username'))
 								  ->first();
 		if($user == null){ 
@@ -43,10 +43,8 @@ class PasswordController extends Controller{
 		}
 		Mail::send('mails.resetpwd'.$lang, ['name' => $user->name, 'link' => 'http://host59.collegist.eotvos.elte.hu/password/reset/'.$user->username.'/'.$string], function ($m) use ($user) {
             $m->to($user->email, $user->name);
-			$m->subject('Elfelejtett jelszó');
+			$m->subject($layout->language('forgotten_password'));
         });
-		
-		$layout = new LayoutData();
 		return view('success.success', ["layout" => $layout,
 										"message" => $layout->language('success_send_email_about_what_to_do'),
 										"url" => '/']);

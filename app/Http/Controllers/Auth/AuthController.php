@@ -29,10 +29,16 @@ class AuthController extends Controller{
 				Session::put('user', $user);
 				return view('home', ["layout" => new LayoutData()]);
 			}else{ //password doesn't match
-				return view('auth.login.error', ["layout" => new LayoutData()]);
+				$layout = new LayoutData();
+				return view('errors.error', ["layout" => $layout,
+											 "message" => $layout->language('unsuccessful_login'),
+											 "url" => '/login']);
 			}
 		}else{ //username not found
-			return view('auth.login.error', ["layout" => new LayoutData()]);
+			$layout = new LayoutData();
+			return view('errors.error', ["layout" => $layout,
+										 "message" => $layout->language('unsuccessful_login'),
+										 "url" => '/login']);
 		}
 	}
 	
@@ -53,6 +59,7 @@ class AuthController extends Controller{
     }
 	
 	public function register(Request $request){
+		$layout = new LayoutData();
 		$regTime = Carbon::now();
         $string = sha1($request->input('username') . $regTime->toDateTimeString() . $request->input('email'));
         $this->validate($request, [
@@ -92,13 +99,15 @@ class AuthController extends Controller{
 		}
 		Mail::send('mails.verification_'.$lang, ['name' => $request->input('name'), 'link' => 'http://host59.collegist.eotvos.elte.hu/register/'.$string], function ($m) use ($request) {
             $m->to($request->input('email'), $request->input('name'));
-			$m->subject('Regisztráció megerősítése');
+			$m->subject($layout->language('confirm_registration'));
         });
-		
-		return view('auth.register.ok', ["layout" => new LayoutData()]);
+		return view('success.success', ["layout" => $layout,
+										"message" => $layout->language('success_at_sending_registration_verification_email'),
+										"url" => '/register']);
     }
 	
 	public function vefify($code){
+		$layout = new LayoutData();
 		$user = DB::table('registrations')->where('code', 'LIKE', $code)->get();
 		if($user != null){
 			$regTime = Carbon::now();
@@ -107,9 +116,13 @@ class AuthController extends Controller{
 				->update(['verified' => 1,
 						  'verification_date' => $regTime]);
 			
-			return view('auth.verification.ok', ["layout" => new LayoutData()]);
+			return view('success.success', ["layout" => $layout,
+										"message" => $layout->language('success_at_verifying_the_registration'),
+										"url" => '/register']);
 		}else{
-			return view('auth.verification.error', ["layout" => new LayoutData()]);
+			return view('errors.error', ["layout" => $layout,
+										 "message" => $layout->language('error_at_verifying_the_registration'),
+										 "url" => '/register']);
 		}
 	}
 }
