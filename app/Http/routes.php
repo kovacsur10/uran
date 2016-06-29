@@ -30,9 +30,12 @@ Route::group(['middleware' => 'web'], function () {
 	Route::get('logout', 'Auth\AuthController@logout')->middleware('auth.logged');
 
 	// Registration Routes...
-	Route::get('register', 'Auth\AuthController@showRegistrationForm')->middleware('auth.notlogged');
-	Route::get('register/{code}', 'Auth\AuthController@vefify')->middleware('auth.notlogged');
-	Route::put('register', 'Auth\AuthController@register')->middleware('auth.notlogged');
+	Route::get('register', 'Auth\RegisterController@showRegistrationChoserForm')->middleware('auth.notlogged');
+	Route::get('register/collegist', 'Auth\RegisterController@showCollegistRegistrationForm')->middleware('auth.notlogged');
+	Route::get('register/guest', 'Auth\RegisterController@showGuestRegistrationForm')->middleware('auth.notlogged');
+	Route::get('register/{code}', 'Auth\RegisterController@vefify')->middleware('auth.notlogged');
+	Route::put('register/collegist', 'Auth\RegisterController@registerCollegist')->middleware('auth.notlogged');
+	Route::put('register/guest', 'Auth\RegisterController@registerGuest')->middleware('auth.notlogged');
 
 	// Password Reset Routes...
 	Route::get('password/reset', 'Auth\PasswordController@showResetForm')->middleware('auth.notlogged');

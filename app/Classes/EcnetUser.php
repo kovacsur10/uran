@@ -67,8 +67,9 @@ class EcnetUser extends User{
 	}
 	
 	protected function getEcnetUserData($id){
-		return DB::table('ecnet_user_data')->where('user_id', '=', $id)
-										 ->first();
+		$ret = DB::table('ecnet_user_data')->where('user_id', '=', $id)
+			->first();
+		return $ret == null ? [] : $ret;
 	}
 	
 	protected function getEcnetUsers(){

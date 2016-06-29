@@ -24,13 +24,14 @@ class UserController extends Controller{
 						->where('username', '=', $username)
 						->select('id')
 						->first();
-		if($targetId == null)
+		if($targetId == null){
 			$layout = new LayoutData();
 			return view('errors.error', ["layout" => $layout,
 										 "message" => $layout->language('error_at_finding_the_user'),
 										 "url" => '/home']);
-		else
+		}else{
 			return view('user.showpublicdata', ["layout" => new LayoutData(),
 												"target" => new User($targetId->id)]);
+		}
 	}
 }

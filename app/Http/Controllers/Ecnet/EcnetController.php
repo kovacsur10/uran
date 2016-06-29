@@ -141,7 +141,7 @@ class EcnetController extends Controller{
 			}
 			DB::table('ecnet_user_data')->where('user_id', '=', $request->account)
 									  ->update(['money' => $money]);
-			Notify::notify($layout->user(), $request->account, $layout->language('balance_was_modified'), layout->language('balance_was_modified_description').' '.$oldmoney.' '.$layout->language('from_forint').' '.$money.' '.$layout->language('to_forint').'!', 'ecnet/account');
+			Notify::notify($layout->user(), $request->account, $layout->language('balance_was_modified'), $layout->language('balance_was_modified_description').' '.$oldmoney.' '.$layout->language('from_forint').' '.$money.' '.$layout->language('to_forint').'!', 'ecnet/account');
 			return view('success.success', ["layout" => $layout,
 											"message" => $layout->language('success_set_money'),
 											"url" => '/ecnet/account']);

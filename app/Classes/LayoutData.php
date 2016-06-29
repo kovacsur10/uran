@@ -17,6 +17,7 @@ class LayoutData{
 	protected $modules;
 	protected $permissions;
 	protected $language;
+	protected $base;
 	
 	public function __construct(){
 		$this->logged = Session::has('user');
@@ -24,11 +25,16 @@ class LayoutData{
 		$this->room = new Room();
 		$this->modules = new Modules();
 		$this->permissions = new Permissions();
+		$this->base = new BaseData();
 		$this->language = Session::has('lang') ? Session::get('lang') : "hu_HU";
 	}
 	
 	public function setUser($user){
 		$this->user = $user;
+	}
+	
+	public function base(){
+		return $this->base;
 	}
 	
 	public function user(){
@@ -49,6 +55,10 @@ class LayoutData{
 	
 	public function permissions(){
 		return $this->permissions;
+	}
+	
+	public function lang(){
+		return Session::has('lang') ? Session::get('lang') : "hu_HU";
 	}
 	
 	public function language($key){
