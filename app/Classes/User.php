@@ -26,6 +26,7 @@ class User{
 	public function users(){
 		return DB::table('users')
 			->select('id', 'username', 'name')
+			->where('registered', '=', 1)
 			->orderBy('name', 'asc')
 			->get();
 	}
@@ -72,6 +73,7 @@ class User{
 	
 	public function getUserData($userId){
 		return DB::table('users')->where('id', '=', $userId)
+								 ->where('registered', '=', 1)
 								 ->first();
 	}
 	
