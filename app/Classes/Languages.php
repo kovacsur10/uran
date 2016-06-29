@@ -380,7 +380,7 @@ class Languages{
 			'neptun' => 'Neptun identifier',
 			'place_of_birth' => 'Place of birth',
 			'date_of_birth' => 'Date of birth (yyyy.mm.dd.)',
-			'name_of_mother' => 'Mother\'s name',
+			'name_of_mother' => 'Mother\'s maiden name',
 			'year_of_leaving_exam' => 'Year of the leaving exam',
 			'high_school' => 'Name of secondary school',
 			'collegist_username_advice_description' => 'Neptun identifier is recommended as a username.',
