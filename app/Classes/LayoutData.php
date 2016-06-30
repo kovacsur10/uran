@@ -8,6 +8,7 @@ use App\Classes\Room;
 use App\Classes\Modules;
 use App\Classes\Permissions;
 use App\Classes\Languages;
+use App\Classes\Registrations;
 use DB;
 
 class LayoutData{
@@ -18,6 +19,7 @@ class LayoutData{
 	protected $permissions;
 	protected $language;
 	protected $base;
+	protected $registrations;
 	
 	public function __construct(){
 		$this->logged = Session::has('user');
@@ -27,6 +29,7 @@ class LayoutData{
 		$this->permissions = new Permissions();
 		$this->base = new BaseData();
 		$this->language = Session::has('lang') ? Session::get('lang') : "hu_HU";
+		$this->registrations = new Registrations();
 	}
 	
 	public function setUser($user){
@@ -55,6 +58,10 @@ class LayoutData{
 	
 	public function permissions(){
 		return $this->permissions;
+	}
+	
+	public function registrations(){
+		return $this->registrations;
 	}
 	
 	public function lang(){

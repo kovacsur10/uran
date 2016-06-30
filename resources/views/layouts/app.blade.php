@@ -87,6 +87,9 @@
 								@if($data->user()->permitted('module_admin'))
 								<li><a href="{{ url('/admin/modules') }}">{{ $layout->language('modules_handling') }}</a></li>
 								@endif
+								@if($data->user()->permitted('accept_user_registration'))
+								<li><a href="{{ url('/admin/registration/show') }}">{{ $layout->language('accept_user_registration') }}</a></li>
+								@endif
                             </ul>
                         </li>
 						@endif
