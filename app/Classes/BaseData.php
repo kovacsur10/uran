@@ -50,6 +50,7 @@ class BaseData{
 	
 	protected function getAdmissionYears(){
 		$ret = DB::table('admission_years')
+			->orderBy('year', 'asc')
 			->get();
 		return $ret == null ? [] : $ret;
 	}

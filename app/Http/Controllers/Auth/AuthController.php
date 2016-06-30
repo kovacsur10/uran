@@ -18,6 +18,7 @@ class AuthController extends Controller{
     }
 	
 	public function login(Request $request){
+		$request->merge(array('username' => strtolower($request->input('username'))));
 		$this->validateLogin($request);
 		$user = DB::table('users')->where('username', 'LIKE', $request->input('username'))
 			->where('registered', '=', 1)

@@ -29,6 +29,7 @@ class RegisterController extends Controller{
 	public function registerGuest(Request $request){
 		$layout = new LayoutData();
 		$regTime = Carbon::now();
+		$request->merge(array('username' => strtolower($request->input('username'))));
         $string = sha1($request->input('username') . $regTime->toDateTimeString() . $request->input('email'));
         $this->validate($request, [
             'username' => 'required|min:6|max:32|unique:users|regex:/(^[A-Za-z0-9_\-]+$)/',
@@ -43,6 +44,7 @@ class RegisterController extends Controller{
 			'reason' => 'required',
 			'phone' => 'required',
 		]);
+		
 		DB::beginTransaction(); //DATABASE TRANSACTION STARTS HERE
 		DB::table('users')->insert([
 			'username' => $request->input('username'),
@@ -101,6 +103,7 @@ class RegisterController extends Controller{
 	public function registerCollegist(Request $request){
 		$layout = new LayoutData();
 		$regTime = Carbon::now();
+		$request->merge(array('username' => strtolower($request->input('username'))));
         $string = sha1($request->input('username') . $regTime->toDateTimeString() . $request->input('email'));
         $this->validate($request, [
             'username' => 'required|min:6|max:32|unique:users|regex:/(^[A-Za-z0-9_\-]+$)/',
