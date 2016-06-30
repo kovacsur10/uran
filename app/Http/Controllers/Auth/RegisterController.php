@@ -122,7 +122,7 @@ class RegisterController extends Controller{
 			'faculty' => 'required',
 			'workshop' => 'required',
 		]);
-		$this->validate($request, array('date_of_birth' => array('required', 'regex:/(^(?:19[0-9]{2}|2[0-9]{3}).(?:1[012]|0[1-9]).(?:0[1-9]|[12][0-9]|3[01]).$)/')));
+		$this->validate($request, array('date_of_birth' => array('required', 'regex:/(^(?:19[0-9]{2}|2[0-9]{3})\.(?:1[012]|0[1-9])\.(?:0[1-9]|[12][0-9]|3[01])\.$)/')));
 		DB::beginTransaction(); //DATABASE TRANSACTION STARTS HERE
 		DB::table('users')->insert([
 			'username' => $request->input('username'),

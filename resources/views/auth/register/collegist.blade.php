@@ -102,7 +102,7 @@
 								</div>
 								
 								<div class="form-group{{ $errors->has('date_of_birth') ? ' has-error' : '' }}">
-									<label class="col-md-4 control-label">{{ $layout->language('date_of_birth') }}</label>
+									<label class="col-md-4 control-label">{{ $layout->language('date_of_birth_with_format') }}</label>
 
 									<div class="col-md-6">
 										<input type="date" class="form-control" name="date_of_birth" value="{{ old('date_of_birth') }}">

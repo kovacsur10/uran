@@ -8,6 +8,7 @@ class BaseData{
 	protected $faculties;
 	protected $workshops;
 	protected $admissionYears;
+	protected $countries;
 	
 	public function __construct(){
 		$this->faculties = $this->getFaculties();
@@ -25,6 +26,14 @@ class BaseData{
 	
 	public function admissionYears(){
 		return $this->admissionYears;
+	}
+	
+	public function countries(){
+		if($this->countries == null){
+			$this->countries = DB::table('country')
+				->get();
+		}
+		return $this->countries == null ? [] : $this->countries;
 	}
 	
 	protected function getFaculties(){
