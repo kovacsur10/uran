@@ -179,7 +179,10 @@
 									</div>
 								</li>
 								<li class="list-group-item">
-									<button class="btn btn-primary" type="submit" name="register_user">{{ $layout->language('accept_user_registration') }}</button>
+									<div class="row">
+										<div class="col-md-6"><a href="{{ url('/admin/registration/reject/'.$userData->id) }}" class="btn btn-danger" role="button">{{ $layout->language('reject_user_registration') }}</a></div>
+										<div class="col-md-6"><button class="btn btn-primary" type="submit" name="register_user">{{ $layout->language('accept_user_registration') }}</button></div>
+									</div>
 								</li>
 							</ul>
 							</form>

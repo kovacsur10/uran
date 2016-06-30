@@ -33,6 +33,28 @@ class RegistrationController extends Controller{
 		}
     }
 	
+	public function reject($id){
+		$layout = new LayoutData();
+		if($layout->user()->permitted('accept_user_registration')){
+			try{
+				DB::table('users')
+					->where('id', '=', $id)
+					->where('registered', '=', 0)
+					->where('id', '!=', 0)
+					->delete();
+			}catch(\Illuminate\Database\QueryException $e){
+				return view('errors.error', ["layout" => $layout,
+											 "message" => $layout->language('reject_user_registration_failure'),
+											 "url" => '/admin/registration/show']);
+			}	
+			return view('success.success', ["layout" => $layout,
+											"message" => $layout->language('reject_user_registration_success'),
+											"url" => '/admin/registration/show']);
+		}else{
+			return view('errors.authentication', ["layout" => $layout]);
+		}
+    }
+	
 	public function accept(Request $request){
 		$layout = new LayoutData();
 		if($layout->user()->permitted('accept_user_registration')){
@@ -101,7 +123,7 @@ class RegistrationController extends Controller{
 							'workshop' => $request->input('workshop'),
 						]);
 				}
-			}catch(\Exception $e){
+			}catch(\Illuminate\Database\QueryException $e){
 				return view('errors.error', ["layout" => $layout,
 											 "message" => $layout->language('accept_user_registration_failure'),
 											 "url" => '/admin/registration/show']);

@@ -23,6 +23,7 @@ Route::group(['middleware' => 'web'], function () {
 	Route::get('admin/modules', 'Admin\ModuleController@show')->middleware('auth.logged');
 	Route::post('admin/modules/activate', 'Admin\ModuleController@activate')->middleware('auth.logged');
 	Route::post('admin/modules/deactivate', 'Admin\ModuleController@deactivate')->middleware('auth.logged');
+	Route::get('admin/registration/reject/{id}', 'Admin\RegistrationController@reject')->middleware('auth.logged');
 	Route::get('admin/registration/show', 'Admin\RegistrationController@showList')->middleware('auth.logged');
 	Route::get('admin/registration/show/{id}', 'Admin\RegistrationController@show')->middleware('auth.logged');
 	Route::post('admin/registration/accept', 'Admin\RegistrationController@accept')->middleware('auth.logged');

@@ -206,6 +206,9 @@ class Languages{
 			'accept_user_registration_success' => 'A regisztrációs kérelem sikeresen el lett fogadva!',
 			'accept_user_registration_failure' => 'A regisztrációs kérelem elfogadásakor hiba történt!',
 			'registration_accepted' => 'Sikeres regisztráció',
+			'reject_user_registration' => 'Regisztráció elutasítása',
+			'reject_user_registration_success' => 'Sikeresen elutasítottad a regisztrációs kérelmet!',
+			'reject_user_registration_failure' => 'A regisztrációs kérelem elutasítása sikertelen!',
 			
 			'' => '',
 		];
@@ -412,6 +415,9 @@ class Languages{
 			'accept_user_registration_success' => 'The registration order was successfully accepted!',
 			'accept_user_registration_failure' => 'An error occured during the acceptance of the registration order!',
 			'registration_accepted' => 'Registration was accepted',
+			'reject_user_registration' => 'Reject registration',
+			'reject_user_registration_success' => 'The registration order was successfully rejected!',
+			'reject_user_registration_failure' => 'An error occured during the rejection of the registration order!',
 		];
 	}
 	
