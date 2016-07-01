@@ -34,7 +34,7 @@ class RegisterController extends Controller{
         $this->validate($request, [
             'username' => 'required|min:6|max:32|unique:users|regex:/(^[A-Za-z0-9_\-]+$)/',
             'email' => 'required|email|max:255|unique:users|unique:users',
-            'password' => 'required|min:8|max:64|confirmed||regex:/(^[A-Za-z0-9\-_\/]+$)/',
+            'password' => 'required|min:8|max:64|confirmed||regex:/(^[A-Za-z0-9\-_\/\.\?\:]+$)/',
             'name' => 'required',
 			'country' => 'required',
 			'shire' => 'required',
@@ -43,6 +43,7 @@ class RegisterController extends Controller{
 			'city' => 'required',
 			'reason' => 'required',
 			'phone' => 'required',
+			'accept' => 'required',
 		]);
 		
 		DB::beginTransaction(); //DATABASE TRANSACTION STARTS HERE
@@ -108,7 +109,7 @@ class RegisterController extends Controller{
         $this->validate($request, [
             'username' => 'required|min:6|max:32|unique:users|regex:/(^[A-Za-z0-9_\-]+$)/',
             'email' => 'required|email|max:255|unique:users|unique:users',
-            'password' => 'required|min:8|max:64|confirmed||regex:/(^[A-Za-z0-9\-_\/]+$)/',
+            'password' => 'required|min:8|max:64|confirmed||regex:/(^[A-Za-z0-9\-_\/\.\?\:]+$)/',
             'name' => 'required',
 			'country' => 'required',
 			'shire' => 'required',
@@ -124,8 +125,9 @@ class RegisterController extends Controller{
 			'from_year' => 'required',
 			'faculty' => 'required',
 			'workshop' => 'required',
+			'accept' => 'required',
 		]);
-		$this->validate($request, array('date_of_birth' => array('required', 'regex:/(^(?:19[0-9]{2}|2[0-9]{3})\.(?:1[012]|0[1-9])\.(?:0[1-9]|[12][0-9]|3[01])\.$)/')));
+		$this->validate($request, array('date_of_birth' => array('required', 'regex:/(^(?:19[0-9]{2}|2[0-9]{3})\.(?:1[012]|0[1-9])\.(?:0[1-9]|[12][0-9]|3[01])\.?$)/')));
 		DB::beginTransaction(); //DATABASE TRANSACTION STARTS HERE
 		DB::table('users')->insert([
 			'username' => $request->input('username'),
