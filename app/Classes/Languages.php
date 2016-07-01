@@ -214,7 +214,9 @@ class Languages{
 			'register_email_advice_description' => 'Kérjük, létező e-mail címet adjon meg! Ezen keresztül fog a Collegium kommunikálni Önnel!',
 			'register_username_can_contain_description' => 'Felhasználói neved legalább 6, de nem több, mint 32 karaktert tartalmazhat. A következő karakterek engedélyezettek: az angol ábécé betűi, számok, illetve a következő speciális karakterek (- _).',
 			'register_reason_advice_description' => 'Kérjük minél kifejezőbb regisztrációs indokot adjon.',
-			'accept_rules_with_submit_description' => 'A Regisztrálok gomb megnyomásával a szabályzat tartalmát elfogadom.',	
+			'accept_rules_with_submit_description' => 'A Regisztrálok gomb megnyomásával a szabályzat tartalmát elfogadom.',
+			'new_user_registered' => 'Új regisztráció',
+			'new_user_registered_description' => 'Kérem bírálja el a regisztrációs kérelmet!',
 		//countries
 			'HUN' => 'Magyarország',
 			'AFG' => 'Afganisztán',
@@ -680,6 +682,8 @@ class Languages{
 			'register_username_can_contain_description' => 'The username must be between 6 and 32 characters. It can contain the following characters: english letters, numbers and these special characters (- _).',
 			'register_reason_advice_description' => 'Please give us a clear reason.',
 			'accept_rules_with_submit_description' => 'I accept the terms and conditions.',
+			'new_user_registered' => 'New registration',
+			'new_user_registered_description' => 'Please accept or reject the registration order!',
 		//countries
 			'HUN' => 'Hungary',
 			'AFG' => 'Afghanistan',

@@ -83,4 +83,37 @@ class Notify{
 		}
 	}
 	
+	public static function notifyAdminFromServer($adminPermission, $subject, $message, $route){
+		if($adminPermission != null && $subject != null && $message != null){
+			$admins = DB::table('users')
+						->join('user_permissions', 'user_permissions.user_id', '=', 'users.id')
+						->join('permissions', 'permissions.id', '=', 'user_permissions.permission_id')
+						->where('permissions.permission_name', 'LIKE', $adminPermission)
+						->select('users.id as id')
+						->get();
+			if($admins != null){
+				foreach($admins as $admin){
+					if($route == null){
+						DB::table('notifications')
+							->insert(['user_id' => $admin->id,
+									  'subject' => $subject,
+									  'message' => $message,
+									  'from' => 0,
+									  'time' => Carbon::now()->toDateTimeString(),
+									  'admin' => 'true']);
+					}else{
+						DB::table('notifications')
+							->insert(['user_id' => $admin->id,
+									  'subject' => $subject,
+									  'message' => $message,
+									  'from' => 0,
+									  'route' => $route,
+									  'time' => Carbon::now()->toDateTimeString(),
+									  'admin' => 'true']);
+					}
+				}
+			}
+		}
+	}
+	
 }
