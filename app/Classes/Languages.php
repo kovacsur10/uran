@@ -49,6 +49,7 @@ class Languages{
 			'users_list' => 'Felhasználók listája',
 			'identifier' => 'Azonosító',
 			'user_data' => 'Személyes adatok',
+			'administration' => 'Ügyintézés',
 		//permissions
 			'assign_permissions' => 'Jogok hozzárendelése',
 			'error_at_setting_the_permissions' => 'Hiba a jogosultságok beállításakor!',
@@ -467,6 +468,8 @@ class Languages{
 			'YEM' => 'Yemen',
 			'ZMB' => 'Zambia',
 			'ZWE' => 'Zimbabwe',
+		//tasks
+			'task_manager' => 'Feladat központ',
 		
 			'' => '',
 		];
@@ -515,6 +518,7 @@ class Languages{
 			'users_list' => 'Users list',
 			'identifier' => 'Identifier',
 			'user_data' => 'Personal data',
+			'administration' => 'Ügyintézés',
 		//permissions
 			'assign_permissions' => 'Assign permissions',
 			'error_at_setting_the_permissions' => 'Error at setting the permissions!',
@@ -934,6 +938,9 @@ class Languages{
 			'YEM' => 'Yemen',
 			'ZMB' => 'Zambia',
 			'ZWE' => 'Zimbabwe',
+		//tasks
+			'task_manager' => 'Task manager',
+			'administration' => 'Administration',
 		];
 	}
 	

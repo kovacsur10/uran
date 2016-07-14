@@ -48,5 +48,6 @@ class Kernel extends HttpKernel
 		'auth.notlogged' => \App\Http\Middleware\NonAuthenticatedMiddleware::class,
 		'modules.rooms' => \App\Http\Middleware\Modules\RoomsMiddleware::class,
 		'modules.ecnet' => \App\Http\Middleware\Modules\EcnetMiddleware::class,
+		'modules.tasks' => \App\Http\Middleware\Modules\TasksMiddleware::class,
     ];
 }
