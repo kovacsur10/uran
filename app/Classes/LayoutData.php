@@ -10,6 +10,7 @@ use App\Classes\Permissions;
 use App\Classes\Languages;
 use App\Classes\Registrations;
 use App\Classes\Tasks;
+use App\Classes\Errors;
 use DB;
 
 class LayoutData{
@@ -22,6 +23,7 @@ class LayoutData{
 	protected $base;
 	protected $registrations;
 	protected $tasks;
+	protected $errors;
 	
 	public function __construct(){
 		$this->logged = Session::has('user');
@@ -33,6 +35,11 @@ class LayoutData{
 		$this->language = Session::has('lang') ? Session::get('lang') : "hu_HU";
 		$this->registrations = new Registrations();
 		$this->tasks = new Tasks();
+		$this->errors = new Errors();
+	}
+	
+	public function errors(){
+		return $this->errors;
 	}
 	
 	public function setUser($user){
