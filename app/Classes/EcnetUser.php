@@ -3,6 +3,7 @@
 namespace App\Classes;
 
 use DB;
+use Carbon\Carbon;
 
 class EcnetUser extends User{
 	protected $ecnetUser;
@@ -30,6 +31,10 @@ class EcnetUser extends User{
 	
 	public function macAddresses(){
 		return $this->macAddresses;
+	}
+	
+	public function macAddressesOfUser($userId){
+		return $this->getMACAddresses($userId);
 	}
 	
 	public function hasMACSlotOrder($id){
@@ -66,6 +71,15 @@ class EcnetUser extends User{
 			return array_slice($this->ecnetUsers, $from, $count);
 	}
 	
+	public function addMACSlotOrder($userId, $reason){
+		DB::table('ecnet_mac_slot_orders')
+			->insert([
+				'user_id' => $userId,
+				'reason' => $reason,
+				'order_time' => Carbon::now()->toDateTimeString()
+			]);
+	}
+	
 	protected function getEcnetUserData($id){
 		$ret = DB::table('ecnet_user_data')->where('user_id', '=', $id)
 			->first();
@@ -84,9 +98,10 @@ class EcnetUser extends User{
 	}
 	
 	protected function getMACAddresses($id){
-		return DB::table('ecnet_mac_addresses')->where('user_id', '=', $id)
-											 ->select('id', 'mac_address')
-											 ->get();
+		$addresses = DB::table('ecnet_mac_addresses')->where('user_id', '=', $id)
+			->select('id', 'mac_address')
+			->get();
+		return $addresses === null ? [] : $addresses;
 	}
 	
 	protected function getFilteredEcnetUsers($username, $name){

@@ -17,12 +17,11 @@ class EcnetController extends Controller{
     public function showAccount(){
 		$layout = new LayoutData();
 		$layout->setUser(new EcnetUser(Session::get('user')->id));
-		$users = $this->getUsers();
 		if($layout->user()->ecnetUser() == null){
 			return view('errors.usernotfound', ["layout" => $layout]);
 		}else{
 			return view('ecnet.account', ["layout" => $layout,
-										  "users" => $users]);
+										  "users" => $layout->user()->users()]);
 		}
 	}
 	
@@ -30,13 +29,12 @@ class EcnetController extends Controller{
 		$layout = new LayoutData();
 		$layout->setUser(new EcnetUser(Session::get('user')->id));
 		$now = Carbon::now();
-		$users = $this->getUsers();
 		if($layout->user()->ecnetUser() == null){
 			return view('errors.usernotfound', ["layout" => $layout]);
 		}else{
 			return view('ecnet.ecnet', ["layout" => $layout,
 										"active" => $now->toDateTimeString() < $layout->user()->ecnetUser()->valid_time,
-										"users" => $users]);
+										"users" => $layout->user()->users()]);
 		}
 	}
 	
@@ -89,12 +87,15 @@ class EcnetController extends Controller{
 		return view('ecnet.showactiveusers', ["layout" => $layout]);
 >>>>>>> d8c9872... LayoutData data handling was added to the project.
 	}
+<<<<<<< HEAD
 	
 	public function getUsers(){
 		return DB::table('users')->select('id', 'username', 'name')
 								 ->orderBy('name', 'asc')
 								 ->get();
 	}
+=======
+>>>>>>> 65fec04... Task manager is nearly complete.
 	
 	public function filterUsers(Request $request){
 		if($request->input('username') == null){
@@ -256,11 +257,10 @@ class EcnetController extends Controller{
 	public function getSlot(Request $request){
 		$layout = new LayoutData();
 		$layout->setUser(new EcnetUser(Session::get('user')->id));
-		$time = Carbon::now();
         $this->validate($request, [
 			'reason' => 'required',
 		]);
-		DB::table('ecnet_mac_slot_orders')->insert(['user_id' => Session::get('user')->id, 'reason' => $request->input('reason'), 'order_time' => $time->toDateTimeString()]);
+		addMACSlotOrder($layout->user()->user()->id, $request->input('reason'));
 		Notify::notifyAdmin($layout->user(), 'ecnet_slot_verify', $layout->language('mac_slot_ordering'), $layout->language('mac_slot_was_ordered_description').$request->input('reason'), 'ecnet/order');
 		return view('success.success', ["layout" => $layout,
 										"message" => $layout->language('success_at_sending_mac_slot_order'),

@@ -7,9 +7,11 @@ use App\Classes\Errors;
 class Errors{
 
 	protected $errors;
+	protected $old;
 	
 	public function __construct(){
 		$this->errors = [];
+		$this->old = [];
 	}
 
 	public function add($key, $data){
@@ -21,7 +23,27 @@ class Errors{
 	}
 	
 	public function get($key){
-		return $this->errors[$key];
+		if($this->has($key)){
+			return $this->errors[$key];
+		}else{
+			return null;
+		}
+	}
+	
+	public function addOld($key, $data){
+		$this->old[$key] = $data;
+	}
+	
+	public function hasOld($key){
+		return array_key_exists($key, $this->old);
+	}
+	
+	public function getOld($key){
+		if($this->hasOld($key)){
+			return $this->old[$key];
+		}else{
+			return null;
+		}
 	}
 	
 }

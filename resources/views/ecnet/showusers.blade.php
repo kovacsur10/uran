@@ -133,15 +133,15 @@
 									@if($layout->user()->hasMACSlotOrder($ecnetUser->id))
 										- <i style="color:gold;" class="fa fa-btn fa-flash"></i><a href="{{ url('ecnet/order') }}">{{ $layout->language('mac_slot_order') }}</a> <i style="color:gold;" class="fa fa-btn fa-flash"></i>
 									@endif
-									@if(count($layout->user()->macAddresses($ecnetUser->id)) < $ecnetUser->mac_slots)
-										- <span style="color:red;">{{ $layout->language('low_mac_slot_usage') }} (diff: {{ $ecnetUser->mac_slots - count($layout->user()->macAddresses($ecnetUser->id)) }})</span>
+									@if(count($layout->user()->macAddressesOfUser($ecnetUser->id)) < $ecnetUser->mac_slots)
+										- <span style="color:red;">{{ $layout->language('low_mac_slot_usage') }} (diff: {{ $ecnetUser->mac_slots - count($layout->user()->macAddressesOfUser($ecnetUser->id)) }})</span>
 									@endif
 									@if($ecnetUser->mac_slots != 0)						
 										<div class="dropdown">
 											<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">{{ $layout->language('registrated_mac_addresses') }}
 											<span class="caret"></span></button>
 											<ul class="dropdown-menu">
-											@foreach($layout->user()->macAddresses($ecnetUser->id) as $macAddress)
+											@foreach($layout->user()->macAddressesOfUser($ecnetUser->id) as $macAddress)
 												<li>{{ $macAddress->mac_address }}</li>
 											@endforeach
 											</ul>

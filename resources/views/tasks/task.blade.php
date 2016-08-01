@@ -26,61 +26,116 @@
 					<!-- DATA SECTION -->
 					<div class="col-md-8 col-md-offset-2">
 						@if($layout->tasks()->canModify())
-							<form class="form-horizontal" role="form" method="POST" action="{{ url('/tasks/new') }}">
+							<form class="form-horizontal" role="form" method="POST" action="{{ url('/tasks/task/'.$task->id.'/modify') }}">
 								{!! csrf_field() !!}
 								
 								<div class="panel panel-{{ $task->priority === 'high' ? 'warning' : ($task->priority === 'highest' ? 'danger' : 'default') }}">
 									<div class="panel-heading">
 										<div class="row">
-											<div class="col-md-8"><input class="form-control" name="caption" type="text" value="{{ old('caption') === null ? $task->caption : old('caption') }}" /></div>
+											<div class="col-md-8">
+												<input class="form-control" name="caption" type="text" value="{{ $layout->errors()->getOld('caption') === null ? $task->caption : $layout->errors()->getOld('caption') }}" />
+												@if ($layout->errors()->has('caption'))
+													<span class="text-danger">
+														<strong>{{ $layout->errors()->get('caption') }}</strong>
+													</span>
+												@endif
+											</div>
 											<div class="text-right col-md-4"><a href="{{ url('data/'.$task->username) }}">{{ $task->user }}</a></div>
 										</div>
 									</div>
 									<div class="panel-body">
 										<div class="row">
-											<div class="well col-md-7"><?php echo nl2br($task->text); ?></div>
+											<div class="well col-md-7">
+												<textarea class="form-control" rows="6" name="text" cols="40" rows="5">{{ $layout->errors()->getOld('text') === null ? $task->text : $layout->errors()->getOld('text') }}</textarea>
+												@if ($layout->errors()->has('text'))
+													<span class="text-danger">
+														<strong>{{ $layout->errors()->get('text') }}</strong>
+													</span>
+												@endif
+											</div>
 											<div class="well col-md-4 col-md-offset-1">
 												<span>{{ $layout->language('date') }}: {{ $layout->formatDate($task->date) }}</span><br>
-												<span>{{ $layout->language('deadline') }}: 
-												@if($task->deadline !== null)
-													{{ $layout->formatDate($task->deadline) }}
-												@else
-													{{ $layout->language('not_set') }}
-												@endif
+												<span>
+													<label  class="control-label" for="deadline">{{ $layout->language('deadline') }}:</label>
+													<div class='input-group date' data-date-format="yyyy. mm. dd" id='datepicker_add_new_task'>
+														<input type='text' readonly class="form-control" name="deadline" value="{{ $layout->errors()->getOld('deadline') === null ? ($task->deadline === null ? '' : $layout->formatDate($task->deadline)) : $layout->errors()->getOld('deadline') }}" />
+														<span class="input-group-addon">
+															<span class="glyphicon glyphicon-calendar"></span>
+														</span>
+														@if ($layout->errors()->has('deadline'))
+															<span class="text-danger">
+																<strong>{{ $layout->errors()->get('deadline') }}</strong>
+															</span>
+														@endif
+													</div>
 												</span><br>
 												<span>
 													<label  class="control-label" for="priority">{{ $layout->language('priority') }}:</label>
 													<select class="form-control"  name="priority"  id="priority" required="true" autocomplete="off">
 														@foreach($layout->tasks()->priorities() as $priority)
-															<option value="{{ $priority->id }}" {{ (old('priority') === $priority->id || (old('priority') === null && $task->priority === $priority->name)) ? 'selected' : '' }}>{{ $layout->language($priority->name) }}</option>
+															<option value="{{ $priority->id }}" {{ ($layout->errors()->getOld('priority') === $priority->id || ($layout->errors()->getOld('priority') === null && $task->priority === $priority->name)) ? 'selected' : '' }}>{{ $layout->language($priority->name) }}</option>
 														@endforeach
 													</select>
+													@if ($layout->errors()->has('priority'))
+														<span class="text-danger">
+															<strong>{{ $layout->errors()->get('priority') }}</strong>
+														</span>
+													@endif
 												</span><br>
 												<span>
 													<label  class="control-label" for="status">{{ $layout->language('status') }}:</label>
 													<select class="form-control"  name="status"  id="status" required="true" autocomplete="off">
 														@foreach($layout->tasks()->statusTypes() as $status)
-															<option value="{{ $status->id }}" {{ (old('status') === $status->id || (old('status') === null && $task->status === $status->status)) ? 'selected' : '' }}>{{ $layout->language($status->status) }}</option>
+															<option value="{{ $status->id }}" {{ ($layout->errors()->getOld('status') === $status->id || ($layout->errors()->getOld('status') === null && $task->status === $status->status)) ? 'selected' : '' }}>{{ $layout->language($status->status) }}</option>
 														@endforeach
 													</select>
+													@if ($layout->errors()->has('status'))
+														<span class="text-danger">
+															<strong>{{ $layout->errors()->get('status') }}</strong>
+														</span>
+													@endif
 												</span><br>
-												@if($task->status == "Closed")
-													<span>{{ $task->closed }}</span><br>
+												@if($task->status === "closed")
+													<span>{{ $layout->formatDate($task->closed) }}</span><br>
 												@endif
 												<span>
 													<label  class="control-label" for="type">{{ $layout->language('type') }}:</label>
 													<select class="form-control"  name="type"  id="type" required="true" autocomplete="off">
 														@foreach($layout->tasks()->taskTypes() as $type)
-															<option value="{{ $type->id }}" {{ (old('type') === $type->id || (old('type') === null && $task->type === $type->type)) ? 'selected' : '' }}>{{ $layout->language($type->type) }}</option>
+															<option value="{{ $type->id }}" {{ ($layout->errors()->getOld('type') === $type->id || ($layout->errors()->getOld('type') === null && $task->type === $type->type)) ? 'selected' : '' }}>{{ $layout->language($type->type) }}</option>
 														@endforeach
 													</select>
+													@if ($layout->errors()->has('type'))
+														<span class="text-danger">
+															<strong>{{ $layout->errors()->get('type') }}</strong>
+														</span>
+													@endif
 												</span><br>
-												@if($task->assigned_name != null)
-													<span>{{ $layout->language('assigned_to') }}: <a href="{{ url('data/'.$task->assigned_username) }}">{{ $task->assigned_name }}</a></span><br>
-												@endif
+												<span>
+													<label  class="control-label" for="assigned_username">{{ $layout->language('assigned_to') }}:</label>
+													<select class="form-control"  name="assigned_username"  id="type" required="true" autocomplete="off">
+														<option value="admin" {{ ($layout->errors()->getOld('assigned_username') === null && $task->assigned_username === null) ? 'selected' : '' }}>{{ $layout->language('no_one_is_assigned') }}</option>
+														@foreach($layout->user()->users() as $user)
+															<option value="{{ $user->username }}" {{ ($layout->errors()->getOld('assigned_username') === $user->username || ($layout->errors()->getOld('assigned_username') === null && $task->assigned_username === $user->username)) ? 'selected' : '' }}>{{ $user->name }} ({{ $user->username }})</option>
+														@endforeach
+													</select>
+													@if ($layout->errors()->has('assigned_username'))
+														<span class="text-danger">
+															<strong>{{ $layout->errors()->get('assigned_username') }}</strong>
+														</span>
+													@endif
+												</span>
 												<span>
 													<label  class="control-label" for="working_hours">{{ $layout->language('working_hour') }}:</label>
-													<input class="form-control" name="working_hours" type="text" value="{{ old('working_hours') === null ? $task->working_hours : old('working_hours') }}" />
+													<input class="form-control" name="working_hours" type="text" value="{{ $layout->errors()->getOld('working_hours') === null ? $task->working_hours : $layout->errors()->getOld('working_hours') }}" />
+													@if ($layout->errors()->has('working_hours'))
+														<span class="text-danger">
+															<strong>{{ $layout->errors()->get('working_hours') }}</strong>
+														</span>
+													@endif
+												</span><br>
+												<span>
+													<input type="submit" class="form-control btn btn-primary" name="updateTask" value="{{ $layout->language('modify') }}"></input>
 												</span>
 											</div>
 										</div>
@@ -109,12 +164,14 @@
 											</span><br>
 											<span>{{ $layout->language('priority') }}: {{ $layout->language($task->priority) }}</span><br>
 											<span>{{ $layout->language('status') }}: {{ $layout->language($task->status) }}</span><br>
-											@if($task->status == "Closed")
+											@if($task->status === "closed")
 												<span>{{ $task->closed }}</span><br>
 											@endif
 											<span>{{ $layout->language('type') }}: {{ $layout->language($task->type) }}</span><br>
 											@if($task->assigned_name != null)
 												<span>{{ $layout->language('assigned_to') }}: <a href="{{ url('data/'.$task->assigned_username) }}">{{ $task->assigned_name }}</a></span><br>
+											@else
+												<span>{{ $layout->language('assigned_to') }}: {{ $layout->language('no_one_is_assigned') }}</span><br>
 											@endif
 											<span>{{ $layout->language('working_hour') }}: {{ $task->working_hours }}</span>
 										</div>
@@ -135,6 +192,11 @@
 									<div class="col-md-9">
 										<textarea class="form-control" name="commentText">{{ $layout->language('write_new_comment_description') }}</textarea>
 									</div>
+									@if ($errors->has('commentText'))
+										<span class="text-danger">
+											<strong>{{ $errors->first('commentText') }}</strong>
+										</span>
+									@endif
 								</div>
 							</div>
 						</form>
@@ -165,4 +227,16 @@
         </div>
     </div>
 </div>
+
+<!-- Datepicker script -->
+<script type="text/javascript">
+	$(function(){
+		$('#datepicker_add_new_task').datepicker({
+			format: 'yyyy. mm. dd',
+			autoclose: true,
+			clearBtn: true,
+			startDate: "today"
+		});
+	});
+</script>
 @endsection

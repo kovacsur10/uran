@@ -50,6 +50,8 @@ class Languages{
 			'identifier' => 'Azonosító',
 			'user_data' => 'Személyes adatok',
 			'administration' => 'Ügyintézés',
+			'not_specified_value' => 'Nem érvényes érték!',
+			'empty_value_is_forbidden' => 'A mező értéke nem lehet üres!',
 		//permissions
 			'assign_permissions' => 'Jogok hozzárendelése',
 			'error_at_setting_the_permissions' => 'Hiba a jogosultságok beállításakor!',
@@ -501,6 +503,7 @@ class Languages{
 			'not_set' => 'nincsen beállítva',
 			'comment_not_exists' => 'Nem létezik ilyen komment!',
 			'task_not_found' => 'Ilyen feladat nem létezik!',
+			'no_one_is_assigned' => 'Senkihez sincs hozzárendelve!',
 		
 			'' => '',
 		];
@@ -550,6 +553,8 @@ class Languages{
 			'identifier' => 'Identifier',
 			'user_data' => 'Personal data',
 			'administration' => 'Administration',
+			'not_specified_value' => 'This value in not valid!',
+			'empty_value_is_forbidden' => 'Empty value is forbidden!',
 		//permissions
 			'assign_permissions' => 'Assign permissions',
 			'error_at_setting_the_permissions' => 'Error at setting the permissions!',
@@ -1002,6 +1007,7 @@ class Languages{
 			'not_set' => 'not set',
 			'comment_not_exists' => 'Comment not exists!',
 			'task_not_found' => 'Task was not found!',
+			'no_one_is_assigned' => 'Nobody is assigned!',
 		];
 	}
 	

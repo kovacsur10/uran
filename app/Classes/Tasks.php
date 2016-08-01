@@ -91,6 +91,11 @@ class Tasks{
 			$this->task->assigned_username = null;
 		}
 		
+		//format deadline
+		if($this->task->deadline !== null){
+			$this->task->deadline = substr($this->task->deadline, 0, 10);
+		}
+		
 		//set comments
 		$this->comments = DB::table('tasks_comments')
 			->join('users', 'users.id', '=', 'tasks_comments.sender')
@@ -101,6 +106,38 @@ class Tasks{
 			->get();
 		if($this->comments === null){
 			$this->comments = [];
+		}
+	}
+	
+	public function update($taskId, $type, $text, $caption, $deadline, $priority, $status, $workingHours, $assignedUser, $closed){
+		if($deadline === null){
+			DB::table('tasks_task')
+				->where('id', '=', $taskId)
+				->update([
+					'status' => $status,
+					'type' => $type,
+					'text' => $text,
+					'caption' => $caption,
+					'priority' => $priority,
+					'deadline' => null,
+					'hours' => $workingHours,
+					'assigned' => $assignedUser,
+					'closed_datetime' => $closed
+				]);
+		}else{
+			DB::table('tasks_task')
+				->where('id', '=', $taskId)
+				->update([
+					'status' => $status,
+					'type' => $type,
+					'text' => $text,
+					'caption' => $caption,
+					'priority' => $priority,
+					'deadline' => str_replace('.', '-', str_replace('. ', '-', $deadline)),
+					'hours' => $workingHours,
+					'assigned' => $assignedUser,
+					'closed_datetime' => $closed
+				]);
 		}
 	}
 	

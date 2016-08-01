@@ -35,13 +35,17 @@
 							<div class="row" style="margin-right:20px;">
 								<div class="col-md-6">{{ $task->caption }}</div>
 								<div class="col-md-2">{{ $task->user }}</div>
-								<div class="col-md-2">{{ $task->status }}</div>
-								<div class="col-md-2">{{ $task->date }}</div>
+								<div class="col-md-2">{{ $layout->language($task->status) }}</div>
+								<div class="col-md-2">{{ $layout->formatDate($task->date) }}</div>
 							</div>
 						</a>
 					</div>
 					@endforeach
-					<div><a href="{{ url('tasks/new') }}" class="btn btn-primary">{{ $layout->language('create_new_task') }}</a></div>
+					@if($layout->user()->permitted('tasks_add'))
+					<div>
+						<a href="{{ url('tasks/new') }}" class="btn btn-primary">{{ $layout->language('create_new_task') }}</a>
+					</div>
+					@endif
                 </div>
             </div>
         </div>

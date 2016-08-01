@@ -77,4 +77,10 @@ class User{
 								 ->first();
 	}
 	
+	public function getUserDataByUsername($username){
+		return DB::table('users')->where('username', 'LIKE', $username)
+								 ->where('registered', '=', 1)
+								 ->first();
+	}
+	
 }

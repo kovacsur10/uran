@@ -13,7 +13,8 @@
 
     <!-- Styles -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
-	<link href="/bootstrap-notifications.min.css" rel="stylesheet">
+	<link href="/css/bootstrap-notifications.min.css" rel="stylesheet">
+	<link href="/css/bootstrap-datepicker.min.css" rel="stylesheet">
     {{-- <link href="{{ elixir('css/app.css') }}" rel="stylesheet"> --}}
 
     <style>
@@ -26,17 +27,14 @@
         }
     </style>
 	
-	<link rel="stylesheet" href="/jquery-ui-1.12.0.min.css">
-	
 	<!-- Scripts -->
-	<script type="text/javascript" src="/jquery-3.0.0.min.js"></script>
-	<script type="text/javascript" src="/jquery-ui-1.12.0.min.js"></script>
+	<script type="text/javascript" src="/js/jquery-2.2.4.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    {{-- <script src="{{ elixir('js/app.js') }}"></script> --}}
+	<script type="text/javascript" src="/js/bootstrap-datepicker.min.js"></script>
 	<script type="text/javascript">
 		$('document').ready(function(){
 			$('[data-toggle="tooltip"]').tooltip();
-		});
-		$(function(){
-			$("#datepicker_add_new_task").datepicker();
 		});
 	</script>
 </head>
@@ -58,6 +56,7 @@
                         <li><a href="{{ url('/login') }}">{{ $layout->language('login') }}</a></li>
                         <li><a href="{{ url('/register') }}">{{ $layout->language('registration') }}</a></li>
                     @else
+						@if($data->modules()->isActivatedByName('ecnet'))
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                                 {{ $layout->language('ecnet') }} <span class="caret"></span>
@@ -71,6 +70,8 @@
 								@endif
                             </ul>
                         </li>
+						@endif
+						@if($data->modules()->isActivatedByName('rooms'))
 						<li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                                 TODO <span class="caret"></span>
@@ -81,6 +82,7 @@
 								@endif
                             </ul>
                         </li>
+						@endif
 						@if($data->user()->permitted('permission_admin') || $data->user()->permitted('module_admin'))
 						<li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -191,10 +193,5 @@
     </nav>
 
     @yield('content')
-
-    <!-- JavaScripts -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-    {{-- <script src="{{ elixir('js/app.js') }}"></script> --}}
 </body>
 </html>
