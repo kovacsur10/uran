@@ -19,8 +19,15 @@ class Permissions{
 		$permissions = DB::table('permissions')->join('user_permissions', 'permissions.id', '=', 'user_permissions.permission_id')
 			->select('permissions.id as id', 'permission_name', 'permissions.description as description')
 			->where('user_permissions.user_id', '=', $userId)
+			->orderBy('id', 'asc')
 			->get();
 		return $permissions == null ? [] : $permissions;
 	}
 	
+	public function getAllPermissions(){
+		$permissions = DB::table('permissions')
+			->orderBy('id', 'asc')
+			->get();
+		return $permissions == null ? [] : $permissions;
+	}
 }

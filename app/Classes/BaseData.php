@@ -44,12 +44,14 @@ class BaseData{
 	
 	protected function getFaculties(){
 		$ret = DB::table('faculties')
+			->orderBy('id', 'asc')
 			->get();
 		return $ret == null ? [] : $ret;
 	}
 	
 	protected function getWorkshops(){
 		$ret = DB::table('workshops')
+			->orderBy('id', 'asc')
 			->get();
 		return $ret == null ? [] : $ret;
 	}

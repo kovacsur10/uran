@@ -25,7 +25,7 @@
 								
 								<div class="form-group">
 									<div class="col-md-6 col-md-offset-3">
-										@foreach($layout->user()->getAvailablePermissions() as $permission)
+										@foreach($layout->permissions()->getAllPermissions() as $permission)
 											<div class="checkbox">
 												<label><input type="checkbox" name="permissions[]" value="{{ $permission->id }}" {{ $layout->permissions()->permitted($userid, $permission->permission_name) ? 'checked' : '' }}> {{ $permission->description }} ({{ $permission->permission_name }})</label>
 											</div>

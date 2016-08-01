@@ -26,11 +26,17 @@
         }
     </style>
 	
+	<link rel="stylesheet" href="/jquery-ui-1.12.0.min.css">
+	
 	<!-- Scripts -->
 	<script type="text/javascript" src="/jquery-3.0.0.min.js"></script>
+	<script type="text/javascript" src="/jquery-ui-1.12.0.min.js"></script>
 	<script type="text/javascript">
 		$('document').ready(function(){
 			$('[data-toggle="tooltip"]').tooltip();
+		});
+		$(function(){
+			$("#datepicker_add_new_task").datepicker();
 		});
 	</script>
 </head>
