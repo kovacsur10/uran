@@ -10,6 +10,7 @@ class Modules{
 
 	public function get(){
 		$moduls = DB::table('modules')
+			->orderBy('id', 'asc')
 			->get();
 		return $moduls == null ? [] : $moduls;
 	}

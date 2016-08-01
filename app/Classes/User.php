@@ -77,10 +77,4 @@ class User{
 								 ->first();
 	}
 	
-	public function getAvailablePermissions(){
-		$permissions = DB::table('permissions')
-			->get();
-		return $permissions == null ? [] : $permissions;
-	}
-	
 }

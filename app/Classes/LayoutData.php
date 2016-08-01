@@ -9,6 +9,7 @@ use App\Classes\Modules;
 use App\Classes\Permissions;
 use App\Classes\Languages;
 use App\Classes\Registrations;
+use App\Classes\Tasks;
 use DB;
 
 class LayoutData{
@@ -20,6 +21,7 @@ class LayoutData{
 	protected $language;
 	protected $base;
 	protected $registrations;
+	protected $tasks;
 	
 	public function __construct(){
 		$this->logged = Session::has('user');
@@ -30,6 +32,7 @@ class LayoutData{
 		$this->base = new BaseData();
 		$this->language = Session::has('lang') ? Session::get('lang') : "hu_HU";
 		$this->registrations = new Registrations();
+		$this->tasks = new Tasks();
 	}
 	
 	public function setUser($user){
@@ -46,6 +49,10 @@ class LayoutData{
 	
 	public function room(){
 		return $this->room;
+	}
+	
+	public function tasks(){
+		return $this->tasks;
 	}
 	
 	public function logged(){
@@ -85,6 +92,16 @@ class LayoutData{
 			}else{
 				return 'missing tag';
 			}
+		}
+	}
+	
+	public function formatDate($date){
+		if($this->language === 'hu_HU'){
+			return str_replace("-", ". ", str_replace(" ", ". ", $date));
+		}else if($this->language === 'en_US'){
+			return str_replace("-", ". ", str_replace(" ", ". ", $date));
+		}else{
+			return str_replace("-", ". ", str_replace(" ", ". ", $date));
 		}
 	}
 	
