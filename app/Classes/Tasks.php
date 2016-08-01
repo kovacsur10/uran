@@ -4,6 +4,7 @@ namespace App\Classes;
 
 use DB;
 use Carbon\Carbon;
+use App\Classes\LayoutData;
 
 class Tasks{
 	protected $tasks;
@@ -11,6 +12,7 @@ class Tasks{
 	protected $types;
 	protected $comments;
 	protected $priorities;
+	protected $statusTypes;
 	
 	public function __construct(){
 		$this->tasks = $this->getTasks();
@@ -18,6 +20,7 @@ class Tasks{
 		$this->types = $this->getTaskTypes();
 		$this->task = null;
 		$this->comments = [];
+		$this->statusTypes = $this->getTaskStatusTypes();
 	}
 	
 	public function get(){
@@ -38,6 +41,10 @@ class Tasks{
 	
 	public function getComments(){
 		return $this->comments;
+	}
+	
+	public function statusTypes(){
+		return $this->statusTypes;
 	}
 	
 	public function getComment($commentId){
@@ -68,7 +75,7 @@ class Tasks{
 			->join('tasks_status', 'tasks_status.id', '=', 'tasks_task.status')
 			->join('tasks_priority', 'tasks_priority.id', '=', 'tasks_task.priority')
 			->join('users', 'users.id', '=', 'tasks_task.created_by')
-			->select('tasks_task.id as id', 'created_datetime as date', 'tasks_status.status as status', 'tasks_type.type as type', 'users.name as user', 'users.username as username', 'text', 'caption', 'closed_datetime as closed', 'deadline', 'tasks_priority.name as priority', 'tasks_task.hours as working_hours')
+			->select('tasks_task.id as id', 'created_datetime as date', 'tasks_status.status as status', 'tasks_type.type as type', 'users.id as owner_id', 'users.name as user', 'users.username as username', 'text', 'caption', 'closed_datetime as closed', 'deadline', 'tasks_priority.name as priority', 'tasks_task.hours as working_hours')
 			->where('tasks_task.id', '=', $id)
 			->first();
 		$assigned = DB::table('tasks_task')
@@ -95,6 +102,11 @@ class Tasks{
 		if($this->comments === null){
 			$this->comments = [];
 		}
+	}
+	
+	public function canModify(){
+		$layout = new LayoutData();
+		return $this->task && ($layout->user()->user()->id === $this->task->owner_id || $layout->user()->permitted('tasks_admin'));
 	}
 	
 	public function addTask($type, $createdById, $text, $caption, $deadline, $priority){
@@ -168,6 +180,13 @@ class Tasks{
 	
 	protected function getTaskTypes(){
 		$ret = DB::table('tasks_type')
+			->orderBy('id', 'asc')
+			->get();
+		return $ret == null ? [] : $ret;
+	}
+	
+	protected function getTaskStatusTypes(){
+		$ret = DB::table('tasks_status')
 			->orderBy('id', 'asc')
 			->get();
 		return $ret == null ? [] : $ret;

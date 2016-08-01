@@ -38,13 +38,15 @@ class TaskController extends Controller{
 				//TODO: check if not empty
 				$layout->tasks()->addComment($taskId, $layout->user()->user()->id, $request->commentText);
 			}else{
-				//TODO
+				return view('errors.error', ["layout" => $layout,
+											 "message" => $layout->language('task_not_found'),
+											 "url" => '/tasks/list']);
 			}
-			$layout->tasks()->setTask($taskId);
-			return view('tasks.task', ["layout" => $layout]);
 		}else{
-			//TODO
+			$layout->errors()->add('permission', $layout->language('permission'));
 		}
+		$layout->tasks()->setTask($taskId);
+		return view('tasks.task', ["layout" => $layout]);
 	}
 	
 	public function removeComment($taskId, $commentId){
@@ -52,15 +54,14 @@ class TaskController extends Controller{
 		if($layout->tasks()->commentExists($commentId)){
 			if($layout->tasks()->getComment($commentId)->poster_username === $layout->user()->user()->username){
 				$layout->tasks()->removeComment($commentId);
-				return $this->showTask($taskId);
 			}else{
-				//TODO
-				return $this->showTask($taskId);
+				$layout->errors()->add('permission', $layout->language('insufficient_permissions'));
 			}
 		}else{
-			//TODO
-			return $this->showTask($taskId);
+			$layout->errors()->add('comment_not_exists', $layout->language('comment_not_exists'));
 		}
+		$layout->tasks()->setTask($taskId);
+		return view('tasks.task', ["layout" => $layout]);
 	}
 	
 	public function addNew(Request $request){
@@ -74,9 +75,9 @@ class TaskController extends Controller{
 				$layout->tasks()->addTask($request->type, $layout->user()->user()->id, $request->text, $request->caption, $request->deadline, $request->priority);
 			}
 		}else{
-			//TODO
+			$layout->errors()->add('permission', $layout->language('insufficient_permissions'));
 		}
-		return $this->show();
+		return view('tasks.tasks', ["layout" => $layout]);
 	}
 	
 	public function remove($taskId){
@@ -85,9 +86,9 @@ class TaskController extends Controller{
 		
 		if($layout->user()->permitted('tasks_admin') || $layout->tasks()->getTask()->username === $layout->user()->user()->username){
 			$layout->tasks()->removeTask($taskId);
-			//TODO
+			return $this->show();
 		}else{
-			//TODO: errors.error
+			return view('errors.authentication', ["layout" => $layout]);
 		}
 	}
 }

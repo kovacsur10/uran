@@ -7,6 +7,11 @@
             <div class="panel panel-default">
                 <div class="panel-heading">{{ $layout->language('task_manager') }}</div>
                 <div class="panel-body">
+					@if($layout->errors()->has('permission'))
+						<div class="alert alert-danger">
+							{{ $layout->errors()->get('permission') }}
+						</div>
+					@endif
 					<div class="well well-sm">
 						<div class="row">
 							<div class="col-md-6">{{ $layout->language('caption') }}</div>

@@ -499,6 +499,8 @@ class Languages{
 			'ongoing' => 'Folyamatban',
 			'send' => 'Elküld',
 			'not_set' => 'nincsen beállítva',
+			'comment_not_exists' => 'Nem létezik ilyen komment!',
+			'task_not_found' => 'Ilyen feladat nem létezik!',
 		
 			'' => '',
 		];
@@ -998,6 +1000,8 @@ class Languages{
 			'ongoing' => 'Ongoing',
 			'send' => 'Send',
 			'not_set' => 'not set',
+			'comment_not_exists' => 'Comment not exists!',
+			'task_not_found' => 'Task was not found!',
 		];
 	}
 	
