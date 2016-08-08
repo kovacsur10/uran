@@ -76,7 +76,7 @@ class TaskController extends Controller{
 			}
 			//add task or return the errors
 			if(!$error){
-				if($request->status === 3){ // TODO: nicer
+				if($request->status == $layout->tasks()->getStatusByName('closed')->id){
 					$closedDate = Carbon::now()->toDateTimeString();
 				}else{
 					$closedDate = null;
