@@ -96,7 +96,7 @@
 													@endif
 												</span><br>
 												@if($task->status === "closed")
-													<span>{{ $layout->formatDate($task->closed) }}</span><br>
+													<span>{{ $layout->language('closed_on_that_date') }}: {{ $layout->formatDate($task->closed) }}</span><br>
 												@endif
 												<span>
 													<label  class="control-label" for="type">{{ $layout->language('type') }}:</label>

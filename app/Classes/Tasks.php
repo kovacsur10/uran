@@ -47,6 +47,12 @@ class Tasks{
 		return $this->statusTypes;
 	}
 	
+	public function getStatusByName($statusName){
+		return DB::table('tasks_status')
+			->where('status', 'LIKE', $statusName)
+			->first();
+	}
+	
 	public function getComment($commentId){
 		return DB::table('tasks_comments')
 			->join('users', 'users.id', '=', 'tasks_comments.sender')
