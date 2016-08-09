@@ -980,7 +980,7 @@ class Languages{
 			'task_manager' => 'Task manager',
 			'status' => 'Status',
 			'date' => 'Date',
-			'caption' => 'Caption',
+			'caption' => 'Summary',
 			'create_new_task' => 'Create new task',
 			'add_task' => 'Add task',
 			'deadline' => 'Deadline',
