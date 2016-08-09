@@ -24,6 +24,7 @@ class LayoutData{
 	protected $registrations;
 	protected $tasks;
 	protected $errors;
+	protected $database;
 	
 	public function __construct(){
 		$this->logged = Session::has('user');
@@ -36,6 +37,7 @@ class LayoutData{
 		$this->registrations = new Registrations();
 		$this->tasks = new Tasks();
 		$this->errors = new Errors();
+		$this->database = new Database();
 	}
 	
 	public function errors(){
@@ -52,6 +54,10 @@ class LayoutData{
 	
 	public function user(){
 		return $this->user;
+	}
+	
+	public function database(){
+		return $this->database;
 	}
 	
 	public function room(){

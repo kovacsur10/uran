@@ -6,19 +6,26 @@ use DB;
 use Carbon\Carbon;
 
 class EcnetUser extends User{
-	protected $ecnetUser;
-	protected $validationTime;
-	protected $macAddresses;
-	protected $ecnetUsers;
-	protected $filterName = "";
-	protected $filterUsername = "";
+
+// PUBLIC VARIABLES
+
+// PRIVATE VARIABLES
+
+	private $ecnetUser;
+	private $validationTime;
+	private $macAddresses;
+	private $ecnetUsers;
+	private $filterName = "";
+	private $filterUsername = "";
 	
-	public function __construct($id){
-		$this->ecnetUser = $this->getEcnetUserData($id);
+// PUBLIC FUNCTIONS
+
+	public function __construct($userId){
+		$this->ecnetUser = $this->getEcnetUserData($userId);
 		$this->validationTime = $this->getValidationTime();
-		$this->macAddresses = $this->getMACAddresses($id);
+		$this->macAddresses = $this->getMACAddresses($userId);
 		$this->ecnetUsers = $this->getEcnetUsers();
-		parent::__construct($id);
+		parent::__construct($userId);
 	}
 	
 	public function ecnetUser(){
@@ -80,31 +87,40 @@ class EcnetUser extends User{
 			]);
 	}
 	
-	protected function getEcnetUserData($id){
+	public function register($userId){
+		DB::table('ecnet_user_data')->insert([
+				'user_id' => $userId,
+				'valid_time' => Carbon::now()->toDateTimeString(),
+			]);
+	}
+	
+// PRIVATE FUNCTIONS
+	
+	private function getEcnetUserData($id){
 		$ret = DB::table('ecnet_user_data')->where('user_id', '=', $id)
 			->first();
 		return $ret == null ? [] : $ret;
 	}
 	
-	protected function getEcnetUsers(){
+	private function getEcnetUsers(){
 		return DB::table('ecnet_user_data')
 			->join('users', 'users.id', '=', 'ecnet_user_data.user_id')
 			->select('users.id as id', 'users.username as username', 'users.name as name', 'ecnet_user_data.money as money', 'ecnet_user_data.valid_time as valid_time', 'ecnet_user_data.mac_slots as mac_slots')
 			->get();
 	}
 	
-	protected function getValidationTime(){
+	private function getValidationTime(){
 		return DB::table('ecnet_valid_date')->first();
 	}
 	
-	protected function getMACAddresses($id){
+	private function getMACAddresses($id){
 		$addresses = DB::table('ecnet_mac_addresses')->where('user_id', '=', $id)
 			->select('id', 'mac_address')
 			->get();
 		return $addresses === null ? [] : $addresses;
 	}
 	
-	protected function getFilteredEcnetUsers($username, $name){
+	private function getFilteredEcnetUsers($username, $name){
 		return DB::table('ecnet_user_data')
 			->join('users', 'users.id', '=', 'ecnet_user_data.user_id')
 			->where('users.name', 'LIKE', '%'.$name.'%')
