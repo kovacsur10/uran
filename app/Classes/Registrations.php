@@ -98,4 +98,31 @@ class Registrations{
 			'language' => $defaultLanguage,
 		]);
 	}
+	
+	public function insertCollegistData($username, $password, $email, $name, $country, $shire, $postalCode, $address, $city, $phoneNumber, $defaultLanguage, $cityOfBirth, $dateOfBirth, $nameOfMother, $yearOfLeavingExam, $highSchool, $neptun, $applicationYear, $faculty, $workshop){
+		DB::table('users')->insert([
+			'username' => $username,
+            'password' => password_hash($password, PASSWORD_DEFAULT),
+            'email' => $email,
+            'name' => $name,
+            'registration_date' => Carbon::now()->toDateTimeString(),
+			'country' => $country,
+			'shire' => $shire,
+			'postalcode' => $postalCode,
+			'address' => $address,
+			'city' => $city,
+			'reason' => null,
+			'phone' => $phoneNumber,
+			'language' => $defaultLanguage,
+			'city_of_birth' => $cityOfBirth,
+			'date_of_birth' => $dateOfBirth,
+			'name_of_mother' => $nameOfMother,
+			'year_of_leaving_exam' => $yearOfLeavingExam,
+			'high_school' => $highSchool,
+			'neptun' => $neptun,
+			'from_year' => $applicationYear,
+			'faculty' => $faculty,
+			'workshop' => $workshop,
+		]);
+	}
 }
