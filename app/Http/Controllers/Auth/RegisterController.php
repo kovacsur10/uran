@@ -8,6 +8,7 @@ use App\Classes\Notify;
 use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use DB;
@@ -48,35 +49,24 @@ class RegisterController extends Controller{
 		]);
 		
 		DB::beginTransaction(); //DATABASE TRANSACTION STARTS HERE
-		DB::table('users')->insert([
-			'username' => $request->input('username'),
-            'password' => password_hash($request->input('password'), PASSWORD_DEFAULT),
-            'email' => $request->input('email'),
-            'name' => $request->input('name'),
-            'registration_date' => $regTime->toDateTimeString(),
-			'country' => $request->input('country'),
-			'shire' => $request->input('shire'),
-			'postalcode' => $request->input('postalcode'),
-			'address' => $request->input('address'),
-			'city' => $request->input('city'),
-			'reason' => $request->input('reason'),
-			'phone' => $request->input('phone'),
-			'language' => $layout->lang(),
-		]);
-		$userId = DB::table('users')
-			->select('id')
-			->where('username', 'LIKE', $request->input('username'))
-			->first();
+		try{
+			$layout->registrations()->insertGuestData($request->input('username'), $request->input('password'), $request->input('email'), $request->input('name'), $request->input('country'), $request->input('shire'), $request->input('postalcode'), $request->input('address'), $request->input('city'), $request->input('reason'), $request->input('phone'));	
+		}catch(\Illuminate\Database\QueryException $e){
+		}
+		$userId = $layout->registrations()->getNotVerifiedUserData($request->input('username'));
 		if($userId == null){
 			DB::rollback();
 			return view('errors.error', ["layout" => $layout,
 										 "message" => $layout->language('error_at_sending_registration_verification_email'),
 										 "url" => '/register']);
 		}else{
-			DB::table('registrations')->insert([
-				'user_id' => $userId->id,
-				'code' => $string,
-			]);
+			try{
+				$layout->registrations()->addCode($userId->id, $string);
+			}catch(\Illuminate\Database\QueryException $e){
+				return view('errors.error', ["layout" => $layout,
+										 "message" => $layout->language('error_at_sending_registration_verification_email'),
+										 "url" => '/register']);
+			}
 			
 			// ECNET PART
 			if($layout->modules()->isActivatedByName('ecnet')){
@@ -155,20 +145,20 @@ class RegisterController extends Controller{
 			'faculty' => $request->input('faculty'),
 			'workshop' => $request->input('workshop'),
 		]);
-		$userId = DB::table('users')
-			->select('id')
-			->where('username', 'LIKE', $request->input('username'))
-			->first();
+		$userId = $layout->registrations()->getNotVerifiedUserData($request->input('username'));
 		if($userId == null){
 			DB::rollback();
 			return view('errors.error', ["layout" => $layout,
 										 "message" => $layout->language('error_at_sending_registration_verification_email'),
 										 "url" => '/register']);
 		}else{
-			DB::table('registrations')->insert([
-				'user_id' => $userId->id,
-				'code' => $string,
-			]);
+			try{
+				$layout->registrations()->addCode($userId->id, $string);
+			}catch(\Illuminate\Database\QueryException $e){
+				return view('errors.error', ["layout" => $layout,
+										 "message" => $layout->language('error_at_sending_registration_verification_email'),
+										 "url" => '/register']);
+			}
 			
 			// ECNET PART
 			if($layout->modules()->isActivatedByName('ecnet')){
@@ -197,22 +187,28 @@ class RegisterController extends Controller{
 	
 	public function vefify($code){
 		$layout = new LayoutData();
-		$user = DB::table('registrations')
-			->where('code', 'LIKE', $code)
-			->first();
+		$user = $layout->registrations()->getRegistrationByCode($code);
 		if($user != null){
-			DB::table('registrations')
-				->where('code', 'LIKE', $code)
-				->update(['verified' => 1,
-						  'verification_date' => Carbon::now()]);
-				
-			return view('success.success', ["layout" => $layout,
-											"message" => $layout->language('success_at_verifying_the_registration'),
-											"url" => '/register']);
+			try{
+				$layout->registrations()->verify($code);
+				return view('success.success', [
+						"layout" => $layout,
+						"message" => $layout->language('success_at_verifying_the_registration'),
+						"url" => '/register'
+					]);
+			}catch(\Illuminate\Database\QueryException $e){
+				return view('errors.error', [
+						"layout" => $layout,
+						"message" => $layout->language('error_at_verifying_the_registration'),
+						"url" => '/register'
+					]);
+			}
 		}else{
-			return view('errors.error', ["layout" => $layout,
-										 "message" => $layout->language('error_at_verifying_the_registration'),
-										 "url" => '/register']);
+			return view('errors.error', [
+					"layout" => $layout,
+					"message" => $layout->language('error_at_verifying_the_registration'),
+					"url" => '/register'
+				]);
 		}
 	}
 }

@@ -3,6 +3,7 @@
 namespace App\Classes;
 
 use DB;
+use Carbon\Carbon;
 
 class Registrations{
 	protected $registrationUser;	
@@ -43,4 +44,58 @@ class Registrations{
 		$this->registrationUser = $user == null ? [] : $user;
 	}
 	
+	public function getRegistrationByCode($code){
+		return DB::table('registrations')
+			->where('code', 'LIKE', $code)
+			->first();
+	}
+	
+	public function verify($code){
+		try{
+			DB::table('registrations')
+				->where('code', 'LIKE', $code)
+				->update([
+					'verified' => 1,
+					'verification_date' => Carbon::now()
+				]);
+		}catch(\Illuminate\Database\QueryException $e){
+			return null;
+		}
+	}
+	
+	public function getNotVerifiedUserData($username){
+		try{
+			return DB::table('users')
+				->where('username', 'LIKE', $username)
+				->where('registered', '=', 0)
+				->first();
+		}catch(\Illuminate\Database\QueryException $e){
+			return null;
+		}
+	}
+	
+	public function addCode($userId, $code){
+		DB::table('registrations')->insert([
+				'user_id' => $userId,
+				'code' => $code,
+			]);
+	}
+	
+	public function insertGuestData($username, $password, $email, $name, $country, $shire, $postalCode, $address, $city, $reasonOfRegistration, $phoneNumber, $defaultLanguage){
+		DB::table('users')->insert([
+			'username' => $username,
+            'password' => password_hash($password, PASSWORD_DEFAULT),
+            'email' => $email,
+            'name' => $name,
+            'registration_date' => Carbon::now()->toDateTimeString(),
+			'country' => $country,
+			'shire' => $shire,
+			'postalcode' => $postalCode,
+			'address' => $address,
+			'city' => $city,
+			'reason' => $reasonOfRegistration,
+			'phone' => $phoneNumber,
+			'language' => $defaultLanguage,
+		]);
+	}
 }
