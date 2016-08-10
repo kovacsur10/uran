@@ -2,7 +2,7 @@
 
 namespace App\Classes;
 
-use App\Classes\User;
+use App\Classes\Layout\User;
 use Carbon\Carbon;
 use DB;
 

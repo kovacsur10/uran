@@ -1,8 +1,6 @@
 <?php
 
-namespace App\Classes;
-
-use App\Classes\Errors;
+namespace App\Classes\Layout;
 
 class Errors{
 

@@ -3,14 +3,16 @@
 namespace App\Classes;
 
 use Illuminate\Support\Facades\Session;
-use App\Classes\Layout\User;
-use App\Classes\Layout\Room;
+use App\Classes\Layout\BaseData;
+use App\Classes\Layout\EcnetUser;
+use App\Classes\Layout\Errors;
+use App\Classes\Layout\Languages;
 use App\Classes\Layout\Modules;
 use App\Classes\Layout\Permissions;
-use App\Classes\Layout\Languages;
 use App\Classes\Layout\Registrations;
+use App\Classes\Layout\Room;
 use App\Classes\Layout\Tasks;
-use App\Classes\Layout\Errors;
+use App\Classes\Layout\User;
 use DB;
 
 class LayoutData{

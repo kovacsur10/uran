@@ -2,7 +2,6 @@
 
 namespace App\Classes;
 
-use App\Classes\Database;
 use DB;
 
 class Database{
