@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Classes\User;
+use App\Classes\EcnetUser;
 use App\Classes\LayoutData;
 use App\Classes\Notify;
 use Validator;
@@ -69,7 +70,7 @@ class RegisterController extends Controller{
 			
 			// ECNET PART
 			if($layout->modules()->isActivatedByName('ecnet')){
-				$layout->setUser(new EcnetUser(Session::get('user')->id));
+				$layout->setUser(new EcnetUser(0));
 				$layout->user()->register($userId->id);
 			}
 			// ECNET PART END
@@ -79,7 +80,7 @@ class RegisterController extends Controller{
 				$lang = $layout->lang();
 			else
 				$lang = "hu_HU";
-			Mail::send('mails.verification_'.$lang, ['name' => $request->input('name'), 'link' => 'http://host59.collegist.eotvos.elte.hu/register/'.$string], function ($m) use ($request, $layout) {
+			Mail::send('mails.verification_'.$lang, ['name' => $request->input('name'), 'link' => url('/register/'.$string)], function ($m) use ($request, $layout) {
 				$m->to($request->input('email'), $request->input('name'));
 				$m->subject($layout->language('confirm_registration'));
 			});
@@ -117,7 +118,7 @@ class RegisterController extends Controller{
 		]);
 		$this->validate($request, array('date_of_birth' => array('required', 'regex:/(^(?:19[0-9]{2}|2[0-9]{3})\.(?:1[012]|0[1-9])\.(?:0[1-9]|[12][0-9]|3[01])\.?$)/')));
 		$layout->database()->beginTransaction(); //DATABASE TRANSACTION STARTS HERE
-		$layout->registrations()->insertCollegistData($request->input('username'), $request->input('password'), $request->input('email'), $request->input('name'), $request->input('country'), $request->input('shire'), $request->input('postalcode'), $request->input('address'), $request->input('city'), $request->input('phone'), $layout->lang(), $request->input('city_of_birth'), $request->input('date_of_birth'), $request->input('name_of_mother'), $request->input('year_of_leaving_exam'), $request->input('high_school'), $request->input('neptun'), $request->input('from_year'), $request->input('faculty'), $request->input('workshop'))
+		$layout->registrations()->insertCollegistData($request->input('username'), $request->input('password'), $request->input('email'), $request->input('name'), $request->input('country'), $request->input('shire'), $request->input('postalcode'), $request->input('address'), $request->input('city'), $request->input('phone'), $layout->lang(), $request->input('city_of_birth'), $request->input('date_of_birth'), $request->input('name_of_mother'), $request->input('year_of_leaving_exam'), $request->input('high_school'), $request->input('neptun'), $request->input('from_year'), $request->input('faculty'), $request->input('workshop'));
 		$userId = $layout->registrations()->getNotVerifiedUserData($request->input('username'));
 		if($userId == null){
 			$layout->database()->rollback();
@@ -136,7 +137,7 @@ class RegisterController extends Controller{
 			
 			// ECNET PART
 			if($layout->modules()->isActivatedByName('ecnet')){
-				$layout->setUser(new EcnetUser(Session::get('user')->id));
+				$layout->setUser(new EcnetUser(0));
 				$layout->user()->register($userId->id);
 			}
 			// ECNET PART END
@@ -146,7 +147,7 @@ class RegisterController extends Controller{
 				$lang = $layout->lang();
 			else
 				$lang = "hu_HU";
-			Mail::send('mails.verification_'.$lang, ['name' => $request->input('name'), 'link' => 'http://host59.collegist.eotvos.elte.hu/register/'.$string], function ($m) use ($request, $layout) {
+			Mail::send('mails.verification_'.$lang, ['name' => $request->input('name'), 'link' => url('/register/'.$string)], function ($m) use ($request, $layout) {
 				$m->to($request->input('email'), $request->input('name'));
 				$m->subject($layout->language('confirm_registration'));
 			});
