@@ -4,12 +4,13 @@ namespace App\Http\Controllers\Auth;
 
 use App\Classes\User;
 use App\Classes\LayoutData;
+use App\Classes\Auth;
 use Validator;
 use App\Http\Controllers\Controller;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
-use DB;
 use Mail;
 
 class AuthController extends Controller{	
@@ -20,14 +21,16 @@ class AuthController extends Controller{
 	public function login(Request $request){
 		$request->merge(array('username' => strtolower($request->input('username'))));
 		$this->validateLogin($request);
-		$user = DB::table('users')->where('username', 'LIKE', $request->input('username'))
-			->where('registered', '=', 1)
-			->first();
+		$user = Auth::getUser($request->input('username'));
 		if($user != null){ 
 			if(password_verify($request->input('password'), $user->password)){
-				DB::table('users')
-					->where('username', 'LIKE', $user->username)
-					->update(['last_online' => Carbon::now()->toDateTimeString()]);
+				try{
+					Auth::updateLoginDate($user->username);
+				}catch(\Illuminate\Database\QueryException $e){
+					return view('errors.error', ["layout" => $layout,
+												 "message" => $layout->language('unsuccessful_login'),
+												 "url" => '/login']);
+				}
 				Session::put('user', $user);
 				return view('home', ["layout" => new LayoutData()]);
 			}else{ //password doesn't match
