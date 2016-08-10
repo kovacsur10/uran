@@ -3,16 +3,18 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Classes\User;
+use App\Classes\Auth;
 use App\Classes\LayoutData;
 use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
-use DB;
 use Mail;
 
 class PasswordController extends Controller{
+	
+// PUBLIC FUNCTIONS
 	
 	public function showResetForm(){
         return view('auth.password.reset', ["layout" => new LayoutData()]);
@@ -23,8 +25,7 @@ class PasswordController extends Controller{
             'username' => 'required',
 		]);
 		$layout = new LayoutData();
-		$user = DB::table('users')->where('username', 'LIKE', $request->input('username'))
-								  ->first();
+		$user = Auth::getUser($request->input('username'));
 		if($user == null){ 
 			$layout = new LayoutData();
 			return view('errors.error', ["layout" => $layout,
@@ -41,7 +42,7 @@ class PasswordController extends Controller{
 		}else{
 			$lang = "hu_HU";
 		}
-		Mail::send('mails.resetpwd'.$lang, ['name' => $user->name, 'link' => 'http://host59.collegist.eotvos.elte.hu/password/reset/'.$user->username.'/'.$string], function ($m) use ($user) {
+		Mail::send('mails.resetpwd_'.$lang, ['name' => $user->name, 'link' => url('/password/reset/'.$user->username.'/'.$string)], function ($m) use ($user, $layout) {
             $m->to($user->email, $user->name);
 			$m->subject($layout->language('forgotten_password'));
         });
@@ -51,8 +52,7 @@ class PasswordController extends Controller{
 	}
 	
 	public function showPasswordForm($username, $code){
-		$user = DB::table('users')->where('username', 'LIKE', $username)
-								  ->first();
+		$user = Auth::getUser($username);
 		if($user == null){ 
 			$layout = new LayoutData();
 			return view('errors.error', ["layout" => $layout,
@@ -79,14 +79,13 @@ class PasswordController extends Controller{
     }
 	
 	public function completeReset(Request $request){
+		$layout = new LayoutData();
 		$this->validate($request, [
             'username' => 'required',
             'password' => 'required|min:8|max:64|confirmed||regex:/(^[A-Za-z0-9\-_\/]+$)/',
 		]);
 		
-		DB::table('users')
-            ->where('username', 'LIKE', $request->input('username'))
-            ->update(array('password' => password_hash($request->input('password'), PASSWORD_DEFAULT)));
+		Auth::updatePassword($request->input('username'), $request->input('password'));
 			
 		return view('success.success', ["layout" => $layout,
 										"message" => $layout->language('success_at_reset_password'),
