@@ -10,15 +10,15 @@ class Database{
 	public function __construct(){
 	}
 
-	public function beginTransaction(){
+	public static function beginTransaction(){
 		DB::beginTransaction();
 	}
 	
-	public function rollback(){
+	public static function rollback(){
 		DB::rollback();
 	}
 	
-	public function commit(){
+	public static function commit(){
 		DB::commit();
 	}
 	

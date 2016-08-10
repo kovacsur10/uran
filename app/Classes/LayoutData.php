@@ -3,14 +3,14 @@
 namespace App\Classes;
 
 use Illuminate\Support\Facades\Session;
-use App\Classes\User;
-use App\Classes\Room;
-use App\Classes\Modules;
-use App\Classes\Permissions;
-use App\Classes\Languages;
-use App\Classes\Registrations;
-use App\Classes\Tasks;
-use App\Classes\Errors;
+use App\Classes\Layout\User;
+use App\Classes\Layout\Room;
+use App\Classes\Layout\Modules;
+use App\Classes\Layout\Permissions;
+use App\Classes\Layout\Languages;
+use App\Classes\Layout\Registrations;
+use App\Classes\Layout\Tasks;
+use App\Classes\Layout\Errors;
 use DB;
 
 class LayoutData{
@@ -24,7 +24,6 @@ class LayoutData{
 	protected $registrations;
 	protected $tasks;
 	protected $errors;
-	protected $database;
 	
 	public function __construct(){
 		$this->logged = Session::has('user');
@@ -37,7 +36,6 @@ class LayoutData{
 		$this->registrations = new Registrations();
 		$this->tasks = new Tasks();
 		$this->errors = new Errors();
-		$this->database = new Database();
 	}
 	
 	public function errors(){
@@ -54,10 +52,6 @@ class LayoutData{
 	
 	public function user(){
 		return $this->user;
-	}
-	
-	public function database(){
-		return $this->database;
 	}
 	
 	public function room(){

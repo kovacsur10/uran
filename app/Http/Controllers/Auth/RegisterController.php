@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Classes\User;
-use App\Classes\EcnetUser;
+use App\Classes\Database;
+use App\Classes\Layout\EcnetUser;
 use App\Classes\LayoutData;
 use App\Classes\Notify;
 use Validator;
@@ -47,14 +47,14 @@ class RegisterController extends Controller{
 			'accept' => 'required',
 		]);
 		
-		$layout->database()->beginTransaction(); //DATABASE TRANSACTION STARTS HERE
+		Database::beginTransaction(); //DATABASE TRANSACTION STARTS HERE
 		try{
 			$layout->registrations()->insertGuestData($request->input('username'), $request->input('password'), $request->input('email'), $request->input('name'), $request->input('country'), $request->input('shire'), $request->input('postalcode'), $request->input('address'), $request->input('city'), $request->input('reason'), $request->input('phone'), $layout->lang());	
 		}catch(\Illuminate\Database\QueryException $e){
 		}
 		$userId = $layout->registrations()->getNotVerifiedUserData($request->input('username'));
 		if($userId == null){
-			$layout->database()->rollback();
+			Database::rollback();
 			return view('errors.error', ["layout" => $layout,
 										 "message" => $layout->language('error_at_sending_registration_verification_email'),
 										 "url" => '/register']);
@@ -62,7 +62,7 @@ class RegisterController extends Controller{
 			try{
 				$layout->registrations()->addCode($userId->id, $string);
 			}catch(\Illuminate\Database\QueryException $e){
-				$layout->database()->rollback();
+				Database::rollback();
 				return view('errors.error', ["layout" => $layout,
 										 "message" => $layout->language('error_at_sending_registration_verification_email'),
 										 "url" => '/register']);
@@ -75,7 +75,7 @@ class RegisterController extends Controller{
 			}
 			// ECNET PART END
 			
-			$layout->database()->commit();
+			Database::commit();
 			if($layout->lang() == "hu_HU" || $layout->lang() == "en_US")
 				$lang = $layout->lang();
 			else
@@ -117,11 +117,11 @@ class RegisterController extends Controller{
 			'accept' => 'required',
 		]);
 		$this->validate($request, array('date_of_birth' => array('required', 'regex:/(^(?:19[0-9]{2}|2[0-9]{3})\.(?:1[012]|0[1-9])\.(?:0[1-9]|[12][0-9]|3[01])\.?$)/')));
-		$layout->database()->beginTransaction(); //DATABASE TRANSACTION STARTS HERE
+		Database::beginTransaction(); //DATABASE TRANSACTION STARTS HERE
 		$layout->registrations()->insertCollegistData($request->input('username'), $request->input('password'), $request->input('email'), $request->input('name'), $request->input('country'), $request->input('shire'), $request->input('postalcode'), $request->input('address'), $request->input('city'), $request->input('phone'), $layout->lang(), $request->input('city_of_birth'), $request->input('date_of_birth'), $request->input('name_of_mother'), $request->input('year_of_leaving_exam'), $request->input('high_school'), $request->input('neptun'), $request->input('from_year'), $request->input('faculty'), $request->input('workshop'));
 		$userId = $layout->registrations()->getNotVerifiedUserData($request->input('username'));
 		if($userId == null){
-			$layout->database()->rollback();
+			Database::rollback();
 			return view('errors.error', ["layout" => $layout,
 										 "message" => $layout->language('error_at_sending_registration_verification_email'),
 										 "url" => '/register']);
@@ -129,7 +129,7 @@ class RegisterController extends Controller{
 			try{
 				$layout->registrations()->addCode($userId->id, $string);
 			}catch(\Illuminate\Database\QueryException $e){
-				$layout->database()->rollback();
+				Database::rollback();
 				return view('errors.error', ["layout" => $layout,
 										 "message" => $layout->language('error_at_sending_registration_verification_email'),
 										 "url" => '/register']);
@@ -142,7 +142,7 @@ class RegisterController extends Controller{
 			}
 			// ECNET PART END
 			
-			$layout->database()->commit();
+			Database::commit();
 			if($layout->lang() == "hu_HU" || $layout->lang() == "en_US")
 				$lang = $layout->lang();
 			else
