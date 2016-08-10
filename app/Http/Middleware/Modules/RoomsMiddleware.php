@@ -5,7 +5,7 @@ namespace App\Http\Middleware\Modules;
 use Closure;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
-use App\Classes\Modules;
+use App\Classes\Layout\Modules;
 
 class RoomsMiddleware{
     /**
