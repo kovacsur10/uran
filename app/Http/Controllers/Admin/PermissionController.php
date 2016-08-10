@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Classes\LayoutData;
 use App\Classes\Notify;
+use App\Classes\Database;
 use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
@@ -28,7 +29,7 @@ class PermissionController extends Controller{
 		$layout = new LayoutData();
 		if($layout->user()->permitted('permission_admin')){
 			$error = false;
-			DB::beginTransaction(); //DATABASE TRANSACTION STARTS HERE
+			Database::beginTransaction(); //DATABASE TRANSACTION STARTS HERE
 			try{
 				DB::table('user_permissions')
 					->where('user_id', '=', $request->user)
@@ -48,12 +49,12 @@ class PermissionController extends Controller{
 			}
 			
 			if($error){
-				DB::rollback();
+				Database::rollback();
 				return view('errors.error', ["layout" => $layout,
 											 "message" => $layout->language('error_at_setting_the_permissions'),
 											 "url" => '/admin/permissions']);
 			}else{
-				DB::commit();
+				Database::commit();
 				return view('admin.permissions', ["layout" => $layout]);
 			} //DATABASE TRANSACTION ENDS HERE
 		}else{
