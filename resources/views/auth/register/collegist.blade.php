@@ -112,11 +112,15 @@
 								</div>
 								
 								<div class="form-group{{ $errors->has('date_of_birth') ? ' has-error' : '' }}">
-									<label class="col-md-4 control-label">{{ $layout->language('date_of_birth_with_format') }}</label>
+									<label class="col-md-4 control-label">{{ $layout->language('date_of_birth') }}</label>
 
 									<div class="col-md-6">
-										<input type="date" class="form-control" name="date_of_birth" value="{{ old('date_of_birth') }}">
-
+										<div class='input-group date' data-date-format="yyyy.mm.dd." id='datepicker_add_new_task'>
+											<input type="text" readonly class="form-control" name="date_of_birth" value="{{ old('date_of_birth') }}">
+											<span class="input-group-addon">
+												<span class="glyphicon glyphicon-calendar"></span>
+											</span>
+										</div>
 										@if ($errors->has('date_of_birth'))
 											<span class="help-block">
 												<strong>{{ $errors->first('date_of_birth') }}</strong>
@@ -361,4 +365,15 @@
         </div>
     </div>
 </div>
+
+<!-- Datepicker script -->
+<script type="text/javascript">
+	$(function(){
+		$('#datepicker_add_new_task').datepicker({
+			format: 'yyyy.mm.dd.',
+			autoclose: true,
+			clearBtn: true
+		});
+	});
+</script>
 @endsection
