@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Classes;
+namespace App\Classes\Layout;
 
 use DB;
-use App\Classes\Permissions;
+use App\Classes\Layout\Permissions;
 use App\Classes\Notifications;
 
 class User{

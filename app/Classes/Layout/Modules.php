@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Classes;
+namespace App\Classes\Layout;
 
-use App\Classes\User;
+use App\Classes\Layout\User;
 use Carbon\Carbon;
 use DB;
 
