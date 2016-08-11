@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Classes\LayoutData;
-use App\Classes\User;
+use App\Classes\Layout\User;
 use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
@@ -20,17 +20,14 @@ class UserController extends Controller{
 	}
 	
 	public function showPublicData($username){
-		$targetId = DB::table('users')
-						->where('username', '=', $username)
-						->select('id')
-						->first();
+		$layout = new LayoutData();
+		$targetId = $layout->user()->getUserDataByUsername($username);
 		if($targetId == null){
-			$layout = new LayoutData();
 			return view('errors.error', ["layout" => $layout,
 										 "message" => $layout->language('error_at_finding_the_user'),
 										 "url" => '/home']);
 		}else{
-			return view('user.showpublicdata', ["layout" => new LayoutData(),
+			return view('user.showpublicdata', ["layout" => $layout,
 												"target" => new User($targetId->id)]);
 		}
 	}
