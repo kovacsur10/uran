@@ -7,24 +7,9 @@
             <div class="panel panel-default">
                 <div class="panel-heading">{{ $layout->language('admin_panel') }} - {{ $layout->language('user_administration_LC') }}</div>
                 <div class="panel-body">				
-<<<<<<< HEAD
-					@if($user->permitted('ecnet_user_handling'))
-<<<<<<< HEAD
-						@foreach($user->eirUsers() as $eirUser)
-<<<<<<< HEAD
-						<div class="panel panel-default {{ $eirUser->valid_time > Carbon\Carbon::now()->toDateTimeString() ? 'panel-success' : 'panel-danger' }}">
-							<div class="panel-heading">{{ $eirUser->name }} - {{ $eirUser->username }} - id: {{ $eirUser->id }}</div>
-=======
-=======
 					@if($layout->user()->permitted('ecnet_user_handling'))
->>>>>>> d8c9872... LayoutData data handling was added to the project.
 						<div class="panel panel-default">
-<<<<<<< HEAD
-							<div class="panel-heading">Felhasználó keresése</div>
->>>>>>> 39d2186... ECNET userhandling: filter is working.
-=======
 							<div class="panel-heading">{{ $layout->language('find_user') }}</div>
->>>>>>> ba2ceb3... Language support is added. Need to do more!
 							<div class="panel-body">
 								<form class="form-horizontal" role="form" method="POST" action="{{ url('/ecnet/users') }}">
 									{!! csrf_field() !!}
@@ -65,20 +50,7 @@
 											<a href="{{ url('ecnet/users/resetfilter') }}" class="btn btn-danger" role="button">{{ $layout->language('delete_filter') }}</a>
 										</div>
 									</div>
-<<<<<<< HEAD
-								@endif
-								</p>
-=======
-						<div class="panel panel-default {{ $eirUser->valid_time > Carbon\Carbon::now()->toDateTimeString() ? "panel-success" : "panel-danger" }}">
-							<div class="panel-heading">{{ $eirUser->name }} - {{ $eirUser->username }} - id: {{ $eirUser->id }}</div>
-							<div class="panel-body">
-								<p>Egyenleg: {{ $eirUser->money }} <i class="fa fa-btn fa-money"></i></p>
-								<p>Érvényességi idő: {{ $eirUser->valid_time }} <i class="fa fa-btn {{ $eirUser->valid_time > Carbon\Carbon::now()->toDateTimeString() ? "fa-calendar-check-o" : "fa-calendar-times-o" }}"></i></p>
-								<p>MAC slotok száma: {{ $eirUser->mac_slots }} darab</p>
->>>>>>> 5ea7d77... Eir user administration was added.
-=======
 								</form>
->>>>>>> 39d2186... ECNET userhandling: filter is working.
 							</div>
 						</div>
 						

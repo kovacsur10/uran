@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Ecnet;
 
 use App\Classes\LayoutData;
-use App\Classes\EcnetUser;
+use App\Classes\Layout\EcnetUser;
 use App\Classes\Notify;
 use Validator;
 use App\Http\Controllers\Controller;
@@ -52,50 +52,31 @@ class EcnetController extends Controller{
 		$layout = new LayoutData();
 		$layout->setUser(new EcnetUser(Session::get('user')->id));
 		if(Session::has('ecnet_username_filter') && Session::has('ecnet_name_filter')){
-			$user->filterUsers(Session::get('ecnet_username_filter'), Session::get('ecnet_name_filter'));
+			$layout->user()->filterUsers(Session::get('ecnet_username_filter'), Session::get('ecnet_name_filter'));
 		}
 		return view('ecnet.showusers', ["layout" => $layout,
 										"usersToShow" => $count,
 										"firstUser" => $first]);
 	}
 	
-<<<<<<< HEAD
 	public function showActiveUsers($type){
-<<<<<<< HEAD:app/Http/Controllers/Eir/EirController.php
-=======
 		$layout = new LayoutData();
 		$layout->setUser(new EcnetUser(Session::get('user')->id));
->>>>>>> 215d55e... Module Middlewares were added.:app/Http/Controllers/Ecnet/EcnetController.php
 		if($type == "name" || $type == "username" || $type == "both"){
 			return view('ecnet.showactiveusers.'.$type, ["logged" => Session::has('user'),
-												  "user" => new EirUser(Session::get('user')->id)]);
+												  "layout" => $layout]);
 		}else{
-<<<<<<< HEAD
-			return view('errors.error', ["logged" => Session::has('user'),
-										 "user" => new EirUser(Session::get('user')->id),
-										 "message" => 'Nincsen ilyen oldal!',
-=======
 			return view('errors.error', ["layout" => $layout,
 										 "message" => $layout->language('error_page_not_found'),
->>>>>>> ba2ceb3... Language support is added. Need to do more!
 										 "url" => '/ecnet/users']);
 		}
-=======
-	public function showActiveUsers(){
-		$layout = new LayoutData();
-		$layout->setUser(new EirUser(Session::get('user')->id));
-		return view('ecnet.showactiveusers', ["layout" => $layout]);
->>>>>>> d8c9872... LayoutData data handling was added to the project.
 	}
-<<<<<<< HEAD
 	
 	public function getUsers(){
 		return DB::table('users')->select('id', 'username', 'name')
 								 ->orderBy('name', 'asc')
 								 ->get();
 	}
-=======
->>>>>>> 65fec04... Task manager is nearly complete.
 	
 	public function filterUsers(Request $request){
 		if($request->input('username') == null){
@@ -260,7 +241,7 @@ class EcnetController extends Controller{
         $this->validate($request, [
 			'reason' => 'required',
 		]);
-		addMACSlotOrder($layout->user()->user()->id, $request->input('reason'));
+		$layout->user()->addMACSlotOrder($layout->user()->user()->id, $request->input('reason'));
 		Notify::notifyAdmin($layout->user(), 'ecnet_slot_verify', $layout->language('mac_slot_ordering'), $layout->language('mac_slot_was_ordered_description').$request->input('reason'), 'ecnet/order');
 		return view('success.success', ["layout" => $layout,
 										"message" => $layout->language('success_at_sending_mac_slot_order'),
@@ -274,7 +255,7 @@ class EcnetController extends Controller{
 			'optradio' => 'required',
 			'slot' => 'required',
 		]);
-		if($user->permitted('ecnet_slot_verify')){
+		if($layout->user()->permitted('ecnet_slot_verify')){
 			$target = DB::table('ecnet_user_data')->join('ecnet_mac_slot_orders', 'ecnet_mac_slot_orders.user_id', '=', 'ecnet_user_data.user_id')
 												->where('ecnet_mac_slot_orders.id', '=', $request->input('slot'))
 												->first();
@@ -286,9 +267,9 @@ class EcnetController extends Controller{
 			if($request->input('optradio') == "allow"){
 				DB::table('ecnet_user_data')->where('user_id', '=', $target->user_id)
 										  ->update(['mac_slots' => $target->mac_slots+1]);
-				Notify::notify($user, $target->user_id, $layout->language('mac_slot_ordering'), $layout->language('mac_slot_order_was_accepted_description').$target->reason, 'ecnet/access');
+				Notify::notify($layout->user(), $target->user_id, $layout->language('mac_slot_ordering'), $layout->language('mac_slot_order_was_accepted_description').$target->reason, 'ecnet/access');
 			}else{
-				Notify::notify($user, $target->user_id, $layout->language('mac_slot_ordering'), $layout->language('mac_slot_order_was_denied_description').$target->reason, 'ecnet/order');
+				Notify::notify($layout->user(), $target->user_id, $layout->language('mac_slot_ordering'), $layout->language('mac_slot_order_was_denied_description').$target->reason, 'ecnet/order');
 			}
 			DB::table('ecnet_mac_slot_orders')->where('id', '=', $request->input('slot'))->delete();
 			return view('success.success', ["layout" => $layout,
