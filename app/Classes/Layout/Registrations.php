@@ -6,7 +6,12 @@ use DB;
 use Carbon\Carbon;
 
 class Registrations{
-	protected $registrationUser;	
+	
+// PRIVATE VARIABLES	
+	
+	private $registrationUser;	
+	
+// PUBLIC FUNCTIONS	
 	
 	public function __construct(){
 	}
@@ -125,4 +130,25 @@ class Registrations{
 			'workshop' => $workshop,
 		]);
 	}
+	
+	public function addUserDefaultPermissions($userType, $userId){
+		//get the default permissions
+		$permissions = DB::table('default_permissions')
+			->where('registration_type', 'LIKE', $userType)
+			->orderBy('id', 'asc')
+			->get();
+		if($permissions !== null){
+			//set the user permissions
+			foreach($permissions as $permission){
+				DB::table('user_permissions')
+					->insert([
+						'user_id' => $userId,
+						'permission_id' => $permission->permission
+					]);
+			}
+		}
+	}
+	
+// PRIVATE FUNCTIONS
+
 }
