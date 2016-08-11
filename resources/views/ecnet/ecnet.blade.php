@@ -10,7 +10,7 @@
 					@if($active)
 					<div class="alert alert-success">
 						<p>{{ $layout->language('internet_is_active') }}</p>
-						<p>{{ $layout->language('expiration_date') }}: {{ str_replace("-", ". ", str_replace(" ", ". ", $layout->user()->ecnetUser()->valid_time)) }}</p>
+						<p>{{ $layout->language('expiration_date') }}: {{ $layout->formatDate($layout->user()->ecnetUser()->valid_time) }}</p>
 					</div>
 					@else
 					<div class="alert alert-danger">
@@ -30,9 +30,14 @@
 								
 								<div class="form-group{{ $errors->has('custom_valid_date') ? ' has-error' : '' }}">
 									<label class="col-md-4 control-label">{{ $layout->language('custom_validation_date') }}</label>
-
+									
 									<div class="col-md-6">
-										<input type="date" class="form-control" name="custom_valid_date" value="{{ old('custom_valid_date') }}">
+										<div class='input-group date' data-date-format="yyyy.mm.dd." id='datepicker_custom_valid_date'>
+											<input type="text" readonly class="form-control" name="custom_valid_date" value="{{ old('custom_valid_date') }}">
+											<span class="input-group-addon">
+												<span class="glyphicon glyphicon-calendar"></span>
+											</span>
+										</div>
 
 										@if ($errors->has('custom_valid_date'))
 											<span class="help-block">
@@ -73,7 +78,7 @@
 								<p>{{ $layout->language('default_time_set_note_description') }}</p>
 								<p>{{ $layout->language('default_time_now_description') }}: <strong>
 								@if($layout->user()->validationTime() != null)
-									{{ $layout->user()->validationTime()->valid_date }}
+									{{ $layout->formatDate($layout->user()->validationTime()->valid_date) }}
 								@else
 									{{ $layout->language('error_no_default_time_description') }}
 								@endif
@@ -92,7 +97,12 @@
 									<label class="col-md-4 control-label">{{ $layout->language('validation_date') }}</label>
 
 									<div class="col-md-6">
-										<input type="date" class="form-control" name="new_valid_date" value="{{ old('new_valid_date') }}">
+										<div class='input-group date' data-date-format="yyyy.mm.dd." id='datepicker_new_valid_date'>
+											<input type="text" readonly class="form-control" name="new_valid_date" value="{{ old('new_valid_date') }}">
+											<span class="input-group-addon">
+												<span class="glyphicon glyphicon-calendar"></span>
+											</span>
+										</div>
 
 										@if ($errors->has('new_valid_date'))
 											<span class="help-block">
@@ -113,7 +123,7 @@
 							<div class="alert alert-warning">
 								<p>{{ $layout->language('default_time_now_description') }}: <strong>
 								@if($layout->user()->validationTime() != null)
-									{{ $layout->user()->validationTime()->valid_date }}
+									{{ $layout->formatDate($layout->user()->validationTime()->valid_date) }}
 								@else
 									{{ $layout->language('error_no_default_time_description') }}
 								@endif
@@ -177,4 +187,25 @@
         </div>
     </div>
 </div>
+
+<!-- Datepicker script -->
+<script type="text/javascript">
+	$(function(){
+		$('#datepicker_custom_valid_date').datepicker({
+			format: 'yyyy.mm.dd.',
+			autoclose: true,
+			clearBtn: true,
+			todayHighlight: true
+		});
+	});
+	
+	$(function(){
+		$('#datepicker_new_valid_date').datepicker({
+			format: 'yyyy.mm.dd.',
+			autoclose: true,
+			clearBtn: true,
+			todayHighlight: true
+		});
+	});
+</script>
 @endsection

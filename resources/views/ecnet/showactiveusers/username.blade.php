@@ -1,4 +1,4 @@
-@extends('ecnet.showactiveusers.layout', ['data' => $layout])
+@extends('ecnet.showactiveusers.layout', ['layout' => $layout])
 
 @section('listcontent')
 				
