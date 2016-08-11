@@ -21,7 +21,9 @@
 						</div>
 					</div>
 					@foreach($layout->tasks()->get() as $task)
-					  @if($task->priority === 'high' || $task->priority === 'highest')
+					  @if($task->status === 'closed')
+					  <div class="alert alert-info">
+					  @elseif($task->priority === 'high' || $task->priority === 'highest')
 					  <div class="alert alert-{{ $task->priority === 'high' ? 'warning' : 'danger' }}">
 					  @else
 					  <div class="well well-sm">
