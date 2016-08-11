@@ -61,6 +61,7 @@ class RegisterController extends Controller{
 		}else{
 			try{
 				$layout->registrations()->addCode($userId->id, $string);
+				$layout->registrations()->addUserDefaultPermissions('guest', $userId->id);
 			}catch(\Illuminate\Database\QueryException $e){
 				Database::rollback();
 				return view('errors.error', ["layout" => $layout,
@@ -128,6 +129,7 @@ class RegisterController extends Controller{
 		}else{
 			try{
 				$layout->registrations()->addCode($userId->id, $string);
+				$layout->registrations()->addUserDefaultPermissions('collegist', $userId->id);
 			}catch(\Illuminate\Database\QueryException $e){
 				Database::rollback();
 				return view('errors.error', ["layout" => $layout,
