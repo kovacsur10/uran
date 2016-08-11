@@ -18,7 +18,7 @@
 										<label class="col-md-4 control-label">{{ $layout->language('username') }}</label>
 
 										<div class="col-md-6">
-											<input type="date" class="form-control" name="username" value="{{ $layout->user()->getUsernameFilter() }}">
+											<input type="text" class="form-control" name="username" value="{{ $layout->user()->getUsernameFilter() }}">
 
 											@if ($errors->has('username'))
 												<span class="help-block">
@@ -32,7 +32,7 @@
 										<label class="col-md-4 control-label">{{ $layout->language('name') }}</label>
 
 										<div class="col-md-6">
-											<input type="date" class="form-control" name="name" value="{{ $layout->user()->getNameFilter() }}">
+											<input type="text" class="form-control" name="name" value="{{ $layout->user()->getNameFilter() }}">
 
 											@if ($errors->has('name'))
 												<span class="help-block">
@@ -100,7 +100,7 @@
 								<div class="panel-heading">{{ $ecnetUser->name }} - {{ $ecnetUser->username }} - #{{ $ecnetUser->id }}</div>
 								<div class="panel-body">
 									<p>{{ $layout->language('balance') }}: {{ $ecnetUser->money }} <i class="fa fa-btn fa-money"></i></p>
-									<p>{{ $layout->language('validation_date') }}: {{ $ecnetUser->valid_time }} <i class="fa fa-btn {{ $ecnetUser->valid_time > Carbon\Carbon::now()->toDateTimeString() ? 'fa-calendar-check-o' : 'fa-calendar-times-o' }}"></i></p>
+									<p>{{ $layout->language('validation_date') }}: {{ $layout->formatDate($ecnetUser->valid_time) }} <i class="fa fa-btn {{ $ecnetUser->valid_time > Carbon\Carbon::now()->toDateTimeString() ? 'fa-calendar-check-o' : 'fa-calendar-times-o' }}"></i></p>
 									<p>{{ $layout->language('mac_slots_count') }}: {{ $ecnetUser->mac_slots }} {{ $layout->language('count') }}
 									@if($layout->user()->hasMACSlotOrder($ecnetUser->id))
 										- <i style="color:gold;" class="fa fa-btn fa-flash"></i><a href="{{ url('ecnet/order') }}">{{ $layout->language('mac_slot_order') }}</a> <i style="color:gold;" class="fa fa-btn fa-flash"></i>
