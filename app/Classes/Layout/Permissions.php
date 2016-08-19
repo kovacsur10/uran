@@ -10,7 +10,7 @@ class Permissions{
 // PUBLIC FUNCTIONS
 	
 	public function permitted($userId, $permissionName){
-		$permissions = Permissions::get($userId);
+		$permissions = $this->getForUser($userId);
 		$i = 0;
 		while($i < count($permissions) && $permissions[$i]->permission_name != $permissionName){
 			$i++;
@@ -18,7 +18,7 @@ class Permissions{
 		return $i < count($permissions);
 	}
 	
-	public static function get($userId){
+	public function getForUser($userId){
 		$permissions = DB::table('permissions')->join('user_permissions', 'permissions.id', '=', 'user_permissions.permission_id')
 			->select('permissions.id as id', 'permission_name', 'permissions.description as description')
 			->where('user_permissions.user_id', '=', $userId)
@@ -27,11 +27,27 @@ class Permissions{
 		return $permissions == null ? [] : $permissions;
 	}
 	
+	public function getById($permissionId){
+		return DB::table('permissions')
+			->where('permissions.id', '=', $permissionId)
+			->first();
+	}
+	
 	public function getAllPermissions(){
 		$permissions = DB::table('permissions')
 			->orderBy('id', 'asc')
 			->get();
 		return $permissions == null ? [] : $permissions;
+	}
+	
+	public function getUsersWithPermission($permissionId){
+		$users = DB::table('permissions')
+			->join('user_permissions', 'user_permissions.permission_id', '=', 'permissions.id')
+			->join('users', 'users.id', '=', 'user_permissions.user_id')
+			->where('permissions.id', '=', $permissionId)
+			->select('users.id', 'users.name', 'users.username')
+			->get();
+		return $users === null ? [] : $users;
 	}
 	
 	public function hasGuestsDefaultPermission($permissionId){
@@ -63,6 +79,20 @@ class Permissions{
 			DB::rollback();
 			return 1;
 		}
+	}
+	
+	public function removeAll($userId){
+		DB::table('user_permissions')
+			->where('user_id', '=', $userId)
+			->delete();
+	}
+	
+	public function setPermissionForUser($userId, $permissionId){
+		DB::table('user_permissions')
+			->insert([
+				'user_id' => $userId,
+				'permission_id' => $permissionId
+			]);
 	}
 	
 // PRIVATE FUNCTIONS	

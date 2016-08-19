@@ -8,11 +8,19 @@ use DB;
 
 class Modules{
 
+// PUBLIC FUNCTIONS
+
 	public function get(){
 		$moduls = DB::table('modules')
 			->orderBy('id', 'asc')
 			->get();
 		return $moduls == null ? [] : $moduls;
+	}
+	
+	public function getById($id){
+		return DB::table('modules')
+			->where('id', '=', $id)
+			->first();
 	}
 	
 	public function isActivatedById($id){
@@ -47,6 +55,19 @@ class Modules{
 				array_push($inactives, $module);
 		}
 		return $inactives;
+	}
+	
+	public function activate($moduleId){
+		DB::table('active_modules')
+			->insert([
+				'module_id' => $moduleId
+			]);
+	}
+	
+	public function deactivate($moduleId){
+		DB::table('active_modules')
+			->where('module_id', '=', $moduleId)
+			->delete();
 	}
 	
 }

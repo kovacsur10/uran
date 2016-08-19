@@ -14,7 +14,8 @@ class User{
 	
 	public function __construct($userId){
 		$this->user = $this->getUserData($userId);
-		$this->permissions = Permissions::get($userId);
+		$tmpPermissions = new Permissions();
+		$this->permissions = $tmpPermissions->getForUser($userId);
 		$this->notifications = Notifications::getNotifications($userId);
 		$this->unseenNotificationCount = Notifications::getUnseenNotificationCount($userId);
 	}
@@ -72,15 +73,23 @@ class User{
 	}
 	
 	public function getUserData($userId){
-		return DB::table('users')->where('id', '=', $userId)
-								 ->where('registered', '=', 1)
-								 ->first();
+		if($userId === 0){
+			return DB::table('users')
+				->where('id', '=', 0)
+				->first();
+		}else{	
+			return DB::table('users')
+				->where('id', '=', $userId)
+				->where('registered', '=', 1)
+				->first();
+		}
 	}
 	
 	public function getUserDataByUsername($username){
-		return DB::table('users')->where('username', 'LIKE', $username)
-								 ->where('registered', '=', 1)
-								 ->first();
+		return DB::table('users')
+			->where('username', 'LIKE', $username)
+			->where('registered', '=', 1)
+			->first();
 	}
 	
 }
