@@ -15,6 +15,28 @@ class Room{
 		return $this->rooms;
 	}
 	
+	public function getRoomId($roomNumber){
+		$roomId	= DB::table('rooms_rooms')
+			->where('room_number', 'LIKE', $roomNumber)
+			->select('id')
+			->first();
+		return $roomId === null ? null : $roomId->id;
+	}
+	
+	public function emptyRoom($roomId){
+		DB::table('rooms_room_assignments')
+			->where('roomid', '=', $roomId)
+			->delete();
+	}
+	
+	public function setUserToRoom($roomId, $userId){
+		DB::table('rooms_room_assignments')
+			->insert([
+				'roomid' => $roomId,
+				'userid' => $userId
+			]);
+	}
+	
 	public function getResidents($room_number){
 		$ret = DB::table('rooms_rooms')
 			->join('rooms_room_assignments', 'rooms_room_assignments.roomid', '=', 'rooms_rooms.id')

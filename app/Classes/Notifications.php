@@ -23,4 +23,17 @@ class Notifications{
 			->count('id');
 	}
 	
+	public static function get($notificationId, $userId){
+		return DB::table('notifications')
+			->where('id', '=', $notificationId)
+			->where('user_id', '=', $userId)
+			->first();
+	}
+	
+	public static function setSeen($notificationId){
+		DB::table('notifications')
+			->where('id', '=', $notificationId)
+			->update(['seen' => 'true']);
+	}
+	
 }

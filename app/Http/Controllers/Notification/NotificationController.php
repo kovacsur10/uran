@@ -3,12 +3,10 @@
 namespace App\Http\Controllers\Notification;
 
 use App\Classes\LayoutData;
+use App\Classes\Notifications;
 use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Http\Request;
-use Carbon\Carbon;
-use DB;
 
 class NotificationController extends Controller{	
 	
@@ -18,23 +16,18 @@ class NotificationController extends Controller{
 	}
 	
 	public function showNotification($notificationId){
-		$exist = DB::table('notifications')
-					->where('id', '=', $notificationId)
-					->where('user_id', '=', Session::get('user')->id)
-					->first();
-		if($exist == null){
+		$notification = Notifications::get($notificationId, Session::get('user')->id);
+		if($notification === null){
 			$layout = new LayoutData();
 			return view('errors.error', ["layout" => $layout,
 										 "message" => $layout->language('error_notification_view_insufficient_permission'),
 										 "url" => '/notification/list/0']);
 		}else{
-			DB::table('notifications')
-				->where('id', '=', $notificationId)
-				->update(['seen' => 'true']);
-			if($exist->route == null)
+			Notifications::setSeen($notificationId);
+			if($notification->route === null)
 				return redirect('notification/list/0');
 			else
-				return redirect($exist->route);
+				return redirect($notification->route);
 		}
 	}
 }

@@ -4,14 +4,11 @@ namespace App\Http\Controllers\Rooms;
 
 use App\Classes\LayoutData;
 use App\Classes\Notify;
+use App\Classes\Database;
 use Validator;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
-use Carbon\Carbon;
-use DB;
-use Mail;
 
 class RoomsController extends Controller{	
     public function showMap($level){
@@ -35,32 +32,30 @@ class RoomsController extends Controller{
 		$layout = new LayoutData();
 		if($layout->user()->permitted('rooms_assign')){
 			$error = false;
-			$roomid = DB::table('rooms_rooms')
-				->where('room_number', 'LIKE', $request->room)
-				->select('id')
-				->first();
-			DB::beginTransaction(); //DATABASE TRANSACTION STARTS HERE
-			DB::table('rooms_room_assignments')
-				->where('roomid', '=', $roomid->id)
-				->delete();
-			for($i = 0; $i < $request->count; $i++){
-				if($request->input('resident'.$i) != 0){
-					try{
-						DB::table('rooms_room_assignments')
-							->insert(['roomid' => $roomid->id, 'userid' => $request->input('resident'.$i)]);
-					}catch(\Illuminate\Database\QueryException $e) {
-						$error = true;
+			$roomId = $layout->room()->getRoomId($request->room);
+			Database::beginTransaction(); //DATABASE TRANSACTION STARTS HERE
+			if($roomId == null){
+				$error = true;
+			}else{
+				$layout->room()->emptyRoom($roomId);
+				for($i = 0; $i < $request->count; $i++){
+					if($request->input('resident'.$i) != 0){
+						try{
+							$layout->room()->setUserToRoom($roomId, $request->input('resident'.$i));
+						}catch(\Illuminate\Database\QueryException $e) {
+							$error = true;
+						}
 					}
 				}
 			}
 			
 			if($error){
-				DB::rollback();
+				Database::rollback();
 				return view('errors.error', ["layout" => $layout,
 											 "message" => $layout->language('error_already_lives_somewhere'),
 											 "url" => '/rooms/room/'.$request->room]);
 			}else{
-				DB::commit();
+				Database::commit();
 				return view('rooms.showroom', ["layout" => new LayoutData(),
 											   "room" => $request->room]);
 			} //DATABASE TRANSACTION ENDS HERE
