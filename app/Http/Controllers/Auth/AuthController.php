@@ -11,7 +11,6 @@ use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
-use Mail;
 
 class AuthController extends Controller{	
     public function showLoginForm(){
