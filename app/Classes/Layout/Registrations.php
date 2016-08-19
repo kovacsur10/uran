@@ -149,6 +149,52 @@ class Registrations{
 		}
 	}
 	
+	public function reject($userId){
+		DB::table('users')
+			->where('id', '=', $userId)
+			->where('registered', '=', 0)
+			->where('id', '!=', 0)
+			->delete();
+	}
+	
+	public function acceptGuest($userId, $country, $shire, $postalCode, $address, $city, $phone, $reason){
+		DB::table('users')
+			->where('id', '=', $userId)
+			->update([
+				'registered' => 1,
+				'country' => $country,
+				'shire' => $shire,
+				'postalcode' => $postalCode,
+				'address' => $address,
+				'city' => $city,
+				'phone' => $phone,
+				'reason' => $reason,
+			]);
+	}
+	
+	public function acceptCollegist($userId, $country, $shire, $postalCode, $address, $city, $phone, $cityOfBirth, $dateOfBirth, $nameOfMother, $yearOfLeavingExam, $highSchool, $neptunCode, $applicationYear, $faculty, $workshop){
+		DB::table('users')
+			->where('id', '=', $userId)
+			->update([
+				'registered' => 1,
+				'country' => $country,
+				'shire' => $shire,
+				'postalcode' => $postalCode,
+				'address' => $address,
+				'city' => $city,
+				'phone' => $phone,
+				'city_of_birth' => $cityOfBirth,
+				'name_of_mother' => $nameOfMother,
+				'date_of_birth' => $dateOfBirth,
+				'year_of_leaving_exam' => $yearOfLeavingExam,
+				'high_school' => $highSchool,
+				'neptun' => $neptunCode,
+				'from_year' => $applicationYear,
+				'faculty' => $faculty,
+				'workshop' => $workshop,
+			]);
+	}
+	
 // PRIVATE FUNCTIONS
 
 }

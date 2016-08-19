@@ -3,13 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Classes\LayoutData;
-use App\Classes\Notify;
 use Validator;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
-use DB;
 use Mail;
 
 class RegistrationController extends Controller{
@@ -37,11 +34,7 @@ class RegistrationController extends Controller{
 		$layout = new LayoutData();
 		if($layout->user()->permitted('accept_user_registration')){
 			try{
-				DB::table('users')
-					->where('id', '=', $id)
-					->where('registered', '=', 0)
-					->where('id', '!=', 0)
-					->delete();
+				$layout->registrations()->reject($id);
 			}catch(\Illuminate\Database\QueryException $e){
 				return view('errors.error', ["layout" => $layout,
 											 "message" => $layout->language('reject_user_registration_failure'),
@@ -89,39 +82,9 @@ class RegistrationController extends Controller{
 			}
 			try{
 				if($request->neptun == null || $request->neptun == ""){
-					DB::table('users')
-						->where('id', '=', $request->id)
-						->update([
-							'registered' => 1,
-							'country' => $request->input('country'),
-							'shire' => $request->input('shire'),
-							'postalcode' => $request->input('postalcode'),
-							'address' => $request->input('address'),
-							'city' => $request->input('city'),
-							'phone' => $request->input('phone'),
-							'reason' => $request->input('reason'),
-						]);
+					$layout->registrations()->acceptGuest($request->id, $request->input('country'), $request->input('shire'), $request->input('postalcode'), $request->input('address'), $request->input('city'), $request->input('phone'), $request->input('reason'));
 				}else{
-					DB::table('users')
-						->where('id', '=', $request->id)
-						->update([
-							'registered' => 1,
-							'country' => $request->input('country'),
-							'shire' => $request->input('shire'),
-							'postalcode' => $request->input('postalcode'),
-							'address' => $request->input('address'),
-							'city' => $request->input('city'),
-							'phone' => $request->input('phone'),
-							'city_of_birth' => $request->input('city_of_birth'),
-							'name_of_mother' => $request->input('name_of_mother'),
-							'date_of_birth' => $request->input('date_of_birth'),
-							'year_of_leaving_exam' => $request->input('year_of_leaving_exam'),
-							'high_school' => $request->input('high_school'),
-							'neptun' => $request->input('neptun'),
-							'from_year' => $request->input('from_year'),
-							'faculty' => $request->input('faculty'),
-							'workshop' => $request->input('workshop'),
-						]);
+					$layout->registrations()->acceptCollegist($request->id, $request->input('country'), $request->input('shire'), $request->input('postalcode'), $request->input('address'), $request->input('city'), $request->input('phone'), $request->input('city_of_birth'), $request->input('date_of_birth'), $request->input('name_of_mother'), $request->input('year_of_leaving_exam'), $request->input('high_school'), $request->input('neptun'), $request->input('from_year'), $request->input('faculty'), $request->input('workshop'));
 				}
 			}catch(\Illuminate\Database\QueryException $e){
 				return view('errors.error', ["layout" => $layout,

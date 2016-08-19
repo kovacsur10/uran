@@ -3,13 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Classes\LayoutData;
+use App\Classes\Layout\User;
 use App\Classes\Notify;
-use Validator;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
-use DB;
 
 class ModuleController extends Controller{
 
@@ -22,13 +20,14 @@ class ModuleController extends Controller{
 		$layout = new LayoutData();
 		if($layout->user()->permitted('module_admin')){
 			try{
-				DB::table('active_modules')
-					->insert(['module_id' => $request->module]);
+				$layout->modules()->activate($request->module);
 			}catch(\Illuminate\Database\QueryException $e){
 				return view('errors.error', ["layout" => $layout,
 											 "message" => $layout->language('error_at_module_activation'),
 											 "url" => '/admin/modules']);
 			}
+			$module = $layout->modules()->getById($request->module);
+			Notify::notifyAdminFromServer('module_admin', 'Module aktiválása', 'A(z) '.$module->name.' modul aktiválva lett!', 'admin/modules');
 			return view('admin.modules', ["layout" => $layout]);
 		}else{
 			return view('errors.authentication', ["layout" => $layout]);
@@ -38,9 +37,9 @@ class ModuleController extends Controller{
 	public function deactivate(Request $request){
 		$layout = new LayoutData();
 		if($layout->user()->permitted('module_admin')){
-			DB::table('active_modules')
-				->where('module_id', '=', $request->module)
-				->delete();
+			$layout->modules()->deactivate($request->module);
+			$module = $layout->modules()->getById($request->module);
+			Notify::notifyAdminFromServer('module_admin', 'Modul deaktiválása', 'A(z) '.$module->name.' modul deaktiválva lett!', 'admin/modules');
 			return view('admin.modules', ["layout" => $layout]);
 		}else{
 			return view('errors.authentication', ["layout" => $layout]);
