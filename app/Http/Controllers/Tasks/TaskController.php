@@ -6,16 +6,12 @@ use App\Classes\LayoutData;
 use App\Classes\Notify;
 use Validator;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
-use Illuminate\Database\QueryException;
 use Carbon\Carbon;
-use DB;
-use Mail;
 
 class TaskController extends Controller{
 	
-	// Public functions
+// PUBLIC FUNCTIONS
 	
     public function show(){
 		$layout = new LayoutData();
@@ -87,6 +83,18 @@ class TaskController extends Controller{
 				}else{
 					$layout->tasks()->update($taskId, $request->type, $request->text, $request->caption, $request->deadline, $request->priority, $request->status, $request->working_hours, $assignedUser, $closedDate);
 				}
+				//alert for changing the status
+				$newStatus = $layout->tasks()->getStatusById($request->status)->status;
+				if($newStatus !== $layout->tasks()->getTask()->status){
+					Notify::notify($layout->user(), $layout->tasks()->getTask()->owner_id, 'Feladat státusz változás', 'Egy általad létrehozott feladat státusza megváltozott ('.$layout->language($layout->tasks()->getTask()->status).' -> '.$layout->language($newStatus).')!', 'tasks/task/'.$taskId);
+					if($assignedUser !== null && $assignedUser !== $layout->tasks()->getTask()->assigned_id){
+						Notify::notify($layout->user(), $assignedUser, 'Feladat státusz változás', 'Egy feladat - amin éppen dolgozol - státusza megváltozott ('.$layout->language($layout->tasks()->getTask()->status).' -> '.$layout->language($newStatus).')!', 'tasks/task/'.$taskId);
+					}
+				}
+				//alert for assignment
+				if($assignedUser !== null && $assignedUser !== $layout->tasks()->getTask()->assigned_id){
+					Notify::notify($layout->user(), $assignedUser, 'Feladat hozzárendelés', 'Hozzá lettél rendelve egy feladathoz! Kérlek vedd fel a kapcsolatot a feladat elvégzése miatt velem!', 'tasks/task/'.$taskId);
+				}
 				$layout->tasks()->setTask($taskId); //need to refresh the data
 				return view('tasks.task', ["layout" => $layout]);
 			}else{
@@ -113,6 +121,11 @@ class TaskController extends Controller{
 					'commentText' => 'required',
 				]);
 				$layout->tasks()->addComment($taskId, $layout->user()->user()->id, $request->commentText);
+				$layout->tasks()->setTask($taskId);
+				Notify::notify($layout->user(), $layout->tasks()->getTask()->owner_id, 'Új komment', 'Egy új kommentet írtak az általad készített feladathoz!', 'tasks/task/'.$taskId);
+				if($layout->tasks()->getTask()->assigned_id !== null && $layout->tasks()->getTask()->assigned_id !== $layout->tasks()->getTask()->owner_id){ //assigned user exists and it's not the owner
+					Notify::notify($layout->user(), $layout->tasks()->getTask()->assigned_id, 'Új komment', 'Egy új kommentet írtak egy feladathoz, amin aktuálisan dolgozol!', 'tasks/task/'.$taskId);
+				}
 			}else{
 				return view('errors.error', ["layout" => $layout,
 											 "message" => $layout->language('task_not_found'),
@@ -120,8 +133,8 @@ class TaskController extends Controller{
 			}
 		}else{
 			$layout->errors()->add('permission', $layout->language('permission'));
+			$layout->tasks()->setTask($taskId);
 		}
-		$layout->tasks()->setTask($taskId);
 		return view('tasks.task', ["layout" => $layout]);
 	}
 	
@@ -201,7 +214,7 @@ class TaskController extends Controller{
 		}
 	}
 	
-	// Private functions
+// PRIVATE FUNCTIONS
 	
 	private function inArray($value, $array){
 		$i = 0;

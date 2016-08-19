@@ -47,6 +47,12 @@ class Tasks{
 		return $this->statusTypes;
 	}
 	
+	public function getStatusById($id){
+		return DB::table('tasks_status')
+			->where('id', '=', $id)
+			->first();
+	}
+	
 	public function getStatusByName($statusName){
 		return DB::table('tasks_status')
 			->where('status', 'LIKE', $statusName)
@@ -90,9 +96,11 @@ class Tasks{
 			->whereNotNull('tasks_task.id')
 			->first();
 		if($assigned !== null){
+			$this->task->assigned_id = $assigned->id;
 			$this->task->assigned_name = $assigned->name;
 			$this->task->assigned_username = $assigned->username;
 		}else{
+			$this->task->assigned_id = null;
 			$this->task->assigned_name = null;
 			$this->task->assigned_username = null;
 		}
