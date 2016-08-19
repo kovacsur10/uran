@@ -87,7 +87,7 @@ class TaskController extends Controller{
 				$newStatus = $layout->tasks()->getStatusById($request->status)->status;
 				if($newStatus !== $layout->tasks()->getTask()->status){
 					Notify::notify($layout->user(), $layout->tasks()->getTask()->owner_id, 'Feladat státusz változás', 'Egy általad létrehozott feladat státusza megváltozott ('.$layout->language($layout->tasks()->getTask()->status).' -> '.$layout->language($newStatus).')!', 'tasks/task/'.$taskId);
-					if($assignedUser !== null && $assignedUser !== $layout->tasks()->getTask()->assigned_id){
+					if($assignedUser !== null && $assignedUser !== $layout->tasks()->getTask()->owner_id){
 						Notify::notify($layout->user(), $assignedUser, 'Feladat státusz változás', 'Egy feladat - amin éppen dolgozol - státusza megváltozott ('.$layout->language($layout->tasks()->getTask()->status).' -> '.$layout->language($newStatus).')!', 'tasks/task/'.$taskId);
 					}
 				}
