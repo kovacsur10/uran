@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Ecnet;
 
 use App\Classes\LayoutData;
+use App\Classes\Logger;
 use App\Classes\Layout\EcnetUser;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
@@ -28,6 +29,7 @@ class AdminController extends Controller{
 			return view('ecnet.showactiveusers.'.$type, ["logged" => Session::has('user'),
 												  "layout" => $layout]);
 		}else{
+			Logger::warning('Error at showActiveUsers, type mismatch (expected: name, username or both; given: '.print_r($type ,true).').', null, null, 'ecnet/users');
 			return view('errors.error', ["layout" => $layout,
 										 "message" => $layout->language('error_page_not_found'),
 										 "url" => '/ecnet/users']);

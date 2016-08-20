@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Ecnet;
 
 use App\Classes\LayoutData;
 use App\Classes\Layout\EcnetUser;
+use App\Classes\Logger;
 use App\Classes\Notify;
 use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 
 class SlotController extends Controller{	
@@ -26,7 +28,15 @@ class SlotController extends Controller{
         $this->validate($request, [
 			'reason' => 'required',
 		]);
-		$layout->user()->addMACSlotOrder($layout->user()->user()->id, $request->input('reason'));
+		try{
+			$layout->user()->addMACSlotOrder($layout->user()->user()->id, $request->input('reason'));
+		}catch(\Illuminate\Database\QueryException $e){
+			Logger::warning('Cannot order a slot!', null, null, 'ecnet/order');
+			return view('errors.error', ["layout" => $layout,
+										 "message" => $layout->language('error_at_sending_mac_slot_order'),
+										 "url" => '/ecnet/order']);
+		}
+		Logger::log('New MAC slot order!', null, $request->input('reason'), 'ecnet/order');
 		Notify::notifyAdmin($layout->user(), 'ecnet_slot_verify', $layout->language('mac_slot_ordering'), $layout->language('mac_slot_was_ordered_description').$request->input('reason'), 'ecnet/order');
 		return view('success.success', ["layout" => $layout,
 										"message" => $layout->language('success_at_sending_mac_slot_order'),
@@ -43,17 +53,33 @@ class SlotController extends Controller{
 		if($layout->user()->permitted('ecnet_slot_verify')){
 			$target = $layout->user()->getMacSlotOrderById($request->input('slot'));
 			if($target === null){
+				Logger::warning('Could not find a MAC slot order with id#'.print_r($request->input('slot'), true).'!', null, null, 'ecnet/order');
 				return view('errors.error', ["layout" => $layout,
 											 "message" => $layout->language('error_at_allowing_mac_slot_order'),
 											 "url" => '/ecnet/order']);
 			}
 			if($request->input('optradio') == "allow"){
-				$layout->user()->setMacSlotCountForUser($target->user_id, $target->mac_slots+1);
+				try{
+					$layout->user()->setMacSlotCountForUser($target->user_id, $target->mac_slots+1);
+				}catch(\Illuminate\Database\QueryException $e){
+					Logger::warning('Could not set the MAC slot count!', $target->mac_slots, $target->mac_slots+1, 'ecnet/order');
+					return view('errors.error', ["layout" => $layout,
+												"message" => $layout->language('error_at_allowing_mac_slot_order'),
+												"url" => '/ecnet/order']);
+				}
 				Notify::notify($layout->user(), $target->user_id, $layout->language('mac_slot_ordering'), $layout->language('mac_slot_order_was_accepted_description').$target->reason, 'ecnet/access');
 			}else{
 				Notify::notify($layout->user(), $target->user_id, $layout->language('mac_slot_ordering'), $layout->language('mac_slot_order_was_denied_description').$target->reason, 'ecnet/order');
 			}
-			$layout->user()->deleteMacSlotOrderById($request->input('slot'));
+			try{
+				$layout->user()->deleteMacSlotOrderById($request->input('slot'));
+			}catch(\Illuminate\Database\QueryException $e){
+				Logger::warning('Could not delete the MAC slot order with id #'.print_r($request->input('slot'), true).'!', null, null, 'ecnet/order');
+				return view('errors.error', ["layout" => $layout,
+											"message" => $layout->language('error_at_allowing_mac_slot_order'),
+											"url" => '/ecnet/order']);
+			}
+			Logger::log('MAC slot order was removed (accepted or denied)!', null, null, 'ecnet/order');
 			return view('success.success', ["layout" => $layout,
 											"message" => $layout->language('success_at_allowing_mac_slot_order'),
 											"url" => '/ecnet/order']);
