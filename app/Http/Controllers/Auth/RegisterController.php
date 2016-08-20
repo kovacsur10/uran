@@ -8,7 +8,6 @@ use App\Classes\LayoutData;
 use App\Classes\Notify;
 use Validator;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
