@@ -73,7 +73,7 @@ class Room{
 		$ret = DB::table('rooms_room_assignments')
 			->where('userid', '=', $userid)
 			->first();
-		return $ret == null ? false : true;
+		return $ret !== null;
 	}
 	
 	protected function getRooms(){

@@ -10,7 +10,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
-use Carbon\Carbon;
 
 class AuthController extends Controller{	
     public function showLoginForm(){
