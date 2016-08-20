@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Ecnet;
 
 use App\Classes\LayoutData;
 use App\Classes\Layout\EcnetUser;
+use App\Classes\Logger;
 use App\Classes\Notify;
 use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -19,7 +21,8 @@ class AccessController extends Controller{
 		$layout = new LayoutData();
 		$layout->setUser(new EcnetUser(Session::get('user')->id));
 		$now = Carbon::now();
-		if($layout->user()->ecnetUser() == null){
+		if($layout->user()->ecnetUser() === null){
+			Logger::warning('Ecnet user was not found!', null, null, 'ecnet/access');
 			return view('errors.usernotfound', ["layout" => $layout]);
 		}else{
 			return view('ecnet.ecnet', ["layout" => $layout,
@@ -38,10 +41,12 @@ class AccessController extends Controller{
 			$newTime = $request->new_valid_date.' 05:00:00';
 			$layout->user()->changeDefaultValidDate($newTime);
 			
+			Logger::log('ECnet default access time was set!', null, $newTime, 'ecnet/access');
 			return view('success.success', ["layout" => $layout,
 											"message" => $layout->language('success_at_setting_the_default_time_to').$newTime,
 											"url" => '/ecnet/access']);
 		}else{
+			Logger::warning('At ECnet validation time setting. PERMISSIONS NEEDED!', null, null, 'ecnet/access');
 			return view('errors.authentication', ["layout" => $layout]);
 		}
 	}
@@ -53,8 +58,9 @@ class AccessController extends Controller{
 			'account' => 'required',
 		]);
 		if($layout->user()->permitted('ecnet_set_valid_time')){
-			if($request->custom_valid_date == null){
-				if($layout->user()->validationTime() == null){
+			if($request->custom_valid_date === null){
+				if($layout->user()->validationTime() === null){
+					Logger::warning('At ECnet user internet activation the default time was not set!', null, null, 'ecnet/access');
 					return view('errors.error', ["layout" => $layout,
 												 "message" => $layout->language('error_no_default_time_set'),
 												 "url" => '/ecnet/access']);
@@ -63,13 +69,21 @@ class AccessController extends Controller{
 			}else{
 				$newTime = $request->custom_valid_date.' 05:00:00';
 			}
-			$layout->user()->activateUserNet($request->account, $newTime);
+			try{
+				$layout->user()->activateUserNet($request->account, $newTime);
+			}catch(\Illuminate\Database\QueryException $e){
+				Logger::warning('Could not activate user internet access for user #'.print_r($request->account, true).'!', null, null, 'ecnet/access');
+				return view('errors.error', ["layout" => $layout,
+											 "message" => $layout->language('error_at_setting_users_internet_access_time'),
+											 "url" => '/ecnet/access']);
+			}
 			Notify::notify($layout->user(), $request->account, $layout->language('internet_access_was_modified'), $layout->language('internet_access_was_modified_to_description').$layout->formatDate($newTime), 'ecnet/access');
-			
+			Logger::log('Successfully activated user internet access for user #'.print_r($request->account, true).'!', null, $newTime, 'ecnet/access');
 			return view('success.success', ["layout" => $layout,
 											"message" => $layout->language('success_at_setting_users_internet_access_time'),
 											"url" => '/ecnet/access']);
 		}else{
+			Logger::warning('At ECnet activate user internet. PERMISSIONS NEEDED!', null, null, 'ecnet/access');
 			return view('errors.authentication', ["layout" => $layout]);
 		}
 	}
@@ -124,6 +138,7 @@ class AccessController extends Controller{
 			$layout->user()->insertMacAddress($layout->user()->user()->id, $address);
 		}
 		
+		Logger::log('MAC addresses was changed for user!', null, null, 'ecnet/access');
 		return view('success.success', ["layout" => $layout,
 										"message" => $layout->language('success_at_updating_mac_addresses'),
 										"url" => '/ecnet/access']);
