@@ -4,6 +4,7 @@ namespace App\Classes\Layout;
 
 use DB;
 use Carbon\Carbon;
+use Illuminate\Database\QueryException;
 
 class EcnetUser extends User{
 
@@ -92,6 +93,91 @@ class EcnetUser extends User{
 				'user_id' => $userId,
 				'valid_time' => Carbon::now()->toDateTimeString(),
 			]);
+	}
+	
+	//PrintingController
+	public function getMoneyByUserId($userId){
+		return DB::table('ecnet_user_data')
+			->where('user_id', '=', $userId)
+			->select('money')
+			->first();
+	}
+	
+	public function setMoneyForUser($userId, $money){
+		DB::table('ecnet_user_data')
+			->where('user_id', '=', $userId)
+			->update(['money' => $money]);
+	}
+	
+	//AccessController
+	public function changeDefaultValidDate($newTime){
+		try{
+			DB::table('ecnet_valid_date')
+				->delete();
+		}catch(\Illuminate\Database\QueryException $e){
+			//nothing to do, there were no lines
+		}
+		DB::table('ecnet_valid_date')
+			->insert(['valid_date' => $newTime]);
+	}
+	
+	public function activateUserNet($userId, $newTime){
+		DB::table('ecnet_user_data')
+			->where('user_id', '=', $userId)
+			->update([
+				'valid_time' => $newTime
+			]);
+	}
+	
+	public function macAddressExists($macAddress){
+		$ret = DB::table('ecnet_mac_addresses')
+			->where('mac_address', 'LIKE', $macAddress)
+			->first();
+		return $ret !== null;
+	}
+	
+	public function deleteMacAddress($macAddress){
+		DB::table('ecnet_mac_addresses')
+			->where('mac_address', 'LIKE', $macAddress)
+			->delete();
+	}
+	
+	public function insertMacAddress($userId, $macAddress){
+		DB::table('ecnet_mac_addresses')
+			->insert([
+				'user_id' => $userId,
+				'mac_address' => $macAddress
+			]);
+	}
+	
+	//SlotController
+	public function getMacSlotOrders(){
+		$ret = DB::table('ecnet_mac_slot_orders')
+			->join('users', 'users.id', '=', 'ecnet_mac_slot_orders.user_id')
+			->select('ecnet_mac_slot_orders.id', 'users.username', 'ecnet_mac_slot_orders.reason', 'ecnet_mac_slot_orders.order_time')
+			->get();
+		return $ret === null ? [] : $ret;
+	}
+	
+	public function getMacSlotOrderById($orderId){
+		return DB::table('ecnet_user_data')
+			->join('ecnet_mac_slot_orders', 'ecnet_mac_slot_orders.user_id', '=', 'ecnet_user_data.user_id')
+			->where('ecnet_mac_slot_orders.id', '=', $orderId)
+			->first();
+	}
+
+	public function setMacSlotCountForUser($userId, $macSlotCount){
+		DB::table('ecnet_user_data')
+			->where('user_id', '=', $userId)
+			->update([
+				'mac_slots' => $macSlotCount
+			]);		
+	}
+
+	public function deleteMacSlotOrderById($orderId){
+		DB::table('ecnet_mac_slot_orders')
+			->where('id', '=', $orderId)
+			->delete();
 	}
 	
 // PRIVATE FUNCTIONS

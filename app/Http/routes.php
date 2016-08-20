@@ -55,21 +55,24 @@ Route::group(['middleware' => 'web'], function () {
 	Route::get('data/{username}', 'User\UserController@showPublicData')->middleware('auth.logged');
 	
 	// ECNET routes
-	Route::get('ecnet/account', 'Ecnet\EcnetController@showAccount')->middleware('auth.logged')->middleware('modules.ecnet');
-	Route::get('ecnet/access', 'Ecnet\EcnetController@showInternet')->middleware('auth.logged')->middleware('modules.ecnet');
-	Route::get('ecnet/order', 'Ecnet\EcnetController@showMACOrderForm')->middleware('auth.logged')->middleware('modules.ecnet');
-	Route::get('ecnet/users', 'Ecnet\EcnetController@showUsers')->middleware('auth.logged')->middleware('modules.ecnet');
-	Route::get('ecnet/users/resetfilter', 'Ecnet\EcnetController@resetFilterUsers')->middleware('auth.logged')->middleware('modules.ecnet');
-	Route::get('ecnet/users/listactives/{type}', 'Ecnet\EcnetController@showActiveUsers')->middleware('auth.logged')->middleware('modules.ecnet');
-	Route::get('ecnet/users/{count}', 'Ecnet\EcnetController@showUsers')->middleware('auth.logged')->middleware('modules.ecnet');
-	Route::get('ecnet/users/{count}/{first}', 'Ecnet\EcnetController@showUsers')->middleware('auth.logged')->middleware('modules.ecnet');
-	Route::post('ecnet/users', 'Ecnet\EcnetController@filterUsers')->middleware('auth.logged')->middleware('modules.ecnet');
-	Route::post('ecnet/addmoney', 'Ecnet\EcnetController@addMoney')->middleware('auth.logged')->middleware('modules.ecnet');
-	Route::post('ecnet/setvalidtime', 'Ecnet\EcnetController@updateValidationTime')->middleware('auth.logged')->middleware('modules.ecnet');
-	Route::post('ecnet/activate', 'Ecnet\EcnetController@activate')->middleware('auth.logged')->middleware('modules.ecnet');
-	Route::post('ecnet/setmacs', 'Ecnet\EcnetController@setMACAddresses')->middleware('auth.logged')->middleware('modules.ecnet');
-	Route::post('ecnet/getslot', 'Ecnet\EcnetController@getSlot')->middleware('auth.logged')->middleware('modules.ecnet');
-	Route::post('ecnet/allowordenyorder', 'Ecnet\EcnetController@allowOrDenyOrder')->middleware('auth.logged')->middleware('modules.ecnet');
+	Route::get('ecnet/account', 'Ecnet\PrintingController@showAccount')->middleware('auth.logged')->middleware('modules.ecnet');
+	Route::post('ecnet/addmoney', 'Ecnet\PrintingController@addMoney')->middleware('auth.logged')->middleware('modules.ecnet');
+	
+	Route::get('ecnet/access', 'Ecnet\AccessController@showInternet')->middleware('auth.logged')->middleware('modules.ecnet');
+	Route::post('ecnet/setvalidtime', 'Ecnet\AccessController@updateValidationTime')->middleware('auth.logged')->middleware('modules.ecnet');
+	Route::post('ecnet/activate', 'Ecnet\AccessController@activate')->middleware('auth.logged')->middleware('modules.ecnet');
+	Route::post('ecnet/setmacs', 'Ecnet\AccessController@setMACAddresses')->middleware('auth.logged')->middleware('modules.ecnet');
+	
+	Route::get('ecnet/order', 'Ecnet\SlotController@showMACOrderForm')->middleware('auth.logged')->middleware('modules.ecnet');
+	Route::post('ecnet/allowordenyorder', 'Ecnet\SlotController@allowOrDenyOrder')->middleware('auth.logged')->middleware('modules.ecnet');
+	Route::post('ecnet/getslot', 'Ecnet\SlotController@getSlot')->middleware('auth.logged')->middleware('modules.ecnet');
+	
+	Route::get('ecnet/users', 'Ecnet\AdminController@showUsers')->middleware('auth.logged')->middleware('modules.ecnet');
+	Route::get('ecnet/users/resetfilter', 'Ecnet\AdminController@resetFilterUsers')->middleware('auth.logged')->middleware('modules.ecnet');
+	Route::get('ecnet/users/listactives/{type}', 'Ecnet\AdminController@showActiveUsers')->middleware('auth.logged')->middleware('modules.ecnet');
+	Route::get('ecnet/users/{count}', 'Ecnet\AdminController@showUsers')->middleware('auth.logged')->middleware('modules.ecnet');
+	Route::get('ecnet/users/{count}/{first}', 'Ecnet\AdminController@showUsers')->middleware('auth.logged')->middleware('modules.ecnet');
+	Route::post('ecnet/users', 'Ecnet\AdminController@filterUsers')->middleware('auth.logged')->middleware('modules.ecnet');
 	
 	// Rooms routes
 	Route::get('rooms/map/{level}', 'Rooms\RoomsController@showMap')->middleware('auth.logged')->middleware('modules.rooms');

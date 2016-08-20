@@ -47,7 +47,7 @@
 									<label  class="col-md-4 control-label" for="slot_select">{{ $layout->language('request') }}</label>
 									<div class="col-md-6">
 										<select class="form-control"  name="slot"  id="slot_select" required="true">
-											@foreach($orders as $order)
+											@foreach($layout->user()->getMacSlotOrders() as $order)
 											<option value="{{ $order->id }}">{{ $order->username }} ({{ $order->order_time }}: {{ $order->reason }})</option>
 											@endforeach
 										</select>
