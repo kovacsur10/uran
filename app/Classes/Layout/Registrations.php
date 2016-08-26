@@ -158,18 +158,29 @@ class Registrations{
 	}
 	
 	public function acceptGuest($userId, $country, $shire, $postalCode, $address, $city, $phone, $reason){
-		DB::table('users')
-			->where('id', '=', $userId)
-			->update([
-				'registered' => 1,
-				'country' => $country,
-				'shire' => $shire,
-				'postalcode' => $postalCode,
-				'address' => $address,
-				'city' => $city,
-				'phone' => $phone,
-				'reason' => $reason,
-			]);
+		$status = DB::table('user_status_codes')
+			->where('status_name', 'LIKE', 'visitor')
+			->first();
+		if($status !== null){
+			DB::table('users')
+				->where('id', '=', $userId)
+				->update([
+					'registered' => 1,
+					'country' => $country,
+					'shire' => $shire,
+					'postalcode' => $postalCode,
+					'address' => $address,
+					'city' => $city,
+					'phone' => $phone,
+					'reason' => $reason,
+					'status' => $status->id
+				]);
+		}else{
+			//create an exeption - TODO: nicer
+			DB::table('almafa')
+				->where('id', '=', 1)
+				->first();
+		}
 	}
 	
 	public function acceptCollegist($userId, $country, $shire, $postalCode, $address, $city, $phone, $cityOfBirth, $dateOfBirth, $nameOfMother, $yearOfLeavingExam, $highSchool, $neptunCode, $applicationYear, $faculty, $workshop){
