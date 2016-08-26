@@ -15,6 +15,10 @@ Route::group(['middleware' => 'web'], function () {
 	// Language router
 	Route::get('lang/set/{language}', 'Language\LanguageController@set');
 	
+	// ECadmin routes
+	Route::get('ecadmin/user/list', 'ECAdmin\UserController@show')->middleware('auth.logged');
+	Route::get('ecadmin/user/show/{userId}', 'ECAdmin\UserController@showUser')->middleware('auth.logged');
+	
 	// Admin routes
 	Route::get('admin/permissions', 'Admin\PermissionController@showPermissions')->middleware('auth.logged');
 	Route::post('admin/permissions', 'Admin\PermissionController@modifyPermissions')->middleware('auth.logged');

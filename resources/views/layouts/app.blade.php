@@ -42,6 +42,12 @@
     <nav class="navbar navbar-default navbar-static-top">
         <div class="container">
             <div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#app-navbar-collapse" aria-expanded="false">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
                 <!-- Branding Image -->
                 <a class="navbar-brand" href="{{ url('/') }}">
                     {{ $layout->language('uran') }}
@@ -52,7 +58,7 @@
                 <!-- Left Side Of Navbar -->
                 <ul class="nav navbar-nav">
                     <!-- Authentication Links -->
-                    @if (!$data->logged())
+                    @if(!$data->logged())
                         <li><a href="{{ url('/login') }}">{{ $layout->language('login') }}</a></li>
                         <li><a href="{{ url('/register') }}">{{ $layout->language('registration') }}</a></li>
                     @else
@@ -109,6 +115,16 @@
 							<ul class="dropdown-menu" role="menu">
 								@if($layout->modules()->isActivatedByName('tasks'))
 								<li><a href="{{ url('/tasks/list') }}">{{ $layout->language('task_manager') }}</a></li>
+								@endif
+                            </ul>
+                        </li>
+						<li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+							{{ $layout->language('TODO') }} <span class="caret"></span>
+                            </a>
+							<ul class="dropdown-menu" role="menu">
+								@if($data->user()->permitted('user_handling'))
+								<li><a href="{{ url('/ecadmin/user/list') }}">{{ $layout->language('TODO') }}</a></li>
 								@endif
                             </ul>
                         </li>

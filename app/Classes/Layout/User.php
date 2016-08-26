@@ -32,6 +32,18 @@ class User{
 			->get();
 	}
 	
+	public function usersAllData($from = 0, $count = 50){
+		$ret = DB::table('users')
+			->join('user_status_codes', 'user_status_codes.id', '=', 'users.status')
+			->where('registered', '=', 1)
+			->select('*', 'users.id as id')
+			->orderBy('name', 'asc')
+			->skip($from)
+			->take($count)
+			->get();
+		return $ret === null ? [] : $ret;
+	}
+	
 	public function permissions(){
 		return $this->permissions;
 	}
