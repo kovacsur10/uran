@@ -120,7 +120,7 @@ class Registrations{
 			'phone' => $phoneNumber,
 			'language' => $defaultLanguage,
 			'city_of_birth' => $cityOfBirth,
-			'date_of_birth' => $dateOfBirth,
+			'date_of_birth' => substr(str_replace('.', '-', $dateOfBirth), 0, -1),
 			'name_of_mother' => $nameOfMother,
 			'year_of_leaving_exam' => $yearOfLeavingExam,
 			'high_school' => $highSchool,
