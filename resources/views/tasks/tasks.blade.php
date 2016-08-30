@@ -14,10 +14,10 @@
 					@endif
 					<div class="well well-sm">
 						<div class="row">
-							<div class="col-md-6">{{ $layout->language('caption') }}</div>
-							<div class="col-md-2">{{ $layout->language('user') }}</div>
-							<div class="col-md-2">{{ $layout->language('status') }}</div>
-							<div class="col-md-2">{{ $layout->language('date') }}</div>
+							<div class="col-sm-6">{{ $layout->language('caption') }}</div>
+							<div class="col-sm-2">{{ $layout->language('user') }}</div>
+							<div class="col-sm-2">{{ $layout->language('status') }}</div>
+							<div class="col-sm-2">{{ $layout->language('date') }}</div>
 						</div>
 					</div>
 					@foreach($layout->tasks()->get() as $task)
@@ -35,10 +35,10 @@
 						@endif
 						<a href="{{ url('/tasks/task/'.$task->id) }}">
 							<div class="row" style="margin-right:20px;">
-								<div class="col-md-6">{{ $task->caption }}</div>
-								<div class="col-md-2">{{ $task->user }}</div>
-								<div class="col-md-2">{{ $layout->language($task->status) }}</div>
-								<div class="col-md-2">{{ $layout->formatDate($task->date) }}</div>
+								<div class="col-sm-6">{{ $task->caption }}</div>
+								<div class="col-sm-2">{{ $task->user }}</div>
+								<div class="col-sm-2">{{ $layout->language($task->status) }}</div>
+								<div class="col-sm-2">{{ $layout->formatDate($task->date) }}</div>
 							</div>
 						</a>
 					</div>
