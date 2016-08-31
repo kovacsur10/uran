@@ -85,7 +85,7 @@ class LayoutData{
 	}
 	
 	public function language($key){
-		if($this->language == 'hu_HU'){
+		if($this->language === 'hu_HU'){
 			$lang =  Languages::hungarian();
 		}else if($this->language == 'en_US'){
 			$lang =  Languages::english();
