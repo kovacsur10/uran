@@ -1,0 +1,11 @@
+.nod-success input:first-child {
+    background: #afa;
+}
+
+.nod-error input:first-child {
+    background: #fcc;
+}
+
+.nod-error-message {
+    color: #D62222;
+}
