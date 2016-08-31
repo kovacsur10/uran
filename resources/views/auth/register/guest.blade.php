@@ -15,7 +15,7 @@
                             <label class="col-md-4 control-label">{{ $layout->language('username') }}</label>
 
                             <div class="col-md-6">
-                                <input type="text" class="form-control" name="username" value="{{ old('username') }}" required="true">
+                                <input type="text" class="form-control" name="username" id="username"  value="{{ old('username') }}" required="true">
 
                                 @if ($errors->has('username'))
                                     <span class="help-block">
@@ -234,4 +234,5 @@
         </div>
     </div>
 </div>
+<script type="text/javascript" src="/js/view/auth/register/guest.js"></script>
 @endsection

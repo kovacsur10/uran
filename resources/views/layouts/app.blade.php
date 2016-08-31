@@ -15,6 +15,7 @@
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
 	<link href="/css/bootstrap-notifications.min.css" rel="stylesheet">
 	<link href="/css/bootstrap-datepicker.min.css" rel="stylesheet">
+	<link href="/css/validator.css" rel="stylesheet">
     {{-- <link href="{{ elixir('css/app.css') }}" rel="stylesheet"> --}}
 
     <style>
@@ -29,6 +30,7 @@
 	
 	<!-- Scripts -->
 	<script type="text/javascript" src="/js/jquery-2.2.4.min.js"></script>
+	<script type="text/javascript" src="/js/nod.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     {{-- <script src="{{ elixir('js/app.js') }}"></script> --}}
 	<script type="text/javascript" src="/js/bootstrap-datepicker.min.js"></script>
