@@ -97,6 +97,28 @@ class User{
 		}
 	}
 	
+	// Function name: getUserData_Administration
+	// Input: user id (integer)
+	// Output: the requested user's data
+	// This function returns the requested user's full data.
+	// Not only the user table, but it joins a lot more table
+	// and gives all the informations stored in the database 
+	// about the target. (Excluded the modules.)
+	public function getUserData_Administration($userId){
+		if($userId === 0){
+			return null;
+		}else{	
+			return DB::table('users')
+				->where('users.id', '=', $userId)
+				->where('users.registered', '=', 1)
+				->join('user_status_codes', 'user_status_codes.id', '=', 'users.status')
+				->join('workshops', 'workshops.id', '=', 'users.workshop')
+				->join('faculties', 'faculties.id', '=', 'users.faculty')
+				->select('users.id as id', 'users.username as username', 'users.email as email', 'users.registration_date as registration_date', 'users.name as name', 'users.country as country', 'users.shire as shire', 'users.city as city', 'users.postalcode as postalcode', 'users.address as address', 'users.phone as phone', 'users.reason as reason', 'users.neptun as neptun', 'users.city_of_birth as city_of_birth', 'users.date_of_birth as date_of_birth', 'users.name_of_mother as name_of_mother', 'users.high_school as high_school', 'users.year_of_leaving_exam as year_of_leaving_exam', 'user_status_codes.status_name as status', 'user_status_codes.id as status_id', 'workshops.name as workshop', 'workshops.id as workshop_id', 'faculties.name as faculty', 'faculties.id as faculty_id', 'users.from_year as admission_year')
+				->first();
+		}
+	}
+	
 	public function getUserDataByUsername($username){
 		return DB::table('users')
 			->where('username', 'LIKE', $username)

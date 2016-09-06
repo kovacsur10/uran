@@ -52,6 +52,9 @@ class Languages{
 			'administration' => 'Ügyintézés',
 			'not_specified_value' => 'Nem érvényes érték!',
 			'empty_value_is_forbidden' => 'A mező értéke nem lehet üres!',
+			'school_data' => 'Tanulmányi adatok',
+			'contact_informations' => 'Elérhetőségek',
+			'system_data' => 'Rendszer adatok',
 		//permissions
 			'assign_permissions' => 'Jogok hozzárendelése',
 			'error_at_setting_the_permissions' => 'Hiba a jogosultságok beállításakor!',
@@ -562,6 +565,9 @@ class Languages{
 			'administration' => 'Administration',
 			'not_specified_value' => 'This value in not valid!',
 			'empty_value_is_forbidden' => 'Empty value is forbidden!',
+			'school_data' => 'University data',
+			'contact_informations' => 'Contact informations',
+			'system_data' => 'System data',
 		//permissions
 			'assign_permissions' => 'Assign permissions',
 			'error_at_setting_the_permissions' => 'Error at setting the permissions!',
