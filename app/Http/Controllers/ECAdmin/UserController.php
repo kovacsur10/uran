@@ -21,4 +21,15 @@ class UserController extends Controller{
 										   "target" => new User($userId)]);
     }
 	
+	public function updateUser(Request $request, $userId){
+		$layout = new LayoutData();
+		if($layout->user()->permitted('user_handling')){
+			//TODO
+			return view('ecadmin.users.show', ["layout" => $layout,
+											   "target" => new User($userId)]);
+		}else{
+			//TODO
+		}
+    }
+	
 }
