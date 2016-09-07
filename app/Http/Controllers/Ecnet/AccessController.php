@@ -58,7 +58,7 @@ class AccessController extends Controller{
 			'account' => 'required',
 		]);
 		if($layout->user()->permitted('ecnet_set_valid_time')){
-			if($request->custom_valid_date === null){
+			if($request->custom_valid_date === null || $request->custom_valid_date === ''){
 				if($layout->user()->validationTime() === null){
 					Logger::warning('At ECnet user internet activation the default time was not set!', null, null, 'ecnet/access');
 					return view('errors.error', ["layout" => $layout,
