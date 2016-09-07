@@ -24,6 +24,7 @@ class AuthController extends Controller{
 			if(password_verify($request->input('password'), $user->password)){
 				try{
 					Auth::updateLoginDate($user->username);
+					Auth::setUserLanguage($user->username);
 				}catch(\Illuminate\Database\QueryException $e){
 					return view('errors.error', ["layout" => $layout,
 												 "message" => $layout->language('unsuccessful_login'),
