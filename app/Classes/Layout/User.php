@@ -100,6 +100,7 @@ class User{
 	// Function name: getUserData_Administration
 	// Input: user id (integer)
 	// Output: the requested user's data
+	//
 	// This function returns the requested user's full data.
 	// Not only the user table, but it joins a lot more table
 	// and gives all the informations stored in the database 
@@ -124,6 +125,20 @@ class User{
 			->where('username', 'LIKE', $username)
 			->where('registered', '=', 1)
 			->first();
+	}
+	
+	// Function name: saveUserLanguage
+	// Input: language identifier (string)
+	// Output: -
+	//
+	// DB EXCEPTION!
+	// This function updates the user default language.
+	public function saveUserLanguage($lang){
+		DB::table('users')
+			->where('id', '=', $this->user->id)
+			->update([
+				'language' => $lang
+			]);
 	}
 	
 }

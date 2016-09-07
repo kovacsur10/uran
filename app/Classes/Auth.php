@@ -4,6 +4,7 @@ namespace App\Classes;
 
 use DB;
 use Carbon\Carbon;
+use App\Classes\LayoutData;
 
 class Auth{
 	
@@ -13,6 +14,13 @@ class Auth{
 		DB::table('users')
 			->where('username', 'LIKE', $username)
 			->update(['last_online' => Carbon::now()->toDateTimeString()]);
+	}
+	
+	public static function setUserLanguage($username){
+		$user = DB::table('users')
+			->where('username', 'LIKE', $username)
+			->first();
+		LayoutData::setLanguage($user->language);
 	}
 	
 	public static function getUser($username){

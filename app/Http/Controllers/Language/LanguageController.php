@@ -2,19 +2,18 @@
 
 namespace App\Http\Controllers\Language;
 
-use App\Http\Controllers\Controller;
 use App\Classes\LayoutData;
-use App\Http\Requests;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
 
 class LanguageController extends Controller{
 
 	public function set($language){
-		if(Session::has('lang')){
-			Session::forget('lang');
+		$layout = new LayoutData();
+		$layout->setLanguage($language);
+		if($layout->logged()){
+			$layout->user()->saveUserLanguage($language);
 		}
-		Session::put('lang', $language);
 		return redirect(isset($_GET['page']) ? $_GET['page'] : 'home');
 	}
 

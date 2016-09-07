@@ -121,6 +121,13 @@ class LayoutData{
 		}
 	}
 	
+	public static function setLanguage($language){
+		if(Session::has('lang')){
+			Session::forget('lang');
+		}
+		Session::put('lang', $language);
+	}
+	
 	private function getRouteWithParams(){
 		$params = Route::getCurrentRoute()->parameters();
 		$route = Route::getCurrentRoute()->getPath();
