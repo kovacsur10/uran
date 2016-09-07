@@ -203,8 +203,11 @@
                         </li>
                     @endif
 					<li>
-						<a style="padding: 0px 0px;" href="{{ url('lang/set/hu_HU') }}"><img style="height:18px;" src="/images/lang_hu.png" alt="Hungarian Flag"></a>
-						<a style="padding: 0px 0px;" href="{{ url('lang/set/en_US') }}"><img style="height:18px;" src="/images/lang_en.png" alt="UK Flag"></a>
+						@if($layout->lang() !== 'hu_HU')
+							<a style="padding: 0px 0px;" href="{{ url('lang/set/hu_HU').'?page='.$layout->getRoute() }}"><img style="height:18px;" src="/images/lang_hu.png" alt="Hungarian Flag"></a>
+						@elseif($layout->lang() !== 'en_US')
+							<a style="padding: 0px 0px;" href="{{ url('lang/set/en_US').'?page='.$layout->getRoute() }}"><img style="height:18px;" src="/images/lang_en.png" alt="UK Flag"></a>
+						@endif
 					</li>
 				</ul>
             </div>

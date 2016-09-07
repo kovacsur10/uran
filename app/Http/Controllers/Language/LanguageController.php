@@ -15,7 +15,7 @@ class LanguageController extends Controller{
 			Session::forget('lang');
 		}
 		Session::put('lang', $language);
-		return redirect('home');
+		return redirect(isset($_GET['page']) ? $_GET['page'] : 'home');
 	}
 
 }
