@@ -33,7 +33,7 @@ class RegisterController extends Controller{
         $string = sha1($request->input('username') . Carbon::now()->toDateTimeString() . $request->input('email'));
         $this->validate($request, [
             'username' => 'required|min:6|max:32|unique:users|regex:/(^[A-Za-z0-9_\-]+$)/',
-            'email' => 'required|email|max:255|unique:users|unique:users',
+            'email' => 'required|email|max:255|unique:users',
             'password' => 'required|min:8|max:64|confirmed||regex:/(^[A-Za-z0-9\-_\/\.\?\:]+$)/',
             'name' => 'required',
 			'country' => 'required',
