@@ -47,7 +47,7 @@
                             <label class="col-md-4 control-label">{{ $layout->language('email_address') }}</label>
 
                             <div class="col-md-6">
-                                <input type="email" class="form-control" name="email" value="{{ old('email') }}" required="true">
+                                <input type="email" class="form-control" name="email" id="email" value="{{ old('email') }}" required="true">
 
                                 @if ($errors->has('email'))
                                     <span class="help-block">
@@ -223,7 +223,7 @@
 
                         <div class="form-group">
                             <div class="col-md-6 col-md-offset-4">
-                                <button type="submit" class="btn btn-primary">
+                                <button type="submit" id="registerButton" class="btn btn-primary">
                                     <i class="fa fa-btn fa-user"></i>{{ $layout->language('register') }}
                                 </button>
                             </div>
