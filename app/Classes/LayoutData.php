@@ -3,6 +3,7 @@
 namespace App\Classes;
 
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Route;
 use App\Classes\Layout\BaseData;
 use App\Classes\Layout\EcnetUser;
 use App\Classes\Layout\Errors;
@@ -16,16 +17,17 @@ use App\Classes\Layout\User;
 use DB;
 
 class LayoutData{
-	protected $user;
-	protected $room;
-	protected $logged;
-	protected $modules;
-	protected $permissions;
-	protected $language;
-	protected $base;
-	protected $registrations;
-	protected $tasks;
-	protected $errors;
+	private $user;
+	private $room;
+	private $logged;
+	private $modules;
+	private $permissions;
+	private $language;
+	private $base;
+	private $registrations;
+	private $tasks;
+	private $errors;
+	private $route;
 	
 	public function __construct(){
 		$this->logged = Session::has('user');
@@ -38,6 +40,7 @@ class LayoutData{
 		$this->registrations = new Registrations();
 		$this->tasks = new Tasks();
 		$this->errors = new Errors();
+		$this->route = $this->getRouteWithParams();
 	}
 	
 	public function errors(){
@@ -84,6 +87,10 @@ class LayoutData{
 		return Session::has('lang') ? Session::get('lang') : "hu_HU";
 	}
 	
+	public function getRoute(){
+		return $this->route;
+	}
+	
 	public function language($key){
 		if($this->language === 'hu_HU'){
 			$lang =  Languages::hungarian();
@@ -112,6 +119,15 @@ class LayoutData{
 		}else{
 			return str_replace("-", ". ", str_replace(" ", ". ", $date));
 		}
+	}
+	
+	private function getRouteWithParams(){
+		$params = Route::getCurrentRoute()->parameters();
+		$route = Route::getCurrentRoute()->getPath();
+		foreach($params as $key => $value){
+			$route = str_replace('{'.$key.'}', $value, $route);
+		}
+		return $route;
 	}
 	
 }
