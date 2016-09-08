@@ -33,7 +33,7 @@
                             <label class="col-md-4 control-label">{{ $layout->language('name') }}</label>
 
                             <div class="col-md-6">
-                                <input type="text" class="form-control" name="name" value="{{ old('name') }}" required="true">
+                                <input type="text" class="form-control" name="name" id="name" value="{{ old('name') }}" required="true">
 
                                 @if ($errors->has('name'))
                                     <span class="help-block">
@@ -65,7 +65,7 @@
                             <label class="col-md-4 control-label">{{ $layout->language('password') }}</label>
 
                             <div class="col-md-6">
-                                <input type="password" class="form-control" name="password" required="true">
+                                <input type="password" class="form-control" name="password" id="password" required="true">
 
                                 @if ($errors->has('password'))
                                     <span class="help-block">
@@ -83,7 +83,7 @@
                             <label class="col-md-4 control-label">{{ $layout->language('confirm_password') }}</label>
 
                             <div class="col-md-6">
-                                <input type="password" class="form-control" name="password_confirmation" required="true">
+                                <input type="password" class="form-control" name="password_confirmation" id="password_again" required="true">
 
                                 @if ($errors->has('password_confirmation'))
                                     <span class="help-block">
@@ -97,7 +97,7 @@
                             <label class="col-md-4 control-label">{{ $layout->language('phone_number') }}</label>
 
                             <div class="col-md-6">
-                                <input type="text" class="form-control" name="phone" value="{{ old('phone') }}">
+                                <input type="text" class="form-control" name="phone" id="phone" value="{{ old('phone') }}">
 
                                 @if ($errors->has('phone'))
                                     <span class="help-block">
@@ -135,7 +135,7 @@
 									<label class="col-md-4 control-label">{{ $layout->language('shire') }}</label>
 
 									<div class="col-md-6">
-										<input type="text" class="form-control" name="shire" value="{{ old('shire') }}" required="true">
+										<input type="text" class="form-control" name="shire" id="shire" value="{{ old('shire') }}" required="true">
 
 										@if ($errors->has('shire'))
 											<span class="help-block">
@@ -149,7 +149,7 @@
 									<label class="col-md-4 control-label">{{ $layout->language('postalcode') }}</label>
 
 									<div class="col-md-6">
-										<input type="text" class="form-control" name="postalcode" value="{{ old('postalcode') }}" required="true">
+										<input type="text" class="form-control" name="postalcode" id="postalcode" value="{{ old('postalcode') }}" required="true">
 
 										@if ($errors->has('postalcode'))
 											<span class="help-block">
@@ -163,7 +163,7 @@
 									<label class="col-md-4 control-label">{{ $layout->language('city') }}</label>
 
 									<div class="col-md-6">
-										<input type="text" class="form-control" name="city" value="{{ old('city') }}" required="true">
+										<input type="text" class="form-control" name="city" id="city" value="{{ old('city') }}" required="true">
 
 										@if ($errors->has('city'))
 											<span class="help-block">
@@ -177,7 +177,7 @@
 									<label class="col-md-4 control-label">{{ $layout->language('address') }}</label>
 
 									<div class="col-md-6">
-										<input type="text" class="form-control" name="address" value="{{ old('address') }}" required="true">
+										<input type="text" class="form-control" name="address" id="address" value="{{ old('address') }}" required="true">
 
 										@if ($errors->has('address'))
 											<span class="help-block">
@@ -193,7 +193,7 @@
                             <label class="col-md-4 control-label">{{ $layout->language('reason_of_registration') }}</label>
 
                             <div class="col-md-6">
-                                <input type="text" class="form-control" name="reason" value="{{ old('reason') }}" required="true">
+                                <input type="text" class="form-control" name="reason" id="reason" value="{{ old('reason') }}" required="true">
 
                                 @if ($errors->has('reason'))
                                     <span class="help-block">
@@ -210,7 +210,7 @@
 						<div class="form-group{{ $errors->has('accept') ? ' has-error' : '' }}">
                             <div class="col-md-10 col-md-offset-1">
                                 <div class="checkbox">
-									<label><input type="checkbox" required name="accept" value="accepted">{{ $layout->language('accept_rules_with_submit_description') }}</label>
+									<label><input type="checkbox" required name="accept" id="accept" value="accepted">{{ $layout->language('accept_rules_with_submit_description') }}</label>
 								</div>
 
                                 @if ($errors->has('accept'))
