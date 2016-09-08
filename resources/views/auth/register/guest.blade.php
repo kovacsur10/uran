@@ -209,8 +209,9 @@
 						
 						<div class="form-group{{ $errors->has('accept') ? ' has-error' : '' }}">
                             <div class="col-md-10 col-md-offset-1">
-                                <div class="checkbox">
-									<label><input type="checkbox" required name="accept" id="accept" value="accepted">{{ $layout->language('accept_rules_with_submit_description') }}</label>
+                                <div class="form-group">
+									<input class="col-xs-1" type="checkbox" required name="accept" id="accept" value="accepted">
+									<label class="col-xs-11">{{ $layout->language('accept_rules_with_submit_description') }}</label>
 								</div>
 
                                 @if ($errors->has('accept'))
