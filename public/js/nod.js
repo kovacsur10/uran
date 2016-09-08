@@ -946,9 +946,14 @@ nod.getCheckFunction = function (metric) {
     if (metric.validate instanceof RegExp) {
         return nod.checkFunctions.regexp(metric.validate);
     }
-
+	
     var args   = metric.validate.split(':'),
         fnName = args.shift();
+		
+	//custom by Mate Kovacs
+	if(fnName === 'regex'){
+		args = [ metric.validate.substring(6) ];
+	}
 
     if (fnName === 'one-of' || fnName === 'only-one-of' ||
         fnName === 'same-as' || fnName === 'some-radio') {

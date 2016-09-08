@@ -83,7 +83,7 @@ class LayoutData{
 		return $this->registrations;
 	}
 	
-	public function lang(){
+	public static function lang(){
 		return Session::has('lang') ? Session::get('lang') : "hu_HU";
 	}
 	

@@ -33,6 +33,14 @@
 	<script type="text/javascript" src="/js/nod.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     {{-- <script src="{{ elixir('js/app.js') }}"></script> --}}
+	<script type="text/javascript" src="/js/view/layout/app.js" charset="UTF-8"></script>
+	<script type="text/javascript">
+		@if($layout->lang() === 'en_US')
+			var language = english;
+		@else
+			var language = hungarian;
+		@endif
+	</script>
 	<script type="text/javascript" src="/js/bootstrap-datepicker.min.js"></script>
 	<script type="text/javascript">
 		$('document').ready(function(){
