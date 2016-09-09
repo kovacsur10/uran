@@ -25,7 +25,8 @@
 								<select class="form-control" name="status"> 	
 									<option class="form-control" name="status" value=""></option>
 									@foreach($layout->tasks()->statusTypes() as $status)
-										<option class="form-control" name="status" value="{{ $status->id }}">{{ $layout->language($status->status) }}</option>
+										<option class="form-control" name="status" value="{{ $status->id }}" @if($layout->tasks()->getStatusFilter() == $status->id ) selected @endif>
+										{{ $layout->language($status->status) }}</option>
 									@endforeach
 								</select>
 								
