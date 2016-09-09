@@ -98,7 +98,6 @@ Route::group(['middleware' => 'web'], function () {
 	Route::put('tasks/new', 'Tasks\TaskController@addNew')->middleware('auth.logged')->middleware('modules.tasks');
 	Route::get('tasks/task/{taskId}/remove', 'Tasks\TaskController@remove')->middleware('auth.logged')->middleware('modules.tasks');
 	Route::post('tasks/tasks', 'Tasks\TaskController@filterTasks')->middleware('auth.logged')->middleware('modules.tasks');
-	Route::get('tasks/tasks', 'Tasks\TaskController@show')->middleware('auth.logged')->middleware('modules.tasks');
 	Route::get('tasks/resetfilter', 'Tasks\TaskController@resetFilterTasks')->middleware('auth.logged')->middleware('modules.tasks');
 	
 	// Basic routes

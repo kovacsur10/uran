@@ -224,12 +224,12 @@ class TaskController extends Controller{
 		}else{
 			Session::put('tasks_status_filter', $request->input('status'));
 		}
-		return redirect('tasks/tasks');
+		return redirect('tasks/list');
 	}
 	
 	public function resetFilterTasks(){
 		Session::forget('tasks_status_filter');
-		return redirect('tasks/tasks');
+		return redirect('tasks/list');
 	}
 	
 // PRIVATE FUNCTIONS
