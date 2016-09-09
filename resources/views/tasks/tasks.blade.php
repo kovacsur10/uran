@@ -4,6 +4,7 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
+				
             <div class="panel panel-default">
                 <div class="panel-heading">{{ $layout->language('task_manager') }}</div>
                 <div class="panel-body">
@@ -12,6 +13,41 @@
 							{{ $layout->errors()->get('permission') }}
 						</div>
 					@endif
+					
+					
+					<form class="form-horizontal" role="form" method="POST" action="{{ url('/tasks/tasks') }}">
+					{!! csrf_field() !!}
+					
+						<div class="form-group{{ $errors->has('status') ? ' has-error' : '' }}">
+							<label class="col-md-4 control-label">{{ $layout->language('status') }}</label>
+
+							<div class="col-md-6">
+								<select class="form-control" name="status"> 	
+									<option class="form-control" name="status" value=""></option>
+									@foreach($layout->tasks()->statusTypes() as $status)
+										<option class="form-control" name="status" value="{{ $status->id }}">{{ $layout->language($status->status) }}</option>
+									@endforeach
+								</select>
+								
+								@if ($errors->has('status'))
+									<span class="help-block">
+										<strong>{{ $errors->first('status') }}</strong>
+									</span>
+								@endif
+							</div>
+							
+						</div>
+						
+						<div class="form-group">
+							<div class="col-md-6 col-md-offset-4">
+								<button type="submit" class="btn btn-primary">
+									{{ $layout->language('find') }}
+								</button>
+								<a href="{{ url('tasks/resetfilter') }}" class="btn btn-danger" role="button">{{ $layout->language('delete_filter') }}</a>
+							</div>
+						</div>
+					</form>
+					
 					<div class="well well-sm">
 						<div class="row">
 							<div class="col-sm-6">{{ $layout->language('caption') }}</div>

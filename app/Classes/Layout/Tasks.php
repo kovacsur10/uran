@@ -13,6 +13,7 @@ class Tasks{
 	protected $comments;
 	protected $priorities;
 	protected $statusTypes;
+    protected $filterStatus = "";
 	
 	public function __construct(){
 		$this->tasks = $this->getTasks();
@@ -24,7 +25,7 @@ class Tasks{
 	}
 	
 	public function get(){
-		return $this->tasks;
+        return $this->tasks;
 	}
 	
 	public function getTask(){
@@ -45,6 +46,19 @@ class Tasks{
 	
 	public function statusTypes(){
 		return $this->statusTypes;
+	}
+	
+	public function getStatusFilter(){
+		return $this->filterStatus;
+	}
+	public function filterTasks($status){
+		$this->filterStatus = $status;
+		if($status == ""){
+			$this->tasks = $this->getTasks();
+		}
+		else{
+			$this->tasks = $this->getFilteredTasks($status);
+		}
 	}
 	
 	public function getStatusById($id){
@@ -241,5 +255,19 @@ class Tasks{
 			->orderBy('id', 'asc')
 			->get();
 		return $ret == null ? [] : $ret;
+	}
+    
+    private function getFilteredTasks($status){
+		$ret = DB::table('tasks_task')
+			->join('tasks_type', 'tasks_type.id', '=', 'tasks_task.type')
+			->join('tasks_status', 'tasks_status.id', '=', 'tasks_task.status')
+			->join('tasks_priority', 'tasks_priority.id', '=', 'tasks_task.priority')
+			->join('users', 'users.id', '=', 'tasks_task.created_by')
+            ->where('tasks_status.id', '=', $status)
+			->where('tasks_task.deleted', '=', 0)
+			->select('tasks_task.id as id', 'created_datetime as date', 'tasks_status.status as status', 'users.name as user', 'caption', 'tasks_priority.name as priority', 'users.username as username')
+			->orderBy('tasks_task.id', 'desc')
+			->get();
+        return $ret == null ? [] : $ret;
 	}
 }

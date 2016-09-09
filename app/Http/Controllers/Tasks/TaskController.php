@@ -6,6 +6,7 @@ use App\Classes\LayoutData;
 use App\Classes\Notify;
 use Validator;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -15,6 +16,9 @@ class TaskController extends Controller{
 	
     public function show(){
 		$layout = new LayoutData();
+		if(Session::has('tasks_status_filter')){
+			$layout->tasks()->filterTasks(Session::get('tasks_status_filter'));
+		}
 		return view('tasks.tasks', ["layout" => $layout]);
 	}
 	
@@ -213,6 +217,20 @@ class TaskController extends Controller{
 			return view('errors.authentication', ["layout" => $layout]);
 		}
 	}
+		
+	public function filterTasks(Request $request){
+		if($request->input('status') == null){
+			Session::put('tasks_status_filter', '');
+		}else{
+			Session::put('tasks_status_filter', $request->input('status'));
+		}
+		return redirect('tasks/tasks');
+	}
+	
+	public function resetFilterTasks(){
+		Session::forget('tasks_status_filter');
+		return redirect('tasks/tasks');
+	}
 	
 // PRIVATE FUNCTIONS
 	
@@ -224,3 +242,6 @@ class TaskController extends Controller{
 		return $i < count($array);
 	}
 }
+
+
+
