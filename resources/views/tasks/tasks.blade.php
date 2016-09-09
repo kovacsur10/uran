@@ -15,7 +15,7 @@
 					@endif
 					
 					
-					<form class="form-horizontal" role="form" method="POST" action="{{ url('/tasks/tasks') }}">
+					<form class="form-horizontal" role="form" method="POST" action="{{ url('/tasks/list') }}">
 					{!! csrf_field() !!}
 					
 						<div class="form-group{{ $errors->has('status') ? ' has-error' : '' }}">
