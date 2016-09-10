@@ -16,8 +16,8 @@ class TaskController extends Controller{
 	
     public function show(){
 		$layout = new LayoutData();
-		if(Session::has('tasks_status_filter') || Session::has('tasks_caption_filter') || Session::has('tasks_priority_filter')){
-			$layout->tasks()->filterTasks(Session::get('tasks_status_filter'), Session::get('tasks_caption_filter'), Session::get('tasks_priority_filter'));
+		if(Session::has('tasks_status_filter') || Session::has('tasks_caption_filter') || Session::has('tasks_priority_filter') || (Session::has('tasks_mytasks_filter') && Session::get('tasks_mytasks_filter') == 1)){
+			$layout->tasks()->filterTasks(Session::get('tasks_status_filter'), Session::get('tasks_caption_filter'), Session::get('tasks_priority_filter'), Session::get('tasks_mytasks_filter'));
 		}
 		return view('tasks.tasks', ["layout" => $layout]);
 	}
@@ -233,6 +233,11 @@ class TaskController extends Controller{
 			Session::put('tasks_priority_filter', '');
 		}else{
 			Session::put('tasks_priority_filter', $request->input('priority'));
+		}
+		if($request->input('myTasks') == null){
+			Session::put('tasks_mytasks_filter', '0');
+		}else{
+			Session::put('tasks_mytasks_filter', '1');
 		}
 		return redirect('tasks/list');
 	}

@@ -16,6 +16,7 @@ class Tasks{
     protected $filterPriority = "";
     protected $filterStatus = "";
     protected $filterCaption = "";
+    protected $filterMyTasks = 1;
 	
 	public function __construct(){
 		$this->tasks = $this->getTasks();
@@ -59,10 +60,14 @@ class Tasks{
 	public function getPriorityFilter(){
 		return $this->filterPriority;
 	}
-	public function filterTasks($status, $caption, $priority){
+	public function getMyTasksFilter(){
+		return $this->filterMyTasks;
+	}
+	public function filterTasks($status, $caption, $priority, $myTasks){
 		$this->filterStatus = $status;
 		$this->filterCaption = $caption;
 		$this->filterPriority = $priority;
+		$this->filterMyTasks = $myTasks;
 		if($status == "" && $priority == ""){
 			$this->tasks = $this->getTasks();
 		}
