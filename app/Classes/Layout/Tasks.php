@@ -13,7 +13,9 @@ class Tasks{
 	protected $comments;
 	protected $priorities;
 	protected $statusTypes;
+    protected $filterPriority = "";
     protected $filterStatus = "";
+    protected $filterCaption = "";
 	
 	public function __construct(){
 		$this->tasks = $this->getTasks();
@@ -48,16 +50,24 @@ class Tasks{
 		return $this->statusTypes;
 	}
 	
+	public function getCaptionFilter(){
+		return $this->filterCaption;
+	}
 	public function getStatusFilter(){
 		return $this->filterStatus;
 	}
-	public function filterTasks($status){
+	public function getPriorityFilter(){
+		return $this->filterPriority;
+	}
+	public function filterTasks($status, $caption, $priority){
 		$this->filterStatus = $status;
-		if($status == ""){
+		$this->filterCaption = $caption;
+		$this->filterPriority = $priority;
+		if($status == "" && $priority == ""){
 			$this->tasks = $this->getTasks();
 		}
 		else{
-			$this->tasks = $this->getFilteredTasks($status);
+			$this->tasks = $this->getFilteredTasks($this->filterStatus, $this->filterPriority);
 		}
 	}
 	
@@ -229,6 +239,7 @@ class Tasks{
 			->join('tasks_status', 'tasks_status.id', '=', 'tasks_task.status')
 			->join('tasks_priority', 'tasks_priority.id', '=', 'tasks_task.priority')
 			->join('users', 'users.id', '=', 'tasks_task.created_by')
+			->where('tasks_task.caption', 'LIKE', '%'.($this->filterCaption).'%')
 			->where('tasks_task.deleted', '=', 0)
 			->select('tasks_task.id as id', 'created_datetime as date', 'tasks_status.status as status', 'users.name as user', 'caption', 'tasks_priority.name as priority', 'users.username as username')
 			->orderBy('tasks_task.id', 'desc')
@@ -257,17 +268,47 @@ class Tasks{
 		return $ret == null ? [] : $ret;
 	}
     
-    private function getFilteredTasks($status){
-		$ret = DB::table('tasks_task')
-			->join('tasks_type', 'tasks_type.id', '=', 'tasks_task.type')
-			->join('tasks_status', 'tasks_status.id', '=', 'tasks_task.status')
-			->join('tasks_priority', 'tasks_priority.id', '=', 'tasks_task.priority')
-			->join('users', 'users.id', '=', 'tasks_task.created_by')
-            ->where('tasks_status.id', '=', $status)
-			->where('tasks_task.deleted', '=', 0)
-			->select('tasks_task.id as id', 'created_datetime as date', 'tasks_status.status as status', 'users.name as user', 'caption', 'tasks_priority.name as priority', 'users.username as username')
-			->orderBy('tasks_task.id', 'desc')
-			->get();
+    private function getFilteredTasks($status, $priority){
+		if($priority != "" && $status != ""){
+			$ret = DB::table('tasks_task')
+				->join('tasks_type', 'tasks_type.id', '=', 'tasks_task.type')
+				->join('tasks_status', 'tasks_status.id', '=', 'tasks_task.status')
+				->join('tasks_priority', 'tasks_priority.id', '=', 'tasks_task.priority')
+				->join('users', 'users.id', '=', 'tasks_task.created_by')
+				->where('tasks_status.id', '=', $status)
+				->where('tasks_priority.id', '=', $priority)
+				->where('tasks_task.caption', 'LIKE', '%'.($this->filterCaption).'%')
+				->where('tasks_task.deleted', '=', 0)
+				->select('tasks_task.id as id', 'created_datetime as date', 'tasks_status.status as status', 'users.name as user', 'caption', 'tasks_priority.name as priority', 'users.username as username')
+				->orderBy('tasks_task.id', 'desc')
+				->get();
+		}
+		else if($priority == ""){
+			$ret = DB::table('tasks_task')
+				->join('tasks_type', 'tasks_type.id', '=', 'tasks_task.type')
+				->join('tasks_status', 'tasks_status.id', '=', 'tasks_task.status')
+				->join('tasks_priority', 'tasks_priority.id', '=', 'tasks_task.priority')
+				->join('users', 'users.id', '=', 'tasks_task.created_by')
+				->where('tasks_status.id', '=', $status)
+				->where('tasks_task.caption', 'LIKE', '%'.($this->filterCaption).'%')
+				->where('tasks_task.deleted', '=', 0)
+				->select('tasks_task.id as id', 'created_datetime as date', 'tasks_status.status as status', 'users.name as user', 'caption', 'tasks_priority.name as priority', 'users.username as username')
+				->orderBy('tasks_task.id', 'desc')
+				->get();
+		}
+		else{
+			$ret = DB::table('tasks_task')
+				->join('tasks_type', 'tasks_type.id', '=', 'tasks_task.type')
+				->join('tasks_status', 'tasks_status.id', '=', 'tasks_task.status')
+				->join('tasks_priority', 'tasks_priority.id', '=', 'tasks_task.priority')
+				->join('users', 'users.id', '=', 'tasks_task.created_by')
+				->where('tasks_priority.id', '=', $priority)
+				->where('tasks_task.caption', 'LIKE', '%'.($this->filterCaption).'%')
+				->where('tasks_task.deleted', '=', 0)
+				->select('tasks_task.id as id', 'created_datetime as date', 'tasks_status.status as status', 'users.name as user', 'caption', 'tasks_priority.name as priority', 'users.username as username')
+				->orderBy('tasks_task.id', 'desc')
+				->get();
+		}
         return $ret == null ? [] : $ret;
 	}
 }

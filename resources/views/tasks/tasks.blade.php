@@ -15,9 +15,23 @@
 					@endif
 					
 					
-					<form class="form-horizontal" role="form" method="POST" action="{{ url('/tasks/list') }}">
+					<form class="form-horizontal" role="form" method="POST" action="{{ url('/tasks/tasks') }}">
 					{!! csrf_field() !!}
 					
+						<div class="form-group{{ $errors->has('caption') ? ' has-error' : '' }}">
+							<label class="col-md-4 control-label">{{ $layout->language('task') }}</label>
+
+							<div class="col-md-6">
+								<input type="text" class="form-control" name="caption" value="{{ $layout->tasks()->getCaptionFilter() }}">
+
+								@if ($errors->has('caption'))
+									<span class="help-block">
+										<strong>{{ $errors->first('caption') }}</strong>
+									</span>
+								@endif
+							</div>
+						</div>
+									
 						<div class="form-group{{ $errors->has('status') ? ' has-error' : '' }}">
 							<label class="col-md-4 control-label">{{ $layout->language('status') }}</label>
 
@@ -36,7 +50,26 @@
 									</span>
 								@endif
 							</div>
-							
+						</div>
+						
+						<div class="form-group{{ $errors->has('priority') ? ' has-error' : '' }}">
+							<label class="col-md-4 control-label">{{ $layout->language('priority') }}</label>
+
+							<div class="col-md-6">
+								<select class="form-control" name="priority"> 	
+									<option class="form-control" name="priority" value=""></option>
+									@foreach($layout->tasks()->priorities() as $priority)
+										<option class="form-control" name="priority" value="{{ $priority->id }}"  @if($layout->tasks()->getPriorityFilter() == $priority->id ) selected @endif>
+										{{ $layout->language($priority->name) }}</option>
+									@endforeach
+								</select>
+								
+								@if ($errors->has('priority'))
+									<span class="help-block">
+										<strong>{{ $errors->first('priority') }}</strong>
+									</span>
+								@endif
+							</div>
 						</div>
 						
 						<div class="form-group">
