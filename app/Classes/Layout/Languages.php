@@ -514,7 +514,7 @@ class Languages{
 			'task_not_found' => 'Ilyen feladat nem létezik!',
 			'no_one_is_assigned' => 'Senkihez sincs hozzárendelve!',
 			'closed_on_that_date' => 'Lezárás dátuma',
-		
+			'myTasks' => 'Hozzám rendelt feladatok',
 			'' => '',
 		];
 	}
@@ -1028,6 +1028,8 @@ class Languages{
 			'task_not_found' => 'Task was not found!',
 			'no_one_is_assigned' => 'Nobody is assigned!',
 			'closed_on_that_date' => 'Closing date',
+			'myTasks' => 'Tasks for me',
+			'' => '',
 		];
 	}
 	

@@ -72,6 +72,20 @@
 							</div>
 						</div>
 						
+						<div class="form-group{{ $errors->has('myTasks') ? ' has-error' : '' }}">
+							<label class="col-md-4 control-label">{{ $layout->language('myTasks') }}</label>
+
+							<div class="col-md-6">
+								<input type="checkbox" name="myTasks" value="myTasks" @if($layout->tasks()->getMyTasksFilter() == 1 ) checked @endif>
+
+								@if ($errors->has('myTasks'))
+									<span class="help-block">
+										<strong>{{ $errors->first('myTasks') }}</strong>
+									</span>
+								@endif
+							</div>
+						</div>
+						
 						<div class="form-group">
 							<div class="col-md-6 col-md-offset-4">
 								<button type="submit" class="btn btn-primary">
