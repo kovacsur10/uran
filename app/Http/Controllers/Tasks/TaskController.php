@@ -14,12 +14,14 @@ class TaskController extends Controller{
 	
 // PUBLIC FUNCTIONS
 	
-    public function show(){
+    public function show($count = 10, $first = 0){
 		$layout = new LayoutData();
 		if(Session::has('tasks_status_filter') || Session::has('tasks_caption_filter') || Session::has('tasks_priority_filter') || (Session::has('tasks_mytasks_filter') && Session::get('tasks_mytasks_filter') == 1)){
 			$layout->tasks()->filterTasks(Session::get('tasks_status_filter'), Session::get('tasks_caption_filter'), Session::get('tasks_priority_filter'), Session::get('tasks_mytasks_filter'));
 		}
-		return view('tasks.tasks', ["layout" => $layout]);
+		return view('tasks.tasks', ["layout" => $layout,
+									"tasksToShow" => $count,
+									"firstTask" => $first]);
 	}
 	
 	public function showTask($id){

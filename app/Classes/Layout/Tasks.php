@@ -76,6 +76,19 @@ class Tasks{
 		}
 	}
 	
+	public function tasksToPages($from = 0, $count = 50){
+		if($this->tasks == null)
+			return null;
+		else if($count == 0)
+			return array_slice($this->tasks, $from, count($this->tasks)-$from);
+		else if($from < 0 || count($this->tasks) < $from || $count <= 0)
+			return null;
+		else if(count($this->tasks) < $from + $count)
+			return array_slice($this->tasks, $from, count($this->tasks) - $from);
+		else
+			return array_slice($this->tasks, $from, $count);
+	}
+	
 	public function getStatusById($id){
 		return DB::table('tasks_status')
 			->where('id', '=', $id)
