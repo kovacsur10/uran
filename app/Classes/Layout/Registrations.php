@@ -17,23 +17,23 @@ class Registrations{
 	}
 	
 	public function get(){
-		$ret = DB::table('users')
+		return DB::table('users')
 			->where('registered', '=', 0)
 			->where('id', '!=', 0)
 			->orderBy('name', 'asc')
-			->get();
-		return $ret == null ? [] : $ret;
+			->get()
+			->toArray();
 	}
 	
 	public function getNames(){
-		$ret = DB::table('users')
+		return DB::table('users')
 			->join('registrations', 'registrations.user_id', '=', 'users.id')
 			->select('id', 'name', 'verified')
 			->where('registered', '=', 0)
 			->where('id', '!=', 0)
 			->orderBy('name', 'asc')
-			->get();
-		return $ret == null ? [] : $ret;
+			->get()
+			->toArray();
 	}
 	
 	public function getRegistrationUser(){
@@ -46,7 +46,7 @@ class Registrations{
 			->where('registered', '=', 0)
 			->where('id', '=', $id)
 			->first();
-		$this->registrationUser = $user == null ? [] : $user;
+		$this->registrationUser = $user === null ? [] : $user;
 	}
 	
 	public function getRegistrationByCode($code){
@@ -80,7 +80,8 @@ class Registrations{
 	}
 	
 	public function addCode($userId, $code){
-		DB::table('registrations')->insert([
+		DB::table('registrations')
+			->insert([
 				'user_id' => $userId,
 				'code' => $code,
 			]);
@@ -137,15 +138,13 @@ class Registrations{
 			->where('registration_type', 'LIKE', $userType)
 			->orderBy('id', 'asc')
 			->get();
-		if($permissions !== null){
-			//set the user permissions
-			foreach($permissions as $permission){
-				DB::table('user_permissions')
-					->insert([
-						'user_id' => $userId,
-						'permission_id' => $permission->permission
-					]);
-			}
+		//set the user permissions
+		foreach($permissions as $permission){
+			DB::table('user_permissions')
+				->insert([
+					'user_id' => $userId,
+					'permission_id' => $permission->permission
+				]);
 		}
 	}
 	

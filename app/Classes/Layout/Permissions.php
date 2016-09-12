@@ -19,12 +19,12 @@ class Permissions{
 	}
 	
 	public function getForUser($userId){
-		$permissions = DB::table('permissions')->join('user_permissions', 'permissions.id', '=', 'user_permissions.permission_id')
+		return DB::table('permissions')->join('user_permissions', 'permissions.id', '=', 'user_permissions.permission_id')
 			->select('permissions.id as id', 'permission_name', 'permissions.description as description')
 			->where('user_permissions.user_id', '=', $userId)
 			->orderBy('id', 'asc')
-			->get();
-		return $permissions == null ? [] : $permissions;
+			->get()
+			->toArray();
 	}
 	
 	public function getById($permissionId){
@@ -34,20 +34,20 @@ class Permissions{
 	}
 	
 	public function getAllPermissions(){
-		$permissions = DB::table('permissions')
+		return DB::table('permissions')
 			->orderBy('id', 'asc')
-			->get();
-		return $permissions == null ? [] : $permissions;
+			->get()
+			->toArray();
 	}
 	
 	public function getUsersWithPermission($permissionId){
-		$users = DB::table('permissions')
+		return DB::table('permissions')
 			->join('user_permissions', 'user_permissions.permission_id', '=', 'permissions.id')
 			->join('users', 'users.id', '=', 'user_permissions.user_id')
 			->where('permissions.id', '=', $permissionId)
 			->select('users.id', 'users.name', 'users.username')
-			->get();
-		return $users === null ? [] : $users;
+			->get()
+			->toArray();
 	}
 	
 	public function hasGuestsDefaultPermission($permissionId){

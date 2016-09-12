@@ -49,7 +49,7 @@ class EcnetUser extends User{
 		$order = DB::table('ecnet_mac_slot_orders')
 			->where('user_id', '=', $id)
 			->first();
-		return ($order != null);
+		return ($order !== null);
 	}
 	
 	public function getNameFilter(){
@@ -153,11 +153,11 @@ class EcnetUser extends User{
 	
 	//SlotController
 	public function getMacSlotOrders(){
-		$ret = DB::table('ecnet_mac_slot_orders')
+		return DB::table('ecnet_mac_slot_orders')
 			->join('users', 'users.id', '=', 'ecnet_mac_slot_orders.user_id')
 			->select('ecnet_mac_slot_orders.id', 'users.username', 'ecnet_mac_slot_orders.reason', 'ecnet_mac_slot_orders.order_time')
-			->get();
-		return $ret === null ? [] : $ret;
+			->get()
+			->toArray();
 	}
 	
 	public function getMacSlotOrderById($orderId){
@@ -186,25 +186,27 @@ class EcnetUser extends User{
 	private function getEcnetUserData($id){
 		$ret = DB::table('ecnet_user_data')->where('user_id', '=', $id)
 			->first();
-		return $ret == null ? [] : $ret;
+		return $ret === null ? [] : $ret;
 	}
 	
 	private function getEcnetUsers(){
 		return DB::table('ecnet_user_data')
 			->join('users', 'users.id', '=', 'ecnet_user_data.user_id')
 			->select('users.id as id', 'users.username as username', 'users.name as name', 'ecnet_user_data.money as money', 'ecnet_user_data.valid_time as valid_time', 'ecnet_user_data.mac_slots as mac_slots')
-			->get();
+			->get()
+			->toArray();
 	}
 	
 	private function getValidationTime(){
-		return DB::table('ecnet_valid_date')->first();
+		return DB::table('ecnet_valid_date')
+			->first();
 	}
 	
 	private function getMACAddresses($id){
-		$addresses = DB::table('ecnet_mac_addresses')->where('user_id', '=', $id)
+		return DB::table('ecnet_mac_addresses')->where('user_id', '=', $id)
 			->select('id', 'mac_address')
-			->get();
-		return $addresses === null ? [] : $addresses;
+			->get()
+			->toArray();
 	}
 	
 	private function getFilteredEcnetUsers($username, $name){
@@ -213,6 +215,7 @@ class EcnetUser extends User{
 			->where('users.name', 'LIKE', '%'.$name.'%')
 			->where('users.username', 'LIKE', '%'.$username.'%')
 			->select('users.id as id', 'users.username as username', 'users.name as name', 'ecnet_user_data.money as money', 'ecnet_user_data.valid_time as valid_time', 'ecnet_user_data.mac_slots as mac_slots')
-			->get();
+			->get()
+			->toArray();
 	}
 }

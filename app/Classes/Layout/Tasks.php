@@ -159,10 +159,8 @@ class Tasks{
 			->where('deleted', '=', '0')
 			->select('tasks_comments.id as id', 'users.name as poster', 'text as comment', 'datetime as date', 'users.username as poster_username')
 			->orderBy('tasks_comments.id','desc')
-			->get();
-		if($this->comments === null){
-			$this->comments = [];
-		}
+			->get()
+			->toArray();
 	}
 	
 	public function update($taskId, $type, $text, $caption, $deadline, $priority, $status, $workingHours, $assignedUser, $closed){
@@ -252,7 +250,7 @@ class Tasks{
 	}
 	
 	protected function getTasks(){
-		$ret = DB::table('tasks_task')
+		return DB::table('tasks_task')
 			->join('tasks_type', 'tasks_type.id', '=', 'tasks_task.type')
 			->join('tasks_status', 'tasks_status.id', '=', 'tasks_task.status')
 			->join('tasks_priority', 'tasks_priority.id', '=', 'tasks_task.priority')
@@ -261,29 +259,29 @@ class Tasks{
 			->where('tasks_task.deleted', '=', 0)
 			->select('tasks_task.id as id', 'created_datetime as date', 'tasks_status.status as status', 'users.name as user', 'caption', 'tasks_priority.name as priority', 'users.username as username')
 			->orderBy('tasks_task.id', 'desc')
-			->get();
-		return $ret == null ? [] : $ret;
+			->get()
+			->toArray();
 	}
 	
 	protected function getPriorities(){
-		$ret = DB::table('tasks_priority')
+		return DB::table('tasks_priority')
 			->orderBy('id', 'asc')
-			->get();
-		return $ret == null ? [] : $ret;
+			->get()
+			->toArray();
 	}
 	
 	protected function getTaskTypes(){
-		$ret = DB::table('tasks_type')
+		return DB::table('tasks_type')
 			->orderBy('id', 'asc')
-			->get();
-		return $ret == null ? [] : $ret;
+			->get()
+			->toArray();
 	}
 	
 	protected function getTaskStatusTypes(){
-		$ret = DB::table('tasks_status')
+		return DB::table('tasks_status')
 			->orderBy('id', 'asc')
-			->get();
-		return $ret == null ? [] : $ret;
+			->get()
+			->toArray();
 	}
     
     private function getFilteredTasks($status, $priority){
@@ -299,7 +297,8 @@ class Tasks{
 				->where('tasks_task.deleted', '=', 0)
 				->select('tasks_task.id as id', 'created_datetime as date', 'tasks_status.status as status', 'users.name as user', 'caption', 'tasks_priority.name as priority', 'users.username as username')
 				->orderBy('tasks_task.id', 'desc')
-				->get();
+				->get()
+				->toArray();
 		}
 		else if($priority == ""){
 			$ret = DB::table('tasks_task')
@@ -312,7 +311,8 @@ class Tasks{
 				->where('tasks_task.deleted', '=', 0)
 				->select('tasks_task.id as id', 'created_datetime as date', 'tasks_status.status as status', 'users.name as user', 'caption', 'tasks_priority.name as priority', 'users.username as username')
 				->orderBy('tasks_task.id', 'desc')
-				->get();
+				->get()
+				->toArray();
 		}
 		else{
 			$ret = DB::table('tasks_task')
@@ -325,8 +325,9 @@ class Tasks{
 				->where('tasks_task.deleted', '=', 0)
 				->select('tasks_task.id as id', 'created_datetime as date', 'tasks_status.status as status', 'users.name as user', 'caption', 'tasks_priority.name as priority', 'users.username as username')
 				->orderBy('tasks_task.id', 'desc')
-				->get();
+				->get()
+				->toArray();
 		}
-        return $ret == null ? [] : $ret;
+		return $ret;
 	}
 }
