@@ -205,7 +205,9 @@ class TaskController extends Controller{
 		}else{
 			$layout->errors()->add('permission', $layout->language('insufficient_permissions'));
 		}
-		return view('tasks.tasks', ["layout" => $layout]);
+		return view('tasks.tasks', ["layout" => $layout,
+									"tasksToShow" => 10,
+									"firstTask" => 0]);
 	}
 	
 	public function remove($taskId){

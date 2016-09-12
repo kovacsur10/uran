@@ -41,39 +41,39 @@ class BaseData{
 	}
 	
 	public function countries(){
-		if($this->countries == null){
+		if($this->countries === null){
 			$this->countries = DB::table('country')
 				->get();
 		}
-		return $this->countries === null ? [] : $this->countries;
+		return $this->countries === null ? [] : $this->countries->toArray();
 	}
 	
 	private function getFaculties(){
-		$ret = DB::table('faculties')
+		return DB::table('faculties')
 			->orderBy('id', 'asc')
-			->get();
-		return $ret === null ? [] : $ret;
+			->get()
+			->toArray();
 	}
 	
 	private function getWorkshops(){
-		$ret = DB::table('workshops')
+		return DB::table('workshops')
 			->orderBy('id', 'asc')
-			->get();
-		return $ret === null ? [] : $ret;
+			->get()
+			->toArray();
 	}
 	
 	private function getAdmissionYears(){
-		$ret = DB::table('admission_years')
+		return DB::table('admission_years')
 			->orderBy('year', 'asc')
-			->get();
-		return $ret === null ? [] : $ret;
+			->get()
+			->toArray();
 	}
 	
 	private function getStatusCodes(){
-		$ret = DB::table('user_status_codes')
+		return DB::table('user_status_codes')
 			->orderBy('id', 'asc')
-			->get();
-		return $ret === null ? [] : $ret;
+			->get()
+			->toArray();
 	}
 	
 	private function getStaticCountryCodes(){
