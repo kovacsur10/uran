@@ -67,16 +67,17 @@ class EcnetUser extends User{
 	}
 	
 	public function ecnetUsers($from = 0, $count = 50){
-		if($this->ecnetUsers == null)
+		if($this->ecnetUsers == null){
 			return null;
-		else if($count == 0)
+		}else if($count == 0){
 			return array_slice($this->ecnetUsers, $from, count($this->ecnetUsers)-$from);
-		else if($from < 0 || count($this->ecnetUsers) < $from || $count <= 0)
+		}else if($from < 0 || count($this->ecnetUsers) < $from || $count <= 0){
 			return null;
-		else if(count($this->ecnetUsers) < $from + $count)
+		}else if(count($this->ecnetUsers) < $from + $count){
 			return array_slice($this->ecnetUsers, $from, count($this->ecnetUsers) - $from);
-		else
+		}else{
 			return array_slice($this->ecnetUsers, $from, $count);
+		}
 	}
 	
 	public function addMACSlotOrder($userId, $reason){

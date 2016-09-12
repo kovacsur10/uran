@@ -39,8 +39,7 @@
 								<select class="form-control" name="status"> 	
 									<option class="form-control" name="status" value=""></option>
 									@foreach($layout->tasks()->statusTypes() as $status)
-										<option class="form-control" name="status" value="{{ $status->id }}" @if($layout->tasks()->getStatusFilter() == $status->id ) selected @endif>
-										{{ $layout->language($status->status) }}</option>
+										<option class="form-control" name="status" value="{{ $status->id }}" {{ $layout->tasks()->getStatusFilter() == $status->id ? "selected" : "" }}>{{ $layout->language($status->status) }}</option>
 									@endforeach
 								</select>
 								
@@ -59,8 +58,7 @@
 								<select class="form-control" name="priority"> 	
 									<option class="form-control" name="priority" value=""></option>
 									@foreach($layout->tasks()->priorities() as $priority)
-										<option class="form-control" name="priority" value="{{ $priority->id }}"  @if($layout->tasks()->getPriorityFilter() == $priority->id ) selected @endif>
-										{{ $layout->language($priority->name) }}</option>
+										<option class="form-control" name="priority" value="{{ $priority->id }}"  {{ $layout->tasks()->getPriorityFilter() == $priority->id ? "selected" : "" }}>{{ $layout->language($priority->name) }}</option>
 									@endforeach
 								</select>
 								
@@ -76,7 +74,7 @@
 							<label class="col-md-4 control-label">{{ $layout->language('myTasks') }}</label>
 
 							<div class="col-md-6">
-								<input type="checkbox" name="myTasks" value="myTasks" @if($layout->tasks()->getMyTasksFilter() == 1 ) checked @endif>
+								<input type="checkbox" name="myTasks" value="myTasks" {{ $layout->tasks()->getMyTasksFilter() == 1 ? "checked" : "" }}>
 
 								@if ($errors->has('myTasks'))
 									<span class="help-block">
