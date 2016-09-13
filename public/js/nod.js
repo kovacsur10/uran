@@ -733,15 +733,22 @@ nod.makeDomNode = function (element, mediator, configuration) {
     // parent is given as a paremeter, while the span is created and added
     // as a child to the parent.
     var parent              = nod.getParent(element, configuration),
+		insertParent		= parent, //added by Mate Kovacs
         _status             = nod.constants.UNCHECKED,
         pendingUpdate       = null,
         span                = document.createElement('span'),
         customSpan          = false;
 
     span.style.display = 'none';
+	span.className += "help-block";
 
+	//added by Mate Kovacs
+	if(parent.classList.contains('input-group')) {
+		insertParent = parent.parentElement;
+	}
+	
     if (!configuration.noDom) {
-        parent.appendChild(span);
+        insertParent.appendChild(span); //modified by Mate Kovacs
     }
 
     // Updates the class of the parent to match the status of the element.

@@ -1,12 +1,12 @@
-var guestValidator = nod();
+var collegistValidator = nod();
 
-guestValidator.configure({
+collegistValidator.configure({
     submit: '#registerButton',
     disableSubmit: true,
 	delay: 300
 });
 
-guestValidator.add([
+collegistValidator.add([
 {
 	selector: '#username',
 	validate: ['presence', 'between-length:6:32', 'regex:(^[A-Za-z0-9_\-]+$)'],
@@ -33,6 +33,36 @@ guestValidator.add([
 	errorMessage: language.presenceError
 },
 {
+	selector: '#city_of_birth',
+	validate: 'presence',
+	errorMessage: language.presenceError
+},
+{
+	selector: '#date_of_birth',
+	validate: ['presence', 'regex:(^(?:19[0-9]{2}|2[0-9]{3})\.(?:1[012]|0[1-9])\.(?:0[1-9]|[12][0-9]|3[01])\.?$)'],
+	errorMessage: [language.presenceError, language.regexpError]
+},
+{
+	selector: '#name_of_mother',
+	validate: 'presence',
+	errorMessage: language.presenceError
+},
+{
+	selector: '#phone',
+	validate: 'presence',
+	errorMessage: language.presenceError
+},
+{
+	selector: '#year_of_leaving_exam',
+	validate: ['presence', 'regex:(^(?:19[6-9][0-9])|(?:200[0-9])|(?:201[0-6])$)'],
+	errorMessage: [language.presenceError, language.regexpError]
+},
+{
+	selector: '#high_school',
+	validate: 'presence',
+	errorMessage: language.presenceError
+},
+{
 	selector: '#shire',
 	validate: 'presence',
 	errorMessage: language.presenceError
@@ -53,14 +83,9 @@ guestValidator.add([
 	errorMessage: language.presenceError
 },
 {
-	selector: '#reason',
-	validate: 'presence',
-	errorMessage: language.presenceError
-},
-{
-	selector: '#phone',
-	validate: 'presence',
-	errorMessage: language.presenceError
+	selector: '#neptun',
+	validate: ['presence', 'between-length:6:6'],
+	errorMessage: [language.presenceError, language.betweenLength6_6Error]
 },
 {
 	selector: '#accept',

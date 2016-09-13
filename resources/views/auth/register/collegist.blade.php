@@ -15,7 +15,7 @@
                             <label class="col-md-4 control-label">{{ $layout->language('username') }}</label>
 
                             <div class="col-md-6">
-                                <input type="text" class="form-control" name="username" value="{{ old('username') }}" required="true">
+                                <input type="text" class="form-control" id="username" name="username" value="{{ old('username') }}" required="true">
 
                                 @if ($errors->has('username'))
                                     <span class="help-block">
@@ -34,7 +34,7 @@
                             <label class="col-md-4 control-label">{{ $layout->language('email_address') }}</label>
 
                             <div class="col-md-6">
-                                <input type="email" class="form-control" name="email" value="{{ old('email') }}" required="true">
+                                <input type="email" class="form-control" name="email" id="email" value="{{ old('email') }}" required="true">
 
                                 @if ($errors->has('email'))
                                     <span class="help-block">
@@ -52,7 +52,7 @@
                             <label class="col-md-4 control-label">{{ $layout->language('password') }}</label>
 
                             <div class="col-md-6">
-                                <input type="password" class="form-control" name="password" required="true">
+                                <input type="password" class="form-control" name="password" id="password" required="true">
 
                                 @if ($errors->has('password'))
                                     <span class="help-block">
@@ -70,7 +70,7 @@
                             <label class="col-md-4 control-label">{{ $layout->language('confirm_password') }}</label>
 
                             <div class="col-md-6">
-                                <input type="password" class="form-control" name="password_confirmation" required="true">
+                                <input type="password" class="form-control" name="password_confirmation" id="password_again" required="true">
 
                                 @if ($errors->has('password_confirmation'))
                                     <span class="help-block">
@@ -87,7 +87,7 @@
 									<label class="col-md-4 control-label">{{ $layout->language('name') }}</label>
 
 									<div class="col-md-6">
-										<input type="text" class="form-control" name="name" value="{{ old('name') }}" required="true">
+										<input type="text" class="form-control" name="name" id="name" value="{{ old('name') }}" required="true">
 
 										@if ($errors->has('name'))
 											<span class="help-block">
@@ -101,7 +101,7 @@
 									<label class="col-md-4 control-label">{{ $layout->language('place_of_birth') }}</label>
 
 									<div class="col-md-6">
-										<input type="text" class="form-control" name="city_of_birth" value="{{ old('city_of_birth') }}">
+										<input type="text" class="form-control" name="city_of_birth" id="city_of_birth" value="{{ old('city_of_birth') }}">
 
 										@if ($errors->has('city_of_birth'))
 											<span class="help-block">
@@ -116,7 +116,7 @@
 
 									<div class="col-md-6">
 										<div class='input-group date' data-date-format="yyyy.mm.dd." id='datepicker_add_new_task'>
-											<input type="text" readonly class="form-control" name="date_of_birth" value="{{ old('date_of_birth') }}">
+											<input type="text" readonly class="form-control" name="date_of_birth" id="date_of_birth" value="{{ old('date_of_birth') }}">
 											<span class="input-group-addon">
 												<span class="glyphicon glyphicon-calendar"></span>
 											</span>
@@ -133,7 +133,7 @@
 									<label class="col-md-4 control-label">{{ $layout->language('name_of_mother') }}</label>
 
 									<div class="col-md-6">
-										<input type="text" class="form-control" name="name_of_mother" value="{{ old('name_of_mother') }}">
+										<input type="text" class="form-control" name="name_of_mother" id="name_of_mother" value="{{ old('name_of_mother') }}">
 
 										@if ($errors->has('name_of_mother'))
 											<span class="help-block">
@@ -147,7 +147,7 @@
 									<label class="col-md-4 control-label">{{ $layout->language('phone_number') }}</label>
 
 									<div class="col-md-6">
-										<input type="text" class="form-control" name="phone" value="{{ old('phone') }}">
+										<input type="text" class="form-control" name="phone" id="phone" value="{{ old('phone') }}">
 
 										@if ($errors->has('phone'))
 											<span class="help-block">
@@ -161,7 +161,7 @@
 									<label class="col-md-4 control-label">{{ $layout->language('year_of_leaving_exam') }}</label>
 
 									<div class="col-md-6">
-										<input type="text" class="form-control" name="year_of_leaving_exam" value="{{ old('year_of_leaving_exam') }}">
+										<input type="text" class="form-control" name="year_of_leaving_exam" id="year_of_leaving_exam" value="{{ old('year_of_leaving_exam') }}">
 
 										@if ($errors->has('year_of_leaving_exam'))
 											<span class="help-block">
@@ -175,7 +175,7 @@
 									<label class="col-md-4 control-label">{{ $layout->language('high_school') }}</label>
 
 									<div class="col-md-6">
-										<input type="text" class="form-control" name="high_school" value="{{ old('high_school') }}">
+										<input type="text" class="form-control" name="high_school" id="high_school" value="{{ old('high_school') }}">
 
 										@if ($errors->has('high_school'))
 											<span class="help-block">
@@ -215,7 +215,7 @@
 									<label class="col-md-4 control-label">{{ $layout->language('shire') }}</label>
 
 									<div class="col-md-6">
-										<input type="text" class="form-control" name="shire" value="{{ old('shire') }}" required="true">
+										<input type="text" class="form-control" name="shire" id="shire" value="{{ old('shire') }}" required="true">
 
 										@if ($errors->has('shire'))
 											<span class="help-block">
@@ -229,7 +229,7 @@
 									<label class="col-md-4 control-label">{{ $layout->language('postalcode') }}</label>
 
 									<div class="col-md-6">
-										<input type="text" class="form-control" name="postalcode" value="{{ old('postalcode') }}" required="true">
+										<input type="text" class="form-control" name="postalcode" id="postalcode" value="{{ old('postalcode') }}" required="true">
 
 										@if ($errors->has('postalcode'))
 											<span class="help-block">
@@ -243,7 +243,7 @@
 									<label class="col-md-4 control-label">{{ $layout->language('city') }}</label>
 
 									<div class="col-md-6">
-										<input type="text" class="form-control" name="city" value="{{ old('city') }}" required="true">
+										<input type="text" class="form-control" name="city" id="city" value="{{ old('city') }}" required="true">
 
 										@if ($errors->has('city'))
 											<span class="help-block">
@@ -257,7 +257,7 @@
 									<label class="col-md-4 control-label">{{ $layout->language('address') }}</label>
 
 									<div class="col-md-6">
-										<input type="text" class="form-control" name="address" value="{{ old('address') }}" required="true">
+										<input type="text" class="form-control" name="address" id="address" value="{{ old('address') }}" required="true">
 
 										@if ($errors->has('address'))
 											<span class="help-block">
@@ -275,7 +275,7 @@
 									<label class="col-md-4 control-label">{{ $layout->language('neptun') }}</label>
 
 									<div class="col-md-6">
-										<input type="text" class="form-control" name="neptun" value="{{ old('neptun') }}" required="true">
+										<input type="text" class="form-control" name="neptun" id="neptun" value="{{ old('neptun') }}" required="true">
 
 										@if ($errors->has('neptun'))
 											<span class="help-block">
@@ -286,9 +286,9 @@
 								</div>
 								
 								<div class="form-group{{ $errors->has('from_year') ? ' has-error' : '' }}">
-									<label  class="col-md-4 control-label" for="country_from_year">{{ $layout->language('from_year') }}</label>
+									<label  class="col-md-4 control-label" for="from_year_select">{{ $layout->language('from_year') }}</label>
 									<div class="col-md-6">
-										<select class="form-control"  name="from_year"  id="country_from_year" required="true">
+										<select class="form-control"  name="from_year"  id="from_year_select" required="true">
 											@foreach($layout->base()->admissionYears() as $fromYear)
 												<option value="{{ $fromYear->year }}" {{ old('from_year') == $fromYear->year ? 'selected' : '' }}>{{ $fromYear->year }}</option>
 											@endforeach
@@ -340,8 +340,9 @@
 					
 						<div class="form-group{{ $errors->has('accept') ? ' has-error' : '' }}">
                             <div class="col-md-10 col-md-offset-1">
-                                <div class="checkbox">
-									<label><input type="checkbox" required name="accept" value="accepted">{{ $layout->language('accept_rules_with_submit_description') }}</label>
+								<div class="form-group">
+									<input class="col-xs-1" type="checkbox" required name="accept" id="accept" value="accepted">
+									<label class="col-xs-11">{{ $layout->language('accept_rules_with_submit_description') }}</label>
 								</div>
 
                                 @if ($errors->has('accept'))
@@ -354,7 +355,7 @@
 						
                         <div class="form-group">
                             <div class="col-md-6 col-md-offset-4">
-                                <button type="submit" class="btn btn-primary">
+                                <button type="submit" id="registerButton" class="btn btn-primary">
                                     <i class="fa fa-btn fa-user"></i>{{ $layout->language('register') }}
                                 </button>
                             </div>
@@ -366,6 +367,7 @@
     </div>
 </div>
 
+<script type="text/javascript" src="/js/view/auth/register/collegist.js"></script>
 <!-- Datepicker script -->
 <script type="text/javascript">
 	$(function(){
@@ -373,6 +375,9 @@
 			format: 'yyyy.mm.dd.',
 			autoclose: true,
 			clearBtn: true
+		})
+		.on('hide', function(e) {
+			collegistValidator.performCheck(['#date_of_birth']);
 		});
 	});
 </script>

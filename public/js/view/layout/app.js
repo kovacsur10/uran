@@ -1,5 +1,6 @@
 var hungarian = {
 	presenceError: 'Nem lehet üres.',
+	betweenLength6_6Error: '6 és 6 karakter közötti szöveg lehet.',
 	betweenLength6_32Error: '6 és 32 karakter közötti szöveg lehet.',
 	betweenLength8_64Error: '8 és 64 karakter közötti szöveg lehet.',
 	noLonger255Error: '255 karakternél hosszabb nem lehet.',
@@ -11,6 +12,7 @@ var hungarian = {
 
 var english = {
 	presenceError: 'Cannot be empty.',
+	betweenLength6_6Error: 'Length must be between 6 and 6.',
 	betweenLength6_32Error: 'Length must be between 6 and 32.',
 	betweenLength8_64Error: 'Length must be between 8 and 64.',
 	noLonger255Error: 'Cannot be longer than 255 characters.',
