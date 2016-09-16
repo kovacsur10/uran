@@ -7,7 +7,8 @@ var hungarian = {
 	emailError: 'Ez nem egy valós e-mail cím.',
 	checkedError: 'A mező bejelölése kötelező!',
 	unmatchError: 'A két mező nem egyezik meg.',
-	regexpError: 'Nem megfelelő karaktereket tartalmaz!'
+	regexpError: 'Nem megfelelő karaktereket tartalmaz!',
+	nonMacAddress: 'Ez nem érvényes MAC cím!'
 };
 
 var english = {
@@ -19,7 +20,8 @@ var english = {
 	emailError: 'It\'s not an e-mail address.',
 	checkedError: 'You have to check this field.',
 	unmatchError: 'The values are not the same.',
-	regexpError: 'It contains invalid characters!'
+	regexpError: 'It contains invalid characters!',
+	nonMacAddress: 'It is not a valid MAC address!'
 };
 
 nod.checkFunctions['regex'] = function(x) {
