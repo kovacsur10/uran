@@ -55,6 +55,7 @@ class Languages{
 			'school_data' => 'Tanulmányi adatok',
 			'contact_informations' => 'Elérhetőségek',
 			'system_data' => 'Rendszer adatok',
+			'openable' => 'lenyitható',
 		//permissions
 			'assign_permissions' => 'Jogok hozzárendelése',
 			'error_at_setting_the_permissions' => 'Hiba a jogosultságok beállításakor!',
@@ -515,6 +516,7 @@ class Languages{
 			'no_one_is_assigned' => 'Senkihez sincs hozzárendelve!',
 			'closed_on_that_date' => 'Lezárás dátuma',
 			'myTasks' => 'Hozzám rendelt feladatok',
+			'data_filtering' => 'Adatok szűrése',
 			'' => '',
 		];
 	}
@@ -568,6 +570,7 @@ class Languages{
 			'school_data' => 'University data',
 			'contact_informations' => 'Contact informations',
 			'system_data' => 'System data',
+			'openable' => 'collapsible',
 		//permissions
 			'assign_permissions' => 'Assign permissions',
 			'error_at_setting_the_permissions' => 'Error at setting the permissions!',
@@ -1029,6 +1032,7 @@ class Languages{
 			'no_one_is_assigned' => 'Nobody is assigned!',
 			'closed_on_that_date' => 'Closing date',
 			'myTasks' => 'Tasks for me',
+			'data_filtering' => 'Filter data',
 			'' => '',
 		];
 	}
