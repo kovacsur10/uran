@@ -14,85 +14,89 @@
 						</div>
 					@endif
 					
-					
-					<form class="form-horizontal" role="form" method="POST" action="{{ url('/tasks/tasks') }}">
-					{!! csrf_field() !!}
-					
-						<div class="form-group{{ $errors->has('caption') ? ' has-error' : '' }}">
-							<label class="col-md-4 control-label">{{ $layout->language('task') }}</label>
+					<div class="panel panel-default">
+						<div class="panel-heading" data-toggle="collapse" data-target="#filterPanelBody">{{ $layout->language('data_filtering') }} - {{ $layout->language('openable') }}</div>
+						<div class="panel-body collapse" id="filterPanelBody">
+							<form class="form-horizontal" role="form" method="POST" action="{{ url('/tasks/tasks') }}">
+							{!! csrf_field() !!}
+							
+								<div class="form-group{{ $errors->has('caption') ? ' has-error' : '' }}">
+									<label class="col-md-4 control-label">{{ $layout->language('task') }}</label>
 
-							<div class="col-md-6">
-								<input type="text" class="form-control" name="caption" value="{{ $layout->tasks()->getCaptionFilter() }}">
+									<div class="col-md-6">
+										<input type="text" class="form-control" name="caption" value="{{ $layout->tasks()->getCaptionFilter() }}">
 
-								@if ($errors->has('caption'))
-									<span class="help-block">
-										<strong>{{ $errors->first('caption') }}</strong>
-									</span>
-								@endif
-							</div>
-						</div>
-									
-						<div class="form-group{{ $errors->has('status') ? ' has-error' : '' }}">
-							<label class="col-md-4 control-label">{{ $layout->language('status') }}</label>
+										@if ($errors->has('caption'))
+											<span class="help-block">
+												<strong>{{ $errors->first('caption') }}</strong>
+											</span>
+										@endif
+									</div>
+								</div>
+											
+								<div class="form-group{{ $errors->has('status') ? ' has-error' : '' }}">
+									<label class="col-md-4 control-label">{{ $layout->language('status') }}</label>
 
-							<div class="col-md-6">
-								<select class="form-control" name="status"> 	
-									<option class="form-control" name="status" value=""></option>
-									@foreach($layout->tasks()->statusTypes() as $status)
-										<option class="form-control" name="status" value="{{ $status->id }}" {{ $layout->tasks()->getStatusFilter() == $status->id ? "selected" : "" }}>{{ $layout->language($status->status) }}</option>
-									@endforeach
-								</select>
+									<div class="col-md-6">
+										<select class="form-control" name="status"> 	
+											<option class="form-control" name="status" value=""></option>
+											@foreach($layout->tasks()->statusTypes() as $status)
+												<option class="form-control" name="status" value="{{ $status->id }}" {{ $layout->tasks()->getStatusFilter() == $status->id ? "selected" : "" }}>{{ $layout->language($status->status) }}</option>
+											@endforeach
+										</select>
+										
+										@if ($errors->has('status'))
+											<span class="help-block">
+												<strong>{{ $errors->first('status') }}</strong>
+											</span>
+										@endif
+									</div>
+								</div>
 								
-								@if ($errors->has('status'))
-									<span class="help-block">
-										<strong>{{ $errors->first('status') }}</strong>
-									</span>
-								@endif
-							</div>
-						</div>
-						
-						<div class="form-group{{ $errors->has('priority') ? ' has-error' : '' }}">
-							<label class="col-md-4 control-label">{{ $layout->language('priority') }}</label>
+								<div class="form-group{{ $errors->has('priority') ? ' has-error' : '' }}">
+									<label class="col-md-4 control-label">{{ $layout->language('priority') }}</label>
 
-							<div class="col-md-6">
-								<select class="form-control" name="priority"> 	
-									<option class="form-control" name="priority" value=""></option>
-									@foreach($layout->tasks()->priorities() as $priority)
-										<option class="form-control" name="priority" value="{{ $priority->id }}"  {{ $layout->tasks()->getPriorityFilter() == $priority->id ? "selected" : "" }}>{{ $layout->language($priority->name) }}</option>
-									@endforeach
-								</select>
+									<div class="col-md-6">
+										<select class="form-control" name="priority"> 	
+											<option class="form-control" name="priority" value=""></option>
+											@foreach($layout->tasks()->priorities() as $priority)
+												<option class="form-control" name="priority" value="{{ $priority->id }}"  {{ $layout->tasks()->getPriorityFilter() == $priority->id ? "selected" : "" }}>{{ $layout->language($priority->name) }}</option>
+											@endforeach
+										</select>
+										
+										@if ($errors->has('priority'))
+											<span class="help-block">
+												<strong>{{ $errors->first('priority') }}</strong>
+											</span>
+										@endif
+									</div>
+								</div>
 								
-								@if ($errors->has('priority'))
-									<span class="help-block">
-										<strong>{{ $errors->first('priority') }}</strong>
-									</span>
-								@endif
-							</div>
-						</div>
-						
-						<div class="form-group{{ $errors->has('myTasks') ? ' has-error' : '' }}">
-							<label class="col-md-4 control-label">{{ $layout->language('myTasks') }}</label>
+								<div class="form-group{{ $errors->has('myTasks') ? ' has-error' : '' }}">
+									<label class="col-md-4 control-label">{{ $layout->language('myTasks') }}</label>
 
-							<div class="col-md-6">
-								<input type="checkbox" name="myTasks" value="myTasks" {{ $layout->tasks()->getMyTasksFilter() == 1 ? "checked" : "" }}>
+									<div class="col-md-6">
+										<input type="checkbox" name="myTasks" value="myTasks" {{ $layout->tasks()->getMyTasksFilter() == 1 ? "checked" : "" }}>
 
-								@if ($errors->has('myTasks'))
-									<span class="help-block">
-										<strong>{{ $errors->first('myTasks') }}</strong>
-									</span>
-								@endif
-							</div>
+										@if ($errors->has('myTasks'))
+											<span class="help-block">
+												<strong>{{ $errors->first('myTasks') }}</strong>
+											</span>
+										@endif
+									</div>
+								</div>
+								
+								<div class="form-group">
+									<div class="col-md-6 col-md-offset-4">
+										<button type="submit" class="btn btn-primary">
+											{{ $layout->language('find') }}
+										</button>
+										<a href="{{ url('tasks/resetfilter') }}" class="btn btn-danger" role="button">{{ $layout->language('delete_filter') }}</a>
+									</div>
+								</div>
+							</form>
 						</div>
-						
-						<div class="form-group">
-							<div class="col-md-6 col-md-offset-4">
-								<button type="submit" class="btn btn-primary">
-									{{ $layout->language('find') }}
-								</button>
-								<a href="{{ url('tasks/resetfilter') }}" class="btn btn-danger" role="button">{{ $layout->language('delete_filter') }}</a>
-							</div>
-						</div>
-					</form>
+					</div>
 					
 					<ul class="list-inline">
 						<li><a href="{{ url('tasks/tasks/10/'.$firstTask) }}" class="btn btn-primary" role="button">10</a></li>
@@ -108,6 +112,13 @@
 							@else
 								<li class="previous disabled"><a href="#">{{ $layout->language('previous_page') }}</a></li>
 							@endif
+							<li>
+								<ul class="pagination">
+									@foreach()
+										<li><a href="{{ url('tasks/tasks/'.$tasksToShow.'/'.($firstTask - $tasksToShow >= 0 ? $firstTask - $tasksToShow : 0)) }}">1</a></li>
+									@endforeach
+								</ul>
+							</li>
 							@if($firstTask+$tasksToShow < count($layout->tasks()->get()))
 								<li class="next"><a href="{{ url('tasks/tasks/'.$tasksToShow.'/'.($firstTask+$tasksToShow)) }}">{{ $layout->language('next_page') }}</a></li>
 							@else

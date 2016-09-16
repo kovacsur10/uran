@@ -48,6 +48,14 @@ class BaseData{
 		return $this->countries === null ? [] : $this->countries->toArray();
 	}
 	
+	public function getPagination($firstId, $countPerPage, $maximumItems){
+		$pages = [];
+		$firstId -= ($firstId % $countPerPage);
+		$firstId = $firstId < 0 ? 0 : ($maximumItems-$countPerPage < $firstId ? $maximumItems-$countPerPage : $firstId);
+
+
+	}
+	
 	private function getFaculties(){
 		return DB::table('faculties')
 			->orderBy('id', 'asc')
