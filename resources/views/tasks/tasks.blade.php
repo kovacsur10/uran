@@ -15,7 +15,7 @@
 					@endif
 					
 					<div class="panel panel-default">
-						<div class="panel-heading" data-toggle="collapse" data-target="#filterPanelBody">{{ $layout->language('data_filtering') }} - {{ $layout->language('openable') }}</div>
+						<div class="panel-heading" style="cursor: pointer;" data-toggle="collapse" data-target="#filterPanelBody">{{ $layout->language('data_filtering') }} - {{ $layout->language('openable') }}</div>
 						<div class="panel-body collapse" id="filterPanelBody">
 							<form class="form-horizontal" role="form" method="POST" action="{{ url('/tasks/tasks') }}">
 							{!! csrf_field() !!}
@@ -97,35 +97,52 @@
 							</form>
 						</div>
 					</div>
-					
-					<ul class="list-inline">
-						<li><a href="{{ url('tasks/tasks/10/'.$firstTask) }}" class="btn btn-primary" role="button">10</a></li>
-						<li><a href="{{ url('tasks/tasks/20/'.$firstTask) }}" class="btn btn-primary" role="button">20</a></li>
-						<li><a href="{{ url('tasks/tasks/50/'.$firstTask) }}" class="btn btn-primary" role="button">50</a></li>
-						<li><a href="{{ url('tasks/tasks/100/'.$firstTask) }}" class="btn btn-primary" role="button">100</a></li>
-					</ul>
 				
-					<nav>
-						<ul class="pager">
-							@if(0 < $firstTask)
-								<li class="previous"><a href="{{ url('tasks/tasks/'.$tasksToShow.'/'.($firstTask - $tasksToShow >= 0 ? $firstTask - $tasksToShow : 0)) }}">{{ $layout->language('previous_page') }}</a></li>
-							@else
-								<li class="previous disabled"><a href="#">{{ $layout->language('previous_page') }}</a></li>
-							@endif
-							<li>
-								<ul class="pagination">
-									@foreach()
-										<li><a href="{{ url('tasks/tasks/'.$tasksToShow.'/'.($firstTask - $tasksToShow >= 0 ? $firstTask - $tasksToShow : 0)) }}">1</a></li>
-									@endforeach
+					<div class="row">
+						<div class="col-sm-3" style="margin: 20px 0px;">
+							<div class="dropdown">
+								<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">{{ $layout->language('choose_visible_row_count') }}
+									<span class="caret"></span>
+								</button>
+								<ul class="dropdown-menu">
+									<li><a href="{{ url('tasks/tasks/10/'.$firstTask) }}">10</a></li>
+									<li><a href="{{ url('tasks/tasks/20/'.$firstTask) }}">20</a></li>
+									<li><a href="{{ url('tasks/tasks/50/'.$firstTask) }}">50</a></li>
+									<li><a href="{{ url('tasks/tasks/100/'.$firstTask) }}">100</a></li>
 								</ul>
-							</li>
-							@if($firstTask+$tasksToShow < count($layout->tasks()->get()))
-								<li class="next"><a href="{{ url('tasks/tasks/'.$tasksToShow.'/'.($firstTask+$tasksToShow)) }}">{{ $layout->language('next_page') }}</a></li>
-							@else
-								<li class="next disabled"><a href="#">{{ $layout->language('next_page') }}</a></li>
+							</div>
+						</div>
+						<div class="col-sm-6">
+							<ul class="pagination">
+								@if(0 < $firstTask)
+									<li><a href="{{ url('tasks/tasks/'.$tasksToShow.'/'.($firstTask - $tasksToShow >= 0 ? $firstTask - $tasksToShow : 0)) }}">&laquo;</a></li>
+								@else
+									<li class="disabled"><a href="#">&laquo;</a></li>
+								@endif
+								@foreach($layout->base()->getPagination($firstTask, $tasksToShow, count($layout->tasks()->get())) as $id => $page)
+									@if($page === 'middle')
+										<li class="active"><span>{{ $id }}</span></li>
+									@elseif($page === 'disabled')
+										<li class="disabled"><span>&nbsp;&nbsp;&nbsp;</span></li>
+									@else
+										<li><a href="{{ url('tasks/tasks/'.$tasksToShow.'/'.$page) }}">{{ $id < 10 ? '&nbsp;'.$id : $id }}</a></li>
+									@endif
+								@endforeach
+								@if($firstTask+$tasksToShow < count($layout->tasks()->get()))
+									<li><a href="{{ url('tasks/tasks/'.$tasksToShow.'/'.($firstTask+$tasksToShow)) }}">&raquo;</a></li>
+								@else
+									<li class="disabled"><a href="#">&raquo;</a></li>
+								@endif
+							</ul>
+						</div>
+						<div class="col-sm-3" style="margin: 20px 0px;">
+							@if($layout->user()->permitted('tasks_add'))
+							<div class="pull-right">
+								<a href="{{ url('tasks/new') }}" class="btn btn-primary">{{ $layout->language('create_new_task') }}</a>
+							</div>
 							@endif
-						</ul>
-					</nav>
+						</div>
+					</div>
 					
 					<div class="well well-sm">
 						<div class="row">
@@ -160,33 +177,52 @@
 						</div>
 						@endforeach
 					@endif
-					@if($layout->user()->permitted('tasks_add'))
-					<div>
-						<a href="{{ url('tasks/new') }}" class="btn btn-primary">{{ $layout->language('create_new_task') }}</a>
+					
+					<div class="row">
+						<div class="col-sm-3" style="margin: 20px 0px;">
+							<div class="dropdown">
+								<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">{{ $layout->language('choose_visible_row_count') }}
+									<span class="caret"></span>
+								</button>
+								<ul class="dropdown-menu">
+									<li><a href="{{ url('tasks/tasks/10/'.$firstTask) }}">10</a></li>
+									<li><a href="{{ url('tasks/tasks/20/'.$firstTask) }}">20</a></li>
+									<li><a href="{{ url('tasks/tasks/50/'.$firstTask) }}">50</a></li>
+									<li><a href="{{ url('tasks/tasks/100/'.$firstTask) }}">100</a></li>
+								</ul>
+							</div>
+						</div>
+						<div class="col-sm-6">
+							<ul class="pagination">
+								@if(0 < $firstTask)
+									<li><a href="{{ url('tasks/tasks/'.$tasksToShow.'/'.($firstTask - $tasksToShow >= 0 ? $firstTask - $tasksToShow : 0)) }}">&laquo;</a></li>
+								@else
+									<li class="disabled"><a href="#">&laquo;</a></li>
+								@endif
+								@foreach($layout->base()->getPagination($firstTask, $tasksToShow, count($layout->tasks()->get())) as $id => $page)
+									@if($page === 'middle')
+										<li class="active"><span>{{ $id }}</span></li>
+									@elseif($page === 'disabled')
+										<li class="disabled"><span>&nbsp;&nbsp;&nbsp;</span></li>
+									@else
+										<li><a href="{{ url('tasks/tasks/'.$tasksToShow.'/'.$page) }}">{{ $id < 10 ? '&nbsp;'.$id : $id }}</a></li>
+									@endif
+								@endforeach
+								@if($firstTask+$tasksToShow < count($layout->tasks()->get()))
+									<li><a href="{{ url('tasks/tasks/'.$tasksToShow.'/'.($firstTask+$tasksToShow)) }}">&raquo;</a></li>
+								@else
+									<li class="disabled"><a href="#">&raquo;</a></li>
+								@endif
+							</ul>
+						</div>
+						<div class="col-sm-3" style="margin: 20px 0px;">
+							@if($layout->user()->permitted('tasks_add'))
+							<div class="pull-right">
+								<a href="{{ url('tasks/new') }}" class="btn btn-primary">{{ $layout->language('create_new_task') }}</a>
+							</div>
+							@endif
+						</div>
 					</div>
-					@endif
-					
-					<nav>
-						<ul class="pager">
-							@if(0 < $firstTask)
-								<li class="previous"><a href="{{ url('tasks/tasks/'.$tasksToShow.'/'.($firstTask - $tasksToShow >= 0 ? $firstTask - $tasksToShow : 0)) }}">{{ $layout->language('previous_page') }}</a></li>
-							@else
-								<li class="previous disabled"><a href="#">{{ $layout->language('previous_page') }}</a></li>
-							@endif
-							@if($firstTask+$tasksToShow < count($layout->tasks()->get()))
-								<li class="next"><a href="{{ url('tasks/tasks/'.$tasksToShow.'/'.($firstTask+$tasksToShow)) }}">{{ $layout->language('next_page') }}</a></li>
-							@else
-								<li class="next disabled"><a href="#">{{ $layout->language('next_page') }}</a></li>
-							@endif
-						</ul>
-					</nav>
-					
-					<ul class="list-inline">
-						<li><a href="{{ url('tasks/tasks/10/'.$firstTask) }}" class="btn btn-primary" role="button">10</a></li>
-						<li><a href="{{ url('tasks/tasks/20/'.$firstTask) }}" class="btn btn-primary" role="button">20</a></li>
-						<li><a href="{{ url('tasks/tasks/50/'.$firstTask) }}" class="btn btn-primary" role="button">50</a></li>
-						<li><a href="{{ url('tasks/tasks/100/'.$firstTask) }}" class="btn btn-primary" role="button">100</a></li>
-					</ul>
 						
                 </div>
             </div>
