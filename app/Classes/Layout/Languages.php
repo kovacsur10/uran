@@ -517,6 +517,7 @@ class Languages{
 			'closed_on_that_date' => 'Lezárás dátuma',
 			'myTasks' => 'Hozzám rendelt feladatok',
 			'data_filtering' => 'Adatok szűrése',
+			'choose_visible_row_count' => 'Megjelenő sorok száma',
 			'' => '',
 		];
 	}
@@ -1033,6 +1034,7 @@ class Languages{
 			'closed_on_that_date' => 'Closing date',
 			'myTasks' => 'Tasks for me',
 			'data_filtering' => 'Filter data',
+			'choose_visible_row_count' => 'Visible row count',
 			'' => '',
 		];
 	}

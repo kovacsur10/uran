@@ -48,12 +48,22 @@ class BaseData{
 		return $this->countries === null ? [] : $this->countries->toArray();
 	}
 	
-	public function getPagination($firstId, $countPerPage, $maximumItems){
-		$pages = [];
+	public function getPagination($firstId, $countPerPage, $maximumItems, $pages = 5){
+		$pageArray = [];
 		$firstId -= ($firstId % $countPerPage);
-		$firstId = $firstId < 0 ? 0 : ($maximumItems-$countPerPage < $firstId ? $maximumItems-$countPerPage : $firstId);
+		$firstId = $firstId < 0 ? 0 : ($maximumItems-$countPerPage < $firstId ? $maximumItems - ($maximumItems % $countPerPage) : $firstId);
+		$lastId = $maximumItems + ($countPerPage - ($maximumItems % $countPerPage));
 
-
+		for($i = $firstId - ($pages * $countPerPage); $i < $firstId + (($pages+1) * $countPerPage); $i += $countPerPage){
+			if($i === $firstId){
+				$pageArray[($i / $countPerPage)+ 1] = 'middle';
+			}else if($i < 0 || $lastId <= $i){
+				$pageArray[($i / $countPerPage)+ 1] = 'disabled';
+			}else{
+				$pageArray[($i / $countPerPage)+ 1] = $i;
+			}
+		}
+		return $pageArray;
 	}
 	
 	private function getFaculties(){

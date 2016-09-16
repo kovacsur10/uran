@@ -16,6 +16,7 @@
 	<link href="/css/bootstrap-notifications.min.css" rel="stylesheet">
 	<link href="/css/bootstrap-datepicker.min.css" rel="stylesheet">
 	<link href="/css/validator.css" rel="stylesheet">
+	<link href="/css/app.css" rel="stylesheet">
     {{-- <link href="{{ elixir('css/app.css') }}" rel="stylesheet"> --}}
 
     <style>

@@ -21,6 +21,7 @@ class TaskController extends Controller{
 		if($count < 0 || !is_numeric($count)){
 			$count = 10;
 		}
+		$first -= ($first % $count);
 		$layout = new LayoutData();
 		if(Session::has('tasks_status_filter') || Session::has('tasks_caption_filter') || Session::has('tasks_priority_filter') || (Session::has('tasks_mytasks_filter') && Session::get('tasks_mytasks_filter') == 1)){
 			$layout->tasks()->filterTasks(Session::get('tasks_status_filter'), Session::get('tasks_caption_filter'), Session::get('tasks_priority_filter'), Session::get('tasks_mytasks_filter'));
