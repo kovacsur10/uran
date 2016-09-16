@@ -99,7 +99,7 @@ class AccessController extends Controller{
 		foreach($layout->user()->macAddresses() as $address){
 			if($request->input('mac_address_'.$address->id) != null){
 				$this->validate($request, [
-					'mac_address_'.$address->id => 'required|regex:/(^(?:[A-Fa-f0-9]{2}[\-:]){5}[A-Fa-f0-9]{2}$)/',
+					'mac_address_'.$address->id => 'required|regex:/(^(?:(?:[0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2})|(?:(?:[0-9A-Fa-f]{2}-){5}[0-9A-Fa-f]{2})$)/',
 				]);
 				array_push($addresses, $request->input('mac_address_'.$address->id));
 			}

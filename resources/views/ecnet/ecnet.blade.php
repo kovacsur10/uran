@@ -145,7 +145,7 @@
 									<label class="col-md-4 control-label">{{ $layout->language('mac_address') }}</label>
 
 									<div class="col-md-6">
-										<input type="text" class="form-control" name="mac_address_{{ $address->id }}" value="{{ old('mac_address_'.$address->id) != null ? old('mac_address_'.$address->id) : $address->mac_address }}">
+										<input type="text" class="form-control mac-address-check" name="mac_address_{{ $address->id }}" value="{{ old('mac_address_'.$address->id) != null ? old('mac_address_'.$address->id) : $address->mac_address }}">
 
 										@if ($errors->has('mac_address_'.$address->id))
 											<span class="help-block">
@@ -161,7 +161,7 @@
 									<label class="col-md-4 control-label">{{ $layout->language('mac_address') }}</label>
 
 									<div class="col-md-6">
-										<input type="text" class="form-control" name="new_mac_address_{{ $i }}" value="{{ old('new_mac_address_'.$i) }}">
+										<input type="text" class="form-control mac-address-check" name="new_mac_address_{{ $i }}" value="{{ old('new_mac_address_'.$i) }}">
 
 										@if ($errors->has('new_mac_address_'.$i))
 											<span class="help-block">
@@ -174,7 +174,7 @@
 								
 								<div class="form-group">
 									<div class="col-md-6 col-md-offset-4">
-										<button type="submit" class="btn btn-primary">
+										<button type="submit" id="setMacAddressesButton" class="btn btn-primary">
 											{{ $layout->language('set_mac_address') }}
 										</button>
 									</div>
@@ -208,4 +208,5 @@
 		});
 	});
 </script>
+<script type="text/javascript" src="/js/view/ecnet/ecnet.js"></script>
 @endsection
