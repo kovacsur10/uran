@@ -28,6 +28,10 @@ class RoomsController extends Controller{
 									   "room" => $id]);
 	}
 	
+	public function downloadList(){
+		return view('rooms.download', ["layout" => new LayoutData()]);
+	}
+	
 	public function assignResidents(Request $request){
 		$layout = new LayoutData();
 		if($layout->user()->permitted('rooms_assign')){

@@ -42,7 +42,8 @@
 								<?php
 									$rooms = [
 										'204' => 'left:710px;top:80px;width:88px;height:58px;',
-										'205' => 'left:710px;top:21px;width:228px;height:58px;',
+										'205a' => 'left:710px;top:21px;width:88px;height:58px;',
+										'205b' => 'left:850px;top:21px;width:88px;height:58px;',
 										'206' => 'left:850px;top:80px;width:88px;height:58px;',
 										'207' => 'left:850px;top:139px;width:88px;height:50px;',
 										'208' => 'left:850px;top:190px;width:88px;height:50px;',
@@ -143,32 +144,38 @@
 							</div>
 						</div>
 						
-						@if($layout->user()->permitted('rooms_assign'))
-							<div class="panel panel-default">
-								<div class="panel-heading">{{ $layout->language('admin_panel') }} - {{ $layout->language('free_spots') }}</div>
-								<div class="panel-body">
-									<?php
-										$i = 0;
-										$places = $layout->room()->getFreePlaces();
-									?>
-									<ul class="col-md-2 col-md-offset-2 list-group">
-									@for(; $i < count($places) / 3; $i++)
-										<li class="list-group-item"><span class="badge"> {{ $places[$i][1] }}</span> {{ $places[$i][0] }}</li>
-									@endfor
-									</ul>
-									<ul class="col-md-2 col-md-offset-1 list-group">
-									@for(; $i < 2* count($places) / 3; $i++)
-										<li class="list-group-item"><span class="badge"> {{ $places[$i][1] }}</span> {{ $places[$i][0] }}</li>
-									@endfor
-									</ul>
-									<ul class="col-md-2 col-md-offset-1 list-group">
-									@for(; $i < count($places); $i++)
-										<li class="list-group-item"><span class="badge"> {{ $places[$i][1] }}</span> {{ $places[$i][0] }}</li>
-									@endfor
-									</ul>
-								</div>
+						<div class="panel panel-default">
+							<div class="panel-heading text-right"><a href="{{ url('/rooms/download') }}" target="_blank">{{ $layout->language('download_table_as_csv') }}</a></div>
+							<div class="panel-body">
+								<table class="table table-bordered">
+									<thead>
+										<tr>
+											<th>Szobaszám</th>
+											<th>Lakó 1</th>
+											<th>Lakó 2</th>
+											<th>Lakó 3</th>
+											<th>Lakó 4</th>
+										</tr>
+									</thead>
+									<tbody>
+										@foreach($layout->room()->rooms() as $room)
+											<tr>
+												<td>{{ $room->room }}</td>
+												@foreach($layout->room()->getResidents($room->room) as $resident)
+													<td>{{ $resident->name }}</td>
+												@endforeach
+												@for($i = 0; $i < $layout->room()->getFreePlaceCount($room->room); $i++)
+													<td style="background-color:lightgray;"></td>
+												@endfor
+												<?php /*@for($i = 0; $i < 4 - count($layout->room()->getResidents($room->room)) - $layout->room()->getFreePlaceCount($room->room); $i++)
+													<td></td>
+												@endfor */?>
+											</tr>
+										@endforeach
+									</tbody>
+								</table>
 							</div>
-						@endif
+						</div>
 					@endif
                 </div>
             </div>
