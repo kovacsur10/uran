@@ -94,6 +94,7 @@ class Languages{
 			'ground_floor' => 'Földszint',
 			'resident' => 'Lakó',
 			'room_assignment' => 'Szobabeosztás',
+			'download_table_as_csv' => 'A táblázat letöltése',
 		//userdata
 			'address' => 'Lakcím',
 			'email_address' => 'E-mail cím',
@@ -610,6 +611,7 @@ class Languages{
 			'ground_floor' => 'Ground floor',
 			'resident' => 'Resident',
 			'room_assignment' => 'Room assignment',
+			'download_table_as_csv' => 'Download the table',
 		//userdata
 			'address' => 'Address',
 			'email_address' => 'E-mail address',

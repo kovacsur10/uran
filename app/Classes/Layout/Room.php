@@ -58,7 +58,7 @@ class Room{
 	
 	public function getFreePlaces(){
 		$freePlaces = [];
-		if($this->rooms != null){
+		if($this->rooms !== null){
 			foreach($this->rooms as $room){
 				$countOfPlaces = $this->getFreePlaceCount($room->room);
 				if($countOfPlaces > 0){
@@ -78,7 +78,8 @@ class Room{
 	
 	protected function getRooms(){
 		return DB::table('rooms_rooms')
-			->select('room_number as room', 'max_collegist_count')
+			->select('room_number as room', 'max_collegist_count', 'floor')
+			->orderBy('id', 'asc')
 			->get()
 			->toArray();
 	}
