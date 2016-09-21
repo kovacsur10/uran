@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use App\Classes\LayoutData;
+use Symfony\Component\HttpKernel\Exception as SymfonyException;
 
 class Handler extends ExceptionHandler
 {
@@ -45,27 +46,11 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
-		/*if($exception instanceof NotFoundHttpException) {
-			print_r(new LayoutData());
-			die();
-			return view('errors.404', ["layout" => new LayoutData()]);
-		}*/
+		if($exception instanceof SymfonyException\NotFoundHttpException) {
+			return response()->view('errors.404', ["layout" => new LayoutData()], 404);
+		}
 	
         return parent::render($request, $exception);
-    }
-	
-	/**
-     * Render an exception into an HTTP response.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Exception  $exception
-     * @return \Illuminate\Http\Response
-     */
-    public function renderHttpException($request, NotFoundHttpException $exception)
-    {
-		print_r(new LayoutData());
-		die();
-		return view('errors.404', ["layout" => new LayoutData()]);
     }
 
     /**

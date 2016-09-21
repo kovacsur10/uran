@@ -129,10 +129,13 @@ class LayoutData{
 	}
 	
 	private function getRouteWithParams(){
-		$params = Route::getCurrentRoute()->parameters();
-		$route = Route::getCurrentRoute()->getPath();
-		foreach($params as $key => $value){
-			$route = str_replace('{'.$key.'}', $value, $route);
+		$route = Route::getCurrentRoute();
+		if($route !== null){
+			$params = Route::getCurrentRoute()->parameters();
+			$route = Route::getCurrentRoute()->getPath();
+			foreach($params as $key => $value){
+				$route = str_replace('{'.$key.'}', $value, $route);
+			}
 		}
 		return $route;
 	}
