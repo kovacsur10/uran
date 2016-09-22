@@ -88,6 +88,9 @@ Route::group(['middleware' => 'web'], function () {
 	Route::get('rooms/room/{id}', 'Rooms\RoomsController@listRoomMembers')->middleware('auth.logged')->middleware('modules.rooms');
 	Route::get('rooms/download', 'Rooms\RoomsController@downloadList')->middleware('auth.logged')->middleware('modules.rooms');
 	Route::post('rooms/assign', 'Rooms\RoomsController@assignResidents')->middleware('auth.logged')->middleware('modules.rooms');
+	Route::post('rooms/tables/select', 'Rooms\RoomsController@selectTable')->middleware('auth.logged')->middleware('modules.rooms');
+	Route::post('rooms/tables/add', 'Rooms\RoomsController@addTable')->middleware('auth.logged')->middleware('modules.rooms');
+	Route::post('rooms/tables/remove', 'Rooms\RoomsController@removeTable')->middleware('auth.logged')->middleware('modules.rooms');
 	
 	// Notification routes
 	Route::get('notification/list/{first}', 'Notification\NotificationController@listNotifications')->middleware('auth.logged');
