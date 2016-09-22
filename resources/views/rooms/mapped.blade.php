@@ -7,6 +7,95 @@
             <div class="panel panel-default">
                 <div class="panel-heading">{{ $layout->language('room_assignment') }}</div>
                 <div class="panel-body">
+					@if($layout->user()->permitted('rooms_assign'))
+						<div class="panel panel-default">
+							<div class="panel-heading">{{ $layout->language('admin_panel') }}</div>
+							<div class="panel-body">
+								<div class="well">
+									{{ $layout->language('current_rooms_active_table)') }}: {{ $layout->room()->activeTable() }}
+								</div>
+								<form class="form-horizontal" role="form" method="POST" action="{{ url('/rooms/tables/select') }}">
+									{!! csrf_field() !!}
+
+									<div class="form-group{{ $errors->has('table_version') ? ' has-error' : '' }}">
+										<label  class="col-md-4 control-label" for="table_version_select">{{ $layout->language('table_version') }}</label>
+										<div class="col-md-6">
+											<select class="form-control"  name="table_version"  id="table_version_select" required="true">
+												@foreach($layout->room()->getTables() as $table)
+													<option value="{{ $table->id }}" {{ old('table_version') == $table->id ? 'selected' : '' }}>{{ $table->table_name }}</option>
+												@endforeach
+											</select>
+											
+											@if ($errors->has('table_version'))
+												<span class="help-block">
+													<strong>{{ $errors->first('table_version') }}</strong>
+												</span>
+											@endif
+										</div>
+									</div>
+									
+									<div class="form-group">
+										<div class="col-md-6 col-md-offset-4">
+											<button type="submit" class="btn btn-primary">
+												<i class="fa fa-btn fa-user"></i>{{ $layout->language('set_up') }}
+											</button>
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+						<div class="panel panel-default">
+							<div class="panel-heading">{{ $layout->language('admin_panel') }}</div>
+							<div class="panel-body">
+								<form class="form-horizontal" role="form" method="POST" action="{{ url('/rooms/tables/remove') }}">
+									{!! csrf_field() !!}
+
+									<div class="form-group{{ $errors->has('table_version') ? ' has-error' : '' }}">
+										<label  class="col-md-4 control-label" for="table_version_select">{{ $layout->language('table_version') }}</label>
+										<div class="col-md-6">
+											<select class="form-control"  name="table_version"  id="table_version_select" required="true">
+												@foreach($layout->room()->getTables() as $table)
+													<option value="{{ $table->id }}" {{ old('table_version') == $table->id ? 'selected' : '' }}>{{ $table->table_name }}</option>
+												@endforeach
+											</select>
+											
+											@if ($errors->has('table_version'))
+												<span class="help-block">
+													<strong>{{ $errors->first('table_version') }}</strong>
+												</span>
+											@endif
+										</div>
+									</div>
+									
+									<div class="form-group">
+										<div class="col-md-6 col-md-offset-4">
+											<button type="submit" class="btn btn-primary">
+												<i class="fa fa-btn fa-user"></i>{{ $layout->language('set_up') }}
+											</button>
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+						<div class="panel panel-default">
+							<div class="panel-heading">{{ $layout->language('admin_panel') }}</div>
+							<div class="panel-body">
+								<form class="form-horizontal" role="form" method="POST" action="{{ url('/rooms/tables/add') }}">
+									{!! csrf_field() !!}
+
+									
+									
+									<div class="form-group">
+										<div class="col-md-6 col-md-offset-4">
+											<button type="submit" class="btn btn-primary">
+												<i class="fa fa-btn fa-user"></i>{{ $layout->language('add') }}
+											</button>
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+					@endif
 					@if($layout->user()->permitted('rooms_observe_assignment'))
 						<div style="position:relative;width:964px;height:527px;background-image: url('{{ url('images/level'.$level.'.png') }}')">
 							@if($level == 3)
