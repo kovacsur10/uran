@@ -9,10 +9,10 @@
                 <div class="panel-body">
 					@if($layout->user()->permitted('rooms_assign'))
 						<div class="panel panel-default">
-							<div class="panel-heading">{{ $layout->language('admin_panel') }}</div>
+							<div class="panel-heading">{{ $layout->language('admin_panel') }} - {{ $layout->language('choose_table') }}</div>
 							<div class="panel-body">
 								<div class="well">
-									{{ $layout->language('current_rooms_active_table)') }}: {{ $layout->room()->activeTable() }}
+									{{ $layout->language('current_rooms_active_table') }}: {{ $layout->room()->activeTable() }}
 								</div>
 								<form class="form-horizontal" role="form" method="POST" action="{{ url('/rooms/tables/select') }}">
 									{!! csrf_field() !!}
@@ -37,7 +37,7 @@
 									<div class="form-group">
 										<div class="col-md-6 col-md-offset-4">
 											<button type="submit" class="btn btn-primary">
-												<i class="fa fa-btn fa-user"></i>{{ $layout->language('set_up') }}
+												<i class="fa fa-btn fa-user"></i>{{ $layout->language('activate') }}
 											</button>
 										</div>
 									</div>
@@ -45,7 +45,7 @@
 							</div>
 						</div>
 						<div class="panel panel-default">
-							<div class="panel-heading">{{ $layout->language('admin_panel') }}</div>
+							<div class="panel-heading">{{ $layout->language('admin_panel') }} - {{ $layout->language('delete_table') }}</div>
 							<div class="panel-body">
 								<form class="form-horizontal" role="form" method="POST" action="{{ url('/rooms/tables/remove') }}">
 									{!! csrf_field() !!}
@@ -70,20 +70,36 @@
 									<div class="form-group">
 										<div class="col-md-6 col-md-offset-4">
 											<button type="submit" class="btn btn-primary">
-												<i class="fa fa-btn fa-user"></i>{{ $layout->language('set_up') }}
+												<i class="fa fa-btn fa-user"></i>{{ $layout->language('delete_table') }}
 											</button>
 										</div>
+									</div>
+									
+									<div class="alert alert-warning">
+										{{ $layout->language('last_table_cannot_be_deleted_description') }}
 									</div>
 								</form>
 							</div>
 						</div>
 						<div class="panel panel-default">
-							<div class="panel-heading">{{ $layout->language('admin_panel') }}</div>
+							<div class="panel-heading">{{ $layout->language('admin_panel') }} - {{ $layout->language('add_new_table') }}</div>
 							<div class="panel-body">
 								<form class="form-horizontal" role="form" method="POST" action="{{ url('/rooms/tables/add') }}">
 									{!! csrf_field() !!}
 
-									
+									<div class="form-group{{ $errors->has('newTableName') ? ' has-error' : '' }}">
+			                            <label class="col-md-4 control-label">{{ $layout->language('new_table_identifier') }}</label>
+			
+			                            <div class="col-md-6">
+			                                <input type="text" class="form-control" id="newTableName" name="newTableName" value="{{ old('newTableName') }}" required="true">
+			
+			                                @if ($errors->has('newTableName'))
+			                                    <span class="help-block">
+			                                        <strong>{{ $errors->first('newTableName') }}</strong>
+			                                    </span>
+			                                @endif
+			                            </div>
+			                        </div>
 									
 									<div class="form-group">
 										<div class="col-md-6 col-md-offset-4">
@@ -177,17 +193,7 @@
 								@if($layout->user()->permitted('rooms_assign'))
 								<a href="{{ url('rooms/room/'.$roomNumber) }}">
 								@endif
-									<div data-toggle="tooltip" data-html="true" title="
-									@if($layout->room()->getResidents($roomNumber) !== null)
-										@foreach($layout->room()->getResidents($roomNumber) as $resident)
-											{{ $resident->name }}<br>
-										@endforeach
-									@endif
-									@for($i = 0; $i < $layout->room()->getFreePlaceCount($roomNumber); $i++)
-										Szabad hely<br>
-									@endfor
-									" data-placement="{{ substr($roomNumber,1,2) > 15 ? 'right' : 'left' }}"  style="position:absolute;{{ $roomPosition }}}">
-									</div>
+									<div data-toggle="tooltip" data-html="true" title="{{ $layout->room()->getRoomResidentListText($roomNumber) }}" data-placement="{{ substr($roomNumber,1,2) > 15 ? 'right' : 'left' }}"  style="position:absolute;{{ $roomPosition }}"></div>
 								@if($layout->user()->permitted('rooms_assign'))
 								</a>
 								@endif
