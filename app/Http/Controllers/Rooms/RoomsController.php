@@ -76,7 +76,7 @@ class RoomsController extends Controller{
 					"level" => "2"]);
 		}else{
 			return view('errors.error', ["layout" => $layout,
-					"message" => $layout->language('error_at_removing_new_rooms_table'),
+					"message" => $layout->language('error_at_selecting_rooms_table'),
 					"url" => '/rooms/map/2']);
 		}
 	}
