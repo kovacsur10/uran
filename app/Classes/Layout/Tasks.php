@@ -16,7 +16,8 @@ class Tasks{
     protected $filterPriority = "";
     protected $filterStatus = "";
     protected $filterCaption = "";
-    protected $filterMyTasks = 1;
+    protected $filterMyTasks = 0;
+	protected $filterHideClosed = 1;
 	
 	public function __construct(){
 		$this->tasks = $this->getTasks();
@@ -63,16 +64,17 @@ class Tasks{
 	public function getMyTasksFilter(){
 		return $this->filterMyTasks;
 	}
-	public function filterTasks($status, $caption, $priority, $myTasks){
+	public function getHideClosedFilter(){
+		return $this->filterHideClosed;
+	}
+	public function filterTasks($status, $caption, $priority, $myTasks, $hideClosed, $user){
 		$this->filterStatus = $status;
 		$this->filterCaption = $caption;
 		$this->filterPriority = $priority;
 		$this->filterMyTasks = $myTasks;
-		if($status == "" && $priority == ""){
-			$this->tasks = $this->getTasks();
-		}else{
-			$this->tasks = $this->getFilteredTasks($this->filterStatus, $this->filterPriority);
-		}
+		$this->filterHideClosed = $hideClosed;
+		$this->tasks = $this->getFilteredTasks($this->filterStatus, $this->filterPriority, $this->filterMyTasks, $this->filterHideClosed, $user);
+		
 	}
 	
 	public function tasksToPages($from = 0, $count = 50){
@@ -284,50 +286,30 @@ class Tasks{
 			->toArray();
 	}
     
-    private function getFilteredTasks($status, $priority){
-		if($priority != "" && $status != ""){
-			$ret = DB::table('tasks_task')
-				->join('tasks_type', 'tasks_type.id', '=', 'tasks_task.type')
-				->join('tasks_status', 'tasks_status.id', '=', 'tasks_task.status')
-				->join('tasks_priority', 'tasks_priority.id', '=', 'tasks_task.priority')
-				->join('users', 'users.id', '=', 'tasks_task.created_by')
-				->where('tasks_status.id', '=', $status)
-				->where('tasks_priority.id', '=', $priority)
-				->where('tasks_task.caption', 'LIKE', '%'.($this->filterCaption).'%')
-				->where('tasks_task.deleted', '=', 0)
-				->select('tasks_task.id as id', 'created_datetime as date', 'tasks_status.status as status', 'users.name as user', 'caption', 'tasks_priority.name as priority', 'users.username as username')
-				->orderBy('tasks_task.id', 'desc')
-				->get()
-				->toArray();
-		}
-		else if($priority == ""){
-			$ret = DB::table('tasks_task')
-				->join('tasks_type', 'tasks_type.id', '=', 'tasks_task.type')
-				->join('tasks_status', 'tasks_status.id', '=', 'tasks_task.status')
-				->join('tasks_priority', 'tasks_priority.id', '=', 'tasks_task.priority')
-				->join('users', 'users.id', '=', 'tasks_task.created_by')
-				->where('tasks_status.id', '=', $status)
-				->where('tasks_task.caption', 'LIKE', '%'.($this->filterCaption).'%')
-				->where('tasks_task.deleted', '=', 0)
-				->select('tasks_task.id as id', 'created_datetime as date', 'tasks_status.status as status', 'users.name as user', 'caption', 'tasks_priority.name as priority', 'users.username as username')
-				->orderBy('tasks_task.id', 'desc')
-				->get()
-				->toArray();
-		}
-		else{
-			$ret = DB::table('tasks_task')
-				->join('tasks_type', 'tasks_type.id', '=', 'tasks_task.type')
-				->join('tasks_status', 'tasks_status.id', '=', 'tasks_task.status')
-				->join('tasks_priority', 'tasks_priority.id', '=', 'tasks_task.priority')
-				->join('users', 'users.id', '=', 'tasks_task.created_by')
-				->where('tasks_priority.id', '=', $priority)
-				->where('tasks_task.caption', 'LIKE', '%'.($this->filterCaption).'%')
-				->where('tasks_task.deleted', '=', 0)
-				->select('tasks_task.id as id', 'created_datetime as date', 'tasks_status.status as status', 'users.name as user', 'caption', 'tasks_priority.name as priority', 'users.username as username')
-				->orderBy('tasks_task.id', 'desc')
-				->get()
-				->toArray();
-		}
+    private function getFilteredTasks($status, $priority, $myTask, $hideClosed, $user){
+		$ret = DB::table('tasks_task')
+			->join('tasks_type', 'tasks_type.id', '=', 'tasks_task.type')
+			->join('tasks_status', 'tasks_status.id', '=', 'tasks_task.status')
+			->join('tasks_priority', 'tasks_priority.id', '=', 'tasks_task.priority')
+			->join('users', 'users.id', '=', 'tasks_task.created_by')
+			->when($status != "", function ($query) use ($status) {
+				return $query->where('tasks_status.id', '=', $status);
+			})
+			->when($priority != "", function ($query) use ($priority) {
+				return $query->where('tasks_priority.id', '=', $priority);
+			})
+			->when($myTask == 1, function ($query) use ($user) {
+				return $query->where('tasks_task.assigned', '=', $user);
+			})
+			->when($hideClosed == 1, function ($query) use ($hideClosed){
+				return $query->where('tasks_status.status', '!=', 'closed');
+			})
+			->where('tasks_task.caption', 'LIKE', '%'.($this->filterCaption).'%')
+			->where('tasks_task.deleted', '=', 0)
+			->select('tasks_task.id as id', 'created_datetime as date', 'tasks_status.status as status', 'users.name as user', 'caption', 'tasks_priority.name as priority', 'users.username as username')
+			->orderBy('tasks_task.id', 'desc')
+			->get()
+			->toArray();
 		return $ret;
 	}
 }

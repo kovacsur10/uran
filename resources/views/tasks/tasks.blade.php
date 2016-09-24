@@ -86,6 +86,20 @@
 									</div>
 								</div>
 								
+								<div class="form-group{{ $errors->has('hide_closed') ? ' has-error' : '' }}">
+									<label class="col-md-4 control-label">{{ $layout->language('hide_closed') }}</label>
+
+									<div class="col-md-6">
+										<input type="checkbox" name="hide_closed" value="hide_closed" {{ $layout->tasks()->getHideClosedFilter() == 1 ? "checked" : "" }}>
+
+										@if ($errors->has('hide_closed'))
+											<span class="help-block">
+												<strong>{{ $errors->first('hide_closed') }}</strong>
+											</span>
+										@endif
+									</div>
+								</div>
+								
 								<div class="form-group">
 									<div class="col-md-6 col-md-offset-4">
 										<button type="submit" class="btn btn-primary">
