@@ -531,6 +531,7 @@ class Languages{
 			'myTasks' => 'Hozzám rendelt feladatok',
 			'data_filtering' => 'Adatok szűrése',
 			'choose_visible_row_count' => 'Megjelenő sorok száma',
+			'hide_closed' => 'Lezárt feladatok elrejtése',
 			'' => '',
 		];
 	}
@@ -1058,6 +1059,7 @@ class Languages{
 			'myTasks' => 'Tasks for me',
 			'data_filtering' => 'Filter data',
 			'choose_visible_row_count' => 'Visible row count',
+			'hide_closed' => 'Hide closed tasks',
 			'' => '',
 		];
 	}
