@@ -9,20 +9,20 @@
                 <div class="panel-body">
 					@if($layout->user()->permitted('rooms_assign'))
 						<div class="panel panel-default">
-							<div class="panel-heading">{{ $layout->language('admin_panel') }} - {{ $layout->language('choose_table') }}</div>
-							<div class="panel-body">
+							<div class="panel-heading" style="cursor: pointer;" data-toggle="collapse" data-target="#selectTableBody">{{ $layout->language('admin_panel') }} - {{ $layout->language('choose_table') }}</div>
+							<div class="panel-body collapse" id="selectTableBody">
 								<div class="well">
 									{{ $layout->language('current_rooms_active_table') }}: {{ $layout->room()->activeTable() }}
 								</div>
-								<form class="form-horizontal" role="form" method="POST" action="{{ url('/rooms/tables/select') }}">
+								<form class="form-horizontal" role="form" method="POST" action="{{ url('/rooms/tables/select/'.$level) }}">
 									{!! csrf_field() !!}
 
 									<div class="form-group{{ $errors->has('table_version') ? ' has-error' : '' }}">
 										<label  class="col-md-4 control-label" for="table_version_select">{{ $layout->language('table_version') }}</label>
 										<div class="col-md-6">
 											<select class="form-control"  name="table_version"  id="table_version_select" required="true">
-												@foreach($layout->room()->getTables() as $table)
-													<option value="{{ $table->id }}" {{ old('table_version') == $table->id ? 'selected' : '' }}>{{ $table->table_name }}</option>
+												@foreach($layout->room()->getTablesEX() as $table)
+													<option value="{{ $table->table_name }}">{{ $table->table_name }}</option>
 												@endforeach
 											</select>
 											
@@ -45,17 +45,17 @@
 							</div>
 						</div>
 						<div class="panel panel-default">
-							<div class="panel-heading">{{ $layout->language('admin_panel') }} - {{ $layout->language('delete_table') }}</div>
-							<div class="panel-body">
-								<form class="form-horizontal" role="form" method="POST" action="{{ url('/rooms/tables/remove') }}">
+							<div class="panel-heading" style="cursor: pointer;" data-toggle="collapse" data-target="#removeTableBody">{{ $layout->language('admin_panel') }} - {{ $layout->language('delete_table') }}</div>
+							<div class="panel-body collapse" id="removeTableBody">
+								<form class="form-horizontal" role="form" method="POST" action="{{ url('/rooms/tables/remove/'.$level) }}">
 									{!! csrf_field() !!}
 
 									<div class="form-group{{ $errors->has('table_version') ? ' has-error' : '' }}">
 										<label  class="col-md-4 control-label" for="table_version_select">{{ $layout->language('table_version') }}</label>
 										<div class="col-md-6">
 											<select class="form-control"  name="table_version"  id="table_version_select" required="true">
-												@foreach($layout->room()->getTables() as $table)
-													<option value="{{ $table->id }}" {{ old('table_version') == $table->id ? 'selected' : '' }}>{{ $table->table_name }}</option>
+												@foreach($layout->room()->getTablesEX() as $table)
+													<option value="{{ $table->table_name }}">{{ $table->table_name }}</option>
 												@endforeach
 											</select>
 											
@@ -82,9 +82,9 @@
 							</div>
 						</div>
 						<div class="panel panel-default">
-							<div class="panel-heading">{{ $layout->language('admin_panel') }} - {{ $layout->language('add_new_table') }}</div>
-							<div class="panel-body">
-								<form class="form-horizontal" role="form" method="POST" action="{{ url('/rooms/tables/add') }}">
+							<div class="panel-heading" style="cursor: pointer;" data-toggle="collapse" data-target="#addNewTableBody">{{ $layout->language('admin_panel') }} - {{ $layout->language('add_new_table') }}</div>
+							<div class="panel-body collapse" id="addNewTableBody">
+								<form class="form-horizontal" role="form" method="POST" action="{{ url('/rooms/tables/add/'.$level) }}">
 									{!! csrf_field() !!}
 
 									<div class="form-group{{ $errors->has('newTableName') ? ' has-error' : '' }}">
@@ -193,7 +193,7 @@
 								@if($layout->user()->permitted('rooms_assign'))
 								<a href="{{ url('rooms/room/'.$roomNumber) }}">
 								@endif
-									<div data-toggle="tooltip" data-html="true" title="{{ $layout->room()->getRoomResidentListText($roomNumber) }}" data-placement="{{ substr($roomNumber,1,2) > 15 ? 'right' : 'left' }}"  style="position:absolute;{{ $roomPosition }}"></div>
+									<div data-toggle="tooltip" data-html="true" title="{{ $layout->room()->getRoomResidentListText($roomNumber, $layout->language('free_spot')) }}" data-placement="{{ substr($roomNumber,1,2) > 15 ? 'right' : 'left' }}"  style="position:absolute;{{ $roomPosition }}"></div>
 								@if($layout->user()->permitted('rooms_assign'))
 								</a>
 								@endif

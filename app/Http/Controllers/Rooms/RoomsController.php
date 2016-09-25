@@ -19,7 +19,7 @@ class RoomsController extends Controller{
 		}else{
 			return view('errors.error', ["layout" => $layout,
 										 "message" => $layout->language('error_floor_not_found'),
-										 "url" => '/rooms/assigned/'.$level]);
+										 "url" => '/rooms/map/'.$level]);
 		}
 	}
 	
@@ -32,14 +32,16 @@ class RoomsController extends Controller{
 		return view('rooms.download', ["layout" => new LayoutData()]);
 	}
 	
-	public function assignResidents(Request $request){
+	public function assignResidents(Request $request, $guard){
 		$layout = new LayoutData();
 		if($layout->user()->permitted('rooms_assign')){
-			$error = false;
+			$error = 0;
 			$roomId = $layout->room()->getRoomId($request->room);
 			Database::beginTransaction(); //DATABASE TRANSACTION STARTS HERE
-			if($roomId == null){
-				$error = true;
+			if($roomId === null){
+				$error = 1;
+			}else if(!$layout->room()->checkGuard($guard)){
+				$error = 2;
 			}else{
 				$layout->room()->emptyRoom($roomId);
 				for($i = 0; $i < $request->count; $i++){
@@ -53,27 +55,31 @@ class RoomsController extends Controller{
 				}
 			}
 			
-			if($error){
-				Database::rollback();
-				return view('errors.error', ["layout" => $layout,
-											 "message" => $layout->language('error_already_lives_somewhere'),
-											 "url" => '/rooms/room/'.$request->room]);
-			}else{
+			if($error === 0){
 				Database::commit();
 				return view('rooms.showroom', ["layout" => new LayoutData(),
-											   "room" => $request->room]);
+						"room" => $request->room]);
+			}else if($error === 2){
+				Database::rollback();
+				return view('errors.error', ["layout" => $layout,
+						"message" => $layout->language('error_rooms_guard_mismatch'),
+						"url" => '/rooms/room/'.$request->room]);
+			}else{
+				Database::rollback();
+				return view('errors.error', ["layout" => $layout,
+						"message" => $layout->language('error_already_lives_somewhere'),
+						"url" => '/rooms/room/'.$request->room]);
 			} //DATABASE TRANSACTION ENDS HERE
 		}else{
 			return view('errors.authentication', ["layout" => $layout]);
 		}
 	}
 	
-	public function selectTable(Request $request){
+	public function selectTable(Request $request, $level){
 		$layout = new LayoutData();
-		if($layout->room()->selectTable($request->newTableName)){ //TODO
-			$layout = new LayoutData(); //TODO: already modified by someone!
-			return view('rooms.mapped', ["layout" => $layout,
-					"level" => "2"]);
+		if($layout->room()->selectTable($request->table_version)){
+			$layout = new LayoutData();
+			return redirect('rooms/map/'.$level);
 		}else{
 			return view('errors.error', ["layout" => $layout,
 					"message" => $layout->language('error_at_selecting_rooms_table'),
@@ -81,11 +87,10 @@ class RoomsController extends Controller{
 		}
 	}
 	
-	public function addTable(Request $request){
+	public function addTable(Request $request, $level){
 		$layout = new LayoutData();
 		if($layout->room()->addNewTable($request->newTableName)){
-			return view('rooms.mapped', ["layout" => $layout,
-				"level" => "2"]);
+			return redirect('rooms/map/'.$level);
 		}else{
 			return view('errors.error', ["layout" => $layout,
 				"message" => $layout->language('error_at_adding_new_rooms_table'),
@@ -93,11 +98,10 @@ class RoomsController extends Controller{
 		}
 	}
 	
-	public function removeTable(Request $request){
+	public function removeTable(Request $request, $level){
 		$layout = new LayoutData();
-		if($layout->room()->removeTable($request->newTableName)){ //TODO
-			return view('rooms.mapped', ["layout" => $layout,
-				"level" => "2"]);
+		if($layout->room()->removeTable($request->table_version)){
+			return redirect('rooms/map/'.$level);
 		}else{
 			return view('errors.error', ["layout" => $layout,
 				"message" => $layout->language('error_at_removing_new_rooms_table'),

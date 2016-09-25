@@ -2,8 +2,6 @@
 
 namespace App\Classes\Layout;
 
-use App\Classes\Layout\User;
-use Carbon\Carbon;
 use DB;
 
 class Modules{
