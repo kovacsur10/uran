@@ -11,7 +11,7 @@
 					<div class="panel panel-default">
 						<div class="panel-heading">{{ $layout->language('admin_panel') }}</div>
 						<div class="panel-body">
-							<form class="form-horizontal" role="form" method="POST" action="{{ url('/rooms/assign') }}">
+							<form class="form-horizontal" role="form" method="POST" action="{{ url('/rooms/assign/'.$layout->room()->getGuard()) }}">
 								{!! csrf_field() !!}
 								
 								<?php
