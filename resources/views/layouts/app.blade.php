@@ -126,6 +126,7 @@
 							<ul class="dropdown-menu" role="menu">
 								@if($layout->modules()->isActivatedByName('tasks'))
 								<li><a href="{{ url('/tasks/list') }}">{{ $layout->language('task_manager') }}</a></li>
+								<li><a href="{{ url('/ecouncil/records/list') }}">{{ $layout->language('TODO') }}</a></li>
 								@endif
                             </ul>
                         </li>
