@@ -17,7 +17,6 @@
 	<link href="/css/bootstrap-datepicker.min.css" rel="stylesheet">
 	<link href="/css/validator.css" rel="stylesheet">
 	<link href="/css/app.css" rel="stylesheet">
-    {{-- <link href="{{ elixir('css/app.css') }}" rel="stylesheet"> --}}
 
     <style>
         body {
@@ -33,7 +32,6 @@
 	<script type="text/javascript" src="/js/jquery-2.2.4.min.js"></script>
 	<script type="text/javascript" src="/js/nod.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-    {{-- <script src="{{ elixir('js/app.js') }}"></script> --}}
 	<script type="text/javascript" src="/js/view/layout/app.js" charset="UTF-8"></script>
 	<script type="text/javascript">
 		@if($layout->lang() === 'en_US')
@@ -126,6 +124,8 @@
 							<ul class="dropdown-menu" role="menu">
 								@if($layout->modules()->isActivatedByName('tasks'))
 								<li><a href="{{ url('/tasks/list') }}">{{ $layout->language('task_manager') }}</a></li>
+								@endif
+								@if($layout->modules()->isActivatedByName('ecouncil') && $data->user()->permitted('record_read'))
 								<li><a href="{{ url('/ecouncil/records/list') }}">{{ $layout->language('TODO') }}</a></li>
 								@endif
                             </ul>

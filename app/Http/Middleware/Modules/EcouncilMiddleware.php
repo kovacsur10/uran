@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use App\Classes\Layout\Modules;
 
-class TasksMiddleware{
+class EcouncilMiddleware{
     /**
      * Handle an incoming request.
      *
@@ -17,7 +17,7 @@ class TasksMiddleware{
      */
     public function handle(Request $request, Closure $next){
 		$modules = new Modules();
-        if(!$modules->isActivatedByName('tasks')){
+        if(!$modules->isActivatedByName('ecouncil')){
             return redirect('/');
         }
 		
