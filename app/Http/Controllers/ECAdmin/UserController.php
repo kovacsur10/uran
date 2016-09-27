@@ -4,7 +4,6 @@ namespace App\Http\Controllers\ECAdmin;
 
 use App\Classes\LayoutData;
 use App\Classes\Layout\User;
-use App\Classes\Notify;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 

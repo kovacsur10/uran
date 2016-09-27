@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Classes\LayoutData;
-use App\Classes\Notify;
+use App\Classes\Notifications;
 use App\Classes\Database;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -49,7 +49,7 @@ class PermissionController extends Controller{
 											 "url" => '/admin/permissions']);
 			}else{
 				Database::commit();
-				Notify::notify($layout->user(), $request->user, 'Megváltoztak a jogaid', 'Egy adminisztrátor módosította a jogaidat a rendszerben!', 'home');
+				Notifications::notify($layout->user(), $request->user, 'Megváltoztak a jogaid', 'Egy adminisztrátor módosította a jogaidat a rendszerben!', 'home');
 				return view('admin.permissions', ["layout" => $layout]);
 			} //DATABASE TRANSACTION ENDS HERE
 		}else{

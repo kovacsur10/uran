@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Notification;
 
 use App\Classes\LayoutData;
 use App\Classes\Notifications;
-use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
 
