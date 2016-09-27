@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Ecnet;
 use App\Classes\LayoutData;
 use App\Classes\Layout\EcnetUser;
 use App\Classes\Logger;
-use App\Classes\Notify;
 use Validator;
+use App\Classes\Notifications;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Database\QueryException;
@@ -77,7 +77,7 @@ class AccessController extends Controller{
 											 "message" => $layout->language('error_at_setting_users_internet_access_time'),
 											 "url" => '/ecnet/access']);
 			}
-			Notify::notify($layout->user(), $request->account, $layout->language('internet_access_was_modified'), $layout->language('internet_access_was_modified_to_description').$layout->formatDate($newTime), 'ecnet/access');
+			Notifications::notify($layout->user(), $request->account, $layout->language('internet_access_was_modified'), $layout->language('internet_access_was_modified_to_description').$layout->formatDate($newTime), 'ecnet/access');
 			Logger::log('Successfully activated user internet access for user #'.print_r($request->account, true).'!', null, $newTime, 'ecnet/access');
 			return view('success.success', ["layout" => $layout,
 											"message" => $layout->language('success_at_setting_users_internet_access_time'),

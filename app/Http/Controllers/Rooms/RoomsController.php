@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Rooms;
 
 use App\Classes\LayoutData;
-use App\Classes\Notify;
 use App\Classes\Database;
 use Validator;
 use App\Http\Controllers\Controller;

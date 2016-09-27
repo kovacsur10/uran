@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Classes\Database;
 use App\Classes\Layout\EcnetUser;
 use App\Classes\LayoutData;
-use App\Classes\Notify;
+use App\Classes\Notifications;
 use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Database\QueryException;
@@ -84,7 +84,7 @@ class RegisterController extends Controller{
 				$m->to($request->input('email'), $request->input('name'));
 				$m->subject($layout->language('confirm_registration'));
 			});
-			Notify::notifyAdminFromServer('accept_user_registration', $layout->language('new_user_registered'), $layout->language('new_user_registered_description'), 'admin/registration/show');
+			Notifications::notifyAdminFromServer('accept_user_registration', $layout->language('new_user_registered'), $layout->language('new_user_registered_description'), 'admin/registration/show');
 			return view('success.success', ["layout" => $layout,
 											"message" => $layout->language('success_at_sending_registration_verification_email'),
 											"url" => '/register']);
@@ -152,7 +152,7 @@ class RegisterController extends Controller{
 				$m->to($request->input('email'), $request->input('name'));
 				$m->subject($layout->language('confirm_registration'));
 			});
-			Notify::notifyAdminFromServer('accept_user_registration', $layout->language('new_user_registered'), $layout->language('new_user_registered_description'), 'admin/registration/show');
+			Notifications::notifyAdminFromServer('accept_user_registration', $layout->language('new_user_registered'), $layout->language('new_user_registered_description'), 'admin/registration/show');
 			return view('success.success', ["layout" => $layout,
 											"message" => $layout->language('success_at_sending_registration_verification_email'),
 											"url" => '/register']);

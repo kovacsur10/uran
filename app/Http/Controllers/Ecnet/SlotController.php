@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Ecnet;
 use App\Classes\LayoutData;
 use App\Classes\Layout\EcnetUser;
 use App\Classes\Logger;
-use App\Classes\Notify;
+use App\Classes\Notifications;
 use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
@@ -37,7 +37,7 @@ class SlotController extends Controller{
 										 "url" => '/ecnet/order']);
 		}
 		Logger::log('New MAC slot order!', null, $request->input('reason'), 'ecnet/order');
-		Notify::notifyAdmin($layout->user(), 'ecnet_slot_verify', $layout->language('mac_slot_ordering'), $layout->language('mac_slot_was_ordered_description').$request->input('reason'), 'ecnet/order');
+		Notifications::notifyAdmin($layout->user(), 'ecnet_slot_verify', $layout->language('mac_slot_ordering'), $layout->language('mac_slot_was_ordered_description').$request->input('reason'), 'ecnet/order');
 		return view('success.success', ["layout" => $layout,
 										"message" => $layout->language('success_at_sending_mac_slot_order'),
 										"url" => '/ecnet/order']);
@@ -67,9 +67,9 @@ class SlotController extends Controller{
 												"message" => $layout->language('error_at_allowing_mac_slot_order'),
 												"url" => '/ecnet/order']);
 				}
-				Notify::notify($layout->user(), $target->user_id, $layout->language('mac_slot_ordering'), $layout->language('mac_slot_order_was_accepted_description').$target->reason, 'ecnet/access');
+				Notifications::notify($layout->user(), $target->user_id, $layout->language('mac_slot_ordering'), $layout->language('mac_slot_order_was_accepted_description').$target->reason, 'ecnet/access');
 			}else{
-				Notify::notify($layout->user(), $target->user_id, $layout->language('mac_slot_ordering'), $layout->language('mac_slot_order_was_denied_description').$target->reason, 'ecnet/order');
+				Notifications::notify($layout->user(), $target->user_id, $layout->language('mac_slot_ordering'), $layout->language('mac_slot_order_was_denied_description').$target->reason, 'ecnet/order');
 			}
 			try{
 				$layout->user()->deleteMacSlotOrderById($request->input('slot'));

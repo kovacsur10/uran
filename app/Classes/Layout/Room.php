@@ -5,7 +5,6 @@ namespace App\Classes\Layout;
 use App\Classes\Database;
 use DB;
 use Carbon\Carbon;
-use Illuminate\Database\QueryException;
 
 /* Class name: Room
  *

@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Classes\LayoutData;
 use App\Classes\Layout\User;
-use App\Classes\Notify;
+use App\Classes\Notifications;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
@@ -27,7 +27,7 @@ class ModuleController extends Controller{
 											 "url" => '/admin/modules']);
 			}
 			$module = $layout->modules()->getById($request->module);
-			Notify::notifyAdminFromServer('module_admin', 'Module aktiválása', 'A(z) '.$module->name.' modul aktiválva lett!', 'admin/modules');
+			Notifications::notifyAdminFromServer('module_admin', 'Module aktiválása', 'A(z) '.$module->name.' modul aktiválva lett!', 'admin/modules');
 			return view('admin.modules', ["layout" => $layout]);
 		}else{
 			return view('errors.authentication', ["layout" => $layout]);
@@ -39,7 +39,7 @@ class ModuleController extends Controller{
 		if($layout->user()->permitted('module_admin')){
 			$layout->modules()->deactivate($request->module);
 			$module = $layout->modules()->getById($request->module);
-			Notify::notifyAdminFromServer('module_admin', 'Modul deaktiválása', 'A(z) '.$module->name.' modul deaktiválva lett!', 'admin/modules');
+			Notifications::notifyAdminFromServer('module_admin', 'Modul deaktiválása', 'A(z) '.$module->name.' modul deaktiválva lett!', 'admin/modules');
 			return view('admin.modules', ["layout" => $layout]);
 		}else{
 			return view('errors.authentication', ["layout" => $layout]);

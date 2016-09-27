@@ -3,12 +3,7 @@
 namespace App\Http\Controllers\ECouncil;
 
 use App\Classes\LayoutData;
-use App\Classes\Notify;
-use Validator;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Http\Request;
-use Carbon\Carbon;
 
 class RecordController extends Controller{
 	
