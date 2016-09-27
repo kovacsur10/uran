@@ -49,5 +49,6 @@ class Kernel extends HttpKernel
 		'modules.rooms' => \App\Http\Middleware\Modules\RoomsMiddleware::class,
 		'modules.ecnet' => \App\Http\Middleware\Modules\EcnetMiddleware::class,
 		'modules.tasks' => \App\Http\Middleware\Modules\TasksMiddleware::class,
+    	'modules.ecouncil' => \App\Http\Middleware\Modules\EcouncilMiddleware::class,
     ];
 }

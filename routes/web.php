@@ -110,9 +110,8 @@ Route::group(['middleware' => 'web'], function () {
 	Route::get('tasks/tasks/{count}', 'Tasks\TaskController@show')->middleware('auth.logged')->middleware('modules.ecnet');
 	Route::get('tasks/tasks/{count}/{first}', 'Tasks\TaskController@show')->middleware('auth.logged')->middleware('modules.ecnet');
 	
-	//Records routes
-	Route::get('ecouncil/records/list', 'ECouncil\RecordController@show')->middleware('auth.logged');
-	
+	// ECouncil routes
+	Route::get('ecouncil/records/list', 'ECouncil\RecordController@show')->middleware('auth.logged')->middleware('modules.ecouncil');
 	
 	// Basic routes
     Route::get('/', 'HomeController@index');
