@@ -38,43 +38,62 @@ class Notifications{
 	public static function notify(User $from, $toId, $subject, $message, $route){
 		$max_count = 100;
 	
-		if($from != null && $toId != null && $subject != null && $message != null){
-			if($route == null){
-				DB::table('notifications')
-				->insert([
-						'user_id' => $toId,
-						'subject' => $subject,
-						'message' => $message,
-						'from' => $from->user()->id,
-						'time' => Carbon::now()->toDateTimeString()
-				]);
-			}else{
-				DB::table('notifications')
-				->insert([
-						'user_id' => $toId,
-						'subject' => $subject,
-						'message' => $message,
-						'from' => $from->user()->id,
-						'route' => $route,
-						'time' => Carbon::now()->toDateTimeString()
-				]);
+		if($from !== null && $toId !== null && $subject !== null && $message !== null){
+			try{
+				if($route === null){
+					DB::table('notifications')
+						->insert([
+								'user_id' => $toId,
+								'subject' => $subject,
+								'message' => $message,
+								'from' => $from->user()->id,
+								'time' => Carbon::now()->toDateTimeString()
+						]);
+				}else{
+					DB::table('notifications')
+						->insert([
+								'user_id' => $toId,
+								'subject' => $subject,
+								'message' => $message,
+								'from' => $from->user()->id,
+								'route' => $route,
+								'time' => Carbon::now()->toDateTimeString()
+						]);
+				}
+			}catch(Exception $ex){
+				Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Insert into table 'notifications' was not successful! ".$ex->getMessage());
 			}
 				
 			//maintain
-			$count = DB::table('notifications')
-			->where('user_id', '=', $toId)
-			->count();
-			if($count != null && $count > $max_count){
-				$notifications = DB::table('notifications')
-				->where('user_id', '=', $toId)
-				->where('admin', '=', 'false')
-				->orderBy('id', 'asc')
-				->take($count - $max_count)
-				->get();
+			try{
+				$count = DB::table('notifications')
+					->where('user_id', '=', $toId)
+					->count();
+			}catch(Exception $ex){
+				Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'notifications' was not successful! ".$ex->getMessage());
+				$count = null;
+			}
+			if($count !== null && $count > $max_count){
+				try{
+					$notifications = DB::table('notifications')
+						->where('user_id', '=', $toId)
+						->where('admin', '=', 'false')
+						->orderBy('id', 'asc')
+						->take($count - $max_count)
+						->get()
+						->toArray();
+				}catch(Exception $ex){
+					$notifications = [];
+					Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'notifications' was not successful! ".$ex->getMessage());
+				}
 				foreach($notifications as $notify){
-					DB::table('notifications')
-					->where('id', '=', $notify->id)
-					->delete();
+					try{
+						DB::table('notifications')
+							->where('id', '=', $notify->id)
+							->delete();
+					}catch(Exception $ex){
+						Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Delete from table 'notifications' was not successful! ".$ex->getMessage());
+					}
 				}
 			}
 		}
@@ -100,34 +119,44 @@ class Notifications{
 	 */
 	public static function notifyAdmin(User $from, $adminPermission, $subject, $message, $route){
 		if($from !== null && $adminPermission !== null && $subject !== null && $message !== null){
-			$admins = DB::table('users')
-			->join('user_permissions', 'user_permissions.user_id', '=', 'users.id')
-			->join('permissions', 'permissions.id', '=', 'user_permissions.permission_id')
-			->where('permissions.permission_name', 'LIKE', $adminPermission)
-			->select('users.id as id')
-			->get();
+			try{
+				$admins = DB::table('users')
+					->join('user_permissions', 'user_permissions.user_id', '=', 'users.id')
+					->join('permissions', 'permissions.id', '=', 'user_permissions.permission_id')
+					->where('permissions.permission_name', 'LIKE', $adminPermission)
+					->select('users.id as id')
+					->get()
+					->toArray();
+			}catch(Exception $ex){
+				$admins = [];
+				Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'notifications' joined to 'user_permissions' and 'permissions' was not successful! ".$ex->getMessage());
+			}
 			foreach($admins as $admin){
-				if($route === null){
-					DB::table('notifications')
-					->insert([
-							'user_id' => $admin->id,
-							'subject' => $subject,
-							'message' => $message,
-							'from' => $from->user()->id,
-							'time' => Carbon::now()->toDateTimeString(),
-							'admin' => 'true'
-					]);
-				}else{
-					DB::table('notifications')
-					->insert([
-							'user_id' => $admin->id,
-							'subject' => $subject,
-							'message' => $message,
-							'from' => $from->user()->id,
-							'route' => $route,
-							'time' => Carbon::now()->toDateTimeString(),
-							'admin' => 'true'
-					]);
+				try{
+					if($route === null){
+						DB::table('notifications')
+							->insert([
+									'user_id' => $admin->id,
+									'subject' => $subject,
+									'message' => $message,
+									'from' => $from->user()->id,
+									'time' => Carbon::now()->toDateTimeString(),
+									'admin' => 'true'
+							]);
+					}else{
+						DB::table('notifications')
+							->insert([
+									'user_id' => $admin->id,
+									'subject' => $subject,
+									'message' => $message,
+									'from' => $from->user()->id,
+									'route' => $route,
+									'time' => Carbon::now()->toDateTimeString(),
+									'admin' => 'true'
+							]);
+					}
+				}catch(Exception $ex){
+					Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Insert into table 'notifications' was not successful! ".$ex->getMessage());
 				}
 			}
 		}
@@ -172,6 +201,7 @@ class Notifications{
 				->toArray();
 		}catch(Exception $ex){
 			$ret = [];
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'notifications' joined to 'users' was not successful! ".$ex->getMessage());
 		}
 		return $ret;
 	}
@@ -191,6 +221,7 @@ class Notifications{
 				->count('id');
 		}catch(Exception $ex){
 			$count = 0;
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'notifications' was not successful! ".$ex->getMessage());
 		}
 		return $count;
 	}
@@ -204,10 +235,16 @@ class Notifications{
 	 * on the user and the notification identifier.
 	 */
 	public static function get($notificationId, $userId){
-		return DB::table('notifications')
-			->where('id', '=', $notificationId)
-			->where('user_id', '=', $userId)
-			->first();
+		try{
+			$notification = DB::table('notifications')
+				->where('id', '=', $notificationId)
+				->where('user_id', '=', $userId)
+				->first();
+		}catch(Exception $ex){
+			$notification = null;
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'notifications' was not successful! ".$ex->getMessage());
+		}
+		return $notification;
 	}
 	
 	/* Function name: setRead
@@ -224,11 +261,12 @@ class Notifications{
 				->update([
 					'seen' => 'true
 				']);
-			$ret = true;
+			$success = true;
 		}catch(Exception $ex){
-			$ret = false;
+			$success = false;
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Update table 'notifications' was not successful! ".$ex->getMessage());
 		}
-		return $ret;
+		return $success;
 	}
 	
 // PRIVATE FUNCTIONS
