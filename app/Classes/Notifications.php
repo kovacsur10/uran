@@ -170,7 +170,7 @@ class Notifications{
 				->orderBy('id', 'desc')
 				->get()
 				->toArray();
-		}finally{
+		}catch(Exception $ex){
 			$ret = [];
 		}
 		return $ret;
@@ -189,7 +189,7 @@ class Notifications{
 				->where('user_id', '=', $userId)
 				->where('seen', '=', 'false')
 				->count('id');
-		}finally{
+		}catch(Exception $ex){
 			$count = 0;
 		}
 		return $count;
@@ -225,7 +225,7 @@ class Notifications{
 					'seen' => 'true
 				']);
 			$ret = true;
-		}finally{
+		}catch(Exception $ex){
 			$ret = false;
 		}
 		return $ret;
