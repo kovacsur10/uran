@@ -2,6 +2,8 @@
 
 namespace App\Classes;
 
+use Carbon\Carbon;
+use App\Classes\Layout\User;
 use DB;
 
 class Notifications{
