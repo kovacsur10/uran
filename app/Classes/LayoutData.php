@@ -14,6 +14,7 @@ use App\Classes\Layout\Registrations;
 use App\Classes\Layout\Room;
 use App\Classes\Layout\Tasks;
 use App\Classes\Layout\User;
+use App\Classes\Logger;
 use DB;
 
 class LayoutData{

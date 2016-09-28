@@ -3,6 +3,7 @@
 namespace App\Classes\Layout;
 
 use DB;
+use App\Classes\Logger;
 
 /* Class name: Modules
  *
@@ -29,7 +30,8 @@ class Modules{
 				->orderBy('id', 'asc')
 				->get()
 				->toArray();
-		}finally{
+		}catch(Exception $ex){
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'modules' was not successful! ".$ex->getMessage());
 			$ret = [];
 		}
 		return $ret;
@@ -47,8 +49,9 @@ class Modules{
 			$ret = DB::table('modules')
 				->where('id', '=', $id)
 				->first();
-		}finally{
+		}catch(Exception $ex){
 			$ret = null;
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'modules' was not successful! ".$ex->getMessage());
 		}
 		return $ret;
 	}
@@ -67,8 +70,9 @@ class Modules{
 			$ret = DB::table('active_modules')
 				->where('module_id', '=', $id)
 				->first();
-		}finally{
+		}catch(Exception $ex){
 			$ret = null;
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'active_modules' was not successful! ".$ex->getMessage());
 		}
 		return $ret !== null;
 	}
@@ -88,8 +92,9 @@ class Modules{
 				->join('modules', 'modules.id', '=', 'active_modules.module_id')
 				->where('modules.name','LIKE', $name)
 				->first();
-		}finally{
+		}catch(Exception $ex){
 			$ret = null;
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'active_modules' joined to 'modules' was not successful! ".$ex->getMessage());
 		}
 		return $ret !== null;
 	}
@@ -107,8 +112,9 @@ class Modules{
 				->join('modules', 'modules.id', '=', 'active_modules.module_id')
 				->get()
 				->toArray();
-		}finally{
+		}catch(Exception $ex){
 			$ret = [];
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'modules' joined to 'active_modules' was not successful! ".$ex->getMessage());
 		}
 		return $ret;
 	}
@@ -126,8 +132,9 @@ class Modules{
 				->leftJoin('active_modules', 'active_modules.module_id', '=', 'modules.id')
 				->get()
 				->toArray();
-		}finally{
+		}catch(Exception $ex){
 			$modules = [];
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'modules' joined to 'active_modules' was not successful! ".$ex->getMessage());
 		}
 		$inactives = [];
 		foreach($modules as $module){
@@ -152,8 +159,9 @@ class Modules{
 					'module_id' => $moduleId
 				]);
 			$successful = true;
-		}finally{
+		}catch(Exception $ex){
 			$successful = false;
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Insert into table 'active_modules' was not successful! ".$ex->getMessage());
 		}
 		return $successful;
 	}
@@ -171,8 +179,9 @@ class Modules{
 				->where('module_id', '=', $moduleId)
 				->delete();
 			$successful = true;
-		}finally{
+		}catch(Exception $ex){
 			$successful = false;
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Delete from table 'active_modules' was not successful! ".$ex->getMessage());
 		}
 		return $successful;
 	}

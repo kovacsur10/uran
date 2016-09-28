@@ -67,7 +67,7 @@ class Room{
 				->where('room_number', 'LIKE', $roomNumber)
 				->select('id')
 				->first();
-		}finally{
+		}catch(Exception $ex){
 			$roomId = null;
 		}
 		return $roomId === null ? null : $roomId->id;
@@ -238,7 +238,7 @@ class Room{
 	 				]);
 	 			Database::commit();
 	 			$ret = true;
-			}finally{
+			}catch(Exception $ex){
 				Database::rollback();
 			}
 		}
@@ -269,7 +269,7 @@ class Room{
 					->delete();
 				Database::commit();
 				$ret = true;
-			}finally{
+			}catch(Exception $ex){
 				Database::rollback();
 			}
 		}
@@ -305,7 +305,7 @@ class Room{
 				Database::commit();
 				$this->refreshGuard();
 				$ret = true;
-			}finally{
+			}catch(Exception $ex){
 				Database::rollback();
 			}
 		}
@@ -327,7 +327,7 @@ class Room{
 				->orderBy('id', 'asc')
 				->get()
 				->toArray();
-		}finally{
+		}catch(Exception $ex){
 			$ret = [];
 		}
 		return $ret;
@@ -349,7 +349,7 @@ class Room{
 				->orderBy('id', 'asc')
 				->get()
 				->toArray();
-		}finally{
+		}catch(Exception $ex){
 			$ret = [];
 		}
 		return $ret;
@@ -379,7 +379,7 @@ class Room{
 		try{
 			$ret = DB::table('rooms_last_modified')
 				->first();
-		}finally{
+		}catch(Exception $ex){
 			$ret = null;
 		}
 		return $ret === null ? null : $ret->last_modified;
@@ -449,7 +449,7 @@ class Room{
 			$ret = DB::table('rooms_tables')
 				->where('table_name', 'LIKE', $tableName)
 				->first();
-		}finally{
+		}catch(Exception $ex){
 			$ret = null;
 		}
 		return $ret !== null || $tableName == "";
