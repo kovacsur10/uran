@@ -6,8 +6,19 @@ use Carbon\Carbon;
 use App\Classes\Layout\User;
 use DB;
 
+/* Class name: Notifications
+ *
+ * This class handles the user notifications.
+ *
+ * Functionality:
+ * 		- user notification
+ * 		- user group notification based on group
+ * 		- user notification from server
+ */
 class Notifications{
 
+// PUBLIC FUNCTIONS
+	
 	/* Function name: getRoomId
 	 * Input: 	$from (User) - sender user
 	 * 			$toId (int) - receiver user
@@ -144,38 +155,54 @@ class Notifications{
 	}
 	
 	/* Function name: getNotifications
-	 * Input: 	$from (User) - sender user
-	 * 			$toId (int) - receiver user
-	 * 			$subject (text) - subject of the notification
-	 * 			$message (text) - content of the notification
-	 * 			$route (text) - route to the source page
-	 * Output: -
+	 * Input: 	$userId (int) - requested user
+	 * Output: array of the user's notifications
 	 *
-	 * This function sends a notification to a target user
-	 * from a user with the given subject and text.
-	 *
-	 * The route is used to redirect the user to a page
-	 * where the user can solve see the source of the
-	 * notification or can solve the problem related to
-	 * the notification.
+	 * This function returns the requested
+	 * user's notifications.
 	 */
 	public static function getNotifications($userId){
-		$ret = DB::table('notifications')
-			->join('users', 'users.id', '=', 'notifications.from')
-			->select('users.name as name', 'users.username as username', 'notifications.id as id', 'notifications.subject as subject', 'notifications.message as message', 'notifications.time as time', 'notifications.seen as seen')
-			->where('user_id', '=', $userId)
-			->orderBy('id', 'desc')
-			->get();
-		return $ret->toArray();
+		try{
+			$ret = DB::table('notifications')
+				->join('users', 'users.id', '=', 'notifications.from')
+				->select('users.name as name', 'users.username as username', 'notifications.id as id', 'notifications.subject as subject', 'notifications.message as message', 'notifications.time as time', 'notifications.seen as seen')
+				->where('user_id', '=', $userId)
+				->orderBy('id', 'desc')
+				->get()
+				->toArray();
+		}finally{
+			$ret = [];
+		}
+		return $ret;
 	}
 	
-	public static function getUnseenNotificationCount($userId){
-		return DB::table('notifications')
-			->where('user_id', '=', $userId)
-			->where('seen', '=', 'false')
-			->count('id');
+	/* Function name: getUnreadNotificationCount
+	 * Input: 	$userId (int) - requested user
+	 * Output: int (count of unseen notifications)
+	 *
+	 * This function returns the count of the
+	 * requested user's unread notifications.
+	 */
+	public static function getUnreadNotificationCount($userId){
+		try{
+			$count = DB::table('notifications')
+				->where('user_id', '=', $userId)
+				->where('seen', '=', 'false')
+				->count('id');
+		}finally{
+			$count = 0;
+		}
+		return $count;
 	}
 	
+	/* Function name: get
+	 * Input: 	$notificationId (int) - identifier of a notification
+	 * 			$userId (int) - requested user
+	 * Output: int (count of unseen notifications)
+	 *
+	 * This function returns a notification based
+	 * on the user and the notification identifier.
+	 */
 	public static function get($notificationId, $userId){
 		return DB::table('notifications')
 			->where('id', '=', $notificationId)
@@ -183,10 +210,27 @@ class Notifications{
 			->first();
 	}
 	
-	public static function setSeen($notificationId){
-		DB::table('notifications')
-			->where('id', '=', $notificationId)
-			->update(['seen' => 'true']);
+	/* Function name: setRead
+	 * Input: 	$notificationId (int) - identifier of a notification
+	 * Output: bool (successfully updated or not)
+	 *
+	 * This function sets the status of a
+	 * notifiation as read.
+	 */
+	public static function setRead($notificationId){
+		try{
+			DB::table('notifications')
+				->where('id', '=', $notificationId)
+				->update([
+					'seen' => 'true
+				']);
+			$ret = true;
+		}finally{
+			$ret = false;
+		}
+		return $ret;
 	}
+	
+// PRIVATE FUNCTIONS
 	
 }

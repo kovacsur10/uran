@@ -17,7 +17,7 @@ class User{
 		$tmpPermissions = new Permissions();
 		$this->permissions = $tmpPermissions->getForUser($userId);
 		$this->notifications = Notifications::getNotifications($userId);
-		$this->unseenNotificationCount = Notifications::getUnseenNotificationCount($userId);
+		$this->unseenNotificationCount = Notifications::getUnreadNotificationCount($userId);
 	}
 	
 	public function user(){
