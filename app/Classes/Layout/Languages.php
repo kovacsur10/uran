@@ -2,12 +2,45 @@
 
 namespace App\Classes\Layout;
 
+/* Class name: Languages
+ *
+ * This class handles the websites
+ * language support.
+ *
+ * Functionality:
+ * 		- default language
+ * 		- supported languages:
+ * 			* Hungarian
+ * 			* American English
+ */
 class Languages{
 	
+	/* Function name: getDefault
+	 * Input: -
+	 * Output: array of words
+	 *
+	 * This function returnes the default
+	 * language set.
+	 * 
+	 * The array has key and value pairs.
+	 * Keys are identifiers and values are
+	 * the texts for write to the screen.
+	 */
 	public static function getDefault(){
 		return Languages::hungarian();
 	}
 	
+	/* Function name: hungarian
+	 * Input: -
+	 * Output: array of words
+	 *
+	 * This function returnes the Hungarian
+	 * language set.
+	 *
+	 * The array has key and value pairs.
+	 * Keys are identifiers and values are
+	 * the texts for write to the screen.
+	 */
 	public static function hungarian(){
 		return
 		[
@@ -537,8 +570,17 @@ class Languages{
 		];
 	}
 	
-//	{{ $layout->language('') }}
-	
+	/* Function name: english
+	 * Input: -
+	 * Output: array of words
+	 *
+	 * This function returnes the American English
+	 * language set.
+	 *
+	 * The array has key and value pairs.
+	 * Keys are identifiers and values are
+	 * the texts for write to the screen.
+	 */
 	public static function english(){
 		return
 		[
