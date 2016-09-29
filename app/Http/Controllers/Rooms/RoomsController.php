@@ -45,11 +45,7 @@ class RoomsController extends Controller{
 				$layout->room()->emptyRoom($roomId);
 				for($i = 0; $i < $request->count; $i++){
 					if($request->input('resident'.$i) != 0){
-						try{
-							$layout->room()->setUserToRoom($roomId, $request->input('resident'.$i));
-						}catch(\Illuminate\Database\QueryException $e) {
-							$error = true;
-						}
+						$error = $layout->room()->setUserToRoom($roomId, $request->input('resident'.$i));
 					}
 				}
 			}
