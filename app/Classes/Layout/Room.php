@@ -3,6 +3,7 @@
 namespace App\Classes\Layout;
 
 use App\Classes\Database;
+use App\Classes\Logger;
 use DB;
 use Carbon\Carbon;
 
@@ -69,6 +70,7 @@ class Room{
 				->first();
 		}catch(Exception $ex){
 			$roomId = null;
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'rooms_rooms' was not successful! ".$ex->getMessage());
 		}
 		return $roomId === null ? null : $roomId->id;
 	}
@@ -79,30 +81,37 @@ class Room{
 	 *
 	 * This function removes all user assignments
 	 * to the room.
-	 *
-	 * THROWING EXCEPTIONS!
 	 */
 	public function emptyRoom($roomId){
-		DB::table(Room::getAssignmentTableName($this->selectedTable))
-			->where('roomid', '=', $roomId)
-			->delete();
+		try{
+			DB::table(Room::getAssignmentTableName($this->selectedTable))
+				->where('roomid', '=', $roomId)
+				->delete();
+		}catch(\Exception $ex){
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Delete from table '".Room::getAssignmentTableName($this->selectedTable)."' was not successful! ".$ex->getMessage());
+		}
 	}
 	
 	/* Function name: setUserToRoom
 	 * Input: 	$roomId (int) - identifier of the room
 	 * 			$userId (int) - identifier of the user
-	 * Output: -
+	 * Output: error code (int)
 	 *
 	 * This function assignes a user to a room.
-	 * 
-	 * THROWING EXCEPTIONS!
 	 */
 	public function setUserToRoom($roomId, $userId){
-		DB::table(Room::getAssignmentTableName($this->selectedTable))
-			->insert([
-				'roomid' => $roomId,
-				'userid' => $userId
-			]);
+		$ret = 0;
+		try{
+			DB::table(Room::getAssignmentTableName($this->selectedTable))
+				->insert([
+					'roomid' => $roomId,
+					'userid' => $userId
+				]);
+		}catch(\Exception $ex){
+			$ret = 1;
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Insert into table '".Room::getAssignmentTableName($this->selectedTable)."' was not successful! ".$ex->getMessage());
+		}
+		return $ret;
 	}
 	
 	/* Function name: getResidents
@@ -112,17 +121,21 @@ class Room{
 	 * This function returns an array of the
 	 * residents of the requested room. It returns
 	 * the id and the name of the users.
-	 * 
-	 * THROWING EXCEPTIONS!
 	 */
 	public function getResidents($roomNumber){
-		return DB::table('rooms_rooms')
-			->join(Room::getAssignmentTableName($this->selectedTable), Room::getAssignmentTableName($this->selectedTable).'.roomid', '=', 'rooms_rooms.id')
-			->join('users', 'users.id', '=', Room::getAssignmentTableName($this->selectedTable).'.userid')
-			->select('users.id as id', 'users.name as name')
-			->where('rooms_rooms.room_number', 'LIKE', $roomNumber)
-			->get()
-			->toArray();
+		try{
+			$residents = DB::table('rooms_rooms')
+				->join(Room::getAssignmentTableName($this->selectedTable), Room::getAssignmentTableName($this->selectedTable).'.roomid', '=', 'rooms_rooms.id')
+				->join('users', 'users.id', '=', Room::getAssignmentTableName($this->selectedTable).'.userid')
+				->select('users.id as id', 'users.name as name')
+				->where('rooms_rooms.room_number', 'LIKE', $roomNumber)
+				->get()
+				->toArray();
+		}catch(\Exception $ex){
+			$residents = [];
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'rooms_rooms' joined to '".Room::getAssignmentTableName($this->selectedTable)."' and 'users' was not successful! ".$ex->getMessage());
+		}
+		return $residents;
 	}
 	
 	/* Function name: getRoomResidentListText
@@ -151,16 +164,20 @@ class Room{
 	 *
 	 * This function returns the count of the
 	 * free places in the requested room.
-	 * 
-	 * THROWING EXCEPTIONS!
 	 */
 	public function getFreePlaceCount($roomNumber){
-		$max_count = DB::table('rooms_rooms')
-			->select('max_collegist_count as count')
-			->where('room_number', 'LIKE', $roomNumber)
-			->first();
-		$residents = count($this->getResidents($roomNumber));
-		return $max_count->count - $residents;
+		try{
+			$max_count = DB::table('rooms_rooms')
+				->select('max_collegist_count as count')
+				->where('room_number', 'LIKE', $roomNumber)
+				->first();
+			$residents = count($this->getResidents($roomNumber));
+			$freePlaceCount = $max_count->count - $residents;
+		}catch(\Exception $ex){
+			$freePlaceCount = 0;
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'rooms_rooms' was not successful! ".$ex->getMessage());
+		}
+		return $freePlaceCount;
 	}
 	
 	/* Function name: getFreePlaces
@@ -189,13 +206,16 @@ class Room{
 	 *
 	 * This function returns whether the user is assigned
 	 * to a room or not.
-	 * 
-	 * THROWING EXCEPTIONS!
 	 */
 	public function userHasResidence($userId){
-		$ret = DB::table(Room::getAssignmentTableName($this->selectedTable))
-			->where('userid', '=', $userId)
-			->first();
+		try{
+			$ret = DB::table(Room::getAssignmentTableName($this->selectedTable))
+				->where('userid', '=', $userId)
+				->first();
+		}catch(\Exception $ex){
+			$ret = null;
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table '".Room::getAssignmentTableName($this->selectedTable)."' was not successful! ".$ex->getMessage());
+		}
 		return $ret !== null;
 	}
 	
@@ -240,6 +260,7 @@ class Room{
 	 			$ret = true;
 			}catch(Exception $ex){
 				Database::rollback();
+				Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 			}
 		}
 		return $ret;
@@ -271,6 +292,7 @@ class Room{
 				$ret = true;
 			}catch(Exception $ex){
 				Database::rollback();
+				Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 			}
 		}
 		return $ret;
@@ -307,6 +329,7 @@ class Room{
 				$ret = true;
 			}catch(Exception $ex){
 				Database::rollback();
+				Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 			}
 		}
 		return $ret;
@@ -323,14 +346,15 @@ class Room{
 	 */
 	public function getTables(){
 		try{
-			return DB::table('rooms_tables')
+			$tables = DB::table('rooms_tables')
 				->orderBy('id', 'asc')
 				->get()
 				->toArray();
 		}catch(Exception $ex){
-			$ret = [];
+			$tables = [];
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'rooms_tables' was not successful! ".$ex->getMessage());
 		}
-		return $ret;
+		return $tables;
 	}
 	
 	/* Function name: getTablesEX
@@ -344,15 +368,16 @@ class Room{
 	 */
 	public function getTablesEX(){
 		try{
-			$ret = DB::table('rooms_tables')
+			$tables = DB::table('rooms_tables')
 				->where('table_name','NOT LIKE', $this->selectedTable)
 				->orderBy('id', 'asc')
 				->get()
 				->toArray();
 		}catch(Exception $ex){
-			$ret = [];
+			$tables = [];
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'rooms_tables' was not successful! ".$ex->getMessage());
 		}
-		return $ret;
+		return $tables;
 	}
 	
 	/* Function name: checkGuard
@@ -381,6 +406,7 @@ class Room{
 				->first();
 		}catch(Exception $ex){
 			$ret = null;
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'rooms_last_modified' was not successful! ".$ex->getMessage());
 		}
 		return $ret === null ? null : $ret->last_modified;
 	}
@@ -406,15 +432,19 @@ class Room{
 	 * This functions returns the existing rooms
 	 * with room number, capacity and the floor
 	 * in the dormitory.
-	 * 
-	 * THROWING EXCEPTIONS!
 	 */
 	private function getRooms(){
-		return $ret = DB::table('rooms_rooms')
-			->select('room_number as room', 'max_collegist_count', 'floor')
-			->orderBy('id', 'asc')
-			->get()
-			->toArray();
+		try{
+			$rooms = DB::table('rooms_rooms')
+				->select('room_number as room', 'max_collegist_count', 'floor')
+				->orderBy('id', 'asc')
+				->get()
+				->toArray();
+		}catch(\Exception $ex){
+			$rooms = [];
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'rooms_rooms' was not successful! ".$ex->getMessage());
+		}
+		return $rooms;
 	}
 	
 	/* Function name: getSelectedTable
@@ -425,13 +455,18 @@ class Room{
 	 * currently selected (active) assignment table.
 	 */
 	private function getSelectedTable(){
-		$ret = DB::table('rooms_tables')
-			->where('selected', '=', true)
-			->first();
-		if($ret === []){
+		try{
+			$table = DB::table('rooms_tables')
+				->where('selected', '=', true)
+				->first();
+		}catch(\Exception $ex){
+			$table = null;
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'rooms_tables' was not successful! ".$ex->getMessage());
+		}
+		if($table === null){
 			return "";
 		}else{
-			return $ret->table_name;
+			return $table->table_name;
 		}
 	}
 	
@@ -446,13 +481,14 @@ class Room{
 	 */
 	private function tableExists($tableName){
 		try{
-			$ret = DB::table('rooms_tables')
+			$tables = DB::table('rooms_tables')
 				->where('table_name', 'LIKE', $tableName)
 				->first();
 		}catch(Exception $ex){
-			$ret = null;
+			$tables = null;
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'rooms_tables' was not successful! ".$ex->getMessage());
 		}
-		return $ret !== null || $tableName == "";
+		return $tables !== null || $tableName == "";
 	}
 	
 	/* Function name: refreshGuard
@@ -465,10 +501,15 @@ class Room{
 	 * THROWING EXCEPTIONS!
 	 */
 	private function refreshGuard(){
-		DB::table('rooms_last_modified')
-			->update([
-				'last_modified' => Carbon::parse(Carbon::now())->timestamp
-			]);
+		try{
+			DB::table('rooms_last_modified')
+				->update([
+					'last_modified' => Carbon::parse(Carbon::now())->timestamp
+				]);
+		}catch(\Exception $ex){
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Update table 'rooms_last_modified' was not successful! ".$ex->getMessage());
+			throw new Exception("CUSTOM EXCEPTION! The previous log message contains the error!");
+		}
 	}
 		
 }
