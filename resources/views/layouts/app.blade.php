@@ -150,8 +150,8 @@
 						
 						<li class="btn-group dropdown dropdown-notifications sw-open">
 							<button style="margin-top:8px;" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-								@if($data->user()->unseenNotificationCount() > 0)
-									<i data-count="{{ $data->user()->unseenNotificationCount() }}" class="glyphicon glyphicon-envelope notification-icon"></i>
+								@if($data->user()->unreadNotificationCount() > 0)
+									<i data-count="{{ $data->user()->unreadNotificationCount() }}" class="glyphicon glyphicon-envelope notification-icon"></i>
 								@else
 									<i class="glyphicon glyphicon-envelope"></i>
 								@endif
@@ -163,7 +163,7 @@
 									<div class="dropdown-toolbar-actions">
 										<a href="{{ url('/notification/list/0') }}"><i class="glyphicon glyphicon-search"></i> {{ $layout->language('show_all') }}</a>
 									</div>
-									<h3 class="dropdown-toolbar-title">{{ $layout->language('unread_notifications') }} ({{ $data->user()->unseenNotificationCount() }})</h3>
+									<h3 class="dropdown-toolbar-title">{{ $layout->language('unread_notifications') }} ({{ $data->user()->unreadNotificationCount() }})</h3>
 								</div><!-- /dropdown-toolbar -->
 
 								<ul class="dropdown-menu notifications">
