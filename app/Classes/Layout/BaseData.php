@@ -16,6 +16,8 @@ use App\Classes\Logger;
  * 		- country support
  * 		- admission year support
  * 		- status code support
+ * 
+ * Functions that can throw exceptions:
  */
 class BaseData{
 

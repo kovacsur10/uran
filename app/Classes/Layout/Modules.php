@@ -12,6 +12,8 @@ use App\Classes\Logger;
  * Functionality:
  * 		- module activation and deactivation
  * 		- module getter functions
+ * 
+ * Functions that can throw exceptions:
  */
 class Modules{
 

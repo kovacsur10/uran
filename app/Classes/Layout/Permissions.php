@@ -3,7 +3,6 @@
 namespace App\Classes\Layout;
 
 use DB;
-use Illuminate\Database\QueryException;
 use App\Classes\Logger;
 
 /* Class name: Permissions
@@ -14,6 +13,8 @@ use App\Classes\Logger;
  * Functionality:
  * 		- user permissions
  * 		- default permissions
+ * 
+ * Functions that can throw exceptions:
  */
 class Permissions{
 	
@@ -227,7 +228,6 @@ class Permissions{
 		return $error;
 	}
 	
-
 // PRIVATE FUNCTIONS	
 	
 	/* Function name: getDefaultPermissions

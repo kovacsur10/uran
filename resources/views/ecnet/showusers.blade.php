@@ -94,36 +94,34 @@
 							</ul>
 						</nav>
 					
-						@if($layout->user()->ecnetUsers($firstUser, $usersToShow) != null)
-							@foreach($layout->user()->ecnetUsers($firstUser, $usersToShow) as $ecnetUser)
-							<div class="panel panel-default {{ $ecnetUser->valid_time > Carbon\Carbon::now()->toDateTimeString() ? 'panel-success' : 'panel-danger' }}">
-								<div class="panel-heading">{{ $ecnetUser->name }} - {{ $ecnetUser->username }} - #{{ $ecnetUser->id }}</div>
-								<div class="panel-body">
-									<p>{{ $layout->language('balance') }}: {{ $ecnetUser->money }} <i class="fa fa-btn fa-money"></i></p>
-									<p>{{ $layout->language('validation_date') }}: {{ $layout->formatDate($ecnetUser->valid_time) }} <i class="fa fa-btn {{ $ecnetUser->valid_time > Carbon\Carbon::now()->toDateTimeString() ? 'fa-calendar-check-o' : 'fa-calendar-times-o' }}"></i></p>
-									<p>{{ $layout->language('mac_slots_count') }}: {{ $ecnetUser->mac_slots }} {{ $layout->language('count') }}
-									@if($layout->user()->hasMACSlotOrder($ecnetUser->id))
-										- <i style="color:gold;" class="fa fa-btn fa-flash"></i><a href="{{ url('ecnet/order') }}">{{ $layout->language('mac_slot_order') }}</a> <i style="color:gold;" class="fa fa-btn fa-flash"></i>
-									@endif
-									@if(count($layout->user()->macAddressesOfUser($ecnetUser->id)) < $ecnetUser->mac_slots)
-										- <span style="color:red;">{{ $layout->language('low_mac_slot_usage') }} (diff: {{ $ecnetUser->mac_slots - count($layout->user()->macAddressesOfUser($ecnetUser->id)) }})</span>
-									@endif
-									@if($ecnetUser->mac_slots != 0)						
-										<div class="dropdown">
-											<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">{{ $layout->language('registrated_mac_addresses') }}
-											<span class="caret"></span></button>
-											<ul class="dropdown-menu">
-											@foreach($layout->user()->macAddressesOfUser($ecnetUser->id) as $macAddress)
-												<li>{{ $macAddress->mac_address }}</li>
-											@endforeach
-											</ul>
-										</div>
-									@endif
-									</p>
-								</div>
+						@foreach($layout->user()->ecnetUsers($firstUser, $usersToShow) as $ecnetUser)
+						<div class="panel panel-default {{ $ecnetUser->valid_time > Carbon\Carbon::now()->toDateTimeString() ? 'panel-success' : 'panel-danger' }}">
+							<div class="panel-heading">{{ $ecnetUser->name }} - {{ $ecnetUser->username }} - #{{ $ecnetUser->id }}</div>
+							<div class="panel-body">
+								<p>{{ $layout->language('balance') }}: {{ $ecnetUser->money }} <i class="fa fa-btn fa-money"></i></p>
+								<p>{{ $layout->language('validation_date') }}: {{ $layout->formatDate($ecnetUser->valid_time) }} <i class="fa fa-btn {{ $ecnetUser->valid_time > Carbon\Carbon::now()->toDateTimeString() ? 'fa-calendar-check-o' : 'fa-calendar-times-o' }}"></i></p>
+								<p>{{ $layout->language('mac_slots_count') }}: {{ $ecnetUser->mac_slots }} {{ $layout->language('count') }}
+								@if($layout->user()->hasMACSlotOrder($ecnetUser->id))
+									- <i style="color:gold;" class="fa fa-btn fa-flash"></i><a href="{{ url('ecnet/order') }}">{{ $layout->language('mac_slot_order') }}</a> <i style="color:gold;" class="fa fa-btn fa-flash"></i>
+								@endif
+								@if(count($layout->user()->macAddressesOfUser($ecnetUser->id)) < $ecnetUser->mac_slots)
+									- <span style="color:red;">{{ $layout->language('low_mac_slot_usage') }} (diff: {{ $ecnetUser->mac_slots - count($layout->user()->macAddressesOfUser($ecnetUser->id)) }})</span>
+								@endif
+								@if($ecnetUser->mac_slots != 0)						
+									<div class="dropdown">
+										<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">{{ $layout->language('registrated_mac_addresses') }}
+										<span class="caret"></span></button>
+										<ul class="dropdown-menu">
+										@foreach($layout->user()->macAddressesOfUser($ecnetUser->id) as $macAddress)
+											<li>{{ $macAddress->mac_address }}</li>
+										@endforeach
+										</ul>
+									</div>
+								@endif
+								</p>
 							</div>
-							@endforeach
-						@endif
+						</div>
+						@endforeach
 						
 						<nav>
 							<ul class="pager">

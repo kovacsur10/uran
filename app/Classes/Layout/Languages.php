@@ -12,6 +12,8 @@ namespace App\Classes\Layout;
  * 		- supported languages:
  * 			* Hungarian
  * 			* American English
+ * 
+ * Functions that can throw exceptions:
  */
 class Languages{
 	

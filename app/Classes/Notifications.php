@@ -14,6 +14,8 @@ use DB;
  * 		- user notification
  * 		- user group notification based on group
  * 		- user notification from server
+ * 
+ * Functions that can throw exceptions:
  */
 class Notifications{
 
