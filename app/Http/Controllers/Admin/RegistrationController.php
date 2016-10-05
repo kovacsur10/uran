@@ -33,9 +33,7 @@ class RegistrationController extends Controller{
 	public function reject($id){
 		$layout = new LayoutData();
 		if($layout->user()->permitted('accept_user_registration')){
-			try{
-				$layout->registrations()->reject($id);
-			}catch(\Illuminate\Database\QueryException $e){
+			if($layout->registrations()->reject($id) !== 0){
 				return view('errors.error', ["layout" => $layout,
 											 "message" => $layout->language('reject_user_registration_failure'),
 											 "url" => '/admin/registration/show']);
@@ -80,13 +78,12 @@ class RegistrationController extends Controller{
 				]);
 				$this->validate($request, array('date_of_birth' => array('required', 'regex:/^((?:(?:19[0-9]{2}|2[0-9]{3})\.(?:1[012]|0[1-9])\.(?:0[1-9]|[12][0-9]|3[01])\.)|(?:(?:19[0-9]{2}|2[0-9]{3})-(?:1[012]|0[1-9])-(?:0[1-9]|[12][0-9]|3[01])(?: 00:00:00)?))$/')));
 			}
-			try{
-				if($request->neptun == null || $request->neptun == ""){
-					$layout->registrations()->acceptGuest($request->id, $request->input('country'), $request->input('shire'), $request->input('postalcode'), $request->input('address'), $request->input('city'), $request->input('phone'), $request->input('reason'));
-				}else{
-					$layout->registrations()->acceptCollegist($request->id, $request->input('country'), $request->input('shire'), $request->input('postalcode'), $request->input('address'), $request->input('city'), $request->input('phone'), $request->input('city_of_birth'), $request->input('date_of_birth'), $request->input('name_of_mother'), $request->input('year_of_leaving_exam'), $request->input('high_school'), $request->input('neptun'), $request->input('from_year'), $request->input('faculty'), $request->input('workshop'));
-				}
-			}catch(\Illuminate\Database\QueryException $e){
+			if($request->neptun == null || $request->neptun == ""){
+				$returnCode = $layout->registrations()->acceptGuest($request->id, $request->input('country'), $request->input('shire'), $request->input('postalcode'), $request->input('address'), $request->input('city'), $request->input('phone'), $request->input('reason'));
+			}else{
+				$returnCode = $layout->registrations()->acceptCollegist($request->id, $request->input('country'), $request->input('shire'), $request->input('postalcode'), $request->input('address'), $request->input('city'), $request->input('phone'), $request->input('city_of_birth'), $request->input('date_of_birth'), $request->input('name_of_mother'), $request->input('year_of_leaving_exam'), $request->input('high_school'), $request->input('neptun'), $request->input('from_year'), $request->input('faculty'), $request->input('workshop'));
+			}
+			if($returnCode !== 0){
 				return view('errors.error', ["layout" => $layout,
 											 "message" => $layout->language('accept_user_registration_failure'),
 											 "url" => '/admin/registration/show']);
