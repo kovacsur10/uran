@@ -10,6 +10,8 @@ namespace App\Classes\Layout;
  *
  * Functionality:
  * 		- stores errors and old values
+ * 
+ * Functions that can throw exceptions:
  */
 class Errors{
 

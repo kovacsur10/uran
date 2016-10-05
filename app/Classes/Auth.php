@@ -14,6 +14,8 @@ use App\Classes\Logger;
  *
  * Functionality:
  * 		- transaction handling
+ * 
+ * Functions that can throw exceptions:
  */
 class Auth{
 	

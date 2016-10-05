@@ -16,6 +16,8 @@ use App\Classes\Notifications;
  * 		- get user permissions
  * 		- get all user's data
  * 		- get notifications for user
+ * 
+ * Functions that can throw exceptions:
  */
 class User{
 	

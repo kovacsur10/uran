@@ -65,13 +65,11 @@ class AccessController extends Controller{
 												 "message" => $layout->language('error_no_default_time_set'),
 												 "url" => '/ecnet/access']);
 				}
-				$newTime = $layout->user()->validationTime()->valid_date;
+				$newTime = $layout->user()->validationTime();
 			}else{
 				$newTime = $request->custom_valid_date.' 05:00:00';
 			}
-			try{
-				$layout->user()->activateUserNet($request->account, $newTime);
-			}catch(\Illuminate\Database\QueryException $e){
+			if($layout->user()->activateUserNet($request->account, $newTime) !== 0){
 				Logger::warning('Could not activate user internet access for user #'.print_r($request->account, true).'!', null, null, 'ecnet/access');
 				return view('errors.error', ["layout" => $layout,
 											 "message" => $layout->language('error_at_setting_users_internet_access_time'),

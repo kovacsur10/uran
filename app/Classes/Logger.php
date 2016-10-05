@@ -14,6 +14,8 @@ use DB;
  * Functionality:
  * 		- error log to file
  * 		- normal log to database
+ * 
+ * Functions that can throw exceptions:
  */
 class Logger{
 

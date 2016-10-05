@@ -77,8 +77,8 @@
 								<p>{{ $layout->language('validation_time_set_admin_description') }}</p>
 								<p>{{ $layout->language('default_time_set_note_description') }}</p>
 								<p>{{ $layout->language('default_time_now_description') }}: <strong>
-								@if($layout->user()->validationTime() != null)
-									{{ $layout->formatDate($layout->user()->validationTime()->valid_date) }}
+								@if($layout->user()->validationTime() !== null)
+									{{ $layout->formatDate($layout->user()->validationTime()) }}
 								@else
 									{{ $layout->language('error_no_default_time_description') }}
 								@endif
@@ -122,8 +122,8 @@
 							</form>
 							<div class="alert alert-warning">
 								<p>{{ $layout->language('default_time_now_description') }}: <strong>
-								@if($layout->user()->validationTime() != null)
-									{{ $layout->formatDate($layout->user()->validationTime()->valid_date) }}
+								@if($layout->user()->validationTime() !== null)
+									{{ $layout->formatDate($layout->user()->validationTime()) }}
 								@else
 									{{ $layout->language('error_no_default_time_description') }}
 								@endif

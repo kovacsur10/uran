@@ -15,6 +15,9 @@ use Carbon\Carbon;
  * Functionality:
  * 		- user and room assignment
  * 		- more assignment table handling
+ * 
+ * Functions that can throw exceptions:
+ * 		refreshGuard
  */
 class Room{
 	

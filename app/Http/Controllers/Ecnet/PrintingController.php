@@ -43,11 +43,11 @@ class PrintingController extends Controller{
 											 "message" => $layout->language('error_at_money_adding'),
 											 "url" => '/ecnet/account']);
 			}
-			$oldmoney = $money->money;
+			$oldmoney = $money;
 			if($request->money == 0){
 				$money = $request->reset;
 			}else{
-				$money = $money->money + $request->money;
+				$money += $request->money;
 			}
 			$layout->user()->setMoneyForUser($request->account, $money);
 			Logger::log('Ecnet money was modified for user #'.$request->account.'.', $oldmoney, $money, 'ecnet/account');
