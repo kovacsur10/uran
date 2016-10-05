@@ -27,18 +27,10 @@ class PermissionController extends Controller{
 		if($layout->user()->permitted('permission_admin')){
 			$error = false;
 			Database::beginTransaction(); //DATABASE TRANSACTION STARTS HERE
-			try{
-				$layout->permissions()->removeAll($request->user);
-			}catch(\Illuminate\Database\QueryException $e) {
-				$error = true;
-			}
+			$error = ($layout->permissions()->removeAll($request->user) != 0);
 			if($request->permissions != null){
 				foreach($request->permissions as $permission){
-					try{
-						$layout->permissions()->setPermissionForUser($request->user, $permission);
-					}catch(\Illuminate\Database\QueryException $e) {
-						$error = true;
-					}
+					$error = ($layout->permissions()->setPermissionForUser($request->user, $permission) != 0);
 				}
 			}
 			
