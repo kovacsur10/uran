@@ -52,7 +52,7 @@ class RegisterController extends Controller{
 		}catch(\Illuminate\Database\QueryException $e){
 		}
 		$userId = $layout->registrations()->getNotVerifiedUserData($request->input('username'));
-		if($userId == null){
+		if($userId === null){
 			Database::rollback();
 			return view('errors.error', ["layout" => $layout,
 										 "message" => $layout->language('error_at_sending_registration_verification_email'),
@@ -162,15 +162,14 @@ class RegisterController extends Controller{
 	public function verify($code){
 		$layout = new LayoutData();
 		$user = $layout->registrations()->getRegistrationByCode($code);
-		if($user != null){
-			try{
-				$layout->registrations()->verify($code);
+		if($user !== null){
+			if($layout->registrations()->verify($code) === 0){
 				return view('success.success', [
 						"layout" => $layout,
 						"message" => $layout->language('success_at_verifying_the_registration'),
 						"url" => '/register'
 					]);
-			}catch(\Illuminate\Database\QueryException $e){
+			}else{
 				return view('errors.error', [
 						"layout" => $layout,
 						"message" => $layout->language('error_at_verifying_the_registration'),
