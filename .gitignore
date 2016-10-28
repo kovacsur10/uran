@@ -6,3 +6,5 @@ Homestead.yaml
 .env
 desktop.ini
 bootstrap/cache/
+storage/
+vendor/
