@@ -32,8 +32,7 @@ class TaskController extends Controller{
 										  Session::get('tasks_caption_filter'), 
 										  Session::get('tasks_priority_filter'), 
 										  Session::get('tasks_mytasks_filter'),  
-										  Session::get('tasks_hide_closed_filter'), 
-										  Session::get('user')->id);
+										  Session::get('tasks_hide_closed_filter'));
 		}
 		return view('tasks.tasks', ["layout" => $layout,
 									"tasksToShow" => $count,

@@ -24,7 +24,7 @@
 									<label class="col-md-4 control-label">{{ $layout->language('task') }}</label>
 
 									<div class="col-md-6">
-										<input type="text" class="form-control" name="caption" value="{{ $layout->tasks()->getCaptionFilter() }}">
+										<input type="text" class="form-control" name="caption" value="{{ $layout->tasks()->getFilter('caption') }}">
 
 										@if ($errors->has('caption'))
 											<span class="help-block">
@@ -41,7 +41,7 @@
 										<select class="form-control" name="status"> 	
 											<option class="form-control" name="status" value=""></option>
 											@foreach($layout->tasks()->statusTypes() as $status)
-												<option class="form-control" name="status" value="{{ $status->id }}" {{ $layout->tasks()->getStatusFilter() == $status->id ? "selected" : "" }}>{{ $layout->language($status->status) }}</option>
+												<option class="form-control" name="status" value="{{ $status->id }}" {{ $layout->tasks()->getFilter('status') == $status->id ? "selected" : "" }}>{{ $layout->language($status->status) }}</option>
 											@endforeach
 										</select>
 										
@@ -60,7 +60,7 @@
 										<select class="form-control" name="priority"> 	
 											<option class="form-control" name="priority" value=""></option>
 											@foreach($layout->tasks()->priorities() as $priority)
-												<option class="form-control" name="priority" value="{{ $priority->id }}"  {{ $layout->tasks()->getPriorityFilter() == $priority->id ? "selected" : "" }}>{{ $layout->language($priority->name) }}</option>
+												<option class="form-control" name="priority" value="{{ $priority->id }}"  {{ $layout->tasks()->getFilter('priority') == $priority->id ? "selected" : "" }}>{{ $layout->language($priority->name) }}</option>
 											@endforeach
 										</select>
 										
@@ -76,7 +76,7 @@
 									<label class="col-md-4 control-label">{{ $layout->language('myTasks') }}</label>
 
 									<div class="col-md-6">
-										<input type="checkbox" name="myTasks" value="myTasks" {{ $layout->tasks()->getMyTasksFilter() == 1 ? "checked" : "" }}>
+										<input type="checkbox" name="myTasks" value="myTasks" {{ $layout->tasks()->getFilter('myTasks') == 1 ? "checked" : "" }}>
 
 										@if ($errors->has('myTasks'))
 											<span class="help-block">
@@ -90,7 +90,7 @@
 									<label class="col-md-4 control-label">{{ $layout->language('hide_closed') }}</label>
 
 									<div class="col-md-6">
-										<input type="checkbox" name="hide_closed" value="hide_closed" {{ $layout->tasks()->getHideClosedFilter() == 1 ? "checked" : "" }}>
+										<input type="checkbox" name="hide_closed" value="hide_closed" {{ $layout->tasks()->getFilter('hideClosed') == 1 ? "checked" : "" }}>
 
 										@if ($errors->has('hide_closed'))
 											<span class="help-block">
