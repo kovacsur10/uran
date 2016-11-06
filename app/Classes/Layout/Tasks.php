@@ -5,6 +5,7 @@ namespace App\Classes\Layout;
 use DB;
 use Carbon\Carbon;
 use App\Classes\LayoutData;
+use App\Classes\Logger;
 
 /* Class name: Tasks
  *

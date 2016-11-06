@@ -46,7 +46,7 @@ class TaskController extends Controller{
 	}
 	
 	public function add(){
-		$layout = new LayoutData();
+		$layout = new LayoutData();		
 		return view('tasks.add', ["layout" => $layout]);
 	}
 	
