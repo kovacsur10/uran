@@ -2,7 +2,7 @@
 
 namespace App\Classes;
 
-use DB;
+use App\Persistence as Persistence;
 use App\Classes\Logger;
 
 /* Class name: Database
@@ -14,6 +14,9 @@ use App\Classes\Logger;
  * 		- transaction handling
  * 
  * Functions that can throw exceptions:
+ * 		- beginTransaction
+ * 		- rollback
+ * 		- commit
  */
 class Database{
 	
@@ -27,9 +30,10 @@ class Database{
 	 */
 	public static function beginTransaction(){
 		try{
-			DB::beginTransaction();
+			\Persistence\beginTransaction();
 		}catch(Exception $ex){
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Starting a new transaction was not successful! ".$ex->getMessage());
+			throw $ex;
 		}
 	}
 	
@@ -41,9 +45,10 @@ class Database{
 	 */
 	public static function rollback(){
 		try{
-			DB::rollback();
+			\Persistence\rollback();
 		}catch(Exception $ex){
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Rollbacking the changes in a transaction was not successful! ".$ex->getMessage());
+			throw $ex;
 		}
 	}
 	
@@ -55,9 +60,10 @@ class Database{
 	 */
 	public static function commit(){
 		try{
-			DB::commit();
+			\Persistence\commit();
 		}catch(Exception $ex){
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Committing the changes in a transaction was not successful! ".$ex->getMessage());
+			throw $ex;
 		}
 	}
 	

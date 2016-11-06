@@ -4,9 +4,9 @@ namespace App\Classes;
 
 use Illuminate\Support\Facades\Session;
 use Carbon\Carbon;
-use DB;
+use App\Persistence as Persistence;
 
-/* Class name: Logger
+/** Class name: Logger
  *
  * This class handles the logging part
  * of the system.
@@ -16,6 +16,8 @@ use DB;
  * 		- normal log to database
  * 
  * Functions that can throw exceptions:
+ * 
+ * @author Máté Kovács <kovacsur10@gmail.com>
  */
 class Logger{
 
@@ -116,16 +118,8 @@ class Logger{
 	 */
 	private static function write($description, $oldValue, $newValue, $route, $severity){
 		try{
-			DB::table('logs')
-				->insert([
-					'description' => $description,
-					'old_value' => print_r($oldValue, true),
-					'new_value' => print_r($newValue, true),
-					'path' => $route,
-					'user_id' => Session::has('user') ? Session::get('user')->id : 0,
-					'datetime' => Carbon::now(),
-					'type' => $severity,
-				]);
+			$user = Session::has('user') ? Session::get('user')->id : 0;
+			\Persistence\writeIntoLog($description, $oldValue, $newValue, $route, $user, Carbon::now(), $severity);
 		}catch(Exception $ex){
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Insert into table 'logs' was not successful! ".$ex->getMessage());
 		}
