@@ -119,7 +119,7 @@ class Logger{
 	private static function write($description, $oldValue, $newValue, $route, $severity){
 		try{
 			$user = Session::has('user') ? Session::get('user')->id : 0;
-			\Persistence\writeIntoLog($description, $oldValue, $newValue, $route, $user, Carbon::now(), $severity);
+			Persistence\writeIntoLog($description, $oldValue, $newValue, $route, $user, Carbon::now(), $severity);
 		}catch(Exception $ex){
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Insert into table 'logs' was not successful! ".$ex->getMessage());
 		}
