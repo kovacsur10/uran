@@ -2,12 +2,12 @@
 
 namespace App\Classes;
 
-use DB;
 use Carbon\Carbon;
 use App\Classes\LayoutData;
 use App\Classes\Logger;
+use App\Persistence as Persistence;
 
-/* Class name: Auth
+/** Class name: Auth
  *
  * This class handles the basic authentication
  * functionalities.
@@ -16,40 +16,42 @@ use App\Classes\Logger;
  * 		- transaction handling
  * 
  * Functions that can throw exceptions:
+ * 
+ * @author Máté Kovács <kovacsur10@gmail.com>
  */
 class Auth{
 	
 // PUBLIC FUNCTIONS
 
-	/* Function name: updateLoginDate
-	 * Input: $username (text) - the user's username
-	 * Output: -
+	/** Function name: updateLoginDate
 	 *
 	 * This function updates the login date for the
 	 * user, who logged in to the page.
+	 * 
+	 * @param text $username - the user's username
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public static function updateLoginDate($username){
 		try{
-			DB::table('users')
-				->where('username', 'LIKE', $username)
-				->update(['last_online' => Carbon::now()->toDateTimeString()]);
+			\Persistence\updateUserLoginTime($username, Carbon::now()->toDateTimeString());
 		}catch(Exception $ex){
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Update 'users' was not successful! ".$ex->getMessage());
 		}
 	}
 	
-	 /* Function name: setUserLanguage
-	 * Input: $username (text) - the user's username
-	 * Output: -
+	 /** Function name: setUserLanguage
 	 *
 	 * This function sets the language of the page
 	 * based on the user's saved data.
+	 * 
+	 * @param text $username - the user's username
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public static function setUserLanguage($username){
 		try{
-			$user = DB::table('users')
-				->where('username', 'LIKE', $username)
-				->first();
+			$user = \Persistence\getUserByUsername($username);
 		}catch(Exception $ex){
 			$user = null;
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from 'users' was not successful! ".$ex->getMessage());
@@ -57,18 +59,18 @@ class Auth{
 		LayoutData::setLanguage($user->language);
 	}
 	
-	/* Function name: getUser
-	 * Input: $username (text) - the user's username
-	 * Output: User data
+	/** Function name: getUser
 	 *
 	 * This function returns the requested user's data.
+	 * 
+	 * @param text $username - the user's username
+	 * @return User data|null
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public static function getUser($username){
 		try{
-			$user = DB::table('users')
-				->where('username', 'LIKE', $username)
-				->where('registered', '=', 1)
-				->first();
+			$user = \Persistence\getUserByUsername($username);
 		}catch(Exception $ex){
 			$user = null;
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from 'users' was not successful! ".$ex->getMessage());
@@ -76,19 +78,19 @@ class Auth{
 		return $user;
 	}
 	
-	/* Function name: updatePassword
-	 * Input:	$username (text) - the user's username
-	 * 			$password (text) - the user's password
-	 * Output: -
+	/** Function name: updatePassword
 	 *
 	 * This function changes the password of
 	 * the requested user.
+	 * 
+	 * @param text $username - the user's username
+	 * @param text $password - the user's password
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public static function updatePassword($username, $password){
 		try{
-			DB::table('users')
-	            ->where('username', 'LIKE', $username)
-	            ->update(array('password' => password_hash($password, PASSWORD_DEFAULT)));
+			\Persistence\updateUserPassword($username, $password);
 		}catch(Exception $ex){
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Update table 'users' was not successful! ".$ex->getMessage());
 		}
