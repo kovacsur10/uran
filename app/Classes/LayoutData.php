@@ -14,7 +14,7 @@ use App\Classes\Layout\Room;
 use App\Classes\Layout\Tasks;
 use App\Classes\Layout\User;
 
-/* Class name: LayoutData
+/** Class name: LayoutData
  *
  * This class handles the layout data.
  *
@@ -22,6 +22,8 @@ use App\Classes\Layout\User;
  * 		- stores layout classes
  * 
  * Functions that can throw exceptions:
+ * 
+ * @author Máté Kovács <kovacsur10@gmail.com>
  */
 class LayoutData{
 	
@@ -41,11 +43,11 @@ class LayoutData{
 	
 // PUBLIC FUNCTIONS
 	
-	/* Function name: __construct
-	 * Input: -
-	 * Output: -
+	/** Function name: __construct
 	 *
 	 * This is the constructor for the LayoutData class.
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function __construct(){
 		$this->logged = Session::has('user');
@@ -61,133 +63,160 @@ class LayoutData{
 		$this->route = $this->getRouteWithParams();
 	}
 	
-	/* Function name: setUser
-	 * Input: $user (User) - existing user
-	 * Output: -
+	/** Function name: setUser
 	 *
 	 * This function stores the a new
 	 * user as the user.
+	 * 
+	 * @param User $user - existing user
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function setUser($user){
 		$this->user = $user;
 	}
 	
-	/* Function name: base
-	 * Input: -
-	 * Output: base data (BaseData)
+	/** Function name: base
 	 *
 	 * Getter function for base data.
+	 * 
+	 * @return BaseData
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function base(){
 		return $this->base;
 	}
 	
-	/* Function name: errors
-	 * Input: -
-	 * Output: errors (Errors)
+	/** Function name: errors
 	 *
 	 * Getter function for errors.
+	 * 
+	 * @return Errors
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function errors(){
 		return $this->errors;
 	}
 	
-	/* Function name: user
-	 * Input: -
-	 * Output: user (User)
+	/** Function name: user
 	 *
 	 * Getter function for user.
+	 * 
+	 * @return User
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function user(){
 		return $this->user;
 	}
 	
-	/* Function name: room
-	 * Input: -
-	 * Output: room (Room)
+	/** Function name: room
 	 *
 	 * Getter function for rooms.
+	 * 
+	 * @return Room
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function room(){
 		return $this->room;
 	}
 	
-	/* Function name: tasks
-	 * Input: -
-	 * Output: tasks (Tasks)
+	/** Function name: tasks
 	 *
 	 * Getter function for tasks.
+	 * 
+	 * @return Tasks
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function tasks(){
 		return $this->tasks;
 	}
 	
-	/* Function name: logged
-	 * Input: -
-	 * Output: logged or not (bool)
+	/** Function name: logged
 	 *
 	 * Getter function for the user's login status.
+	 * 
+	 * @return bool - logged or not
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function logged(){
 		return $this->logged;
 	}
 	
-	/* Function name: modules
-	 * Input: -
-	 * Output: modules (Modules)
+	/** Function name: modules
 	 *
 	 * Getter function for modules.
+	 * 
+	 * @return Modules
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function modules(){
 		return $this->modules;
 	}
 	
-	/* Function name: permissions
-	 * Input: -
-	 * Output: permissions (Permissions)
+	/** Function name: permissions
 	 *
 	 * Getter function for permissions.
+	 * 
+	 * @return Permissions
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function permissions(){
 		return $this->permissions;
 	}
 	
-	/* Function name: registrations
-	 * Input: -
-	 * Output: registrations (Registrations)
+	/** Function name: registrations
 	 *
 	 * Getter function for registrations.
+	 * 
+	 * @return Registrations
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function registrations(){
 		return $this->registrations;
 	}
 	
-	/* Function name: lang
-	 * Input: -
-	 * Output: language code (text)
+	/** Function name: lang
 	 *
 	 * Getter function for language code.
+	 * 
+	 * @return text - language text identifier
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public static function lang(){
 		return Session::has('lang') ? Session::get('lang') : "hu_HU";
 	}
 	
-	/* Function name: getRoute
-	 * Input: -
-	 * Output: route (text)
+	/** Function name: getRoute
 	 *
 	 * Getter function for route.
+	 * 
+	 * @return text - route
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function getRoute(){
 		return $this->route;
 	}
 	
-	/* Function name: language
-	 * Input: $key (text) - 
-	 * Output: text (text)
+	/** Function name: language
 	 *
 	 * This function returns the text
 	 * for the requested text key.
+	 * 
+	 * @param text $key - word text identifier 
+	 * @return text - word/phrase in the selected language
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function language($key){
 		if($this->language === 'hu_HU'){
@@ -209,12 +238,15 @@ class LayoutData{
 		}
 	}
 	
-	/* Function name: formatDate
-	 * Input: $date (text) - formattable data
-	 * Output: formatted date (text)
+	/** Function name: formatDate
 	 *
 	 * This function returns the date in
 	 * a custom formatted form.
+	 * 
+	 * @param text $date - formattable data
+	 * @return text - formatted date
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function formatDate($date){
 		if($this->language === 'hu_HU'){
@@ -226,12 +258,14 @@ class LayoutData{
 		}
 	}
 	
-	/* Function name: setLanguage
-	 * Input: $language (text) - language identifier
-	 * Output: -
+	/** Function name: setLanguage
 	 *
 	 * This function sets the language of
 	 * the page.
+	 * 
+	 * @param text $language - language identifier
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public static function setLanguage($language){
 		if($language !== null){
@@ -244,12 +278,14 @@ class LayoutData{
 	
 // PRIVATE FUNCTIONS
 	
-	/* Function name: getRouteWithParams
-	 * Input: -
-	 * Output: route (text)
+	/** Function name: getRouteWithParams
 	 *
 	 * This function returns the route for 
 	 * the current page with the parameters.
+	 * 
+	 * @return text - route
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	private function getRouteWithParams(){
 		$route = Route::getCurrentRoute();

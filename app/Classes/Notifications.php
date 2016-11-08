@@ -4,7 +4,8 @@ namespace App\Classes;
 
 use Carbon\Carbon;
 use App\Classes\Layout\User;
-use App\Persistence as Persistence;
+use App\Persistence\P_General;
+use App\Persistence\P_User;
 
 /** Class name: Notifications
  *
@@ -46,28 +47,28 @@ class Notifications{
 	
 		if($from !== null && $toId !== null && $subject !== null && $message !== null){
 			try{
-				Persistence\insertNewNotification($toId, $from->user()->id, $subject, $message, Carbon::now()->toDateTimeString(), false, $route);
+				P_General::insertNewNotification($toId, $from->user()->id, $subject, $message, Carbon::now()->toDateTimeString(), false, $route);
 			}catch(\Exception $ex){
 				Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Insert into table 'notifications' was not successful! ".$ex->getMessage());
 			}
 				
 			//maintain
 			try{
-				$count = Persistence\getNotificationCountForUser($toId);
+				$count = P_General::getNotificationCountForUser($toId);
 			}catch(\Exception $ex){
 				Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'notifications' was not successful! ".$ex->getMessage());
 				$count = null;
 			}
 			if($count !== null && $count > $max_count){
 				try{
-					$notifications = Persistence\getOldestNonAdminNotificationsForUser($toId, $count - $max_count);
+					$notifications = P_General::getOldestNonAdminNotificationsForUser($toId, $count - $max_count);
 				}catch(Exception $ex){
 					$notifications = [];
 					Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'notifications' was not successful! ".$ex->getMessage());
 				}
 				foreach($notifications as $notify){
 					try{
-						Persistence\deleteNotification($notify->id);
+						P_General::deleteNotification($notify->id);
 					}catch(Exception $ex){
 						Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Delete from table 'notifications' was not successful! ".$ex->getMessage());
 					}
@@ -99,14 +100,14 @@ class Notifications{
 	public static function notifyAdmin(User $from, $adminPermission, $subject, $message, $route){
 		if($from !== null && $adminPermission !== null && $subject !== null && $message !== null){
 			try{
-				$admins = Persistence\getUsersWithPermission($adminPermission);
+				$admins = P_User::getUsersWithPermission($adminPermission);
 			}catch(Exception $ex){
 				$admins = [];
 				Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'notifications' joined to 'user_permissions' and 'permissions' was not successful! ".$ex->getMessage());
 			}
 			foreach($admins as $admin){
 				try{
-					Persistence\insertNewNotification($admin->id, $from->user()->id, $subject, $message, Carbon::now()->toDateTimeString(), true, $route);
+					P_General::insertNewNotification($admin->id, $from->user()->id, $subject, $message, Carbon::now()->toDateTimeString(), true, $route);
 				}catch(Exception $ex){
 					Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Insert into table 'notifications' was not successful! ".$ex->getMessage());
 				}
@@ -149,7 +150,7 @@ class Notifications{
 	 */
 	public static function getNotifications($userId){
 		try{
-			$ret = Persistence\getNotificationsForUser($userId);
+			$ret = P_General::getNotificationsForUser($userId);
 		}catch(Exception $ex){
 			$ret = [];
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'notifications' joined to 'users' was not successful! ".$ex->getMessage());
@@ -169,7 +170,7 @@ class Notifications{
 	 */
 	public static function getUnreadNotificationCount($userId){
 		try{
-			$count = Persistence\getUnseenNotificationCountForUser($userId);
+			$count = P_General::getUnseenNotificationCountForUser($userId);
 		}catch(Exception $ex){
 			$count = 0;
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'notifications' was not successful! ".$ex->getMessage());
@@ -190,7 +191,7 @@ class Notifications{
 	 */
 	public static function get($notificationId, $userId){
 		try{
-			$notification = Persistence\getNotification($notificationId, $userId);
+			$notification = P_General::getNotification($notificationId, $userId);
 		}catch(Exception $ex){
 			$notification = null;
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'notifications' was not successful! ".$ex->getMessage());
@@ -210,7 +211,7 @@ class Notifications{
 	 */
 	public static function setRead($notificationId){
 		try{
-			Persistence\setNotificationAsSeen($notificationId);
+			P_General::setNotificationAsSeen($notificationId);
 			$success = true;
 		}catch(Exception $ex){
 			$success = false;
