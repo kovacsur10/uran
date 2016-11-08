@@ -4,7 +4,7 @@ namespace App\Classes;
 
 use Illuminate\Support\Facades\Session;
 use Carbon\Carbon;
-use App\Persistence as Persistence;
+use App\Persistence\P_General;
 
 /** Class name: Logger
  *
@@ -23,32 +23,29 @@ class Logger{
 
 // PUBLIC FUNCTIONS
 
-	/* Function name: log
-	 * Input: 	$description (text) - short description
-	 * 			$oldValue (text) - if changed, the old value
-	 * 			$newValue (text) - if changed, the new value
-	 * 			$route (text) - route to the page
-	 * Output: -
+	/** Function name: log
 	 *
 	 * This function writes log into the database.
 	 * Severity of the log: normal log, not severe
-	 * 
+	 *
 	 * The old value and new value can be empty strings.
 	 * If a value is changed according to these fields
 	 * the old data can be recovered.
-	 * 
+	 *
 	 * A valid route should be added for debugging reasons.
+	 *
+	 * @param text $description - short description
+	 * @param text $oldValue - if changed, the old value
+	 * @param text $newValue - if changed, the new value
+	 * @param text $route - route to the page
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public static function log($description, $oldValue, $newValue, $route){
 		Logger::write($description, $oldValue, $newValue, $route, 1);
 	}
 	
-	/* Function name: warning
-	 * Input: 	$description (text) - short description
-	 * 			$oldValue (text) - if changed, the old value
-	 * 			$newValue (text) - if changed, the new value
-	 * 			$route (text) - route to the page
-	 * Output: -
+	/** Function name: warning
 	 *
 	 * This function writes log into the database.
 	 * Severity of the log: warning
@@ -58,17 +55,19 @@ class Logger{
 	 * the old data can be recovered.
 	 *
 	 * A valid route should be added for debugging reasons.
+	 *
+	 * @param text $description - short description
+	 * @param text $oldValue - if changed, the old value
+	 * @param text $newValue - if changed, the new value
+	 * @param text $route - route to the page
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public static function warning($description, $oldValue, $newValue, $route){
 		Logger::write($description, $oldValue, $newValue, $route, 2);
 	}
 	
-	/* Function name: error
-	 * Input: 	$description (text) - short description
-	 * 			$oldValue (text) - if changed, the old value
-	 * 			$newValue (text) - if changed, the new value
-	 * 			$route (text) - route to the page
-	 * Output: -
+	/** Function name: error
 	 *
 	 * This function writes log into the database.
 	 * Severity of the log: error, severe
@@ -78,17 +77,26 @@ class Logger{
 	 * the old data can be recovered.
 	 *
 	 * A valid route should be added for debugging reasons.
+	 * 
+	 * @param text $description - short description
+	 * @param text $oldValue - if changed, the old value
+	 * @param text $newValue - if changed, the new value
+	 * @param text $route - route to the page
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public static function error($description, $oldValue, $newValue, $route){
 		Logger::write($description, $oldValue, $newValue, $route, 3);
 	}
 	
-	/* Function name: error_log
-	 * Input: 	$message (text) - error message
-	 * Output: -
+	/** Function name: error_log
 	 *
 	 * This function writes the error log into the 
 	 * filesystem error log!
+	 * 
+	 * @param text $message - error message
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public static function error_log($message){
 		error_log(Carbon::now().": ".$message."\n", 3, '/var/log/uran_error.log');
@@ -96,13 +104,7 @@ class Logger{
 	
 // PRIVATE FUNCTIONS
 	
-	/* Function name: write
-	 * Input: 	$description (text) - short description
-	 * 			$oldValue (text) - if changed, the old value
-	 * 			$newValue (text) - if changed, the new value
-	 * 			$route (text) - route to the page
-	 * 			$severity (int) - severity of the log
-	 * Output: -
+	/** Function name: write
 	 *
 	 * This function writes log into the database.
 	 * Severity of the log can be:
@@ -115,11 +117,19 @@ class Logger{
 	 * the old data can be recovered.
 	 *
 	 * A valid route should be added for debugging reasons.
+	 * 
+	 * @param text $description - short description
+	 * @param text $oldValue - if changed, the old value
+	 * @param text $newValue - if changed, the new value
+	 * @param text $route - route to the page
+	 * @param int $severity - severity of the log
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	private static function write($description, $oldValue, $newValue, $route, $severity){
 		try{
 			$user = Session::has('user') ? Session::get('user')->id : 0;
-			Persistence\writeIntoLog($description, $oldValue, $newValue, $route, $user, Carbon::now(), $severity);
+			P_General::writeIntoLog($description, $oldValue, $newValue, $route, $user, Carbon::now(), $severity);
 		}catch(Exception $ex){
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Insert into table 'logs' was not successful! ".$ex->getMessage());
 		}

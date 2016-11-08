@@ -5,7 +5,7 @@ namespace App\Classes;
 use Carbon\Carbon;
 use App\Classes\LayoutData;
 use App\Classes\Logger;
-use App\Persistence as Persistence;
+use App\Persistence\P_User;
 
 /** Class name: Auth
  *
@@ -34,7 +34,7 @@ class Auth{
 	 */
 	public static function updateLoginDate($username){
 		try{
-			Persistence\updateUserLoginTime($username, Carbon::now()->toDateTimeString());
+			P_User::updateUserLoginTime($username, Carbon::now()->toDateTimeString());
 		}catch(Exception $ex){
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Update 'users' was not successful! ".$ex->getMessage());
 		}
@@ -51,7 +51,7 @@ class Auth{
 	 */
 	public static function setUserLanguage($username){
 		try{
-			$user = Persistence\getUserByUsername($username);
+			$user = P_User::getUserByUsername($username);
 		}catch(Exception $ex){
 			$user = null;
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from 'users' was not successful! ".$ex->getMessage());
@@ -70,7 +70,7 @@ class Auth{
 	 */
 	public static function getUser($username){
 		try{
-			$user = Persistence\getUserByUsername($username);
+			$user = P_User::getUserByUsername($username);
 		}catch(Exception $ex){
 			$user = null;
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from 'users' was not successful! ".$ex->getMessage());
@@ -90,7 +90,7 @@ class Auth{
 	 */
 	public static function updatePassword($username, $password){
 		try{
-			Persistence\updateUserPassword($username, $password);
+			P_User::updateUserPassword($username, $password);
 		}catch(Exception $ex){
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Update table 'users' was not successful! ".$ex->getMessage());
 		}
