@@ -2,7 +2,7 @@
 
 namespace App\Classes\Layout;
 
-/* Class name: Errors
+/** Class name: Errors
  *
  * This class handles the custom
  * error indication between the
@@ -12,6 +12,8 @@ namespace App\Classes\Layout;
  * 		- stores errors and old values
  * 
  * Functions that can throw exceptions:
+ * 
+ * @author Máté Kovács <kovacsur10@gmail.com>v
  */
 class Errors{
 
@@ -22,48 +24,55 @@ class Errors{
 	
 // PUBLIC FUNCTIONS
 	
-	/* Function name: __construct
-	 * Input: -
-	 * Output: -
+	/** Function name: __construct
 	 *
 	 * This is the constructor for the Errors class.
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function __construct(){
 		$this->errors = [];
 		$this->old = [];
 	}
 
-	/* Function name: add
-	 * Input: 	$key (text) - error message identifier key
-	 * 			$data (text) - error message
-	 * Output: -
+	/** Function name: add
 	 *
 	 * This function saves an error
 	 * message to the given key.
+	 * 
+	 * @param text $key - error message identifier key
+	 * @param text $data - error message
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function add($key, $data){
 		$this->errors[$key] = $data;
 	}
 	
-	/* Function name: has
-	 * Input: 	$key (text) - error message identifier key
-	 * Output: -
+	/** Function name: has
 	 *
 	 * This function returns whether
 	 * the requested key has an error
 	 * message or not.
+	 * 
+	 * @param text $key - error message identifier key
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function has($key){
 		return array_key_exists($key, $this->errors);
 	}
 	
-	/* Function name: get
-	 * Input: 	$key (text) - error message identifier key
-	 * Output: error message (text|NULL)
+	/** Function name: get
 	 *
 	 * This function returns the
 	 * error message connected to
 	 * the requested key.
+	 * 
+	 * @param text $key - error message identifier key
+	 * @return text|null - error message
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function get($key){
 		if($this->has($key)){
@@ -73,36 +82,42 @@ class Errors{
 		}
 	}
 	
-	/* Function name: addOld
-	 * Input: 	$key (text) - old value identifier key
-	 * 			$data (text) - old value
-	 * Output: -
+	/** Function name: addOld
 	 *
 	 * This function saves an old value
 	 * to the given key.
+	 * 
+	 * @return text $key - old value identifier key
+	 * @return text $data - old value
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function addOld($key, $data){
 		$this->old[$key] = $data;
 	}
 	
-	/* Function name: hasOld
-	 * Input: 	$key (text) - old value identifier key
-	 * Output: -
+	/** Function name: hasOld
 	 *
 	 * This function returns whether
 	 * the requested key has an old value or not.
+	 * 
+	 * @param text $key - old value identifier key
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function hasOld($key){
 		return array_key_exists($key, $this->old);
 	}
 	
-	/* Function name: getOld
-	 * Input: 	$key (text) - old value identifier key
-	 * Output: old value (text|NULL)
+	/** Function name: getOld
 	 *
-	 * This function returns the
-	 * old value connected to
-	 * the requested key.
+	 * This function returns the old value
+	 * connected to the requested key.
+	 * 
+	 * @param text $key - old value identifier key
+	 * @return text|null - old value
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function getOld($key){
 		if($this->hasOld($key)){

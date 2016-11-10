@@ -15,7 +15,7 @@ use Mail;
 
 class RegisterController extends Controller{	
 	
-	public function showRegistrationChoserForm(){
+	public function showRegistrationChooserForm(){
         return view('auth.chooseregister', ["layout" => new LayoutData()]);
     }
 	
@@ -94,7 +94,6 @@ class RegisterController extends Controller{
 	public function registerCollegist(Request $request){
 		$layout = new LayoutData();
 		$request->merge(array('username' => strtolower($request->input('username'))));
-        $string = sha1($request->input('username') . Carbon::now()->toDateTimeString() . $request->input('email'));
         $this->validate($request, [
             'username' => 'required|min:6|max:32|unique:users|regex:/(^[A-Za-z0-9_\-]+$)/',
             'email' => 'required|email|max:255|unique:users|unique:users',
@@ -117,6 +116,8 @@ class RegisterController extends Controller{
 		]);
 		$this->validate($request, array('year_of_leaving_exam' => array('required', 'regex:/(^(?:19[6-9][0-9])|(?:200[0-9])|(?:201[0-6])$)/')));
 		$this->validate($request, array('date_of_birth' => array('required', 'regex:/(^(?:19[0-9]{2}|2[0-9]{3})\.(?:1[012]|0[1-9])\.(?:0[1-9]|[12][0-9]|3[01])\.?$)/')));
+		
+		$string = sha1($request->input('username') . Carbon::now()->toDateTimeString() . $request->input('email'));
 		Database::beginTransaction(); //DATABASE TRANSACTION STARTS HERE
 		$layout->registrations()->insertCollegistData($request->input('username'), $request->input('password'), $request->input('email'), $request->input('name'), $request->input('country'), $request->input('shire'), $request->input('postalcode'), $request->input('address'), $request->input('city'), $request->input('phone'), $layout->lang(), $request->input('city_of_birth'), $request->input('date_of_birth'), $request->input('name_of_mother'), $request->input('year_of_leaving_exam'), $request->input('high_school'), $request->input('neptun'), $request->input('from_year'), $request->input('faculty'), $request->input('workshop'));
 		$userId = $layout->registrations()->getNotVerifiedUserData($request->input('username'));
@@ -161,21 +162,12 @@ class RegisterController extends Controller{
 	
 	public function verify($code){
 		$layout = new LayoutData();
-		$user = $layout->registrations()->getRegistrationByCode($code);
-		if($user !== null){
-			if($layout->registrations()->verify($code) === 0){
-				return view('success.success', [
-						"layout" => $layout,
-						"message" => $layout->language('success_at_verifying_the_registration'),
-						"url" => '/register'
-					]);
-			}else{
-				return view('errors.error', [
-						"layout" => $layout,
-						"message" => $layout->language('error_at_verifying_the_registration'),
-						"url" => '/register'
-					]);
-			}
+		if($layout->registrations()->verify($code) === 0){
+			return view('success.success', [
+					"layout" => $layout,
+					"message" => $layout->language('success_at_verifying_the_registration'),
+					"url" => '/register'
+				]);
 		}else{
 			return view('errors.error', [
 					"layout" => $layout,

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Classes\LayoutData;
 use App\Classes\Notifications;
 use App\Classes\Database;
+use App\Classes\Permissions;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
@@ -52,8 +53,8 @@ class PermissionController extends Controller{
 	public function getUsersWithPermission(Request $request){
 		$layout = new LayoutData();
 		if($layout->user()->permitted('permission_admin')){
-			$users = getUsersWithPermission($request->permission);
-			$permission = $layout->permissions()->getById($request->permission);
+			$users = $layout->permissions()->getUsersWithPermission($request->permission);
+			$permission = $layout->permissions()->getByName($request->permission);
 			return view('admin.listuserswithpermission', ["layout" => $layout,
 														  "users" => $users,
 														  "permission" => $permission->permission_name." (".$permission->description.")"]);

@@ -12,7 +12,7 @@
 						<div class="panel-heading">{{ $layout->language('users_list') }}</div>
 						<div class="panel-body">
 							<div class="list-group">
-								@foreach($layout->registrations()->getNames() as $regUser)
+								@foreach($layout->registrations()->get() as $regUser)
 									<a class="list-group-item list-group-item-{{ $regUser->verified ? 'success' : 'danger' }}" href="{{ url('admin/registration/show/'.$regUser->id) }}">{{ $regUser->name }}</a>
 								@endforeach
 							</div>

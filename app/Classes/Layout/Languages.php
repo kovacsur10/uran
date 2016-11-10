@@ -2,7 +2,7 @@
 
 namespace App\Classes\Layout;
 
-/* Class name: Languages
+/** Class name: Languages
  *
  * This class handles the websites
  * language support.
@@ -14,12 +14,12 @@ namespace App\Classes\Layout;
  * 			* American English
  * 
  * Functions that can throw exceptions:
+ * 
+ * @author Máté Kovács <kovacsur10@gmail.com>
  */
 class Languages{
 	
-	/* Function name: getDefault
-	 * Input: -
-	 * Output: array of words
+	/** Function name: getDefault
 	 *
 	 * This function returnes the default
 	 * language set.
@@ -27,14 +27,16 @@ class Languages{
 	 * The array has key and value pairs.
 	 * Keys are identifiers and values are
 	 * the texts for write to the screen.
+	 * 
+	 * @return array of words
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public static function getDefault(){
 		return Languages::hungarian();
 	}
 	
-	/* Function name: hungarian
-	 * Input: -
-	 * Output: array of words
+	/** Function name: hungarian
 	 *
 	 * This function returnes the Hungarian
 	 * language set.
@@ -42,6 +44,10 @@ class Languages{
 	 * The array has key and value pairs.
 	 * Keys are identifiers and values are
 	 * the texts for write to the screen.
+	 * 
+	 * @return array of words
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public static function hungarian(){
 		return
@@ -572,9 +578,7 @@ class Languages{
 		];
 	}
 	
-	/* Function name: english
-	 * Input: -
-	 * Output: array of words
+	/** Function name: english
 	 *
 	 * This function returnes the American English
 	 * language set.
@@ -582,6 +586,10 @@ class Languages{
 	 * The array has key and value pairs.
 	 * Keys are identifiers and values are
 	 * the texts for write to the screen.
+	 * 
+	 * @return array of words
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public static function english(){
 		return
