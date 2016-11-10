@@ -168,7 +168,7 @@
 
 								<ul class="dropdown-menu notifications">
 								
-									@if($data->user()->latestNotifications() == null)
+									@if($data->user()->notifications() == null)
 										<li class="notification">
 											<div class="media">
 												<div class="media-body">
@@ -182,7 +182,7 @@
 											</div>
 										</li>
 									@else
-										@foreach($data->user()->latestNotifications() as $notification)
+										@foreach($data->user()->notifications() as $notification)
 										<li style="{{ $notification->seen ? '' : 'background-color:#E0FFFF;' }}" class="notification">
 											<div style="cursor: pointer;" class="media" onclick="window.location='{{ url('notification/show/'.$notification->id) }}';">
 												<div class="media-body">

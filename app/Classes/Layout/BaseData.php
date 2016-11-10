@@ -2,10 +2,11 @@
 
 namespace App\Classes\Layout;
 
-use DB;
 use App\Classes\Logger;
+use App\Persistence\P_General;
+use App\Persistence\P_User;
 
-/* Class name: BaseData
+/** Class name: BaseData
  *
  * This class handles the base data
  * support in the layout namespace.
@@ -18,109 +19,128 @@ use App\Classes\Logger;
  * 		- status code support
  * 
  * Functions that can throw exceptions:
+ * 
+ * @author Máté Kovács <kovacsur10@gmail.com>
  */
 class BaseData{
 
 // PRIVATE DATA
 	
-	private $faculties;
-	private $workshops;
-	private $admissionYears;
-	private $countries;
-	private $staticCountries;
-	private $statusCodes;
-	
 // PUBLIC FUNCTIONS
 	
-	/* Function name: __construct
-	 * Input: -
-	 * Output: -
+	/** Function name: __construct
 	 *
 	 * The constructor for the BaseData class.
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function __construct(){
-		$this->faculties = $this->getFaculties();
-		$this->workshops = $this->getWorkshops();
-		$this->admissionYears = $this->getAdmissionYears();
-		$this->staticCountries = $this->getStaticCountryCodes();
-		$this->statusCodes = $this->getStatusCodes();
 	}
 	
-	/* Function name: faculties
-	 * Input: -
-	 * Output: array of faculties
+	/** Function name: faculties
 	 *
 	 * Getter function for faculties.
+	 * 
+	 * @return array of faculties
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function faculties(){
-		return $this->faculties;
+		try{
+			$faculties = P_General::getFaculties();
+		}catch(\Exception $ex){
+			$faculties = [];
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'faculties' was not successful! ".$ex->getMessage());
+		}
+		return $faculties;
 	}
 	
-	/* Function name: workshops
-	 * Input: -
-	 * Output: array of workshops
+	/** Function name: workshops
 	 *
 	 * Getter function for workshops.
+	 * 
+	 * @return array of workshops
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function workshops(){
-		return $this->workshops;
+		try{
+			$workshops = P_General::getWorkshops();
+		}catch(\Exception $ex){
+			$workshops = [];
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'workshops' was not successful! ".$ex->getMessage());
+		}
+		return $workshops;
 	}
 	
-	/* Function name: countryCodes
-	 * Input: -
-	 * Output: array of country codes
+	/** Function name: countryCodes
 	 *
-	 * Getter function for country codes.
+	 * This function returns the country codes.
+	 * Country codes are 3 capital letters!
+	 * ALERT! This is a hardcoded array!
+	 * 
+	 * @return array of country codes
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function countryCodes(){
-		return $this->staticCountries;
+		return ['HUN','AFG','ALA','ALB','DZA','ASM','AND','AGO','AIA','ATA','ATG','ARG','ARM','ABW','AUS','AUT','AZE','BHS','BHR','BGD','BRB','BLR','BEL','BLZ','BEN','BMU','BTN','BOL','BES','BIH','BWA','BVT','BRA','IOT','BRN','BGR','BFA','BDI','KHM','CMR','CAN','CPV','CYM','CAF','TCD','CHL','CHN','CXR','CCK','COL','COM','COG','COD','COK','CRI','CIV','HRV','CUB','CUW','CYP','CZE','DNK','DJI','DMA','DOM','ECU','EGY','SLV','GNQ','ERI','EST','ETH','FLK','FRO','FJI','FIN','FRA','GUF','PYF','ATF','GAB','GMB','GEO','DEU','GHA','GIB','GRC','GRL','GRD','GLP','GUM','GTM','GGY','GIN','GNB','GUY','HTI','HMD','VAT','HND','HKG','ISL','IND','IDN','IRN','IRQ','IRL','IMN','ISR','ITA','JAM','JPN','JEY','JOR','KAZ','KEN','KIR','PRK','KOR','KWT','KGZ','LAO','LVA','LBN','LSO','LBR','LBY','LIE','LTU','LUX','MAC','MKD','MDG','MWI','MYS','MDV','MLI','MLT','MHL','MTQ','MRT','MUS','MYT','MEX','FSM','MDA','MCO','MNG','MNE','MSR','MAR','MOZ','MMR','NAM','NRU','NPL','NLD','NCL','NZL','NIC','NER','NGA','NIU','NFK','MNP','NOR','OMN','PAK','PLW','PSE','PAN','PNG','PRY','PER','PHL','PCN','POL','PRT','PRI','QAT','REU','ROU','RUS','RWA','BLM','SHN','KNA','LCA','MAF','SPM','VCT','WSM','SMR','STP','SAU','SEN','SRB','SYC','SLE','SGP','SXM','SVK','SVN','SLB','SOM','ZAF','SGS','SSD','ESP','LKA','SDN','SUR','SJM','SWZ','SWE','CHE','SYR','TWN','TJK','TZA','THA','TLS','TGO','TKL','TON','TTO','TUN','TUR','TKM','TCA','TUV','UGA','UKR','ARE','GBR','USA','UMI','URY','UZB','VUT','VEN','VNM','VGB','VIR','WLF','ESH','YEM','ZMB','ZWE'];;
 	}
 	
-	/* Function name: admissionYears
-	 * Input: -
-	 * Output: array of admission years
+	/** Function name: admissionYears
 	 *
 	 * Getter function for admission years.
+	 * 
+	 * @return array of admission years
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function admissionYears(){
-		return $this->admissionYears;
+		try{
+			$admissionYears = P_General::getAdmissionYears();
+		}catch(\Exception $ex){
+			$admissionYears = [];
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'admission_years' was not successful! ".$ex->getMessage());
+		}
+		return $admissionYears;
 	}
 	
-	/* Function name: statusCodes
-	 * Input: -
-	 * Output: array of status codes
+	/** Function name: statusCodes
 	 *
 	 * Getter function for status codes.
+	 * 
+	 * @return array of status codes
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function statusCodes(){
-		return $this->statusCodes;
+		try{
+			$statusCodes = P_User::getStatusCodes();
+		}catch(\Exception $ex){
+			$statusCodes = [];
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'user_status_codes' was not successful! ".$ex->getMessage());
+		}
+		return $statusCodes;
 	}
 	
-	/* Function name: countries
-	 * Input: -
-	 * Output: arary of countries
+	/** Function name: countries
 	 *
 	 * Getter function for countries.
+	 * 
+	 * @return arary of countries
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function countries(){
-		if($this->countries === null){
-			try{
-				$this->countries = DB::table('country')
-					->get()
-					->toArray();
-			}catch(\Exception $ex){
-				$this->countries = [];
-			}
+		try{
+			$countries = P_General::getCountries();
+		}catch(\Exception $ex){
+			$countries = [];
 		}
-		return $this->countries;
+		return $countries;
 	}
 	
-	/* Function name: getPagination
-	 * Input: 	$firstId (int) - identifier of the element
-	 * 			$countPerPage (int) - count of visible elements per page
-	 * 			$maximumItems (int) - count of items
-	 * 			$pages (int) - count of visible pages on the website
-	 * Output: array of pages
+	/** Function name: getPagination
 	 *
 	 * This function returnes the pagination pages.
 	 * The pages are starting at the highest lower value.
@@ -132,6 +152,14 @@ class BaseData{
 	 * 			(middle element in the list)
 	 * 		- the text 'disabled' if the page is not exist
 	 * 		- the lowest identifier of the elements in that page.
+	 * 
+	 * @param ind $firstId - identifier of the element
+	 * @param int $countPerPage - count of visible elements per page
+	 * @param int $maximumItems - count of items
+	 * @param int $pages - count of visible pages on the website
+	 * @return array of pages
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function getPagination($firstId, $countPerPage, $maximumItems, $pages = 5){
 		$pageArray = [];
@@ -152,96 +180,5 @@ class BaseData{
 	}
 	
 // PRIVATE FUNCTIONS
-	
-	/* Function name: getFaculties
-	 * Input: -
-	 * Output: array of the faculties
-	 *
-	 * This function returns the faculties
-	 * from the database.
-	 */
-	private function getFaculties(){
-		try{
-			$faculties = DB::table('faculties')
-				->orderBy('id', 'asc')
-				->get()
-				->toArray();
-		}catch(\Exception $ex){
-			$faculties = [];
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'faculties' was not successful! ".$ex->getMessage());
-		}
-		return $faculties;
-	}
-	
-	/* Function name: getWorkshops
-	 * Input: -
-	 * Output: array of the workshops
-	 *
-	 * This function returns the workshops of 
-	 * the dormitory from the database.
-	 */
-	private function getWorkshops(){
-		try{
-			$workshops = DB::table('workshops')
-				->orderBy('id', 'asc')
-				->get()
-				->toArray();
-		}catch(\Exception $ex){
-			$workshops = [];
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'workshops' was not successful! ".$ex->getMessage());
-		}
-		return $workshops;
-	}
-	
-	/* Function name: getAdmissionYears
-	 * Input: -
-	 * Output: array of admission years
-	 *
-	 * This function returns the available 
-	 * admission years from the database.
-	 */
-	private function getAdmissionYears(){
-		try{
-			$admissionYears = DB::table('admission_years')
-				->orderBy('year', 'asc')
-				->get()
-				->toArray();
-		}catch(\Exception $ex){
-			$admissionYears = [];
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'admission_years' was not successful! ".$ex->getMessage());
-		}
-		return $admissionYears;
-	}
-	
-	/* Function name: getStatusCodes
-	 * Input: -
-	 * Output: array of status codes
-	 *
-	 * This function returns the user
-	 * status codes from the database.
-	 */
-	private function getStatusCodes(){
-		try{
-			$statusCodes = DB::table('user_status_codes')
-				->orderBy('id', 'asc')
-				->get()
-				->toArray();
-		}catch(\Exception $ex){
-			$statusCodes = [];
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'user_status_codes' was not successful! ".$ex->getMessage());
-		}
-		return $statusCodes;
-	}
-	
-	/* Function name: getStaticCountryCodes
-	 * Input: -
-	 * Output: array of country codes
-	 *
-	 * This function returns an array
-	 * of the country codes on Earth.
-	 */
-	private function getStaticCountryCodes(){
-		return ['HUN','AFG','ALA','ALB','DZA','ASM','AND','AGO','AIA','ATA','ATG','ARG','ARM','ABW','AUS','AUT','AZE','BHS','BHR','BGD','BRB','BLR','BEL','BLZ','BEN','BMU','BTN','BOL','BES','BIH','BWA','BVT','BRA','IOT','BRN','BGR','BFA','BDI','KHM','CMR','CAN','CPV','CYM','CAF','TCD','CHL','CHN','CXR','CCK','COL','COM','COG','COD','COK','CRI','CIV','HRV','CUB','CUW','CYP','CZE','DNK','DJI','DMA','DOM','ECU','EGY','SLV','GNQ','ERI','EST','ETH','FLK','FRO','FJI','FIN','FRA','GUF','PYF','ATF','GAB','GMB','GEO','DEU','GHA','GIB','GRC','GRL','GRD','GLP','GUM','GTM','GGY','GIN','GNB','GUY','HTI','HMD','VAT','HND','HKG','ISL','IND','IDN','IRN','IRQ','IRL','IMN','ISR','ITA','JAM','JPN','JEY','JOR','KAZ','KEN','KIR','PRK','KOR','KWT','KGZ','LAO','LVA','LBN','LSO','LBR','LBY','LIE','LTU','LUX','MAC','MKD','MDG','MWI','MYS','MDV','MLI','MLT','MHL','MTQ','MRT','MUS','MYT','MEX','FSM','MDA','MCO','MNG','MNE','MSR','MAR','MOZ','MMR','NAM','NRU','NPL','NLD','NCL','NZL','NIC','NER','NGA','NIU','NFK','MNP','NOR','OMN','PAK','PLW','PSE','PAN','PNG','PRY','PER','PHL','PCN','POL','PRT','PRI','QAT','REU','ROU','RUS','RWA','BLM','SHN','KNA','LCA','MAF','SPM','VCT','WSM','SMR','STP','SAU','SEN','SRB','SYC','SLE','SGP','SXM','SVK','SVN','SLB','SOM','ZAF','SGS','SSD','ESP','LKA','SDN','SUR','SJM','SWZ','SWE','CHE','SYR','TWN','TJK','TZA','THA','TLS','TGO','TKL','TON','TTO','TUN','TUR','TKM','TCA','TUV','UGA','UKR','ARE','GBR','USA','UMI','URY','UZB','VUT','VEN','VNM','VGB','VIR','WLF','ESH','YEM','ZMB','ZWE'];
-	}
 	
 }

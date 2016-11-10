@@ -46,7 +46,7 @@ Route::group(['middleware' => 'web'], function () {
 	Route::get('logout', 'Auth\AuthController@logout')->middleware('auth.logged');
 
 	// Registration Routes...
-	Route::get('register', 'Auth\RegisterController@showRegistrationChoserForm')->middleware('auth.notlogged');
+	Route::get('register', 'Auth\RegisterController@showRegistrationChooserForm')->middleware('auth.notlogged');
 	Route::get('register/collegist', 'Auth\RegisterController@showCollegistRegistrationForm')->middleware('auth.notlogged');
 	Route::get('register/guest', 'Auth\RegisterController@showGuestRegistrationForm')->middleware('auth.notlogged');
 	Route::get('register/{code}', 'Auth\RegisterController@verify')->middleware('auth.notlogged');

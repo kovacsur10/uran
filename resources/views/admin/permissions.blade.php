@@ -53,7 +53,7 @@
 									<div class="col-md-6">
 										<select class="form-control" name="permission" id="permission">
 											@foreach($layout->permissions()->getAllPermissions() as $permission)
-												<option value="{{ $permission->id }}">{{ $permission->description }} ({{ $permission->permission_name }})</option>
+												<option value="{{ $permission->permission_name }}">{{ $permission->description }} ({{ $permission->permission_name }})</option>
 											@endforeach
 										</select>
 									</div>

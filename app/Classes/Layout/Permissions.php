@@ -2,10 +2,11 @@
 
 namespace App\Classes\Layout;
 
-use DB;
 use App\Classes\Logger;
+use App\Persistence\P_User;
+use App\Persistence\P_General;
 
-/* Class name: Permissions
+/** Class name: Permissions
  *
  * This class handles the permission
  * system of the page.
@@ -15,6 +16,8 @@ use App\Classes\Logger;
  * 		- default permissions
  * 
  * Functions that can throw exceptions:
+ * 
+ * @author Máté Kovács <kovacsur10@gmail.com>
  */
 class Permissions{
 	
@@ -22,15 +25,18 @@ class Permissions{
 	
 // PUBLIC FUNCTIONS
 	
-	/* Function name: permitted
-	 * Input: 	$userId (integer) - user's identifier
-	 * 			$permissionName (text) - text identifier of the permission
-	 * Output: bool (permitted or not)
+	/** Function name: permitted
 	 *
 	 * This function returns a boolean
 	 * value. True is returned if the
 	 * requested user has the requested
 	 * permission.
+	 * 
+	 * @param int $userId - user's identifier
+	 * @param text $permissionName - text identifier of the permission
+	 * @return bool - permitted or not
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function permitted($userId, $permissionName){
 		$permissions = $this->getForUser($userId);
@@ -41,22 +47,19 @@ class Permissions{
 		return $i < count($permissions);
 	}
 	
-	/* Function name: getForUser
-	 * Input: $userId (integer) - user's identifier
-	 * Output: array of permissions
+	/** Function name: getForUser
 	 *
 	 * This function returns the available
 	 * permissions of the requested user.
+	 * 
+	 * @param int $userId - user's identifier
+	 * @return array of Permissions
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function getForUser($userId){
 		try{
-			$permissions = DB::table('permissions')
-				->join('user_permissions', 'permissions.id', '=', 'user_permissions.permission_id')
-				->select('permissions.id as id', 'permission_name', 'permissions.description as description')
-				->where('user_permissions.user_id', '=', $userId)
-				->orderBy('id', 'asc')
-				->get()
-				->toArray();
+			$permissions = P_User::getUserPermissions($userId);
 		}catch(\Exception $ex){
 			$permissions = [];
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'permissions', joined to 'user_permissions' was not successful! ".$ex->getMessage());
@@ -64,18 +67,19 @@ class Permissions{
 		return $permissions;
 	}
 	
-	/* Function name: getById
-	 * Input: $permissionId (integer) - identifier of permission
-	 * Output: Permission
+	/** Function name: getById
 	 *
 	 * This function returns the permission
 	 * data of the requested permission.
+	 * 
+	 * @param int $permissionId - identifier of permission
+	 * @return Permission|null
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function getById($permissionId){
 		try{
-			$permission = DB::table('permissions')
-				->where('permissions.id', '=', $permissionId)
-				->first();
+			$permission = P_General::getPermissionById($permissionId);
 		}catch(\Exception $ex){
 			$permission = null;
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'permissions' was not successful! ".$ex->getMessage());
@@ -83,19 +87,38 @@ class Permissions{
 		return $permission;
 	}
 	
-	/* Function name: getAllPermissions
-	 * Input: -
-	 * Output: array of permissions
+	/** Function name: getByName
+	 *
+	 * This function returns the permission
+	 * data of the requested permission name.
+	 *
+	 * @param text $permissionId - name of a permission
+	 * @return Permission|null
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	public function getByName($permissionName){
+		try{
+			$permission = P_General::getPermissionByName($permissionName);
+		}catch(\Exception $ex){
+			$permission = null;
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'permissions' was not successful! ".$ex->getMessage());
+		}
+		return $permission;
+	}
+	
+	/** Function name: getAllPermissions
 	 *
 	 * This function returns all of
 	 * the available permissions.
+	 * 
+	 * @return array of Permissions
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function getAllPermissions(){
 		try{
-			$permissions = DB::table('permissions')
-				->orderBy('id', 'asc')
-				->get()
-				->toArray();
+			$permissions = P_General::getPermissions();
 		}catch(\Exception $ex){
 			$permissions = [];
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'permissions' was not successful! ".$ex->getMessage());
@@ -103,23 +126,20 @@ class Permissions{
 		return $permissions;
 	}
 	
-	/* Function name: getUsersWithPermission
-	 * Input: $permissionId (integer) - identifier of permission
-	 * Output: array of users
+	/** Function name: getUsersWithPermission
 	 *
 	 * This function returns all of
 	 * the users, who have the requested
 	 * permission.
+	 * 
+	 * @param int $permissionId - identifier of permission
+	 * @return array of Users
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function getUsersWithPermission($permissionId){
+	public function getUsersWithPermission($permissionName){
 		try{
-			$users = DB::table('permissions')
-				->join('user_permissions', 'user_permissions.permission_id', '=', 'permissions.id')
-				->join('users', 'users.id', '=', 'user_permissions.user_id')
-				->where('permissions.id', '=', $permissionId)
-				->select('users.id', 'users.name', 'users.username')
-				->get()
-				->toArray();
+			$users = P_User::getUsersWithPermission($permissionName);
 		}catch(\Exception $ex){
 			$users = [];
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'permissions', joined to 'user_permissions' and 'users' was not successful! ".$ex->getMessage());
@@ -127,77 +147,81 @@ class Permissions{
 		return $users;
 	}
 	
-	/* Function name: hasGuestsDefaultPermission
-	 * Input: $permissionId (integer) - identifier of permission
-	 * Output: bool (has the permission or not)
+	/** Function name: hasGuestsDefaultPermission
 	 *
 	 * This function returns an boolean value
 	 * which means that the permission is in the
 	 * set of the guests' default permissions.
+	 * 
+	 * @param int $permissionId - identifier of permission
+	 * @return bool - has the permission or not
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function hasGuestsDefaultPermission($permissionId){
-		return ($this->getDefaultPermissions('guest', $permissionId) !== null);
+		return ($this->hasDefaultPermission('guest', $permissionId) !== null);
 	}
 	
-	/* Function name: hasCollegistsDefaultPermission
-	 * Input: $permissionId (integer) - identifier of permission
-	 * Output: bool (has the permission or not)
+	/** Function name: hasCollegistsDefaultPermission
 	 *
 	 * This function returns an boolean value
 	 * which means that the permission is in the
 	 * set of the collegists' default permissions.
+	 * 
+	 * @param int $permissionId - identifier of permission
+	 * @return bool - has the permission or not
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function hasCollegistsDefaultPermission($permissionId){
-		return ($this->getDefaultPermissions('collegist', $permissionId) !== null);
+		return ($this->hasDefaultPermission('collegist', $permissionId) !== null);
 	}
 	
-	/* Function name: setDefaults
-	 * Input: 	$userType (text) - user type
-	 * 			$permissions (array of text) - text identifiers of the permissions
-	 * Output: integer (error code)
+	/** Function name: setDefaults
 	 *
 	 * This function sets the default
 	 * permissions to the given user type.
+	 * 
+	 * @param text $userType - user type
+	 * @param arrayOfText $permissions - text identifiers of the permissions
+	 * @return int - error code
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function setDefaults($userType, $permissions){
 		$errorCode = 0;
-		DB::beginTransaction();
+		P_General::beginTransaction();
 		try{
 			//first, delete all the permissions
-			DB::table('default_permissions')
-				->where('registration_type', 'LIKE', $userType)
-				->delete();
+			P_General::deleteDefaultPermissionsForRegistrationType();
 			//add the new permissions
 			foreach($permissions as $permission){
-				DB::table('default_permissions')
-					->insert([
-						'registration_type' => $userType,
-						'permission' => $permission
-					]);
+				P_General::insertNewDefaultPermission($userType, $permission);
 			}
-			DB::commit();
+			P_General::commit();
 		}catch(\Exception $ex){
-			DB::rollback();
+			P_General::rollback();
 			$errorCode = 1;
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Delete from or insert into table 'default_permissions' was not successful! ".$ex->getMessage());
 		}
 		return $errorCode;
 	}
 	
-	/* Function name: removeAll
-	 * Input: $userId (integer) - user's identifier
-	 * Output: integer (error code)
+	/** Function name: removeAll
 	 *
 	 * This function removes all of
 	 * the user's currently possessed
 	 * permissions.
+	 * 
+	 * @param int $userId - user's identifier
+	 * @return int - error code
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function removeAll($userId){
 		$error = 0;
 		try{
-			DB::table('user_permissions')
-				->where('user_id', '=', $userId)
-				->delete();
+			P_User::removePermissionsForUser($userId);
 		}catch(\Exception $ex){
 			$error = 1;
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Delete from table 'user_permissions' was not successful! ".$ex->getMessage());
@@ -205,22 +229,21 @@ class Permissions{
 		return $error;
 	}
 	
-	/* Function name: setPermissionForUser
-	 * Input: 	$userId (integer) - user's identifier
-	 * 			$permissionId (integer) - identifier of a permission
-	 * Output: integer (error code)
+	/** Function name: setPermissionForUser
 	 *
 	 * This function adds the reqested
 	 * permission to the requested user.
+	 * 
+	 * @param int $userId - user's identifier
+	 * @param int $permissionId - identifier of a permission
+	 * @return int - error code
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function setPermissionForUser($userId, $permissionId){
 		$error = 0;
 		try{
-			DB::table('user_permissions')
-				->insert([
-					'user_id' => $userId,
-					'permission_id' => $permissionId
-				]);
+			P_User::addPermissionForUser($userId, $permissionId);
 		}catch(\Exception $ex){
 			$error = 1;
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Insert into table 'user_permissions' was not successful! ".$ex->getMessage());
@@ -230,26 +253,25 @@ class Permissions{
 	
 // PRIVATE FUNCTIONS	
 	
-	/* Function name: getDefaultPermissions
-	 * Input: 	$userType (text) - user type
-	 * 			$permissionId (integer) - indentifier of a permission
-	 * Output: integer (error code)
+	/** Function name: hasDefaultPermission
 	 *
-	 * This function returns the permission
-	 * based on the requested user type
-	 * and the permission.
+	 * This function returns that boolean value
+	 * that the requested user type has the 
+	 * requested permission or not.
+	 * 
+	 * @param text $userType - user type, "collegist" or "guest"
+	 * @param int $permissionId - indentifier of a permission
+	 * @return bool
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	private function getDefaultPermissions($userType, $permissionId){
+	private function hasDefaultPermission($userType, $permissionId){
 		try{
-			$permission = $DB::table('default_permissions')
-				->where('registration_type', 'LIKE', $userType)
-				->where('permission', '=', $permissionId)
-				->orderBy('id', 'asc')
-				->first();
+			$permission = P_General::hasDefaultPermission($userType, $permissionId);
 		}catch(\Exception $ex){
 			$permission = null;
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'default_permissions' was not successful! ".$ex->getMessage());
 		}
-		return $permission;
+		return ($permission !== null);
 	}
 }

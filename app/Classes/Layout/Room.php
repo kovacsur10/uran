@@ -4,10 +4,10 @@ namespace App\Classes\Layout;
 
 use App\Classes\Database;
 use App\Classes\Logger;
-use DB;
 use Carbon\Carbon;
+use App\Persistence\P_Room;
 
-/* Class name: Room
+/** Class name: Room
  *
  * This class handles the database operations
  * of the Rooms module.
@@ -18,6 +18,8 @@ use Carbon\Carbon;
  * 
  * Functions that can throw exceptions:
  * 		refreshGuard
+ * 
+ * @author Máté Kovács <kovacsur10@gmail.com>
  */
 class Room{
 	
@@ -28,49 +30,53 @@ class Room{
 	
 // PUBLIC FUNCTIONS
 	
-	/* Function name: __construct
-	 * Input: -
-	 * Output: -
+	/** Function name: __construct
 	 *
 	 * Constuctor of class Room.
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function __construct(){
 		$this->rooms = $this->getRooms();
 		$this->selectedTable = $this->getSelectedTable();
 	}
 	
-	/* Function name: activeTable
-	 * Input: -
-	 * Output: text (selected assignment table name)
+	/** Function name: activeTable
 	 *
 	 * Getter function of $selectedTable.
+	 * 
+	 * @return text - selected assignment table name
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function activeTable(){
 		return $this->selectedTable;
 	}
 	
-	/* Function name: rooms
-	 * Input: -
-	 * Output: array of the rooms
+	/** Function name: rooms
 	 *
 	 * Getter function of $rooms.
+	 * 
+	 * @return array of the rooms
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function rooms(){
 		return $this->rooms;
 	}
 	
-	/* Function name: getRoomId
-	 * Input: $roomNumber (text) - identifier of the room
-	 * Output: int|NULL (room identifier)
+	/** Function name: getRoomId
 	 *
 	 * This function returns the id of a room.
+	 * 
+	 * @param text $roomNumber - text identifier of the room
+	 * @return int|null - room identifier
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function getRoomId($roomNumber){
 		try{
-			$roomId	= DB::table('rooms_rooms')
-				->where('room_number', 'LIKE', $roomNumber)
-				->select('id')
-				->first();
+			$roomId	= P_Room::getRoom($roomNumber)->id;
 		}catch(Exception $ex){
 			$roomId = null;
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'rooms_rooms' was not successful! ".$ex->getMessage());
@@ -78,38 +84,37 @@ class Room{
 		return $roomId === null ? null : $roomId->id;
 	}
 	
-	/* Function name: emptyRoom
-	 * Input: $roomId (int) - identifier of the room
-	 * Output: -
-	 *
+	/** Function name: emptyRoom
+	 * 
 	 * This function removes all user assignments
 	 * to the room.
+	 * 
+	 * @param int $roomId - identifier of the room
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function emptyRoom($roomId){
 		try{
-			DB::table(Room::getAssignmentTableName($this->selectedTable))
-				->where('roomid', '=', $roomId)
-				->delete();
+			P_Room::clearRoom(Room::getAssignmentTableName($this->selectedTable), $roomId);
 		}catch(\Exception $ex){
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Delete from table '".Room::getAssignmentTableName($this->selectedTable)."' was not successful! ".$ex->getMessage());
 		}
 	}
 	
-	/* Function name: setUserToRoom
-	 * Input: 	$roomId (int) - identifier of the room
-	 * 			$userId (int) - identifier of the user
-	 * Output: error code (int)
+	/** Function name: setUserToRoom
 	 *
 	 * This function assignes a user to a room.
+	 * 
+	 * @param int $roomId - identifier of the room
+	 * @param int $userId - identifier of the user
+	 * @return int - error code
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function setUserToRoom($roomId, $userId){
 		$ret = 0;
 		try{
-			DB::table(Room::getAssignmentTableName($this->selectedTable))
-				->insert([
-					'roomid' => $roomId,
-					'userid' => $userId
-				]);
+			P_Room::addUserToRoom(Room::getAssignmentTableName($this->selectedTable), $roomId, $userId);
 		}catch(\Exception $ex){
 			$ret = 1;
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Insert into table '".Room::getAssignmentTableName($this->selectedTable)."' was not successful! ".$ex->getMessage());
@@ -117,23 +122,20 @@ class Room{
 		return $ret;
 	}
 	
-	/* Function name: getResidents
-	 * Input: $roomNumber (text) - identifier of the room
-	 * Output: array of residents of a room
+	/** Function name: getResidents
 	 *
 	 * This function returns an array of the
 	 * residents of the requested room. It returns
 	 * the id and the name of the users.
+	 * 
+	 * @param text $roomNumber - identifier of the room
+	 * @return array of residents of a room
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function getResidents($roomNumber){
 		try{
-			$residents = DB::table('rooms_rooms')
-				->join(Room::getAssignmentTableName($this->selectedTable), Room::getAssignmentTableName($this->selectedTable).'.roomid', '=', 'rooms_rooms.id')
-				->join('users', 'users.id', '=', Room::getAssignmentTableName($this->selectedTable).'.userid')
-				->select('users.id as id', 'users.name as name')
-				->where('rooms_rooms.room_number', 'LIKE', $roomNumber)
-				->get()
-				->toArray();
+			$residents = P_Room::getResidents(Room::getAssignmentTableName($this->selectedTable), $roomNumber);
 		}catch(\Exception $ex){
 			$residents = [];
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'rooms_rooms' joined to '".Room::getAssignmentTableName($this->selectedTable)."' and 'users' was not successful! ".$ex->getMessage());
@@ -141,14 +143,17 @@ class Room{
 		return $residents;
 	}
 	
-	/* Function name: getRoomResidentListText
-	 * Input: 	$roomNumber (text) - identifier of the room
-	 * 			$freeSpotText (text) - text of "Free spot"
-	 * Output: text (resident list of the room)
+	/** Function name: getRoomResidentListText
 	 *
 	 * This function returns an HTML formatted text
 	 * of the residents of the room. Free places are 
 	 * in the list as well.
+	 * 
+	 * @param text $roomNumber - identifier of the room
+	 * @param text $freeSpotText - text of "Free spot"
+	 * @return text - resident list of the room
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function getRoomResidentListText($roomNumber, $freeSpotText){
 		$text = "";
@@ -161,21 +166,21 @@ class Room{
 		return $text;
 	}
 	
-	/* Function name: getFreePlaceCount
-	 * Input: $roomNumber (text) - identifier of the room
-	 * Output: int (count of free places in the room)
+	/** Function name: getFreePlaceCount
 	 *
 	 * This function returns the count of the
 	 * free places in the requested room.
+	 * 
+	 * @param text $roomNumber - identifier of the room
+	 * @return int - count of free places in the room
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function getFreePlaceCount($roomNumber){
 		try{
-			$max_count = DB::table('rooms_rooms')
-				->select('max_collegist_count as count')
-				->where('room_number', 'LIKE', $roomNumber)
-				->first();
+			$max_count = P_Room::getRoom($roomNumber);
 			$residents = count($this->getResidents($roomNumber));
-			$freePlaceCount = $max_count->count - $residents;
+			$freePlaceCount = $max_count->max_collegist_count - $residents;
 		}catch(\Exception $ex){
 			$freePlaceCount = 0;
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'rooms_rooms' was not successful! ".$ex->getMessage());
@@ -183,12 +188,14 @@ class Room{
 		return $freePlaceCount;
 	}
 	
-	/* Function name: getFreePlaces
-	 * Input: -
-	 * Output: array of free places
+	/** Function name: getFreePlaces
 	 *
 	 * This function returns an array which
 	 * contains the free places in the dormitory.
+	 * 
+	 * @return array of free places
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function getFreePlaces(){
 		$freePlaces = [];
@@ -203,18 +210,19 @@ class Room{
 		return $freePlaces;
 	}
 	
-	/* Function name: userHasResidence
-	 * Input: $userid (int) - id of the user
-	 * Output: bool (the user lives in a room or not)
+	/** Function name: userHasResidence
 	 *
 	 * This function returns whether the user is assigned
 	 * to a room or not.
+	 * 
+	 * @param int $userId - id of the user
+	 * @return bool - the user lives in a room or not
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function userHasResidence($userId){
 		try{
-			$ret = DB::table(Room::getAssignmentTableName($this->selectedTable))
-				->where('userid', '=', $userId)
-				->first();
+			$ret = P_Room::getRoomByUser(Room::getAssignmentTableName($this->selectedTable), $userId);
 		}catch(\Exception $ex){
 			$ret = null;
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table '".Room::getAssignmentTableName($this->selectedTable)."' was not successful! ".$ex->getMessage());
@@ -222,9 +230,7 @@ class Room{
 		return $ret !== null;
 	}
 	
-	/* Function name: addNewTable
-	 * Input: $tableName (string) - name of the assignment table
-	 * Output: bool
+	/** Function name: addNewTable
 	 *
 	 * This function adds a new assignment table
 	 * to the database.
@@ -234,44 +240,28 @@ class Room{
 	 * Failures can be: 
 	 * 		- database exception on statements or insert
 	 * 		- already existing table
+	 * 
+	 * @param text $tableName - name of the assignment table
+	 * @return bool
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function addNewTable($tableName){
 		$ret = false;
 		if(!$this->tableExists($tableName)){
 			$assignmentTable = Room::getAssignmentTableName($tableName);
 			$assignmentIdSeq = $assignmentTable."_id_seq";
-			Database::beginTransaction();
 			try{	
-				// create the assignment table
-				DB::statement('CREATE TABLE "'.$assignmentTable.'" (id integer NOT NULL, userid integer NOT NULL, roomid integer NOT NULL)');
-				DB::statement('ALTER TABLE "'.$assignmentTable.'" OWNER TO laravel');
-				DB::statement('COMMENT ON TABLE "'.$assignmentTable.'" IS \'Rooms modul. Which room is assigned to a collegist.\'');
-				DB::statement('CREATE SEQUENCE "'.$assignmentIdSeq.'" START WITH 1 INCREMENT BY 1 NO MINVALUE NO MAXVALUE CACHE 1');
-				DB::statement('ALTER TABLE "'.$assignmentIdSeq.'" OWNER TO laravel');
-				DB::statement('ALTER SEQUENCE "'.$assignmentIdSeq.'" OWNED BY "'.$assignmentTable.'".id;');
-				DB::statement('ALTER TABLE ONLY "'.$assignmentTable.'" ALTER COLUMN id SET DEFAULT nextval(\''.$assignmentIdSeq.'\'::regclass)');		
-				DB::statement('ALTER TABLE ONLY "'.$assignmentTable.'" ADD CONSTRAINT "'.$assignmentTable.'_pkey" PRIMARY KEY (id)');
-				DB::statement('ALTER TABLE ONLY "'.$assignmentTable.'" ADD CONSTRAINT "'.$assignmentTable.'_userid_unique" UNIQUE (userid)');
-				DB::statement('ALTER TABLE ONLY "'.$assignmentTable.'" ADD CONSTRAINT "'.$assignmentTable.'_roomid_fkey" FOREIGN KEY (roomid) REFERENCES "rooms_rooms"(id) ON UPDATE CASCADE ON DELETE CASCADE');
-	 			DB::statement('ALTER TABLE ONLY "'.$assignmentTable.'" ADD CONSTRAINT "'.$assignmentTable.'_userid_fkey" FOREIGN KEY (userid) REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE');
-	 			
-	 			DB::table('rooms_tables')
-	 				->insert([
-	 					'table_name' => $tableName	
-	 				]);
-	 			Database::commit();
+	 			P_Room::addAssigmentTable($assignmentTable, $tableName, $assignmentIdSeq);
 	 			$ret = true;
 			}catch(Exception $ex){
-				Database::rollback();
 				Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 			}
 		}
 		return $ret;
 	}
 	
-	/* Function name: removeTable
-	 * Input: $tableName (string) - name of the assignment table
-	 * Output: bool
+	/** Function name: removeTable
 	 *
 	 * This function removes an assignment table from
 	 * the database.
@@ -281,29 +271,26 @@ class Room{
 	 * Failures can be:
 	 * 		- database exception on delete
 	 * 		- not existing table
+	 * 
+	 * @param text $tableName - name of the assignment table
+	 * @return bool
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function removeTable($tableName){
 		$ret = false;
 		if($this->tableExists($tableName) && $tableName !== $this->selectedTable){
-			Database::beginTransaction();
 			try{
-				DB::statement('DROP TABLE '.Room::getAssignmentTableName($tableName));
-				DB::table('rooms_tables')
-					->where('table_name', 'LIKE', $tableName)
-					->delete();
-				Database::commit();
+				P_Room::removeAssignmentTable(Room::getAssignmentTableName($tableName), $tableName);
 				$ret = true;
 			}catch(Exception $ex){
-				Database::rollback();
 				Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 			}
 		}
 		return $ret;
 	}
 
-	/* Function name: selectTable
-	 * Input: $tableName (string) - name of the assignment table
-	 * Output: bool
+	/** Function name: selectTable
 	 *
 	 * This function is used to select the
 	 * currently used assignment table.
@@ -311,22 +298,19 @@ class Room{
 	 * was successful.
 	 * False is returned if the selection failed.
 	 * Failures can be: database exception on update.
+	 * 
+	 * @param text $tableName - name of the assignment table
+	 * @return bool
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function selectTable($tableName){
 		$ret = false;
 		if($this->tableExists($tableName)){
 			Database::beginTransaction();
 			try{
-				DB::table('rooms_tables')
-					->where('table_name', 'LIKE', $this->selectedTable)
-					->update([
-						'selected' => 0
-					]);
-				DB::table('rooms_tables')
-					->where('table_name', 'LIKE', $tableName)
-					->update([
-						'selected' => 1
-					]);
+				P_Room::unselectAssignmentTable($this->selectedTable);
+				P_Room::selectAssignmentTable($tableName);
 				Database::commit();
 				$this->refreshGuard();
 				$ret = true;
@@ -338,21 +322,20 @@ class Room{
 		return $ret;
 	}
 	
-	/* Function name: getTables
-	 * Input: -
-	 * Output: array of the assignment tables
+	/** Function name: getTables
 	 *
 	 * This function returns an array of the
 	 * existing assignment tables.
 	 * If there's no assignment table,
 	 * it returns an empty array.
+	 * 
+	 * @return array of the assignment tables
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function getTables(){
 		try{
-			$tables = DB::table('rooms_tables')
-				->orderBy('id', 'asc')
-				->get()
-				->toArray();
+			$tables = P_Room::getAssignmentTables();
 		}catch(Exception $ex){
 			$tables = [];
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'rooms_tables' was not successful! ".$ex->getMessage());
@@ -360,22 +343,20 @@ class Room{
 		return $tables;
 	}
 	
-	/* Function name: getTablesEX
-	 * Input: -
-	 * Output: array of the assignment tables
+	/** Function name: getTablesEX
 	 *
 	 * This function returns an array of the existing assignment
 	 * tables excluding the currently selected one.
 	 * If there's no assignment table,
 	 * it returns an empty array.
+	 * 
+	 * @return array of the assignment tables
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function getTablesEX(){
 		try{
-			$tables = DB::table('rooms_tables')
-				->where('table_name','NOT LIKE', $this->selectedTable)
-				->orderBy('id', 'asc')
-				->get()
-				->toArray();
+			$tables = P_Room::getAssignmentTables($this->selectedTable);
 		}catch(Exception $ex){
 			$tables = [];
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'rooms_tables' was not successful! ".$ex->getMessage());
@@ -383,30 +364,34 @@ class Room{
 		return $tables;
 	}
 	
-	/* Function name: checkGuard
-	 * Input: $guard (known guard value, timestamp)
-	 * Output: bool (same or not)
+	/** Function name: checkGuard
 	 *
 	 * This function checks whether the known (old)
 	 * guard is the same as the current guard.
+	 * 
+	 * @param timestamp $guard - known guard value
+	 * @return bool - same or not
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function checkGuard($guard){
 		return $this->getGuard() === $guard;
 	}
 	
-	/* Function name: getGuard
-	 * Input: -
-	 * Output: int/NULL (guard value)
+	/** Function name: getGuard
 	 *
 	 * This functions returns the currently active
 	 * rooms guard.
 	 *
 	 * INCONSISTENCY IF THE RETURNED VALUE IS NULL
+	 * 
+	 * @return int|null - guard value
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function getGuard(){
 		try{
-			$ret = DB::table('rooms_last_modified')
-				->first();
+			$ret = P_Room::getModificationTime();
 		}catch(Exception $ex){
 			$ret = null;
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'rooms_last_modified' was not successful! ".$ex->getMessage());
@@ -416,33 +401,34 @@ class Room{
 	
 // PRIVATE FUNCTIONS
 	
-	/* Function name: getAssignmentTableName
-	 * Input: $table (string) - the identifier name of the assignment table
-	 * Output: string (the assignment table name)
+	/** Function name: getAssignmentTableName
 	 *
 	 * This functions returns the name of
 	 * the assignment table linked to the
 	 * table identifier name.
+	 * 
+	 * @param text $table - the identifier name of the assignment table
+	 * @return text - the assignment table name
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	private static function getAssignmentTableName($table){
 		return "rooms_" . $table . "_room_assignments";
 	}
 	
-	/* Function name: getRooms
-	 * Input: -
-	 * Output: array of the rooms
+	/** Function name: getRooms
 	 *
 	 * This functions returns the existing rooms
 	 * with room number, capacity and the floor
 	 * in the dormitory.
+	 * 
+	 * @return array of the Rooms
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	private function getRooms(){
 		try{
-			$rooms = DB::table('rooms_rooms')
-				->select('room_number as room', 'max_collegist_count', 'floor')
-				->orderBy('id', 'asc')
-				->get()
-				->toArray();
+			$rooms = P_Room::getRooms();
 		}catch(\Exception $ex){
 			$rooms = [];
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'rooms_rooms' was not successful! ".$ex->getMessage());
@@ -450,18 +436,18 @@ class Room{
 		return $rooms;
 	}
 	
-	/* Function name: getSelectedTable
-	 * Input: -
-	 * Output: string (name of the currently selected table)
+	/** Function name: getSelectedTable
 	 *
 	 * This functions returns the name of the 
 	 * currently selected (active) assignment table.
+	 * 
+	 * @return text - name of the currently selected table
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	private function getSelectedTable(){
 		try{
-			$table = DB::table('rooms_tables')
-				->where('selected', '=', true)
-				->first();
+			$table = P_Room::getSelectedAssigmentTable();
 		}catch(\Exception $ex){
 			$table = null;
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'rooms_tables' was not successful! ".$ex->getMessage());
@@ -473,20 +459,21 @@ class Room{
 		}
 	}
 	
-	/* Function name: tableExists
-	 * Input: $tableName (string) - the identifier name of the assignment table
-	 * Output: bool (the table exist or not)
+	/** Function name: tableExists
 	 *
 	 * This functions returns true, if the
 	 * given table exist in the database.
 	 * It returs false, if it's not in the
 	 * database or the table name is an empty string.
+	 * 
+	 * @param text $tableName - the identifier name of the assignment table
+	 * @return bool - the table exist or not
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	private function tableExists($tableName){
 		try{
-			$tables = DB::table('rooms_tables')
-				->where('table_name', 'LIKE', $tableName)
-				->first();
+			$tables = P_Room::getAssignmentTable($tableName);
 		}catch(Exception $ex){
 			$tables = null;
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'rooms_tables' was not successful! ".$ex->getMessage());
@@ -494,21 +481,18 @@ class Room{
 		return $tables !== null || $tableName == "";
 	}
 	
-	/* Function name: refreshGuard
-	 * Input: -
-	 * Output: -
+	/** Function name: refreshGuard
 	 *
 	 * This functions refreshes the guard, which protects
 	 * the room assignments if a table swap was made.
 	 * 
-	 * THROWING EXCEPTIONS!
+	 * @exception CustomException
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	private function refreshGuard(){
 		try{
-			DB::table('rooms_last_modified')
-				->update([
-					'last_modified' => Carbon::parse(Carbon::now())->timestamp
-				]);
+			P_Room::updateModificationTime(Carbon::parse(Carbon::now())->timestamp);
 		}catch(\Exception $ex){
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Update table 'rooms_last_modified' was not successful! ".$ex->getMessage());
 			throw new Exception("CUSTOM EXCEPTION! The previous log message contains the error!");

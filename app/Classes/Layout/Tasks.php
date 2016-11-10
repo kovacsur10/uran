@@ -2,12 +2,12 @@
 
 namespace App\Classes\Layout;
 
-use DB;
 use Carbon\Carbon;
 use App\Classes\LayoutData;
 use App\Classes\Logger;
+use App\Persistence\P_Tasks;
 
-/* Class name: Tasks
+/** Class name: Tasks
  *
  * This class handles the tasks data
  * support in the layout namespace.
@@ -19,6 +19,8 @@ use App\Classes\Logger;
  * 		- comments support
  *
  * Functions that can throw exceptions:
+ * 
+ * @author Máté Kovács <kovacsur10@gmail.com>
  */
 class Tasks{
 	
@@ -34,11 +36,11 @@ class Tasks{
 	
 // PUBLIC FUNCTIONS
     
-    /* Function name: __construct
-     * Input: -
-     * Output: -
+    /** Function name: __construct
      *
      * The constructor for the Tasks class.
+     * 
+     * @author Máté Kovács <kovacsur10@gmail.com>
      */
 	public function __construct(){
 		$this->filters = [
@@ -56,74 +58,89 @@ class Tasks{
 		$this->statusTypes = $this->getTaskStatusTypes();
 	}
 	
-	/* Function name: get
-	 * Input: -
-	 * Output: array of tasks
+	/** Function name: get
 	 *
 	 * Getter function for tasks.
+	 * 
+	 * @return array of Tasks
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function get(){
         return $this->tasks;
 	}
 	
-	/* Function name: getTask
-	 * Input: -
-	 * Output: task
+	/** Function name: getTask
 	 *
 	 * Getter function for the current task.
+	 * 
+	 * @return Task|null
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function getTask(){
 		return $this->task;
 	}
 	
-	/* Function name: priorities
-	 * Input: -
-	 * Output: array of priorities
+	/** Function name: priorities
 	 *
 	 * Getter function for the task priorities.
+	 * 
+	 * @return array of Priorities
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function priorities(){
 		return $this->priorities;
 	}
 	
-	/* Function name: taskTypes
-	 * Input: -
-	 * Output: array of task types
+	/** Function name: taskTypes
 	 *
 	 * Getter function for the task types.
+	 * 
+	 * @return array of task types
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function taskTypes(){
 		return $this->types;
 	}
 	
-	/* Function name: getComments
-	 * Input: -
-	 * Output: array of comment
+	/** Function name: getComments
 	 *
 	 * Getter function for the comments of the selected task.
+	 * 
+	 * @return array of comments
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function getComments(){
 		return $this->comments;
 	}
 	
-	/* Function name: statusTypes
-	 * Input: -
-	 * Output: array of status types
+	/** Function name: statusTypes
 	 *
 	 * Getter function for the status types of the tasks.
+	 * 
+	 * @return array of status types
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function statusTypes(){
 		return $this->statusTypes;
 	}
 	
-	/* Function name: getFilter
-	 * Input: $filterName (text) - filter name
-	 * Output: filter value | NULL
+	/** Function name: getFilter
 	 *
 	 * Getter function for the requested filter.
 	 * 
 	 * Returns NULL if the requested filter name
 	 * does not exist.
+	 * 
+	 * @param text $filterName - filter name
+	 * @return filterValue|null
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function getFilter($filterName){
 		if(array_key_exists($filterName, $this->filters)){
@@ -133,17 +150,19 @@ class Tasks{
 		}
 	}
 	
-	/* Function name: filterTasks
-	 * Input:	$status (text) - status filter
-	 * 			$caption (text) - caption filter
-	 * 			$priority (int) - priority identifier filter
-	 * 			$myTasks (bool) - only user's tasks filter
-	 * 			$hideClosed (bool) - closed tasks filter 
-	 * Output: -
+	/** Function name: filterTasks
 	 *
 	 * This function sets the filters based
 	 * on the given values. The tasks array is
 	 * updated with the filtered array data.
+	 * 
+	 * @param text $status - status filter
+	 * @param text $caption - caption filter
+	 * @param int $priority - priority identifier filter
+	 * @param bool $myTasks - only user's tasks filter
+	 * @param bool $hideClosed - closed tasks filter 
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function filterTasks($status, $caption, $priority, $myTasks, $hideClosed){
 		$layout = new LayoutData();
@@ -155,13 +174,16 @@ class Tasks{
 		$this->tasks = $this->getTasks($layout->user()->user()->id);
 	}
 	
-	/* Function name: tasksToPages
-	 * Input:	$from (int) - first task identifier
-	 * 			$count (int) - tasks count
-	 * Output: array of tasks
+	/** Function name: tasksToPages
 	 *
 	 * This function returns the requested count
 	 * of tasks from the requested identifier.
+	 * 
+	 * @param int $from - first task identifier
+	 * @param int $count - tasks count
+	 * @return array of tasks
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function tasksToPages($from = 0, $count = 50){ //TODO: refactor
 		if($this->tasks === null){
@@ -177,21 +199,22 @@ class Tasks{
         }
 	}
 	
-	/* Function name: getStatusById
-	 * Input: $statusId (int) - status identifier
-	 * Output: data of status | null
+	/** Function name: getStatusById
 	 *
 	 * This function returns the task status data for the 
 	 * requsted status identifier.
 	 * 
 	 * Null is returned if the requested identifier does
 	 * not exist.
+	 * 
+	 * @param int $statusId - status identifier
+	 * @return Status|null
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function getStatusById($statusId){
 		try{
-			$status = DB::table('tasks_status')
-				->where('id', '=', $statusId)
-				->first();
+			$status = P_Tasks::getStatusById($statusId);
 		}catch(\Exception $ex){
 			$status = null;
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'tasks_status' was not successful! ".$ex->getMessage());
@@ -199,21 +222,22 @@ class Tasks{
 		return $status;
 	}
 	
-	/* Function name: getStatusByName
-	 * Input: $statusName (text) - status name
-	 * Output: data of status | null
+	/** Function name: getStatusByName
 	 *
 	 * This function returns the task status data for the
 	 * requsted status name.
 	 * 
 	 * Null is returned if the requested name does
 	 * not exist.
+	 * 
+	 * @param text $statusName - status name
+	 * @return Status|null
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function getStatusByName($statusName){
 		try{
-			$status = DB::table('tasks_status')
-				->where('status', 'LIKE', $statusName)
-				->first();
+			$status = P_Tasks::getStatusByName($statusName);
 		}catch(\Exception $ex){
 			$status = null;
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'tasks_status' was not successful! ".$ex->getMessage());
@@ -221,23 +245,22 @@ class Tasks{
 		return $status;
 	}
 	
-	/* Function name: getComment
-	 * Input: $commentId (int) - comment identifier
-	 * Output: data of comment | null
+	/** Function name: getComment
 	 *
 	 * This function returns the comment data for the
 	 * requsted comment identifier.
 	 *
 	 * Null is returned if the requested identifier does
 	 * not exist.
+	 * 
+	 * @param int $commentId - comment identifier
+	 * @return Comment|null
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function getComment($commentId){
 		try{
-			$comment = DB::table('tasks_comments')
-				->join('users', 'users.id', '=', 'tasks_comments.sender')
-				->where('tasks_comments.id', '=', $commentId)
-				->select('tasks_comments.id as id', 'users.name as poster', 'text as comment', 'datetime as date', 'users.username as poster_username')
-				->first();
+			$comment = P_Tasks::getComment($commentId);
 		}catch(\Exception $ex){
 			$comment = null;
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'tasks_comments', joined to 'users' was not successful! ".$ex->getMessage());
@@ -245,18 +268,19 @@ class Tasks{
 		return $comment;
 	}
 	
-	/* Function name: exists
-	 * Input: $taskId (int) - task identifier
-	 * Output: bool
+	/** Function name: exists
 	 *
 	 * This function returns whether the requested
 	 * task identifier exists or not.
+	 * 
+	 * @param int $taskId - task identifier
+	 * @return bool
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function exists($taskId){
 		try{
-			$id = DB::table('tasks_task')
-				->where('id', '=', $taskId)
-				->first();
+			$id = P_Tasks::getTask($taskId);
 			$exist = ($id !== null);
 		}catch(\Exception $ex){
 			$exist = false;
@@ -265,18 +289,19 @@ class Tasks{
 		return $exist;
 	}
 	
-	/* Function name: commentExists
-	 * Input: $commentId (int) - comment identifier
-	 * Output: bool
+	/** Function name: commentExists
 	 *
 	 * This function returns whether the requested
 	 * task identifier exists or not.
+	 * 
+	 * @param int $commentId - comment identifier
+	 * @return bool
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function commentExists($commentId){
 		try{
-			$id = DB::table('tasks_comments')
-				->where('id', '=', $commentId)
-				->first();
+			$id = P_Tasks::getComment($commentId);
 			$exist = ($id !== null);
 		}catch(\Exception $ex){
 			$exist = false;
@@ -285,40 +310,30 @@ class Tasks{
 		return $exist;
 	}
 	
-	/* Function name: setTask
-	 * Input: $taskId (int) - task identifier
-	 * Output: -
+	/** Function name: setTask
 	 *
 	 * This function sets the current task
 	 * based on the requested task identifier.
+	 * 
+	 * @param int $taskId - task identifier
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function setTask($taskId){
 		try{
-			$this->task = DB::table('tasks_task')
-				->join('tasks_type', 'tasks_type.id', '=', 'tasks_task.type')
-				->join('tasks_status', 'tasks_status.id', '=', 'tasks_task.status')
-				->join('tasks_priority', 'tasks_priority.id', '=', 'tasks_task.priority')
-				->join('users', 'users.id', '=', 'tasks_task.created_by')
-				->select('tasks_task.id as id', 'created_datetime as date', 'tasks_status.status as status', 'tasks_type.type as type', 'users.id as owner_id', 'users.name as user', 'users.username as username', 'text', 'caption', 'closed_datetime as closed', 'deadline', 'tasks_priority.name as priority', 'tasks_task.hours as working_hours')
-				->where('tasks_task.id', '=', $taskId)
-				->first();
-			try{
-				$assigned = DB::table('tasks_task')
-					->join('users', 'users.id', '=', 'tasks_task.assigned')
-					->where('tasks_task.id', '=', $taskId)
-					->whereNotNull('tasks_task.id')
-					->first();
-				if($assigned !== null){
+			$this->task = P_Tasks::getTask($taskId);
+			if($this->task->assigned_id !== null){
+				try{
+					$assigned = P_Tasks::getAssignedUserToTask($taskId);
 					$this->task->assigned_id = $assigned->id;
 					$this->task->assigned_name = $assigned->name;
 					$this->task->assigned_username = $assigned->username;
-				}else{
-					$this->task->assigned_id = null;
-					$this->task->assigned_name = null;
-					$this->task->assigned_username = null;
+				}catch(\Exception $ex){
+					Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'tasks_task', joined to 'users' was not successful! ".$ex->getMessage());
 				}
-			}catch(\Exception $ex){
-				Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'tasks_task', joined to 'users' was not successful! ".$ex->getMessage());
+			}else{
+				$this->task->assigned_name = null;
+				$this->task->assigned_username = null;
 			}
 				
 			//format deadline
@@ -328,14 +343,7 @@ class Tasks{
 				
 			try{
 				//set comments for the given task
-				$this->comments = DB::table('tasks_comments')
-					->join('users', 'users.id', '=', 'tasks_comments.sender')
-					->where('task', '=', $taskId)
-					->where('deleted', '=', '0')
-					->select('tasks_comments.id as id', 'users.name as poster', 'text as comment', 'datetime as date', 'users.username as poster_username')
-					->orderBy('tasks_comments.id','desc')
-					->get()
-					->toArray();
+				$this->comments = P_Tasks::getCommentsForTask($taskId);
 			}catch(\Exception $ex){
 				Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'tasks_comments', joined to 'tasks_type', 'tasks_status', 'tasks_priority', 'users' was not successful! ".$ex->getMessage());
 			}
@@ -344,166 +352,119 @@ class Tasks{
 		}
 	}
 	
-	/* Function name: update
-	 * Input: 	$taskId (int) - task identifier
-	 * 			$type (int) - task type identifier 
-	 * 			$text (text) - text of the task
-	 * 			$caption (text) - caption of the task
-	 * 			$deadline (date|NULL) - deadline of the task
-	 * 			$priority (int) - priority identifier
-	 * 			$status (int) - task status type identifier
-	 * 			$workingHours (int) - working hours of the task
-	 * 			$assignedUser (int) - assigned user's identifier
-	 * 			$closed (bool) - closed or not
-	 * Output: -
+	/** Function name: update
 	 *
 	 * This function updates a task based on the given
 	 * values.
+	 * 
+	 * @param int $taskId - task identifier
+	 * @param int $type - task type identifier 
+	 * @param text $text - text of the task
+	 * @param text $caption - caption of the task
+	 * @param datetime|null $deadline - deadline of the task
+	 * @param int $priority - priority identifier
+	 * @param int $status - task status type identifier
+	 * @param int $workingHours - working hours of the task
+	 * @param int $assignedUser - assigned user's identifier
+	 * @param bool $closed - closed or not
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function update($taskId, $type, $text, $caption, $deadline, $priority, $status, $workingHours, $assignedUser, $closed){
 		try{
-			if($deadline === null){
-				DB::table('tasks_task')
-					->where('id', '=', $taskId)
-					->update([
-						'status' => $status,
-						'type' => $type,
-						'text' => $text,
-						'caption' => $caption,
-						'priority' => $priority,
-						'deadline' => null,
-						'hours' => $workingHours,
-						'assigned' => $assignedUser,
-						'closed_datetime' => $closed
-					]);
-			}else{
-				DB::table('tasks_task')
-					->where('id', '=', $taskId)
-					->update([
-						'status' => $status,
-						'type' => $type,
-						'text' => $text,
-						'caption' => $caption,
-						'priority' => $priority,
-						'deadline' => str_replace('.', '-', str_replace('. ', '-', $deadline)),
-						'hours' => $workingHours,
-						'assigned' => $assignedUser,
-						'closed_datetime' => $closed
-					]);
-			}
+			$closingTime = $closed ? (Carbon::now()->toDateTimeString()) : null;
+			$deadline = $deadline === null ? null : str_replace('.', '-', str_replace('. ', '-', $deadline));
+			P_Tasks::updateTask($taskId, $status, $type, $text, $caption, $priority, $workingHours, $assignedUser, $closingTime, $deadline);
 		}catch(\Exception $ex){
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Update table 'tasks_task' was not successful! ".$ex->getMessage());
 		}
 	}
 	
-	/* Function name: canModify
-	 * Input: -
-	 * Output: bool (user can modify the task or not)
+	/** Function name: canModify
 	 *
 	 * This function determines whether the current task
 	 * can be modified by the user or not. This boolean
 	 * value is returned.
+	 * 
+	 * @return bool - user can modify the task or not
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function canModify(){
 		$layout = new LayoutData();
 		return ($this->task !== null) && ($layout->user()->user()->id === $this->task->owner_id || $layout->user()->permitted('tasks_admin'));
 	}
 	
-	/* Function name: addTask
-	 * Input:	$type (int) - type identifier
-	 * 			$createdById (int) - creator user's identifier
-	 * 			$text (text) - text of the task
-	 * 			$caption (text) - caption of the task
-	 * 			$deadline (date|NULL) - deadline of the task
-	 * 			$priority (int) - priority identifier
-	 * Output: -
+	/** Function name: addTask
 	 *
 	 * This function creates a new task with the
 	 * given data.
+	 * 
+	 * @param int $type - type identifier
+	 * @param int $createdById - creator user's identifier
+	 * @param text $text - text of the task
+	 * @param text $caption - caption of the task
+	 * @param datetime|null $deadline - deadline of the task
+	 * @param int $priority - priority identifier
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function addTask($type, $createdById, $text, $caption, $deadline, $priority){
 		try{
-			if($deadline === null){
-				DB::table('tasks_task')
-					->insert([
-						'created_datetime' => Carbon::now()->toDateTimeString(),
-						'status' => 1,
-						'type' => $type,
-						'created_by' => $createdById,
-						'text' => $text,
-						'caption' => $caption,
-						'priority' => $priority
-					]);
-			}else{
-				DB::table('tasks_task')
-					->insert([
-						'created_datetime' => Carbon::now()->toDateTimeString(),
-						'status' => 1,
-						'type' => $type,
-						'created_by' => $createdById,
-						'text' => $text,
-						'caption' => $caption,
-						'deadline' => $deadline,
-						'priority' => $priority
-					]);
-			}
+			P_Tasks::addTask($type, $createdById, $text, $caption, $priority, Carbon::now()->toDateTimeString(), $deadline);
 		}catch(\Exception $ex){
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Insert into table 'tasks_task' was not successful! ".$ex->getMessage());
 		}
 	}
 	
-	/* Function name: removeTask
-	 * Input: $taskId (int) - task identifier
-	 * Output: -
+	/** Function name: removeTask
 	 *
 	 * This function removes the requested task.
 	 * The removal is only logical!
+	 * 
+	 * @param int $taskId - task identifier
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function removeTask($taskId){
 		try{
-			DB::table('tasks_task')
-				->where('id', '=', $taskId)
-				->update(['deleted' => 1]);
+			P_Tasks::removeTask($taskId);
 		}catch(\Exception $ex){
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Update table 'tasks_task' was not successful! ".$ex->getMessage());
 		}
 	}
 	
-	/* Function name: addComment
-	 * Input:	$taskId (int) - task identifier
-	 * 			$userId (int) - writer user's identifier 
-	 * 			$text (text) - text of the comment
-	 * Output: -
+	/** Function name: addComment
 	 *
 	 * This function creates a new comment based on
 	 * the given data.
+	 * 
+	 * @param int $taskId - task identifier
+	 * @param int $userId - writer user's identifier 
+	 * @param text $text - text of the comment
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function addComment($taskId, $userId, $text){
 		try{
-			DB::table('tasks_comments')
-				->insert([
-					'text' => $text,
-					'task' => $taskId,
-					'sender' => $userId,
-					'datetime' => Carbon::now()->toDateTimeString()
-				]);
+			P_Tasks::addComment($text, $taskId, $userId, Carbon::now()->toDateTimeString());
 		}catch(\Exception $ex){
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'tasks_comments' was not successful! ".$ex->getMessage());
 		}
 	}
 	
-	/* Function name: removeComment
-	 * Input: $commentId (int) - comment identifier
-	 * Output: -
+	/** Function name: removeComment
 	 *
 	 * This function removes the requested comment.
 	 * The removal is only logical!
+	 * 
+	 * @param int $commentId - comment identifier
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function removeComment($commentId){
 		try{
-			DB::table('tasks_comments')
-				->where('id', '=', $commentId)
-				->update(['deleted' => 1]);
+			P_Tasks::deleteComment($commentId);
 		}catch(\Exception $ex){
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Update table 'tasks_comments' was not successful! ".$ex->getMessage());
 		}
@@ -511,18 +472,17 @@ class Tasks{
 	
 //PRIVATE FUNCTIONS
 	
-	/* Function name: getPriorities
-	 * Input: -
-	 * Output: array of priorities
+	/** Function name: getPriorities
 	 *
 	 * This function returns the task priorities.
+	 * 
+	 * @return array of priorities
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	private function getPriorities(){
 		try{
-			$priorities = DB::table('tasks_priority')
-				->orderBy('id', 'asc')
-				->get()
-				->toArray();
+			$priorities = P_Tasks::getPriorities();
 		}catch(\Exception $ex){
 			$priorities = [];
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'tasks_priority' was not successful! ".$ex->getMessage());
@@ -530,18 +490,17 @@ class Tasks{
 		return $priorities;
 	}
 	
-	/* Function name: getTaskTypes
-	 * Input: -
-	 * Output: array of task types
+	/** Function name: getTaskTypes
 	 *
 	 * This function returns the task types.
+	 * 
+	 * @return array of task types
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	private function getTaskTypes(){
 		try{
-			$taskTypes = DB::table('tasks_type')
-				->orderBy('id', 'asc')
-				->get()
-				->toArray();
+			$taskTypes = P_Tasks::getTypes();
 		}catch(\Exception $ex){
 			$taskTypes = [];
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'tasks_type' was not successful! ".$ex->getMessage());
@@ -549,18 +508,17 @@ class Tasks{
 		return $taskTypes;
 	}
 	
-	/* Function name: getTaskStatusTypes
-	 * Input: -
-	 * Output: array of task status types
+	/** Function name: getTaskStatusTypes
 	 *
 	 * This function returns the task status types.
+	 * 
+	 * @return array of task status types
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	private function getTaskStatusTypes(){
 		try{
-			$statusTypes = DB::table('tasks_status')
-				->orderBy('id', 'asc')
-				->get()
-				->toArray();
+			$statusTypes = P_Tasks::getStatusTypes();
 		}catch(\Exception $ex){
 			$statusTypes = [];
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'tasks_status' was not successful! ".$ex->getMessage());
@@ -568,37 +526,18 @@ class Tasks{
 		return $statusTypes;
 	}
     
-	/* Function name: getTasks
-	 * Input: $userId (int) - user's identifier
-	 * Output: array of tasks
+	/** Function name: getTasks
 	 *
 	 * This function returns the tasks.
+	 * 
+	 * @param int $userId - user's identifier
+	 * @return array of tasks
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
     private function getTasks($userId = 0){
 		try{
-			$tasks = DB::table('tasks_task')
-				->join('tasks_type', 'tasks_type.id', '=', 'tasks_task.type')
-				->join('tasks_status', 'tasks_status.id', '=', 'tasks_task.status')
-				->join('tasks_priority', 'tasks_priority.id', '=', 'tasks_task.priority')
-				->join('users', 'users.id', '=', 'tasks_task.created_by')
-				->when($status != "", function ($query) {
-					return $query->where('tasks_status.id', '=', $this->filters['status']);
-				})
-				->when($priority != "", function ($query){
-					return $query->where('tasks_priority.id', '=', $this->filters['priority']);
-				})
-				->when($this->filters['myTask'], function ($query) use ($userId){
-					return $query->where('tasks_task.assigned', '=', $userId);
-				})
-				->when($this->filters['hideClosed'], function ($query){
-					return $query->where('tasks_status.status', '!=', 'closed');
-				})
-				->where('tasks_task.caption', 'LIKE', '%'.($this->filters['caption']).'%')
-				->where('tasks_task.deleted', '=', 0)
-				->select('tasks_task.id as id', 'created_datetime as date', 'tasks_status.status as status', 'users.name as user', 'caption', 'tasks_priority.name as priority', 'users.username as username')
-				->orderBy('tasks_task.id', 'desc')
-				->get()
-				->toArray();
+			$tasks = P_Tasks::getTasks($this->filters['status'], $this->filters['priority'], $this->filters['myTask'], $userId, $this->filters['hideClosed'], $this->filters['caption']);				
 		}catch(\Exception $ex){
 			$tasks = [];
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'tasks_task', joined to 'tasks_type', 'tasks_status', 'tasks_priority', 'users' was not successful! ".$ex->getMessage());

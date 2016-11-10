@@ -4,8 +4,17 @@ namespace App\Persistence;
 
 use DB;
 
+/** Class name: P_General
+ *
+ * This class is the database persistence layer class
+ * for the general information tables.
+ *
+ * @author Máté Kovács <kovacsur10@gmail.com>
+ */
 class P_General{
 
+//DATABASE FUNCTIONS
+	
 	/** Function name: beginTransaction
 	 *
 	 * This function starts a new database transaction.
@@ -35,6 +44,8 @@ class P_General{
 	static function commit(){
 		DB::commit();
 	}
+
+//LOG FUNCTIONS
 	
 	/** Function name: writeIntoLog
 	 *
@@ -72,6 +83,8 @@ class P_General{
 					'type' => $severity,
 			]);
 	}
+	
+//NOTIFICATION FUNCTIONS
 	
 	/** Function name: insertNewNotification
 	 *
@@ -236,5 +249,321 @@ class P_General{
 			->where('id', '=', $notificationId)
 			->delete();
 	}
+	
+//BASE FUNCTIONS
+	
+	/** Function name: getCountries
+	 * 
+	 * This function returns the countries
+	 * from the database.
+	 * 
+	 * @return array of Countries
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	static function getCountries(){
+		return DB::table('country')
+			->get()
+			->toArray();
+	}
+	
+	/** Function name: getFaculties
+	 *
+	 * This function returns the faculties
+	 * from the database.
+	 *
+	 * @return array of Faculties
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	static function getFaculties(){
+		return DB::table('faculties')
+			->orderBy('id', 'asc')
+			->get()
+			->toArray();
+	}
+	
+	/** Function name: getWorkshops
+	 *
+	 * This function returns the workshops of the dormitory
+	 * from the database.
+	 *
+	 * @return array of Workshops
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	static function getWorkshops(){
+		return DB::table('workshops')
+			->orderBy('id', 'asc')
+			->get()
+			->toArray();
+	}
+	
+	/** Function name: getAdmissionYears
+	 *
+	 * This function returns the admission years
+	 * from the database.
+	 *
+	 * @return array of years
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	static function getAdmissionYears(){
+		return DB::table('admission_years')
+			->orderBy('year', 'asc')
+			->get()
+			->toArray();
+	}
+	
+//MODULE FUNCTIONS
+	
+	/** Function name: getModules
+	 *
+	 * This function returns the available Uran modules
+	 * from the database.
+	 *
+	 * @return array of Modules
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	static function getModules(){
+		return DB::table('modules')
+			->orderBy('id', 'asc')
+			->get()
+			->toArray();
+	}
+	
+	/** Function name: getModuleById
+	 *
+	 * This function returns the Uran module
+	 * from the database based on the requested identifier.
+	 *
+	 * @param int $moduleId - module identifier
+	 * @return Module|null
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	static function getModuleById($moduleId){
+		return DB::table('modules')
+			->where('id', '=', $moduleId)
+			->first();
+	}
+	
+	/** Function name: getActiveModules
+	 *
+	 * This function returns the active Uran modules
+	 * from the database.
+	 *
+	 * @return array of Modules
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	static function getActiveModules(){
+		return DB::table('active_modules')
+			->join('modules', 'modules.id', '=', 'active_modules.module_id')
+			->orderBy('modules.id', 'asc')
+			->get()
+			->toArray();
+	}
+	
+	/** Function name: getModulesLeftJoinedToActives
+	 *
+	 * This function returns the available Uran modules
+	 * left joined to the active modules from the database.
+	 *
+	 * @return array of Modules
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	static function getModulesLeftJoinedToActives(){
+		return DB::table('modules')
+			->leftJoin('active_modules', 'active_modules.module_id', '=', 'modules.id')
+			->orderBy('modules.id', 'asc')
+			->get()
+			->toArray();
+	}
+	
+	/** Function name: getActiveModuleById
+	 *
+	 * This function returns the active Uran module
+	 * from the database based on the requested identifier.
+	 *
+	 * @param int $moduleId - module identifier
+	 * @return Module|null
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	static function getActiveModuleById($moduleId){
+		return DB::table('active_modules')
+			->join('modules', 'modules.id', '=', 'active_modules.module_id')
+			->where('module_id', '=', $moduleId)
+			->first();
+	}
+	
+	/** Function name: getActiveModuleByName
+	 *
+	 * This function returns the active Uran module
+	 * from the database based on the requested module name.
+	 *
+	 * @param text $moduleName - module name
+	 * @return Module|null
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	static function getActiveModuleByName($moduleName){
+		return DB::table('active_modules')
+			->join('modules', 'modules.id', '=', 'active_modules.module_id')
+			->where('modules.name','LIKE', $moduleName)
+			->first();
+	}
+	
+	/** Function name: activateModulById
+	 *
+	 * This function activates the requested module.
+	 *
+	 * @param text $moduleId - module name
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	static function activateModulById($moduleId){
+		DB::table('active_modules')
+			->insert([
+					'module_id' => $moduleId
+			]);
+	}
 
+	/** Function name: deactivateModuleById
+	 *
+	 * This function deactivates the requested module.
+	 *
+	 * @param text $moduleId - module name
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	static function deactivateModuleById($moduleId){
+		DB::table('active_modules')
+			->where('module_id', '=', $moduleId)
+			->delete();
+	}
+	
+//PERMISSIONS
+
+	/** Function name: getPermissions
+	 *
+	 * This function returns all of the
+	 * available permissions.
+	 *
+	 * @return array of Permissions
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	static function getPermissions(){
+		return DB::table('permissions')
+			->orderBy('id', 'asc')
+			->get()
+			->toArray();
+	}
+	
+	/** Function name: getPermissionById
+	 *
+	 * This function returns a permission
+	 * for the requested identifier.
+	 *
+	 * @param int $permissionId - permission identifier
+	 * @return Permission|null
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	static function getPermissionById($permissionId){
+		return DB::table('permissions')
+			->where('permissions.id', '=', $permissionId)
+			->first();
+	}
+	
+	/** Function name: getPermissionByName
+	 *
+	 * This function returns a permission
+	 * for the requested name.
+	 *
+	 * @param int $permissionName - name of a permission
+	 * @return Permission|null
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	static function getPermissionByName($permissionName){
+		return DB::table('permissions')
+			->where('permission_name', 'LIKE', $permissionName)
+			->first();
+	}
+	
+	/** Function name: getDefaultPermissions
+	 *
+	 * This function returns the default permissions
+	 * for the requested user type.
+	 *
+	 * @param text $userType - "collegist" or "guest"
+	 * @return array of Permissions
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	static function getDefaultPermissions($userType){
+		return DB::table('default_permissions')
+			->where('registration_type', 'LIKE', $userType)
+			->orderBy('id', 'asc')
+			->get()
+			->toArray();
+	}
+	
+	/** Function name: hasDefaultPermission
+	 *
+	 * This function returns the Permission
+	 * requested by the user type and permission
+	 * identifier.
+	 *
+	 * @param text $userType - "collegist" or "guest"
+	 * @param int $permissionId - permission identifier
+	 * @return Permission|null
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	static function hasDefaultPermission($userType, $permissionId){
+		return $DB::table('default_permissions')
+			->where('registration_type', 'LIKE', $userType)
+			->where('permission', '=', $permissionId)
+			->orderBy('id', 'asc')
+			->first();
+	}
+	
+	/** Function name: deleteDefaultPermissionsForRegistrationType
+	 *
+	 * This function removes the default permissions for a
+	 * registration user type.
+	 *
+	 * @param text $userType - "collegist" or "guest"
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	static function deleteDefaultPermissionsForRegistrationType($userType){
+		DB::table('default_permissions')
+			->where('registration_type', 'LIKE', $userType)
+			->delete();
+	}
+	
+	/** Function name: insertNewDefaultPermission
+	 *
+	 * This function adds a new default permissions for a
+	 * registration user type.
+	 *
+	 * @param text $userType - "collegist" or "guest"
+	 * @param int $permissionId - permission identifier
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	static function insertNewDefaultPermission($userType, $permissionId){
+		DB::table('default_permissions')
+			->insert([
+					'registration_type' => $userType,
+					'permission' => $permissionId
+			]);
+	}
 }

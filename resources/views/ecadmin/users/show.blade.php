@@ -8,7 +8,7 @@
                 <div class="panel-heading"><a href="{{ url('ecadmin/user/list') }}">{{ $layout->language('user') }}</a></div>
                 <div class="panel-body">
 				@if($layout->user()->permitted('user_handling'))
-					<?php $user = $target->getUserData_Administration($target->user()->id); ?>
+					<?php $user = $target->getUserData($target->user()->id); ?>
 				
 					<form class="form-horizontal" role="form" method="POST" action="{{ url('/ecadmin/user/show/'.$user->id) }}">
 						{!! csrf_field() !!}
