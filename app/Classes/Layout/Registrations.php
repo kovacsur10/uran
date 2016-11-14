@@ -5,6 +5,10 @@ namespace App\Classes\Layout;
 use Carbon\Carbon;
 use App\Persistence\P_User;
 use App\Persistence\P_General;
+use App\Exceptions\ValueMismatchException;
+use App\Exceptions\DatabaseException;
+use App\Classes\Database;
+use App\Classes\LayoutData;
 
 /** Class name: Registrations
  *
@@ -111,132 +115,7 @@ class Registrations{
 		}
 		return $errorCode;
 	}
-	
-	/** Function name: getNotVerifiedUserData
-	 *
-	 * This function returns the requested
-	 * registered, but not accepted
-	 * or rejected user.
-	 * 
-	 * @param text $username - user's text identifier
-	 * @return User|null
-	 * 
-	 * @author Máté Kovács <kovacsur10@gmail.com>
-	 */
-	public function getNotVerifiedUserData($username){
-		try{
-			$user = P_User::getRegistrationUserByUsername($username);
-		}catch(\Illuminate\Database\QueryException $e){
-			$user = null;
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'users' was not successful! ".$ex->getMessage());
-		}
-		return $user;
-	}
-	
-	/** Function name: addCode
-	 *
-	 * This function returns the requested
-	 * registered, but not accepted
-	 * or rejected user.
-	 * 
-	 * THROWS EXCEPTIONS!
-	 * 
-	 * @param int $userId - user's identifier
-	 * @param text $code - registration code
-	 * 
-	 * @author Máté Kovács <kovacsur10@gmail.com>
-	 */
-	public function addCode($userId, $code){
-		addRegistrationCodeEntry($userId, $code);
-	}
-	
-	/** Function name: insertGuestData
-	 * 
-	 * This function registers a guest user.
-	 * 
-	 * @param text $username - user's username
-	 * @param text $password - user's password
-	 * @param text $email - user's e-mail address
-	 * @param text $name - user's name
-	 * @param text $country - user's country (address)
-	 * @param text $shire - user's shire (address)
-	 * @param text $postalCode - user's postal code (address)
-	 * @param text $address - user's address (address)
-	 * @param text $city - user's city (address)
-	 * @param text $reasonOfRegistration - user's reason of registration
-	 * @param text $phoneNumber - user's phone number
-	 * @param text $defaultLanguage - user's default language
-	 * 
-	 * @author Máté Kovács <kovacsur10@gmail.com>
-	 */
-	public function insertGuestData($username, $password, $email, $name, $country, $shire, $postalCode, $address, $city, $reasonOfRegistration, $phoneNumber, $defaultLanguage){
-		try{
-			$date = Carbon::now()->toDateTimeString();
-			P_User::addRegistrationData($username, password_hash($password, PASSWORD_DEFAULT), $email, $name, $country, $shire, $postalCode, $address, $city, $reasonOfRegistration, $phoneNumber, $defaultLanguage, null, null, null, null, null, null, null, null, null, $date);
-		}catch(\Exception $ex){
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Insert into table 'users' was not successful! ".$ex->getMessage());
-		}
-	}
-
-	/** Function name: insertCollegistData
-	 * 
-	 * This function registers a guest user.
-	 * 
-	 * @param text $username
-	 * @param text $password
-	 * @param text $email
-	 * @param text $name
-	 * @param text $country
-	 * @param text $shire
-	 * @param text $postalCode
-	 * @param text $address
-	 * @param text $city
-	 * @param text $phoneNumber
-	 * @param text $defaultLanguage
-	 * @param text $cityOfBirth
-	 * @param datetime $dateOfBirth
-	 * @param text $nameOfMother
-	 * @param int $yearOfLeavingExam
-	 * @param text $highSchool
-	 * @param text $neptun
-	 * @param int $applicationYear
-	 * @param int $faculty
-	 * @param int $workshop
-	 * 
-	 * @author Máté Kovács <kovacsur10@gmail.com>
-	 */
-	public function insertCollegistData($username, $password, $email, $name, $country, $shire, $postalCode, $address, $city, $phoneNumber, $defaultLanguage, $cityOfBirth, $dateOfBirth, $nameOfMother, $yearOfLeavingExam, $highSchool, $neptun, $applicationYear, $faculty, $workshop){
-		try{
-			$date = Carbon::now()->toDateTimeString();
-			P_User::addRegistrationData($username, password_hash($password, PASSWORD_DEFAULT), $email, $name, $country, $shire, $postalCode, $address, $city, null, $phoneNumber, $defaultLanguage, $cityOfBirth, substr(str_replace('.', '-', $dateOfBirth), 0, -1), $nameOfMother, $yearOfLeavingExam, $highSchool, $neptun, $applicationYear, $faculty, $workshop, $date);
-		}catch(\Exception $ex){
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Insert into table 'users' was not successful! ".$ex->getMessage());
-		}
-	}
-	
-	/** Function name: addUserDefaultPermissions
-	 *
-	 * This function gives the registered user
-	 * the default permissions based on the user
-	 * type.
-	 * 
-	 * THROWS EXCEPTIONS!
-	 * 
-	 * @param text $userType - user's type
-	 * @param int $userId - user's identifier
-	 * @return int - error code
-	 * 
-	 * @author Máté Kovács <kovacsur10@gmail.com>
-	 */
-	public function addUserDefaultPermissions($userType, $userId){
-		//get the default permissions
-		$permissions = P_General::getDefaultPermissions();
-		//set the user permissions
-		foreach($permissions as $permission){
-			P_User::addPermissionForUser($userId, $permission->permission);
-		}
-	}
-	
+			
 	/** Function name: reject
 	 *
 	 * This function rejects a user
@@ -333,6 +212,168 @@ class Registrations{
 		return $errorCode;
 	}
 	
+	/** Function name: register
+	 *
+	 * This function register a user.
+	 *
+	 * @param text $username - mandatory
+	 * @param text $password - mandatory
+	 * @param text $email - mandatory
+	 * @param text $name - mandatory
+	 * @param text $country - mandatory
+	 * @param text $shire - mandatory
+	 * @param text $postalCode - mandatory
+	 * @param text $address - mandatory
+	 * @param text $city - mandatory
+	 * @param text|null $reason - in case of 'guest' user
+	 * @param text $phoneNumber - mandatory
+	 * @param text $defaultLanguage - mandatory
+	 * @param text|null $cityOfBirth - in case of 'collegist' user
+	 * @param datetime|null $dateOfBirth - in case of 'collegist' user
+	 * @param text|null $nameOfMother - in case of 'collegist' user
+	 * @param int|null $yearOfLeavingExam - in case of 'collegist' user
+	 * @param text|null $highSchool - in case of 'collegist' user
+	 * @param text|null $neptun - in case of 'collegist' user
+	 * @param int|null $applicationYear - in case of 'collegist' user
+	 * @param int|null $faculty - in case of 'collegist' user
+	 * @param int|null $workshop - in case of 'collegist' user
+	 * 
+	 * @throws ValueMismatchException when the provided data is not correct, it cannot be a 'guest' or 'collegist' user.
+	 * @throws DatabaseException when the registration cannot be made because of a database error.
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	public function register($username, $password, $email, $name, $country, $shire, $postalCode, $address, $city, $reason, $phoneNumber, $defaultLanguage, $cityOfBirth, $dateOfBirth, $nameOfMother, $yearOfLeavingExam, $highSchool, $neptun, $applicationYear, $faculty, $workshop){
+		Database::beginTransaction(); //DATABASE TRANSACTION STARTS HERE
+		
+		//validate input data
+		if($username === null || $password === null || $email === null || $name === null || $country === null || $shire === null || $postalCode === null ||$address === null || $city === null || $phoneNumber === null || $defaultLanguage === null){
+			throw ValueMismatchException("A mandatory parameter is null!");
+		}
+		$password = password_hash($password, PASSWORD_DEFAULT);
+		if($reason === null){
+			$dateOfBirth = substr(str_replace('.', '-', $dateOfBirth), 0, -1);
+			if($cityOfBirth === null || $dateOfBirth === null || $nameOfMother === null || $yearOfLeavingExam === null || $highSchool === null || $neptun === null || $applicationYear === null ||$faculty === null || $workshop === null){
+				throw ValueMismatchException("A mandatory parameter is null!");
+			}
+			$userType = 'collegist';
+		}else{
+			$cityOfBirth = null;
+			$dateOfBirth = null;
+			$nameOfMother = null;
+			$yearOfLeavingExam = null;
+			$highSchool = null;
+			$neptun = null;
+			$applicationYear = null;
+			$faculty = null;
+			$workshop = null;
+			$userType = 'guest';
+		}
+		$date = Carbon::now()->toDateTimeString();
+		$registrationCode = sha1($username . $date . $email);
+		
+		//add registration to the database
+		try{
+			P_User::addRegistrationData($username, $password, $email, $name, $country, $shire, $postalCode, $address, $city, $reason, $phoneNumber, $defaultLanguage, $cityOfBirth, $dateOfBirth, $nameOfMother, $yearOfLeavingExam, $highSchool, $neptun, $applicationYear, $faculty, $workshop, $date);
+			$user = $this->getNotVerifiedUserData($username);
+		}catch(\Illuminate\Database\QueryException $e){
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
+			$this->registrationCleanUp();
+		}
+		if($user === null){
+			$this->registrationCleanUp();
+		}else{
+			try{
+				P_User::addRegistrationCodeEntry($user->id, $registrationCode);
+				$this->addUserDefaultPermissions($userType, $user->id);
+					
+				// ECNET PART
+				$layout = new LayoutData();
+				if($layout->modules()->isActivatedByName('ecnet')){
+					$layout->setUser(new EcnetUser(0));
+					$layout->user()->register($user->id);
+				}
+				// ECNET PART END
+				Database::commit();
+				//set up the language for the e-mail
+				if($layout->lang() == "hu_HU" || $layout->lang() == "en_US"){
+					$lang = $layout->lang();
+				}else{
+					$lang = "hu_HU";
+				}
+				//send e-mail
+				Mail::send('mails.verification_'.$lang, ['name' => $name, 'link' => url('/register/'.$registrationCode)], function ($m) use ($email, $name, $layout) {
+					$m->to($email, $name);
+					$m->subject($layout->language('confirm_registration'));
+				});
+			}catch(\Exception $ex){
+				Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
+				$this->registrationCleanUp();
+			}
+		}
+	}
+	
 // PRIVATE FUNCTIONS
-
+	/** Function name: getNotVerifiedUserData
+	 *
+	 * This function returns the requested
+	 * registered, but not accepted
+	 * or rejected user.
+	 *
+	 * @param text $username - user's text identifier
+	 * @return User|null
+	 *
+	 * @throws DatabaseException is when the persistence layer returns an exception.
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	private function getNotVerifiedUserData($username){
+		try{
+			$user = P_User::getRegistrationUserByUsername($username);
+		}catch(\Illuminate\Database\QueryException $e){
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'users' was not successful! ".$ex->getMessage());
+			throw DatabaseException();
+		}
+		return $user;
+	}
+	
+	/** Function name: addUserDefaultPermissions
+	 *
+	 * This function gives the registered user
+	 * the default permissions based on the user
+	 * type.
+	 *
+	 * @param text $userType - user's type
+	 * @param int $userId - user's identifier
+	 * @return int - error code
+	 *
+	 * @throws QueryException when the persistence layer fails.
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	private function addUserDefaultPermissions($userType, $userId){
+		//get the default permissions
+		$permissions = P_General::getDefaultPermissions();
+		//set the user permissions
+		foreach($permissions as $permission){
+			P_User::addPermissionForUser($userId, $permission->permission);
+		}
+	}
+	
+	/** Function name: registrationCleanUp
+	 *
+	 * This function cleans up when an error
+	 * occures during the registration.
+	 *
+	 * @throws DatabaseException always.
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	private function registrationCleanUp(){
+		try{
+			Database::rollback();
+		}catch(\Exception $ex){
+		}
+		throw DatabaseException("Registration could not be done!");
+	}
 }

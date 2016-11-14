@@ -6,6 +6,10 @@ use Carbon\Carbon;
 use App\Classes\LayoutData;
 use App\Classes\Logger;
 use App\Persistence\P_User;
+use Illuminate\Support\Facades\Session;
+use App\Exceptions\UserNotFoundException;
+use App\Exceptions\ValueMismatchException;
+use App\Exceptions\DatabaseException;
 
 /** Class name: Auth
  *
@@ -22,41 +26,49 @@ use App\Persistence\P_User;
 class Auth{
 	
 // PUBLIC FUNCTIONS
-
-	/** Function name: updateLoginDate
+	/** Function name: logout
 	 *
-	 * This function updates the login date for the
-	 * user, who logged in to the page.
-	 * 
-	 * @param text $username - the user's username
-	 * 
+	 * This function logs out the current user.
+	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public static function updateLoginDate($username){
-		try{
-			P_User::updateUserLoginTime($username, Carbon::now()->toDateTimeString());
-		}catch(Exception $ex){
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Update 'users' was not successful! ".$ex->getMessage());
+	public static function logout(){
+		if(Session::has('user')){
+			Session::forget('user');
 		}
 	}
 	
-	 /** Function name: setUserLanguage
+	/** Function name: login
 	 *
-	 * This function sets the language of the page
-	 * based on the user's saved data.
+	 * This function logs out the current user.
 	 * 
-	 * @param text $username - the user's username
+	 * @param string $username - the login user's name
+	 * @param string $password - the login user's password
+	 *
+	 * @throws DatabaseException It's thrown when the user login time could not be updated.
+	 * @throws ValueMismatchException The given password did not match with the one in the database.
+	 * @throws UserNotFoundException The given user could not be found.
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public static function setUserLanguage($username){
-		try{
-			$user = P_User::getUserByUsername($username);
-		}catch(Exception $ex){
-			$user = null;
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from 'users' was not successful! ".$ex->getMessage());
+	public static function login($username, $password){
+		$user = Auth::getUser(strtolower($username));
+		if($user !== null){
+			if(password_verify($password, $user->password)){
+				try{
+					P_User::updateUserLoginTime($username, Carbon::now()->toDateTimeString());
+				}catch(\Illuminate\Database\QueryException $e){
+					Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
+					throw DatabaseException("User login time could not be updated!");
+				}
+				LayoutData::setLanguage($user->language);
+				Session::put('user', $user);
+			}else{ //password doesn't match
+				throw ValueMismatchException("Password mismatch!");
+			}
+		}else{ //username not found
+			throw UserNotFoundException();
 		}
-		LayoutData::setLanguage($user->language);
 	}
 	
 	/** Function name: getUser
