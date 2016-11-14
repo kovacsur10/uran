@@ -115,7 +115,7 @@ class Registrations{
 		}
 		return $errorCode;
 	}
-			
+	
 	/** Function name: reject
 	 *
 	 * This function rejects a user

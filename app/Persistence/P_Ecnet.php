@@ -2,6 +2,8 @@
 
 namespace App\Persistence;
 
+use DB;
+
 /** Class name: P_Ecnet
  *
  * This class is the database persistence layer class

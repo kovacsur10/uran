@@ -157,9 +157,9 @@ class P_User{
 			->join('workshops', 'workshops.id', '=', 'users.workshop')
 			->join('faculties', 'faculties.id', '=', 'users.faculty')
 			->where('users.id', '=', $userId)
-			->when($userId !== 0, function($query){
+			/*->when($userId !== 0, function($query){
 				return $query->where('users.registered', '=', true);
-			})
+			})*/
 			->select('users.id as id', 'users.username as username', 'users.email as email', 'users.registration_date as registration_date', 'users.name as name', 'users.country as country', 'users.shire as shire', 'users.city as city', 'users.postalcode as postalcode', 'users.address as address', 'users.phone as phone', 'users.reason as reason', 'users.neptun as neptun', 'users.city_of_birth as city_of_birth', 'users.date_of_birth as date_of_birth', 'users.name_of_mother as name_of_mother', 'users.high_school as high_school', 'users.year_of_leaving_exam as year_of_leaving_exam', 'user_status_codes.status_name as status', 'user_status_codes.id as status_id', 'workshops.name as workshop', 'workshops.id as workshop_id', 'faculties.name as faculty', 'faculties.id as faculty_id', 'users.from_year as admission_year')
 			->first();
 	}
@@ -182,7 +182,7 @@ class P_User{
 			->join('faculties', 'faculties.id', '=', 'users.faculty')
 			->where('users.username', 'LIKE', $username)
 			->where('users.registered', '=', 1)
-			->select('users.id as id', 'users.username as username', 'users.email as email', 'users.registration_date as registration_date', 'users.name as name', 'users.country as country', 'users.shire as shire', 'users.city as city', 'users.postalcode as postalcode', 'users.address as address', 'users.phone as phone', 'users.reason as reason', 'users.neptun as neptun', 'users.city_of_birth as city_of_birth', 'users.date_of_birth as date_of_birth', 'users.name_of_mother as name_of_mother', 'users.high_school as high_school', 'users.year_of_leaving_exam as year_of_leaving_exam', 'user_status_codes.status_name as status', 'user_status_codes.id as status_id', 'workshops.name as workshop', 'workshops.id as workshop_id', 'faculties.name as faculty', 'faculties.id as faculty_id', 'users.from_year as admission_year')
+			->select('users.id as id', 'users.username as username', 'users.password as password', 'users.email as email', 'users.registration_date as registration_date', 'users.name as name', 'users.country as country', 'users.shire as shire', 'users.city as city', 'users.postalcode as postalcode', 'users.address as address', 'users.phone as phone', 'users.reason as reason', 'users.neptun as neptun', 'users.city_of_birth as city_of_birth', 'users.date_of_birth as date_of_birth', 'users.name_of_mother as name_of_mother', 'users.high_school as high_school', 'users.year_of_leaving_exam as year_of_leaving_exam', 'user_status_codes.status_name as status', 'user_status_codes.id as status_id', 'workshops.name as workshop', 'workshops.id as workshop_id', 'faculties.name as faculty', 'faculties.id as faculty_id', 'users.from_year as admission_year', 'users.language as language')
 			->first();
 	}
 	
@@ -276,7 +276,6 @@ class P_User{
 	 */
 	static function getRegistrationUserByUsername($username){
 		return DB::table('users')
-			->join('registrations', 'registrations.user_id', '=', 'users.id')
 			->where('users.registered', '=', false)
 			->where('users.username', 'LIKE', $username)
 			->first();
