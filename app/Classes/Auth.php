@@ -59,15 +59,15 @@ class Auth{
 					P_User::updateUserLoginTime($username, Carbon::now()->toDateTimeString());
 				}catch(\Illuminate\Database\QueryException $e){
 					Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
-					throw DatabaseException("User login time could not be updated!");
+					throw new DatabaseException("User login time could not be updated!");
 				}
 				LayoutData::setLanguage($user->language);
 				Session::put('user', $user);
 			}else{ //password doesn't match
-				throw ValueMismatchException("Password mismatch!");
+				throw new ValueMismatchException("Password mismatch!");
 			}
 		}else{ //username not found
-			throw UserNotFoundException();
+			throw new UserNotFoundException();
 		}
 	}
 	

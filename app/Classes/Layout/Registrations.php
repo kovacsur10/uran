@@ -248,13 +248,13 @@ class Registrations{
 		
 		//validate input data
 		if($username === null || $password === null || $email === null || $name === null || $country === null || $shire === null || $postalCode === null ||$address === null || $city === null || $phoneNumber === null || $defaultLanguage === null){
-			throw ValueMismatchException("A mandatory parameter is null!");
+			throw new ValueMismatchException("A mandatory parameter is null!");
 		}
 		$password = password_hash($password, PASSWORD_DEFAULT);
 		if($reason === null){
 			$dateOfBirth = substr(str_replace('.', '-', $dateOfBirth), 0, -1);
 			if($cityOfBirth === null || $dateOfBirth === null || $nameOfMother === null || $yearOfLeavingExam === null || $highSchool === null || $neptun === null || $applicationYear === null ||$faculty === null || $workshop === null){
-				throw ValueMismatchException("A mandatory parameter is null!");
+				throw new ValueMismatchException("A mandatory parameter is null!");
 			}
 			$userType = 'collegist';
 		}else{
@@ -332,7 +332,7 @@ class Registrations{
 			$user = P_User::getRegistrationUserByUsername($username);
 		}catch(\Illuminate\Database\QueryException $e){
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'users' was not successful! ".$ex->getMessage());
-			throw DatabaseException();
+			throw new DatabaseException();
 		}
 		return $user;
 	}
@@ -374,6 +374,6 @@ class Registrations{
 			Database::rollback();
 		}catch(\Exception $ex){
 		}
-		throw DatabaseException("Registration could not be done!");
+		throw new DatabaseException("Registration could not be done!");
 	}
 }
