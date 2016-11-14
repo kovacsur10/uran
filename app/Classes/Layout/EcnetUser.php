@@ -176,7 +176,7 @@ class EcnetUser extends User{
 	 * 
 	 * @param int $userId - user's identifier
 	 * 
-	 * @exception QueryException
+	 * @thrown QueryException when the persistence layer throws an exception.
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
