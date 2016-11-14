@@ -139,7 +139,7 @@ class P_Tasks{
 			->when($hideClosed, function ($query){
 				return $query->where('tasks_status.status', 'NOT LIKE', 'closed');
 			})
-			-when($caption != "", function($query) use($caption){
+			->when($caption != "", function($query) use($caption){
 				return $query->where('tasks_task.caption', 'LIKE', '%'.$caption.'%');
 			})
 			->where('tasks_task.deleted', '=', false)

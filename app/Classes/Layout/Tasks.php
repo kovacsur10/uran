@@ -537,10 +537,10 @@ class Tasks{
 	 */
     private function getTasks($userId = 0){
 		try{
-			$tasks = P_Tasks::getTasks($this->filters['status'], $this->filters['priority'], $this->filters['myTask'], $userId, $this->filters['hideClosed'], $this->filters['caption']);				
+			$tasks = P_Tasks::getTasks($this->filters['status'], $this->filters['priority'], $this->filters['myTasks'], $userId, $this->filters['hideClosed'], $this->filters['caption']);				
 		}catch(\Exception $ex){
 			$tasks = [];
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'tasks_task', joined to 'tasks_type', 'tasks_status', 'tasks_priority', 'users' was not successful! ".$ex->getMessage());
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 		}
 		return $tasks;
 	}
