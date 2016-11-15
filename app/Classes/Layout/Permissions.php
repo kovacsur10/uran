@@ -192,17 +192,16 @@ class Permissions{
 		$errorCode = 0;
 		P_General::beginTransaction();
 		try{
-			//first, delete all the permissions
-			P_General::deleteDefaultPermissionsForRegistrationType();
-			//add the new permissions
-			foreach($permissions as $permission){
-				P_General::insertNewDefaultPermission($userType, $permission);
-			}
-			P_General::commit();
+			P_General::transaction(function(){
+				//first, delete all the permissions
+				P_General::deleteDefaultPermissionsForRegistrationType();
+				//add the new permissions
+				foreach($permissions as $permission){
+					P_General::insertNewDefaultPermission($userType, $permission);
+				}
+			});
 		}catch(\Exception $ex){
-			P_General::rollback();
 			$errorCode = 1;
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Delete from or insert into table 'default_permissions' was not successful! ".$ex->getMessage());
 		}
 		return $errorCode;
 	}

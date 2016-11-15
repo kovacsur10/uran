@@ -177,7 +177,7 @@ class P_General{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	static function getUnseenNotificationCountForUser($userId){
-		DB::table('notifications')
+		return DB::table('notifications')
 			->where('user_id', '=', $userId)
 			->where('seen', '=', 'false')
 			->count('id');

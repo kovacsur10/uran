@@ -6,6 +6,8 @@ use Carbon\Carbon;
 use App\Classes\Layout\User;
 use App\Persistence\P_General;
 use App\Persistence\P_User;
+use App\Exceptions\DatabaseException;
+use App\Exceptions\UserNotFoundException;
 
 /** Class name: Notifications
  *
@@ -146,9 +148,12 @@ class Notifications{
 	 * @param int $userId - requested user identifier
 	 * @return array of the user's notifications
 	 * 
+	 * @throws UserNotFoundException when the provided user does not exist.
+	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public static function getNotifications($userId){
+		User::getUserData($userId); //check the user
 		try{
 			$ret = P_General::getNotificationsForUser($userId);
 		}catch(Exception $ex){
@@ -166,9 +171,12 @@ class Notifications{
 	 * @param int $userId - requested user
 	 * @return int - count of unseen notifications
 	 * 
+	 * @throws UserNotFoundException when the provided user does not exist.
+	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public static function getUnreadNotificationCount($userId){
+		User::getUserData($userId); //check the user
 		try{
 			$count = P_General::getUnseenNotificationCountForUser($userId);
 		}catch(Exception $ex){
@@ -205,19 +213,18 @@ class Notifications{
 	 * notifiation as read.
 	 * 
 	 * @param int $notificationId - identifier of a notification
-	 * @return bool (successfully updated or not)
+	 * 
+	 * @throws DatabaseException when the update is not successful!
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public static function setRead($notificationId){
 		try{
 			P_General::setNotificationAsSeen($notificationId);
-			$success = true;
 		}catch(Exception $ex){
-			$success = false;
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Update table 'notifications' was not successful! ".$ex->getMessage());
+			throw new DatabaseException("Could not set the notification as seen!");
 		}
-		return $success;
 	}
 	
 // PRIVATE FUNCTIONS

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Classes\User;
 use App\Classes\Auth;
 use App\Classes\LayoutData;
+use App\Classes\Layout\User;
 use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
@@ -25,7 +26,7 @@ class PasswordController extends Controller{
             'username' => 'required',
 		]);
 		$layout = new LayoutData();
-		$user = Auth::getUser($request->input('username'));
+		$user = User::getUserDataByUsername($request->input('username'));
 		if($user == null){ 
 			$layout = new LayoutData();
 			return view('errors.error', ["layout" => $layout,
@@ -52,7 +53,7 @@ class PasswordController extends Controller{
 	}
 	
 	public function showPasswordForm($username, $code){
-		$user = Auth::getUser($username);
+		$user = User::getUserDataByUsername($username);
 		if($user == null){ 
 			$layout = new LayoutData();
 			return view('errors.error', ["layout" => $layout,
@@ -80,6 +81,7 @@ class PasswordController extends Controller{
 	
 	public function completeReset(Request $request){
 		$layout = new LayoutData();
+		//validation part
 		$this->validate($request, [
             'username' => 'required',
             'password' => 'required|min:8|max:64|confirmed||regex:/(^[A-Za-z0-9\-_\/]+$)/',

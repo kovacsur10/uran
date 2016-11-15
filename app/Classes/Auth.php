@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use App\Classes\LayoutData;
 use App\Classes\Logger;
 use App\Persistence\P_User;
+use App\Classes\Layout\User;
 use Illuminate\Support\Facades\Session;
 use App\Exceptions\UserNotFoundException;
 use App\Exceptions\ValueMismatchException;
@@ -52,42 +53,19 @@ class Auth{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public static function login($username, $password){
-		$user = Auth::getUser(strtolower($username));
-		if($user !== null){
-			if(password_verify($password, $user->password)){
-				try{
-					P_User::updateUserLoginTime($username, Carbon::now()->toDateTimeString());
-				}catch(\Illuminate\Database\QueryException $e){
-					Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
-					throw new DatabaseException("User login time could not be updated!");
-				}
-				LayoutData::setLanguage($user->language);
-				Session::put('user', $user);
-			}else{ //password doesn't match
-				throw new ValueMismatchException("Password mismatch!");
+		$user = User::getUserDataByUsername(strtolower($username));
+		if(password_verify($password, $user->password)){
+			try{
+				P_User::updateUserLoginTime($username, Carbon::now()->toDateTimeString());
+			}catch(\Illuminate\Database\QueryException $e){
+				Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
+				throw new DatabaseException("User login time could not be updated!");
 			}
-		}else{ //username not found
-			throw new UserNotFoundException();
+			LayoutData::setLanguage($user->language);
+			Session::put('user', $user);
+		}else{ //password doesn't match
+			throw new ValueMismatchException("Password mismatch!");
 		}
-	}
-	
-	/** Function name: getUser
-	 *
-	 * This function returns the requested user's data.
-	 * 
-	 * @param text $username - the user's username
-	 * @return User data|null
-	 * 
-	 * @author Máté Kovács <kovacsur10@gmail.com>
-	 */
-	public static function getUser($username){
-		try{
-			$user = P_User::getUserByUsername($username);
-		}catch(Exception $ex){
-			$user = null;
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from 'users' was not successful! ".$ex->getMessage());
-		}
-		return $user;
 	}
 	
 	/** Function name: updatePassword
@@ -98,13 +76,19 @@ class Auth{
 	 * @param text $username - the user's username
 	 * @param text $password - the user's password
 	 * 
+	 * @throws UserNotFoundException when the username was not associated with a real user.
+	 * @throws DatabaseException when the password update failed due to a persistence layer error.
+	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public static function updatePassword($username, $password){
+		$username = strtolower($username);
+		User::getUserDataByUsername($username); //throws exception when user was not found
 		try{
-			P_User::updateUserPassword($username, $password);
+			P_User::updateUserPassword($username, password_hash($password, PASSWORD_DEFAULT));
 		}catch(Exception $ex){
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Update table 'users' was not successful! ".$ex->getMessage());
+			throw new DatabaseException("Password update failed!");
 		}
 	}
 	

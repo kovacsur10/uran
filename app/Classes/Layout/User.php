@@ -5,6 +5,7 @@ namespace App\Classes\Layout;
 use App\Classes\Layout\Permissions;
 use App\Classes\Notifications;
 use App\Persistence\P_User;
+use App\Exceptions\UserNotFoundException;
 
 /** Class name: User
  *
@@ -41,11 +42,20 @@ class User{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function __construct($userId){
-		$this->user = $this->getUserData($userId);
+		try{
+			$this->user = $this->getUserData($userId);
+		}catch(\Exception $ex){
+			$this->user = null;
+		}
 		$tmpPermissions = new Permissions();
 		$this->permissions = $tmpPermissions->getForUser($userId);
-		$this->notifications = Notifications::getNotifications($userId);
-		$this->unreadNotificationCount = Notifications::getUnreadNotificationCount($userId);
+		try{
+			$this->notifications = Notifications::getNotifications($userId);
+			$this->unreadNotificationCount = Notifications::getUnreadNotificationCount($userId);
+		}catch(\Exception $ex){
+			$this->notifications = null;
+			$this->unreadNotificationCount = 0;
+		}
 	}
 	
 	/** Function name: user
@@ -185,14 +195,19 @@ class User{
 	 * @param int $userId - user's identifier
 	 * @return User|null - user data
 	 * 
+	 * @throws UserNotFoundException when the user cannot be found or a database error occurs.
+	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function getUserData($userId){
+	public static function getUserData($userId){
 		try{
 			$user = P_User::getUserById($userId);
 		}catch(\Exception $ex){
 			$user = null;
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'users' was not successful! ".$ex->getMessage());
+		}
+		if($user === null){
+			throw new UserNotFoundException();
 		}
 		return $user;
 	}
@@ -207,14 +222,19 @@ class User{
 	 * @param text $username - user's name
 	 * @return User|null the requested user's data
 	 * 
+	 * @throws UserNotFoundException when the user cannot be found or a database error occurs.
+	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function getUserDataByUsername($username){
+	public static function getUserDataByUsername($username){
 		try{
 			$user = P_User::getUserByUsername($username);
 		}catch(\Exception $ex){
 			$user = null;
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'users' was not successful! ".$ex->getMessage());
+		}
+		if($user === null){
+			throw new UserNotFoundException();
 		}
 		return $user;
 	}
