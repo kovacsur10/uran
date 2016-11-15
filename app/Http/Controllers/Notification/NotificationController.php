@@ -22,7 +22,10 @@ class NotificationController extends Controller{
 										 "message" => $layout->language('error_notification_view_insufficient_permission'),
 										 "url" => '/notification/list/0']);
 		}else{
-			Notifications::setRead($notificationId);
+			try{
+				Notifications::setRead($notificationId);
+			}catch(\Exception $ex){
+			}
 			if($notification->route === null)
 				return redirect('notification/list/0');
 			else

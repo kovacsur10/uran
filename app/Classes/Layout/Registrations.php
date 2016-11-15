@@ -243,9 +243,7 @@ class Registrations{
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function register($username, $password, $email, $name, $country, $shire, $postalCode, $address, $city, $reason, $phoneNumber, $defaultLanguage, $cityOfBirth, $dateOfBirth, $nameOfMother, $yearOfLeavingExam, $highSchool, $neptun, $applicationYear, $faculty, $workshop){
-		Database::beginTransaction(); //DATABASE TRANSACTION STARTS HERE
-		
+	public function register($username, $password, $email, $name, $country, $shire, $postalCode, $address, $city, $reason, $phoneNumber, $defaultLanguage, $cityOfBirth, $dateOfBirth, $nameOfMother, $yearOfLeavingExam, $highSchool, $neptun, $applicationYear, $faculty, $workshop){		
 		//validate input data
 		if($username === null || $password === null || $email === null || $name === null || $country === null || $shire === null || $postalCode === null ||$address === null || $city === null || $phoneNumber === null || $defaultLanguage === null){
 			throw new ValueMismatchException("A mandatory parameter is null!");
@@ -273,6 +271,7 @@ class Registrations{
 		$registrationCode = sha1($username . $date . $email);
 		
 		//add registration to the database
+		Database::beginTransaction(); //DATABASE TRANSACTION STARTS HERE
 		try{
 			P_User::addRegistrationData($username, $password, $email, $name, $country, $shire, $postalCode, $address, $city, $reason, $phoneNumber, $defaultLanguage, $cityOfBirth, $dateOfBirth, $nameOfMother, $yearOfLeavingExam, $highSchool, $neptun, $applicationYear, $faculty, $workshop, $date);
 			$user = $this->getNotVerifiedUserData($username);

@@ -119,7 +119,7 @@ class P_User{
 		DB::table('users')
 			->where('username', 'LIKE', $username)
 			->update([
-				'password' => password_hash($password, PASSWORD_DEFAULT)
+				'password' => $password
 			]);
 	}
 	
@@ -153,9 +153,9 @@ class P_User{
 	 */
 	static function getUserById($userId){
 		return $user = DB::table('users')
-			->join('user_status_codes', 'user_status_codes.id', '=', 'users.status')
-			->join('workshops', 'workshops.id', '=', 'users.workshop')
-			->join('faculties', 'faculties.id', '=', 'users.faculty')
+			->leftJoin('user_status_codes', 'user_status_codes.id', '=', 'users.status')
+			->leftJoin('workshops', 'workshops.id', '=', 'users.workshop')
+			->leftJoin('faculties', 'faculties.id', '=', 'users.faculty')
 			->where('users.id', '=', $userId)
 			/*->when($userId !== 0, function($query){
 				return $query->where('users.registered', '=', true);
