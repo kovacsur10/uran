@@ -3,6 +3,9 @@
 namespace App\Persistence;
 
 use DB;
+use App\Classes\Data\Faculty;
+use App\Classes\Data\Workshop;
+use App\Classes\Data\Country;
 
 /** Class name: P_General
  *
@@ -257,14 +260,18 @@ class P_General{
 	 * This function returns the countries
 	 * from the database.
 	 * 
-	 * @return array of Countries
+	 * @return array of Country
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	static function getCountries(){
-		return DB::table('country')
-			->get()
-			->toArray();
+		$getCountries = DB::table('country')
+			->get();
+		$countries = [];
+		foreach($getCountries as $country){
+			array_push($countries, new Country($country->id, $country->name));
+		}
+		return $countries;
 	}
 	
 	/** Function name: getFaculties
@@ -272,15 +279,19 @@ class P_General{
 	 * This function returns the faculties
 	 * from the database.
 	 *
-	 * @return array of Faculties
+	 * @return array of Faculty
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	static function getFaculties(){
-		return DB::table('faculties')
+		$getFaculties = DB::table('faculties')
 			->orderBy('id', 'asc')
-			->get()
-			->toArray();
+			->get();
+		$faculties = [];
+		foreach($getFaculties as $faculty){
+			array_push($faculties, new Faculty($faculty->id, $faculty->name));
+		}
+		return $faculties;
 	}
 	
 	/** Function name: getWorkshops
@@ -288,15 +299,19 @@ class P_General{
 	 * This function returns the workshops of the dormitory
 	 * from the database.
 	 *
-	 * @return array of Workshops
+	 * @return array of Workshop
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	static function getWorkshops(){
-		return DB::table('workshops')
+		$getWorkhops = DB::table('workshops')
 			->orderBy('id', 'asc')
-			->get()
-			->toArray();
+			->get();
+		$workshops = [];
+		foreach($getWorkhops as $workshop){
+			array_push($workshops, new Workshop($workshop->id, $workshop->name));
+		}
+		return $workshops;
 	}
 	
 	/** Function name: getAdmissionYears
@@ -311,8 +326,7 @@ class P_General{
 	static function getAdmissionYears(){
 		return DB::table('admission_years')
 			->orderBy('year', 'asc')
-			->get()
-			->toArray();
+			->pluck('year');
 	}
 	
 //MODULE FUNCTIONS

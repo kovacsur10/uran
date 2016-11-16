@@ -22,9 +22,9 @@ class NotificationsTest extends TestCase
 {
 	use DatabaseTransactions;
 
-	/** Function name: test_transaction_success
+	/** Function name: test_getNotifications_success
 	 *
-	 * This function is testing the transaction function of the Database model.
+	 * This function is testing the getNotifications function of the Notifications model.
 	 *
 	 * @return void
 	 *
@@ -39,6 +39,14 @@ class NotificationsTest extends TestCase
 		}
 	}
 	
+	/** Function name: test_getNotifications_fail
+	 *
+	 * This function is testing the getNotifications function of the Notifications model.
+	 *
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
 	public function test_getNotifications_fail(){
 		try{
 			Notifications::getNotifications(-1);
@@ -49,15 +57,39 @@ class NotificationsTest extends TestCase
 		}
 	}
 	
+	/** Function name: test_get_success
+	 *
+	 * This function is testing the get function of the Notifications model.
+	 *
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
 	public function test_get_success(){
 		$this->assertNotNull(Notifications::get(237, 41), "The test notification should exist!");
 	}
 	
+	/** Function name: test_get_fail
+	 *
+	 * This function is testing the get function of the Notifications model.
+	 *
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
 	public function test_get_fail(){
 		$this->assertNull(Notifications::get(237, 0), "The test notification should not exist!");
 		$this->assertNull(Notifications::get(0, 1), "The test notification should not exist!");
 	}
 	
+	/** Function name: test_getUnreadNotificationCount_success
+	 *
+	 * This function is testing the getUnreadNotificationCount function of the Notifications model.
+	 *
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
 	public function test_getUnreadNotificationCount_success(){
 		try{
 			$count = Notifications::getUnreadNotificationCount(41);
@@ -67,6 +99,14 @@ class NotificationsTest extends TestCase
 		}
 	}
 	
+	/** Function name: test_getUnreadNotificationCount_fail
+	 *
+	 * This function is testing the getUnreadNotificationCount function of the Notifications model.
+	 *
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
 	public function test_getUnreadNotificationCount_fail(){
 		try{
 			Notifications::getUnreadNotificationCount(-1);
@@ -77,7 +117,15 @@ class NotificationsTest extends TestCase
 		}
 	}
 	
-	public function test_setRead_success(){
+	/** Function name: test_setRead
+	 *
+	 * This function is testing the setRead function of the Notifications model.
+	 *
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	public function test_setRead(){
 		$notification = Notifications::get(237, 41);
 		$this->assertNotNull($notification, "The test notification should exist!");
 		$this->assertFalse($notification->seen, "The #237 test notification should be unseen!");

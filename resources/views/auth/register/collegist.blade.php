@@ -290,7 +290,7 @@
 									<div class="col-md-6">
 										<select class="form-control"  name="from_year"  id="from_year_select" required="true">
 											@foreach($layout->base()->admissionYears() as $fromYear)
-												<option value="{{ $fromYear->year }}" {{ old('from_year') == $fromYear->year ? 'selected' : '' }}>{{ $fromYear->year }}</option>
+												<option value="{{ $fromYear }}" {{ old('from_year') == $fromYear ? 'selected' : '' }}>{{ $fromYear }}</option>
 											@endforeach
 										</select>
 										
@@ -307,7 +307,7 @@
 									<div class="col-md-6">
 										<select class="form-control"  name="faculty"  id="faculty_select" required="true">
 											@foreach($layout->base()->faculties() as $faculty)
-												<option value="{{ $faculty->id }}" {{ old('faculty') == $faculty->id ? 'selected' : '' }}>{{ $faculty->name }}</option>
+												<option value="{{ $faculty->id() }}" {{ old('faculty') == $faculty->id() ? 'selected' : '' }}>{{ $faculty->name() }}</option>
 											@endforeach
 										</select>
 										
@@ -324,7 +324,7 @@
 									<div class="col-md-6">
 										<select class="form-control"  name="workshop"  id="workshop_select" required="true">
 											@foreach($layout->base()->workshops() as $workshop)
-												<option value="{{ $workshop->id }}" {{ old('workshop') == $workshop->id ? 'selected' : '' }}>{{ $workshop->name }}</option>
+												<option value="{{ $workshop->id() }}" {{ old('workshop') == $workshop->id() ? 'selected' : '' }}>{{ $workshop->name() }}</option>
 											@endforeach
 										</select>
 										
