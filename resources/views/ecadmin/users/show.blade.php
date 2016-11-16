@@ -169,7 +169,7 @@
 											<div class="col-xs-8">
 												<select class="form-control"  name="faculty"  id="faculty_select" required="true" autocomplete="off">
 												@foreach($layout->base()->faculties() as $faculty)
-													<option {{ $user->faculty_id === $faculty->id ? "selected" : "" }} value="{{ $faculty->id }}">{{ $faculty->name }}</option>
+													<option {{ $user->faculty_id === $faculty->id() ? "selected" : "" }} value="{{ $faculty->id() }}">{{ $faculty->name() }}</option>
 												@endforeach
 												</select>
 											</div>
@@ -181,7 +181,7 @@
 											<div class="col-xs-8">
 												<select class="form-control"  name="workshop"  id="workshop_select" required="true" autocomplete="off">
 												@foreach($layout->base()->workshops() as $workshop)
-													<option {{ $user->workshop_id === $workshop->id ? "selected" : "" }} value="{{ $workshop->id }}">{{ $workshop->name }}</option>
+													<option {{ $user->workshop_id === $workshop->id() ? "selected" : "" }} value="{{ $workshop->id() }}">{{ $workshop->name() }}</option>
 												@endforeach
 												</select>
 											</div>
@@ -193,7 +193,7 @@
 											<div class="col-xs-8">
 												<select class="form-control"  name="status"  id="status_select" required="true" autocomplete="off">
 												@foreach($layout->base()->statusCodes() as $status)
-													<option {{ $user->status_id === $status->id ? "selected" : "" }} value="{{ $status->id }}">{{ $status->status_name }}</option>
+													<option {{ $user->status_id === $status->id() ? "selected" : "" }} value="{{ $status->id() }}">{{ $status->statusName() }}</option>
 												@endforeach
 												</select>
 											</div>

@@ -148,7 +148,7 @@
 										<div class="col-md-6">
 											<select class="form-control alert-{{ $userData->neptun ? 'info' : 'danger' }}"  name="from_year"  id="country_from_year" required="true">
 											@foreach($layout->base()->admissionYears() as $fromYear)
-												<option {{ $userData->from_year == $fromYear->year ? "selected" : "" }} value="{{ $fromYear->year }}">{{ $fromYear->year }}</option>
+												<option {{ $userData->from_year == $fromYear ? "selected" : "" }} value="{{ $fromYear }}">{{ $fromYear }}</option>
 											@endforeach
 											</select>
 										</div>
@@ -160,7 +160,7 @@
 										<div class="col-md-6">
 											<select class="form-control alert-{{ $userData->neptun ? 'info' : 'danger' }}"  name="faculty"  id="faculty_select" required="true">
 											@foreach($layout->base()->faculties() as $faculty)
-												<option {{ $userData->faculty == $faculty->id ? "selected" : "" }} value="{{ $faculty->id }}">{{ $faculty->name }}</option>
+												<option {{ $userData->faculty == $faculty->id() ? "selected" : "" }} value="{{ $faculty->id() }}">{{ $faculty->name() }}</option>
 											@endforeach
 											</select>
 										</div>
@@ -172,7 +172,7 @@
 										<div class="col-md-6">
 											<select class="form-control alert-{{ $userData->neptun ? 'info' : 'danger' }}"  name="workshop"  id="workshop_select" required="true">
 											@foreach($layout->base()->workshops() as $workshop)
-												<option {{ $userData->workshop == $workshop->id ? "selected" : "" }} value="{{ $workshop->id }}">{{ $workshop->name }}</option>
+												<option {{ $userData->workshop == $workshop->id() ? "selected" : "" }} value="{{ $workshop->id() }}">{{ $workshop->name() }}</option>
 											@endforeach
 											</select>
 										</div>

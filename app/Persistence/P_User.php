@@ -3,6 +3,7 @@
 namespace App\Persistence;
 
 use DB;
+use App\Classes\Data\StatusCode;
 
 /** Class name: P_User
  *
@@ -218,17 +219,20 @@ class P_User{
 	 * This function returns the existing status
 	 * codes of a user from the database.
 	 *
-	 * @return array of StatusCodes
+	 * @return array of StatusCode
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	static function getStatusCodes(){
-		return DB::table('user_status_codes')
+		$getStatusCodes = DB::table('user_status_codes')
 			->orderBy('id', 'asc')
-			->get()
-			->toArray();
+			->get();
+		$statusCodes = [];
+		foreach($getStatusCodes as $statusCode){
+			array_push($statusCodes, new StatusCode($statusCode->id, $statusCode->status_name));
+		}
+		return $statusCodes;
 	}
-	
 	/** Function name: getStatusCodeByName
 	 *
 	 * This function returns the requested status.
