@@ -20,8 +20,8 @@ class Country{
 	 *
 	 * This is the constructor for the Country class.
 	 *
-	 * @param string $id - workshop identifier
-	 * @param string $name - workshop name
+	 * @param string $id - country identifier
+	 * @param string $name - country name
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */

@@ -21,13 +21,13 @@ class ModuleController extends Controller{
 		if($layout->user()->permitted('module_admin')){
 			try{
 				$layout->modules()->activate($request->module);
-			}catch(\Illuminate\Database\QueryException $e){
+			}catch(\Exception $e){
 				return view('errors.error', ["layout" => $layout,
 											 "message" => $layout->language('error_at_module_activation'),
 											 "url" => '/admin/modules']);
 			}
 			$module = $layout->modules()->getById($request->module);
-			Notifications::notifyAdminFromServer('module_admin', 'Module aktiválása', 'A(z) '.$module->name.' modul aktiválva lett!', 'admin/modules');
+			Notifications::notifyAdminFromServer('module_admin', 'Module aktiválása', 'A(z) '.$module->name().' modul aktiválva lett!', 'admin/modules');
 			return view('admin.modules', ["layout" => $layout]);
 		}else{
 			return view('errors.authentication', ["layout" => $layout]);
@@ -37,9 +37,15 @@ class ModuleController extends Controller{
 	public function deactivate(Request $request){
 		$layout = new LayoutData();
 		if($layout->user()->permitted('module_admin')){
-			$layout->modules()->deactivate($request->module);
+			try{
+				$layout->modules()->deactivate($request->module);
+			}catch(\Exception $ex){
+				return view('errors.error', ["layout" => $layout,
+						"message" => $layout->language('error_at_module_deactivation'),
+						"url" => '/admin/modules']);
+			}
 			$module = $layout->modules()->getById($request->module);
-			Notifications::notifyAdminFromServer('module_admin', 'Modul deaktiválása', 'A(z) '.$module->name.' modul deaktiválva lett!', 'admin/modules');
+			Notifications::notifyAdminFromServer('module_admin', 'Modul deaktiválása', 'A(z) '.$module->name().' modul deaktiválva lett!', 'admin/modules');
 			return view('admin.modules', ["layout" => $layout]);
 		}else{
 			return view('errors.authentication', ["layout" => $layout]);

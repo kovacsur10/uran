@@ -4,6 +4,7 @@ namespace App\Classes\Layout;
 
 use App\Persistence\P_General;
 use App\Classes\Logger;
+use App\Exceptions\DatabaseException;
 
 /** Class name: Modules
  *
@@ -26,11 +27,11 @@ class Modules{
 	 * This function returns the available 
 	 * modules.
 	 * 
-	 * @return array of available modules
+	 * @return array of Module
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function get(){
+	public static function get(){
 		try{
 			$modules = P_General::getModules();
 		}catch(Exception $ex){
@@ -46,11 +47,11 @@ class Modules{
 	 * based on the requested identifier.
 	 * 
 	 * @param int $moduleId - identifier of a module
-	 * @return Module data
+	 * @return Module|null
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function getById($moduleId){
+	public static function getById($moduleId){
 		try{
 			$module = P_General::getModuleById($moduleId);
 		}catch(Exception $ex){
@@ -72,7 +73,7 @@ class Modules{
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function isActivatedById($moduleId){
+	public static function isActivatedById($moduleId){
 		try{
 			$ret = P_General::getActiveModuleById($moduleId);
 		}catch(Exception $ex){
@@ -94,7 +95,7 @@ class Modules{
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function isActivatedByName($moduleName){
+	public static function isActivatedByName($moduleName){
 		try{
 			$ret = P_General::getActiveModuleByName($moduleName);
 		}catch(Exception $ex){
@@ -109,11 +110,11 @@ class Modules{
 	 * This function returns an array
 	 * of the activated modules.
 	 * 
-	 * @return array of Modules
+	 * @return array of Module
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function getActives(){
+	public static function getActives(){
 		try{
 			$ret = P_General::getActiveModules();
 		}catch(Exception $ex){
@@ -128,11 +129,11 @@ class Modules{
 	 * This function returns an array
 	 * of the deactivated modules.
 	 * 
-	 * @return array of Modules
+	 * @return array of Module
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function getInactives(){
+	public static function getInactives(){
 		try{
 			$modules = P_General::getModulesLeftJoinedToActives();
 		}catch(Exception $ex){
@@ -141,7 +142,7 @@ class Modules{
 		}
 		$inactives = [];
 		foreach($modules as $module){
-			if($module->module_id === null){
+			if(!$module->isActive()){
 				array_push($inactives, $module);
 			}
 		}
@@ -154,19 +155,18 @@ class Modules{
 	 * of the requested module to active.
 	 * 
 	 * @param int $moduleId - identifier of a module
-	 * @return bool - successfully updated
+	 * 
+	 * @throws DatabaseException when the persistence layer fails to activate the module.
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function activate($moduleId){
+	public static function activate($moduleId){
 		try{
 			P_General::activateModulById($moduleId);
-			$successful = true;
-		}catch(Exception $ex){
-			$successful = false;
+		}catch(\Exception $ex){
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Insert into table 'active_modules' was not successful! ".$ex->getMessage());
+			throw new DatabaseException("Modul activation was unsuccessful!");
 		}
-		return $successful;
 	}
 	
 	/** Function name: deactivate
@@ -175,19 +175,18 @@ class Modules{
 	 * of the requested module to inactive.
 	 * 
 	 * @param int $moduleId - identifier of a module
-	 * @return bool - successfully updated
+	 * 
+	 * @throws DatabaseException when the persistence layer fails to deactivate the module.
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function deactivate($moduleId){
+	public static function deactivate($moduleId){
 		try{
 			P_General::deactivateModuleById($moduleId);
-			$successful = true;
-		}catch(Exception $ex){
-			$successful = false;
+		}catch(\Exception $ex){
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Delete from table 'active_modules' was not successful! ".$ex->getMessage());
+			throw new DatabaseException("Modul deactivation was unsuccessful!");
 		}
-		return $successful;
 	}
 	
 // PRIVATE FUNCTIONS
