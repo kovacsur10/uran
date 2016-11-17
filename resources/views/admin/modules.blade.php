@@ -19,7 +19,7 @@
 									<div class="col-md-6">
 										<select class="form-control"  name="module"  id="module">
 											@foreach($layout->modules()->getInactives() as $module)
-												<option value="{{ $module->id }}">{{ $module->name }}</option>
+												<option value="{{ $module->id() }}">{{ $module->name() }}</option>
 											@endforeach
 										</select>
 
@@ -53,7 +53,7 @@
 									<div class="col-md-6">
 										<select class="form-control"  name="module"  id="module">
 											@foreach($layout->modules()->getActives() as $module)
-												<option value="{{ $module->id }}">{{ $module->name }}</option>
+												<option value="{{ $module->id() }}">{{ $module->name() }}</option>
 											@endforeach
 										</select>
 

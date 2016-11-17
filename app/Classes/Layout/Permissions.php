@@ -53,11 +53,11 @@ class Permissions{
 	 * permissions of the requested user.
 	 * 
 	 * @param int $userId - user's identifier
-	 * @return array of Permissions
+	 * @return array of Permission
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function getForUser($userId){
+	public static function getForUser($userId){
 		try{
 			$permissions = P_User::getUserPermissions($userId);
 		}catch(\Exception $ex){
