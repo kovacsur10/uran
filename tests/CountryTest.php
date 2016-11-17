@@ -25,12 +25,12 @@ class CountryTest extends TestCase
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	function test_country(){
-		$country = new Country(1, "alma");
-		$this->assertEquals(1, $country->id());
+		$country = new Country("al", "alma");
+		$this->assertEquals("al", $country->id());
 		$this->assertEquals("alma", $country->name());
 
-		$country = new Country("1", 2);
-		$this->assertEquals(1, $country->id());
+		$country = new Country(1, 2);
+		$this->assertEquals("1", $country->id());
 		$this->assertEquals("2", $country->name());
 	}
 

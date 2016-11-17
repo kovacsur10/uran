@@ -81,7 +81,7 @@
 						<div class="panel-body">
 							<ul class="list-group">
 								@foreach($layout->modules()->get() as $module)
-									<li class="list-group-item list-group-item-{{ $layout->modules()->isActivatedById($module->id) ? 'success' : 'danger' }}">{{ $module->name }}</li>
+									<li class="list-group-item list-group-item-{{ $layout->modules()->isActivatedById($module->id()) ? 'success' : 'danger' }}">{{ $module->name() }}</li>
 								@endforeach
 							</ul>
 						</div>

@@ -6,6 +6,7 @@ use DB;
 use App\Classes\Data\Faculty;
 use App\Classes\Data\Workshop;
 use App\Classes\Data\Country;
+use App\Classes\Data\Module;
 
 /** Class name: P_General
  *
@@ -336,15 +337,19 @@ class P_General{
 	 * This function returns the available Uran modules
 	 * from the database.
 	 *
-	 * @return array of Modules
+	 * @return array of Module
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	static function getModules(){
-		return DB::table('modules')
+		$getModules = DB::table('modules')
 			->orderBy('id', 'asc')
-			->get()
-			->toArray();
+			->get();
+		$modules = [];
+		foreach($getModules as $module){
+			array_push($modules, new Module($module->id, $module->name));
+		}
+		return $modules;
 	}
 	
 	/** Function name: getModuleById
@@ -358,9 +363,10 @@ class P_General{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	static function getModuleById($moduleId){
-		return DB::table('modules')
+		$module = DB::table('modules')
 			->where('id', '=', $moduleId)
 			->first();
+		return $module === null ? null : new Module($module->id, $module->name);
 	}
 	
 	/** Function name: getActiveModules
@@ -368,16 +374,20 @@ class P_General{
 	 * This function returns the active Uran modules
 	 * from the database.
 	 *
-	 * @return array of Modules
+	 * @return array of Module
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	static function getActiveModules(){
-		return DB::table('active_modules')
+		$getModules = DB::table('active_modules')
 			->join('modules', 'modules.id', '=', 'active_modules.module_id')
 			->orderBy('modules.id', 'asc')
-			->get()
-			->toArray();
+			->get();
+		$modules = [];
+		foreach($getModules as $module){
+			array_push($modules, new Module($module->id, $module->name, true));
+		}
+		return $modules;
 	}
 	
 	/** Function name: getModulesLeftJoinedToActives
@@ -385,16 +395,20 @@ class P_General{
 	 * This function returns the available Uran modules
 	 * left joined to the active modules from the database.
 	 *
-	 * @return array of Modules
+	 * @return array of Module
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	static function getModulesLeftJoinedToActives(){
-		return DB::table('modules')
+		$getModules = DB::table('modules')
 			->leftJoin('active_modules', 'active_modules.module_id', '=', 'modules.id')
 			->orderBy('modules.id', 'asc')
-			->get()
-			->toArray();
+			->get();
+		$modules = [];
+		foreach($getModules as $module){
+			array_push($modules, new Module($module->id, $module->name, $module->module_id !== null));
+		}
+		return $modules;
 	}
 	
 	/** Function name: getActiveModuleById
@@ -408,10 +422,11 @@ class P_General{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	static function getActiveModuleById($moduleId){
-		return DB::table('active_modules')
+		$module = DB::table('active_modules')
 			->join('modules', 'modules.id', '=', 'active_modules.module_id')
 			->where('module_id', '=', $moduleId)
 			->first();
+		return $module === null ? null : new Module($module->id, $module->name);
 	}
 	
 	/** Function name: getActiveModuleByName
@@ -425,10 +440,11 @@ class P_General{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	static function getActiveModuleByName($moduleName){
-		return DB::table('active_modules')
+		$module = DB::table('active_modules')
 			->join('modules', 'modules.id', '=', 'active_modules.module_id')
 			->where('modules.name','LIKE', $moduleName)
 			->first();
+		return $module === null ? null : new Module($module->id, $module->name);
 	}
 	
 	/** Function name: activateModulById
