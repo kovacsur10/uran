@@ -48,7 +48,7 @@ class User{
 			$this->user = null;
 		}
 		$tmpPermissions = new Permissions();
-		$this->permissions = $tmpPermissions->getForUser($userId);
+		$this->permissions = $tmpPermissions->getForUser($userId); //TODO: permission változott!!!
 		try{
 			$this->notifications = Notifications::getNotifications($userId);
 			$this->unreadNotificationCount = Notifications::getUnreadNotificationCount($userId);

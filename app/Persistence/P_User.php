@@ -4,6 +4,7 @@ namespace App\Persistence;
 
 use DB;
 use App\Classes\Data\StatusCode;
+use App\Classes\Data\Permission;
 
 /** Class name: P_User
  *
@@ -41,18 +42,22 @@ class P_User{
 	 * for the requested user.
 	 *
 	 * @param int $userId - user's identifier
-	 * @return array of Permissions
+	 * @return array of Permission
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	static function getUserPermissions($userId){
-		return DB::table('permissions')
+		$getPermissions = DB::table('permissions')
 			->join('user_permissions', 'permissions.id', '=', 'user_permissions.permission_id')
 			->select('permissions.id as id', 'permission_name', 'permissions.description as description')
 			->where('user_permissions.user_id', '=', $userId)
 			->orderBy('id', 'asc')
-			->get()
-			->toArray();
+			->get();
+		$permissions = [];
+		foreach($getPermissions as $permission){
+			array_push($permissions, new Permission($permission->id, $permission->permission_name, $permission->description));
+		}
+		return $permissions;
 	}
 	
 	/** Function name: removePermissionsForUser
