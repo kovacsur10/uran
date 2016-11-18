@@ -18,10 +18,11 @@ class DefaultPermissionsController extends Controller{
 		$layout = new LayoutData();
 		$permissions = [];
 		
-		if($layout->permissions()->setDefaults('guest', $request->permissions) === 0){
+		try{
+			$layout->permissions()->setDefaults('guest', $request->permissions);
 			Notifications::notifyAdminFromServer('permission_admin', 'Alapértelmezett jogok', 'A vendégekre vonatkozó alapértelmezett jogok megváltoztak!', 'admin/permissions/default');
 			return view('admin.defaultpermissions', ["layout" => $layout]);
-		}else{
+		}catch(\Exception $ex){
 			return view('errors.error', ["layout" => $layout,
 										 "message" => $layout->language('error_at_setting_the_permissions'),
 										 "url" => '/admin/permissions/default']);
@@ -32,10 +33,11 @@ class DefaultPermissionsController extends Controller{
 		$layout = new LayoutData();
 		$permissions = [];
 		
-		if($layout->permissions()->setDefaults('collegist', $request->permissions) === 0){
+		try{
+			$layout->permissions()->setDefaults('collegist', $request->permissions);
 			Notifications::notifyAdminFromServer('permission_admin', 'Alapértelmezett jogok', 'A collegistákra vonatkozó alapértelmezett jogok megváltoztak!', 'admin/permissions/default');
 			return view('admin.defaultpermissions', ["layout" => $layout]);
-		}else{
+		}catch(\Exception $ex){
 			return view('errors.error', ["layout" => $layout,
 										 "message" => $layout->language('error_at_setting_the_permissions'),
 										 "url" => '/admin/permissions/default']);

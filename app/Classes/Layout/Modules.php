@@ -96,6 +96,9 @@ class Modules{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public static function isActivatedByName($moduleName){
+		if($moduleName === null){
+			return false;
+		}
 		try{
 			$ret = P_General::getActiveModuleByName($moduleName);
 		}catch(Exception $ex){

@@ -5,6 +5,7 @@ namespace App\Persistence;
 use DB;
 use App\Classes\Data\StatusCode;
 use App\Classes\Data\Permission;
+use App\Classes\Data\User;
 
 /** Class name: P_User
  *
@@ -21,19 +22,24 @@ class P_User{
 	 * have the requested permission.
 	 *
 	 * @param text $permissionName - permission text identifier
-	 * @return array of users
+	 * @return array of User
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	static function getUsersWithPermission($permissionName){
-		return DB::table('users')
+		$getUsers = DB::table('users')
 			->join('user_permissions', 'user_permissions.user_id', '=', 'users.id')
 			->join('permissions', 'permissions.id', '=', 'user_permissions.permission_id')
+			->join('user_status_codes', 'user_status_codes.id', '=', 'users.status')
 			->where('permissions.permission_name', 'LIKE', $permissionName)
 			->where('users.registered', '=', true)
-			->select('users.id as id', 'users.name as name', 'users.username as username')
-			->get()
-			->toArray();
+			->select('users.*', 'user_status_codes.status_name as status_name')
+			->get();
+		$users = [];
+		foreach($getUsers as $user){
+			array_push($users, new User($user->id, $user->name, $user->username, $user->password, $user->email, $user->registration_date, new StatusCode($user->status, $user->status_name), $user->last_online, $user->language, $user->registered));
+		}
+		return $users;
 	}
 	
 	/** Function name: getUserPermissions
@@ -159,7 +165,7 @@ class P_User{
 	 */
 	static function getUserById($userId){
 		return $user = DB::table('users')
-			->leftJoin('user_status_codes', 'user_status_codes.id', '=', 'users.status')
+			->join('user_status_codes', 'user_status_codes.id', '=', 'users.status')
 			->leftJoin('workshops', 'workshops.id', '=', 'users.workshop')
 			->leftJoin('faculties', 'faculties.id', '=', 'users.faculty')
 			->where('users.id', '=', $userId)
@@ -183,7 +189,7 @@ class P_User{
 	 */
 	static function getUserByUsername($username){
 		return DB::table('users')
-			->leftJoin('user_status_codes', 'user_status_codes.id', '=', 'users.status')
+			->join('user_status_codes', 'user_status_codes.id', '=', 'users.status')
 			->leftJoin('workshops', 'workshops.id', '=', 'users.workshop')
 			->leftJoin('faculties', 'faculties.id', '=', 'users.faculty')
 			->where('users.username', 'LIKE', $username)

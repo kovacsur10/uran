@@ -35,6 +35,11 @@ class ModuleTest extends TestCase
 		$this->assertEquals("2", $module->name());
 		$this->assertNull($module->isActive());
 		
+		$module = new Module("1", 2, null);
+		$this->assertEquals(1, $module->id());
+		$this->assertEquals("2", $module->name());
+		$this->assertNull($module->isActive());
+		
 		$module = new Module(1, "mod", false);
 		$this->assertEquals(1, $module->id());
 		$this->assertEquals("mod", $module->name());

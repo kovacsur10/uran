@@ -36,6 +36,10 @@ class AuthTest extends TestCase
 		$this->assertFalse(Session::has('user'), "Session variable 'user' is set!");
 		Auth::logout();
 		$this->assertFalse(Session::has('user'), "Session variable 'user' is set!");
+		
+		//null value test
+		Session::put('user', null);
+		$this->assertFalse(Session::has('user'), "Session variable 'user' is not set!");
 	}
 	
 	/** Function name: test_login_success
@@ -126,7 +130,7 @@ class AuthTest extends TestCase
 		try{
 			Auth::updatePassword('forUnitTest', 'newPassword');
 		}catch(\Exception $ex){
-			$this->fail("Not the expected exception: ".$ex->getMessage());
+			$this->fail("Not expected exception: ".$ex->getMessage());
 		}
 		//test new password
 		try{
@@ -154,6 +158,54 @@ class AuthTest extends TestCase
 		}catch(UserNotFoundException $ex){	
 		}catch(\Exception $ex){
 			$this->fail("Not the expected exception: ".$ex->getMessage());
+		}
+		
+		try{
+			Auth::updatePassword(null, 'randomPassword');
+			$this->fail("Exception was expected!");
+		}catch(UserNotFoundException $ex){
+		}catch(\Exception $ex){
+			$this->fail("Not the expected exception: ".$ex->getMessage());
+		}
+	}
+	
+	/** Function name: test_updatePassword_null
+	 *
+	 * This function is testing the updatePassword function of the Auth model.
+	 *
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	public function test_updatePassword_null(){
+		try{
+			Auth::updatePassword('forUnitTest', null);
+			$this->fail("An exception should be thrown!");
+		}catch(ValueMismatchException $ex){
+		}catch(\Exception $ex){
+			$this->fail("Not the expected exception: ".$ex->getMessage());
+		}
+	}
+	
+	/** Function name: test_updatePassword_empty
+	 *
+	 * This function is testing the updatePassword function of the Auth model.
+	 *
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	public function test_updatePassword_empty(){
+		try{
+			Auth::updatePassword('forUnitTest', '');
+		}catch(\Exception $ex){
+			$this->fail("Not expected exception: ".$ex->getMessage());
+		}
+		//test new password
+		try{
+			Auth::login('forUnitTest','');
+		}catch(\Exception $ex){
+			$this->fail("Password was not updated, login exception: ".$ex->getMessage());
 		}
 	}
 }

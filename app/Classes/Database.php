@@ -86,7 +86,7 @@ class Database{
 	public static function transaction($fn){
 		Database::beginTransaction();
 		try{
-			$fn;
+			$fn();
 			Database::commit();
 		}catch(\Exception $ex){
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Transaction error! ".$ex->getMessage());

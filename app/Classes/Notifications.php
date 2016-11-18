@@ -8,6 +8,7 @@ use App\Persistence\P_General;
 use App\Persistence\P_User;
 use App\Exceptions\DatabaseException;
 use App\Exceptions\UserNotFoundException;
+use App\Exceptions\ValueMismatchException;
 
 /** Class name: Notifications
  *
@@ -215,10 +216,14 @@ class Notifications{
 	 * @param int $notificationId - identifier of a notification
 	 * 
 	 * @throws DatabaseException when the update is not successful!
+	 * @throws ValueMismatchException when the notification id is null!
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public static function setRead($notificationId){
+		if($notificationId === null){
+			throw new ValueMismatchException("The id must not be null!");
+		}
 		try{
 			P_General::setNotificationAsSeen($notificationId);
 		}catch(Exception $ex){

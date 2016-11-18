@@ -53,11 +53,27 @@ class DatabaseTest extends TestCase
 		try{
 			Database::transaction(
 				function(){
-						throw new Exception("Test exception!");
+					throw new Exception("Test exception!");
 				}
 			);
 			$this->fail("This should throw an exception!");
 		}catch(\Exception $ex){
+		}
+	}
+	
+	/** Function name: test_transaction_null
+	 *
+	 * This function is testing the transaction function of the Database model.
+	 *
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	public function test_transaction_null(){
+		try{
+			Database::transaction(null);
+		}catch(\Exception $ex){
+			$this->fail("Unexpected exception: ".$ex->getMessage());
 		}
 	}
 
