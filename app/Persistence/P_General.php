@@ -7,6 +7,7 @@ use App\Classes\Data\Faculty;
 use App\Classes\Data\Workshop;
 use App\Classes\Data\Country;
 use App\Classes\Data\Module;
+use App\Classes\Data\Permission;
 
 /** Class name: P_General
  *
@@ -165,9 +166,9 @@ class P_General{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	static function getNotificationCountForUser($userId){
-		DB::table('notifications')
-		->where('user_id', '=', $userId)
-		->count('id');
+		return DB::table('notifications')
+			->where('user_id', '=', $userId)
+			->count('id');
 	}
 	
 	/** Function name: getUnseenNotificationCountForUser
@@ -483,15 +484,19 @@ class P_General{
 	 * This function returns all of the
 	 * available permissions.
 	 *
-	 * @return array of Permissions
+	 * @return array of Permission
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	static function getPermissions(){
-		return DB::table('permissions')
+		$getPermissions = DB::table('permissions')
 			->orderBy('id', 'asc')
-			->get()
-			->toArray();
+			->get();
+		$permissions = [];
+		foreach($getPermissions as $permission){
+			array_push($permissions, new Permission($permission->id, $permission->permission_name, $permission->description));
+		}
+		return $permissions;
 	}
 	
 	/** Function name: getPermissionById
@@ -505,9 +510,10 @@ class P_General{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	static function getPermissionById($permissionId){
-		return DB::table('permissions')
+		$permission = DB::table('permissions')
 			->where('permissions.id', '=', $permissionId)
 			->first();
+		return $permission === null ? null : new Permission($permission->id, $permission->permission_name, $permission->description);
 	}
 	
 	/** Function name: getPermissionByName
@@ -521,9 +527,10 @@ class P_General{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	static function getPermissionByName($permissionName){
-		return DB::table('permissions')
+		$permission = DB::table('permissions')
 			->where('permission_name', 'LIKE', $permissionName)
 			->first();
+		return $permission === null ? null : new Permission($permission->id, $permission->permission_name, $permission->description);
 	}
 	
 	/** Function name: getDefaultPermissions
@@ -557,11 +564,13 @@ class P_General{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	static function hasDefaultPermission($userType, $permissionId){
-		return $DB::table('default_permissions')
+		$permission = DB::table('default_permissions')
+			->join('permissions', 'permissions.id', '=', 'default_permissions.permission')
 			->where('registration_type', 'LIKE', $userType)
-			->where('permission', '=', $permissionId)
-			->orderBy('id', 'asc')
+			->where('default_permissions.permission', '=', $permissionId)
+			->select('permissions.*')
 			->first();
+		return $permission === null ? null : new Permission($permission->id, $permission->permission_name, $permission->description);
 	}
 	
 	/** Function name: deleteDefaultPermissionsForRegistrationType

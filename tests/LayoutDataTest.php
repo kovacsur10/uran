@@ -39,7 +39,10 @@ class LayoutDataTest extends TestCase
 	 */
 	public function test_formatDate(){
 		$layout = new LayoutData();
-		$this->assertEquals($layout->formatDate('2016-12-05 06:42:52'), '2016. 12. 05. 06:42:52');
+		$this->assertEquals('2016. 12. 05. 06:42:52', $layout->formatDate('2016-12-05 06:42:52'));
+		$this->assertEquals('', $layout->formatDate(''));
+		$this->assertEquals('alma', $layout->formatDate('alma'));
+		$this->assertEquals(null, $layout->formatDate(null));
 	}
 	
 	/** Function name: test_setLanguage
@@ -61,6 +64,9 @@ class LayoutDataTest extends TestCase
 		LayoutData::setLanguage('en_US');
 		$this->assertTrue(Session::has('lang'));
 		$this->assertEquals(Session::get('lang'), 'en_US');
+		LayoutData::setLanguage(null);
+		$this->assertTrue(Session::has('lang'));
+		$this->assertEquals(Session::get('lang'), 'en_US');
 	}
 	
 	/** Function name: test_lang
@@ -76,7 +82,8 @@ class LayoutDataTest extends TestCase
 			Session::forget('lang');
 		}
 		$this->assertFalse(Session::has('lang'));
-		LayoutData::setLanguage('en_US');
+		Session::put('lang', 'en_US');
+		$this->assertEquals('en_US', Session::get('lang'));
 		$this->assertEquals(LayoutData::lang(), 'en_US');
 	}
 	

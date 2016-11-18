@@ -42,6 +42,7 @@ class ModulesTest extends TestCase
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	function test_getById(){
+		$this->assertNull(Modules::getById(null));
 		$module = Modules::getById(0);
 		$this->assertNull($module);
 		$module = Modules::getById(1);
@@ -58,6 +59,7 @@ class ModulesTest extends TestCase
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	function test_isActivatedById(){
+		$this->assertFalse(Modules::isActivatedById(null));
 		$this->assertFalse(Modules::isActivatedById(0));
 		$this->assertTrue(Modules::isActivatedById(1));
 		$this->assertFalse(Modules::isActivatedById(5));
@@ -72,6 +74,8 @@ class ModulesTest extends TestCase
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	function test_isActivatedByName(){
+		$this->assertFalse(Modules::isActivatedByName(null));
+		$this->assertFalse(Modules::isActivatedByName(''));
 		$this->assertFalse(Modules::isActivatedByName('no_module_like_this'));
 		$this->assertTrue(Modules::isActivatedByName('ecnet'));
 		$this->assertFalse(Modules::isActivatedByName('always_inactive'));
@@ -149,7 +153,23 @@ class ModulesTest extends TestCase
 		}catch(\Exception $ex){
 			$this->fail("Not the expected database exception! ".$ex->getMessage());
 		}
+	}
 	
+	/** Function name: test_activate_null
+	 *
+	 * This function is testing the activate function of the Modules model.
+	 *
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	function test_activate_null(){
+		try{
+			Modules::activate(null);
+		}catch(DatabaseException $ex){
+		}catch(\Exception $ex){
+			$this->fail("Not the expected database exception! ".$ex->getMessage());
+		}
 	}
 	
 	/** Function name: test_deactivate_success
@@ -172,6 +192,28 @@ class ModulesTest extends TestCase
 		$modules = Modules::getInactives();
 		$this->assertNotNull($modules);
 		$this->assertCount(2, $modules);
+	}
+	
+	/** Function name: test_deactivate_null
+	 *
+	 * This function is testing the activate function of the Modules model.
+	 *
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	function test_deactivate_null(){
+		$modules = Modules::getActives();
+		$this->assertNotNull($modules);
+		$this->assertCount(4, $modules);
+		try{
+			Modules::deactivate(null);
+		}catch(\Exception $ex){
+			$this->fail("Unexpected exception! ".$ex->getMessage());
+		}
+		$modules = Modules::getActives();
+		$this->assertNotNull($modules);
+		$this->assertCount(4, $modules);
 	}
 
 }

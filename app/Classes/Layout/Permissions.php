@@ -5,6 +5,9 @@ namespace App\Classes\Layout;
 use App\Classes\Logger;
 use App\Persistence\P_User;
 use App\Persistence\P_General;
+use App\Classes\Database;
+use App\Exceptions\DatabaseException;
+use App\Exceptions\ValueMismatchException;
 
 /** Class name: Permissions
  *
@@ -38,10 +41,10 @@ class Permissions{
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function permitted($userId, $permissionName){
-		$permissions = $this->getForUser($userId);
+	public static function permitted($userId, $permissionName){
+		$permissions = Permissions::getForUser($userId);
 		$i = 0;
-		while($i < count($permissions) && $permissions[$i]->permission_name !== $permissionName){
+		while($i < count($permissions) && $permissions[$i]->name() !== $permissionName){
 			$i++;
 		}
 		return $i < count($permissions);
@@ -77,7 +80,7 @@ class Permissions{
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function getById($permissionId){
+	public static function getById($permissionId){
 		try{
 			$permission = P_General::getPermissionById($permissionId);
 		}catch(\Exception $ex){
@@ -97,7 +100,10 @@ class Permissions{
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function getByName($permissionName){
+	public static function getByName($permissionName){
+		if($permissionName === null){ //exceptional condition
+			return null;
+		}
 		try{
 			$permission = P_General::getPermissionByName($permissionName);
 		}catch(\Exception $ex){
@@ -112,11 +118,11 @@ class Permissions{
 	 * This function returns all of
 	 * the available permissions.
 	 * 
-	 * @return array of Permissions
+	 * @return array of Permission
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function getAllPermissions(){
+	public static function getAllPermissions(){
 		try{
 			$permissions = P_General::getPermissions();
 		}catch(\Exception $ex){
@@ -133,11 +139,14 @@ class Permissions{
 	 * permission.
 	 * 
 	 * @param int $permissionId - identifier of permission
-	 * @return array of Users
+	 * @return array of User
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function getUsersWithPermission($permissionName){
+	public static function getUsersWithPermission($permissionName){
+		if($permissionName === null){
+			return [];
+		}
 		try{
 			$users = P_User::getUsersWithPermission($permissionName);
 		}catch(\Exception $ex){
@@ -158,8 +167,8 @@ class Permissions{
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function hasGuestsDefaultPermission($permissionId){
-		return ($this->hasDefaultPermission('guest', $permissionId) !== null);
+	public static function hasGuestsDefaultPermission($permissionId){
+		return Permissions::hasDefaultPermission('guest', $permissionId);
 	}
 	
 	/** Function name: hasCollegistsDefaultPermission
@@ -173,8 +182,8 @@ class Permissions{
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function hasCollegistsDefaultPermission($permissionId){
-		return ($this->hasDefaultPermission('collegist', $permissionId) !== null);
+	public static function hasCollegistsDefaultPermission($permissionId){
+		return Permissions::hasDefaultPermission('collegist', $permissionId);
 	}
 	
 	/** Function name: setDefaults
@@ -183,27 +192,31 @@ class Permissions{
 	 * permissions to the given user type.
 	 * 
 	 * @param text $userType - user type
-	 * @param arrayOfText $permissions - text identifiers of the permissions
-	 * @return int - error code
+	 * @param arrayOfId $permissions - identifiers of the permissions
+	 * 
+	 * @throws DatabaseException when the default permissions cannot be set!
+	 * @throws ValueMismatchException when the user type not exist or anything is null!
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function setDefaults($userType, $permissions){
-		$errorCode = 0;
-		P_General::beginTransaction();
+	public static function setDefaults($userType, $permissions){
+		if(($userType != "guest" && $userType != "collegist") || $permissions === null){
+			throw new ValueMismatchException("The provided user type does not exist!");
+		}
 		try{
-			P_General::transaction(function(){
+			Database::transaction(function(){
 				//first, delete all the permissions
-				P_General::deleteDefaultPermissionsForRegistrationType();
+				P_General::deleteDefaultPermissionsForRegistrationType($userType);
 				//add the new permissions
+				print_r("what");
 				foreach($permissions as $permission){
 					P_General::insertNewDefaultPermission($userType, $permission);
+					print_r($permission);
 				}
 			});
 		}catch(\Exception $ex){
-			$errorCode = 1;
+			throw new DatabaseException("Cannot set default permissions!");
 		}
-		return $errorCode;
 	}
 	
 	/** Function name: removeAll
@@ -264,7 +277,10 @@ class Permissions{
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	private function hasDefaultPermission($userType, $permissionId){
+	private static function hasDefaultPermission($userType, $permissionId){
+		if($userType === null || $permissionId === null){
+			return false;
+		}
 		try{
 			$permission = P_General::hasDefaultPermission($userType, $permissionId);
 		}catch(\Exception $ex){

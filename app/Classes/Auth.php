@@ -78,10 +78,14 @@ class Auth{
 	 * 
 	 * @throws UserNotFoundException when the username was not associated with a real user.
 	 * @throws DatabaseException when the password update failed due to a persistence layer error.
+	 * @throws ValueMismatchException when the password is null
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public static function updatePassword($username, $password){
+		if($password === null){
+			throw new ValueMismatchException("Password cannot be null!");
+		}
 		$username = strtolower($username);
 		User::getUserDataByUsername($username); //throws exception when user was not found
 		try{

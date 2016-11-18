@@ -46,6 +46,15 @@ class ErrorsTest extends TestCase
 		$errors->add('alma', 'str');
 		$this->assertTrue($errors->has('alma'));
 		$this->assertTrue($errors->has('korte'));
+		$errors->add('', 'str');
+		$this->assertTrue($errors->has('alma'));
+		$this->assertTrue($errors->has('korte'));
+		$this->assertTrue($errors->has(''));
+		$errors->add(null, 'str');
+		$this->assertTrue($errors->has('alma'));
+		$this->assertTrue($errors->has('korte'));
+		$this->assertTrue($errors->has(''));
+		$this->assertTrue($errors->has(null));
 	}
 	
 	/** Function name: test_has
@@ -65,6 +74,8 @@ class ErrorsTest extends TestCase
 		$this->assertTrue($errors->has('alma'));
 		$errors->add('alma', 1);
 		$this->assertTrue($errors->has('alma'));
+		$errors->add(null, 1);
+		$this->assertTrue($errors->has(null));
 	}
 	
 	/** Function name: test_get
@@ -88,6 +99,8 @@ class ErrorsTest extends TestCase
 		$this->assertEquals('str', $errors->get('korte'));
 		$errors->add(null, 3);
 		$this->assertEquals(3, $errors->get(null));
+		$errors->add(null, 5);
+		$this->assertEquals(5, $errors->get(null));
 		$errors->add('', 42);
 		$this->assertEquals(42, $errors->get(''));
 	}
@@ -111,6 +124,15 @@ class ErrorsTest extends TestCase
 		$errors->addOld('alma', 'str');
 		$this->assertTrue($errors->hasOld('alma'));
 		$this->assertTrue($errors->hasOld('korte'));
+		$errors->addOld('', 'str');
+		$this->assertTrue($errors->hasOld('alma'));
+		$this->assertTrue($errors->hasOld('korte'));
+		$this->assertTrue($errors->hasOld(''));
+		$errors->addOld(null, 'str');
+		$this->assertTrue($errors->hasOld('alma'));
+		$this->assertTrue($errors->hasOld('korte'));
+		$this->assertTrue($errors->hasOld(''));
+		$this->assertTrue($errors->hasOld(null));
 	}
 	
 	/** Function name: test_hasOld
@@ -130,6 +152,10 @@ class ErrorsTest extends TestCase
 		$this->assertTrue($errors->hasOld('alma'));
 		$errors->addOld('alma', 1);
 		$this->assertTrue($errors->hasOld('alma'));
+		$errors->addOld('alma', 1);
+		$this->assertTrue($errors->hasOld('alma'));
+		$errors->addOld(null, 1);
+		$this->assertTrue($errors->hasOld(null));
 	}
 	
 	/** Function name: test_getOld
@@ -153,6 +179,8 @@ class ErrorsTest extends TestCase
 		$this->assertEquals('str', $errors->getOld('korte'));
 		$errors->addOld(null, 3);
 		$this->assertEquals(3, $errors->getOld(null));
+		$errors->addOld(null, 5);
+		$this->assertEquals(5, $errors->getOld(null));
 		$errors->addOld('', 42);
 		$this->assertEquals(42, $errors->getOld(''));
 	}
