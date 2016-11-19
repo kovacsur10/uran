@@ -33,7 +33,9 @@ class RegistrationController extends Controller{
 	public function reject($id){
 		$layout = new LayoutData();
 		if($layout->user()->permitted('accept_user_registration')){
-			if($layout->registrations()->reject($id) !== 0){
+			try{
+				$layout->registrations()->reject($id);
+			}catch(\Expcetion $ex){
 				return view('errors.error', ["layout" => $layout,
 											 "message" => $layout->language('reject_user_registration_failure'),
 											 "url" => '/admin/registration/show']);

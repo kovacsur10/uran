@@ -9,6 +9,7 @@ use App\Exceptions\ValueMismatchException;
 use App\Exceptions\DatabaseException;
 use App\Classes\Database;
 use App\Classes\LayoutData;
+use App\Classes\Logger;
 
 /** Class name: Registrations
  *
@@ -29,7 +30,7 @@ class Registrations{
 	
 // PRIVATE VARIABLES	
 	
-	private $registrationUser = null;	
+	private $registrationUser;	
 	
 // PUBLIC FUNCTIONS	
 	
@@ -40,6 +41,7 @@ class Registrations{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function __construct(){
+		$this->registrationUser = null;
 	}
 	
 	/** Function name: getRegistrationUser
@@ -60,11 +62,11 @@ class Registrations{
 	 * registered, but not accepted
 	 * or rejected users.
 	 * 
-	 * @return array of Users
+	 * @return array of User
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function get(){
+	public static function get(){
 		try{
 			$users = P_User::getRegistrationUsers();
 		}catch(\Exception $ex){
@@ -101,19 +103,22 @@ class Registrations{
 	 * address based on the verification code.
 	 * 
 	 * @param text $code - registration code
-	 * @return int - error code
+	 * 
+	 * @throws DatabaseException when the code verification fails.
+	 * @throws ValueMismatchException when the code is null.
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function verify($code){
-		$errorCode = 0;
+	public static function verify($code){
+		if($code === null){
+			throw new ValueMismatchException("The code cannot be null!");
+		}
 		try{
 			P_User::verifyRegistrationUser($code, Carbon::now()->toDateTimeString());
 		}catch(\Exception $ex){
-			$errorCode = 1;
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Update table 'registrations' was not successful! ".$ex->getMessage());
+			throw new DatabaseException("Verifying the registration code was unsuccessful!");
 		}
-		return $errorCode;
 	}
 	
 	/** Function name: reject
@@ -122,19 +127,22 @@ class Registrations{
 	 * registration.
 	 * 
 	 * @param int $userId - user's identifier
-	 * @return int - error code
+	 * 
+	 * @throws DatabaseException when the rejection process fails.
+	 * @throws ValueMismatchException when the user identifier is null.
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function reject($userId){
-		$errorCode = 0;
+	public static function reject($userId){
+		if($userId === null){
+			throw new ValueMismatchException("The user identifier cannot be null!");
+		}
 		try{
 			P_User::removeRegistrationUser($userId);
 		}catch(\Exception $ex){
-			$errorCode = 1;
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Delete from table 'users' was not successful! ".$ex->getMessage());
+			throw new DatabaseException("User registration rejection failed!");
 		}
-		return $errorCode;
 	}
 	
 	/** Function name: acceptGuest
@@ -158,7 +166,7 @@ class Registrations{
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function acceptGuest($userId, $country, $shire, $postalCode, $address, $city, $phone, $reason){
+	public static function acceptGuest($userId, $country, $shire, $postalCode, $address, $city, $phone, $reason){
 		$errorCode = 0;
 		try{
 			$status = P_User::getStatusCodeByName('visitor');
@@ -201,7 +209,7 @@ class Registrations{
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function acceptCollegist($userId, $country, $shire, $postalCode, $address, $city, $phone, $cityOfBirth, $dateOfBirth, $nameOfMother, $yearOfLeavingExam, $highSchool, $neptunCode, $applicationYear, $faculty, $workshop){
+	public static function acceptCollegist($userId, $country, $shire, $postalCode, $address, $city, $phone, $cityOfBirth, $dateOfBirth, $nameOfMother, $yearOfLeavingExam, $highSchool, $neptunCode, $applicationYear, $faculty, $workshop){
 		$errorCode = 0;
 		try{
 			P_User::promoteRegistrationUserToUser($userId, $country, $shire, $postalCode, $address, $city, $phone, 'Uran: Collegist registration', $cityOfBirth, $dateOfBirth, $nameOfMother, $yearOfLeavingExam, $highSchool, $neptunCode, $applicationYear, $faculty, $workshop, 0);
@@ -243,7 +251,7 @@ class Registrations{
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function register($username, $password, $email, $name, $country, $shire, $postalCode, $address, $city, $reason, $phoneNumber, $defaultLanguage, $cityOfBirth, $dateOfBirth, $nameOfMother, $yearOfLeavingExam, $highSchool, $neptun, $applicationYear, $faculty, $workshop){		
+	public static function register($username, $password, $email, $name, $country, $shire, $postalCode, $address, $city, $reason, $phoneNumber, $defaultLanguage, $cityOfBirth, $dateOfBirth, $nameOfMother, $yearOfLeavingExam, $highSchool, $neptun, $applicationYear, $faculty, $workshop){		
 		//validate input data
 		if($username === null || $password === null || $email === null || $name === null || $country === null || $shire === null || $postalCode === null ||$address === null || $city === null || $phoneNumber === null || $defaultLanguage === null){
 			throw new ValueMismatchException("A mandatory parameter is null!");
@@ -326,7 +334,7 @@ class Registrations{
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	private function getNotVerifiedUserData($username){
+	private static function getNotVerifiedUserData($username){
 		try{
 			$user = P_User::getRegistrationUserByUsername($username);
 		}catch(\Illuminate\Database\QueryException $e){
@@ -350,7 +358,7 @@ class Registrations{
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	private function addUserDefaultPermissions($userType, $userId){
+	private static function addUserDefaultPermissions($userType, $userId){
 		//get the default permissions
 		$permissions = P_General::getDefaultPermissions();
 		//set the user permissions
@@ -368,7 +376,7 @@ class Registrations{
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	private function registrationCleanUp(){
+	private static function registrationCleanUp(){
 		try{
 			Database::rollback();
 		}catch(\Exception $ex){

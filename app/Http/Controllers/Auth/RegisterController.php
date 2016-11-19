@@ -105,18 +105,19 @@ class RegisterController extends Controller{
 	
 	public function verify($code){
 		$layout = new LayoutData();
-		if($layout->registrations()->verify($code) === 0){
-			return view('success.success', [
-					"layout" => $layout,
-					"message" => $layout->language('success_at_verifying_the_registration'),
-					"url" => '/register'
-				]);
-		}else{
+		try{
+			$layout->registrations()->verify($code);
+		}catch(\Exception $ex){
 			return view('errors.error', [
 					"layout" => $layout,
 					"message" => $layout->language('error_at_verifying_the_registration'),
 					"url" => '/register'
 				]);
 		}
+		return view('success.success', [
+				"layout" => $layout,
+				"message" => $layout->language('success_at_verifying_the_registration'),
+				"url" => '/register'
+		]);
 	}
 }
