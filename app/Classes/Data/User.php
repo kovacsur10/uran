@@ -21,6 +21,10 @@ class User{
 	private $last_online;
 	private $language;
 	private $registered;
+	
+	private $registration_verification_status;
+	private $registration_verification_date;
+	private $registration_code;
 
 	// PUBLIC FUNCTIONS
 
@@ -41,7 +45,7 @@ class User{
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function __construct(int $id, string $name, string $username, string $password, string $email, string $registration_date, StatusCode $status, string $last_online = null, string $language, bool $registered){
+	public function __construct(int $id, string $name, string $username, string $password, string $email, string $registration_date, StatusCode $status, string $last_online = null, string $language, bool $registered, bool $registration_verification_status, string $registration_verification_date = null, string $registration_code){
 		$this->id = $id;
 		$this->name = $name;
 		$this->username = $username;
@@ -52,7 +56,9 @@ class User{
 		$this->last_online = $last_online;
 		$this->language = $language;
 		$this->registered = $registered;
-		
+		$this->registration_verification_status = $registration_verification_status;
+		$this->registration_verification_date = $registration_verification_date;
+		$this->registration_code = $registration_code;
 	}
 
 	/** Function name: id
@@ -153,6 +159,36 @@ class User{
 	 */
 	public function status() : StatusCode{
 		return $this->status;
+	}
+	
+	/** Function name: verificationDate
+	 *
+	 * This is the getter for registration_verification_date.
+	 *
+	 * @return bool - The registered of the user.
+	 */
+	public function verificationDate(){
+		return $this->registration_verification_date;
+	}
+	
+	/** Function name: verified
+	 *
+	 * This is the getter for registration_verification_status.
+	 *
+	 * @return bool - The registered of the user.
+	 */
+	public function verified() : bool{
+		return $this->registration_verification_status;
+	}
+	
+	/** Function name: registrationCode
+	 *
+	 * This is the getter for registration_code.
+	 *
+	 * @return bool - The registered of the user.
+	 */
+	public function registrationCode() : string{
+		return $this->registration_code;
 	}
 
 }
