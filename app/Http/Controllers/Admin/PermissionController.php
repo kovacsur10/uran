@@ -26,25 +26,23 @@ class PermissionController extends Controller{
 	public function setPermissions(Request $request){
 		$layout = new LayoutData();
 		if($layout->user()->permitted('permission_admin')){
-			$error = false;
-			Database::beginTransaction(); //DATABASE TRANSACTION STARTS HERE
-			$error = ($layout->permissions()->removeAll($request->user) != 0);
-			if($request->permissions != null){
-				foreach($request->permissions as $permission){
-					$error = ($layout->permissions()->setPermissionForUser($request->user, $permission) != 0);
-				}
-			}
-			
-			if($error){
-				Database::rollback();
+			try{
+				Database::transaction(function() use($request, $layout){
+					$layout->permissions()->removeAll($request->user);
+					if($request->permissions !== null){
+						foreach($request->permissions as $permission){
+							$layout->permissions()->setPermissionForUser($request->user, $permission);
+						}
+					}
+				});
+			}catch(\Exception $ex){
 				return view('errors.error', ["layout" => $layout,
-											 "message" => $layout->language('error_at_setting_the_permissions'),
-											 "url" => '/admin/permissions']);
-			}else{
-				Database::commit();
-				Notifications::notify($layout->user(), $request->user, 'Megváltoztak a jogaid', 'Egy adminisztrátor módosította a jogaidat a rendszerben!', 'home');
-				return view('admin.permissions', ["layout" => $layout]);
-			} //DATABASE TRANSACTION ENDS HERE
+						"message" => $layout->language('error_at_setting_the_permissions'),
+						"url" => '/admin/permissions']);
+			}
+			return view('errors.error', ["layout" => $layout,
+					"message" => $layout->language('error_at_setting_the_permissions'),
+					"url" => '/admin/permissions']);
 		}else{
 			return view('errors.authentication', ["layout" => $layout]);
 		}

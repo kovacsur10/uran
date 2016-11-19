@@ -28,11 +28,11 @@ class DatabaseTest extends TestCase
 		try{
 			Database::transaction(
 				function(){
-					//first, delete all the permissions
-					P_General::deleteDefaultPermissionsForRegistrationType();
-					//add the new permissions
-					foreach($permissions as $permission){
-						P_General::insertNewDefaultPermission('guest', $permission);
+					$alma = 1;
+					if($alma === 1){
+						$hallo = false;
+					}else{
+						$hallo = true;
 					}
 				}
 			);

@@ -84,14 +84,16 @@ class Database{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public static function transaction($fn){
-		Database::beginTransaction();
-		try{
-			$fn();
-			Database::commit();
-		}catch(\Exception $ex){
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Transaction error! ".$ex->getMessage());
-			Database::rollback();
-			throw $ex;
+		if($fn !== null){
+			Database::beginTransaction();
+			try{
+				$fn();
+				Database::commit();
+			}catch(\Exception $ex){
+				Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Transaction error! ".$ex->getMessage());
+				Database::rollback();
+				throw $ex;
+			}
 		}
 	}
 	
