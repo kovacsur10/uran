@@ -8,6 +8,7 @@ use App\Persistence\P_General;
 use App\Classes\Database;
 use App\Exceptions\DatabaseException;
 use App\Exceptions\ValueMismatchException;
+use App\Exceptions\UserNotFoundException;
 
 /** Class name: Permissions
  *
@@ -204,18 +205,16 @@ class Permissions{
 			throw new ValueMismatchException("The provided user type does not exist!");
 		}
 		try{
-			Database::transaction(function(){
+			Database::transaction(function() use($userType, $permissions){
 				//first, delete all the permissions
 				P_General::deleteDefaultPermissionsForRegistrationType($userType);
 				//add the new permissions
-				print_r("what");
 				foreach($permissions as $permission){
 					P_General::insertNewDefaultPermission($userType, $permission);
-					print_r($permission);
 				}
 			});
 		}catch(\Exception $ex){
-			throw new DatabaseException("Cannot set default permissions!");
+			throw new DatabaseException("Cannot set default permissions! (".$ex->getMessage().")");
 		}
 	}
 	
@@ -226,19 +225,22 @@ class Permissions{
 	 * permissions.
 	 * 
 	 * @param int $userId - user's identifier
-	 * @return int - error code
+	 * 
+	 * @throws DatabaseException when the persistence layer had an error.
+	 * @throws UserNotFoundException when the given user id was not valid.
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function removeAll($userId){
-		$error = 0;
+	public static function removeAll($userId){
+		if($userId === null){
+			throw new UserNotFoundException();
+		}
 		try{
 			P_User::removePermissionsForUser($userId);
 		}catch(\Exception $ex){
-			$error = 1;
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Delete from table 'user_permissions' was not successful! ".$ex->getMessage());
+			throw new DatabaseException("Removing all permissions for user was not successful!");
 		}
-		return $error;
 	}
 	
 	/** Function name: setPermissionForUser
@@ -248,19 +250,25 @@ class Permissions{
 	 * 
 	 * @param int $userId - user's identifier
 	 * @param int $permissionId - identifier of a permission
-	 * @return int - error code
+	 * 
+	 * @throws DatabaseException when the persistence layer had an error.
+	 * @throws UserNotFoundException when the given user id was not valid.
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function setPermissionForUser($userId, $permissionId){
-		$error = 0;
+	public static function setPermissionForUser($userId, $permissionId){
+		if($userId === null){
+			throw new UserNotFoundException();
+		}
+		if($permissionId === null){
+			throw new DatabaseException("Permission identifier should not be null!");
+		}
 		try{
 			P_User::addPermissionForUser($userId, $permissionId);
 		}catch(\Exception $ex){
-			$error = 1;
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Insert into table 'user_permissions' was not successful! ".$ex->getMessage());
+			throw new DatabaseException("Setting a permission for user was not successful!");
 		}
-		return $error;
 	}
 	
 // PRIVATE FUNCTIONS	

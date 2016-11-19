@@ -7,6 +7,7 @@ use App\Classes\Layout\Permissions;
 use App\Exceptions\DatabaseException;
 use App\Exceptions\ValueMismatchException;
 use App\Classes\Database;
+use App\Exceptions\UserNotFoundException;
 
 /** Class name: PermissionsTest
  *
@@ -19,9 +20,9 @@ class PermissionsTest extends TestCase
 {
 	use DatabaseTransactions;
 
-	/** Function name: test_get
+	/** Function name: test_getForUser
 	 *
-	 * This function is testing the get function of the Modules model.
+	 * This function is testing the get function of the Permissions model.
 	 *
 	 * @return void
 	 *
@@ -45,6 +46,14 @@ class PermissionsTest extends TestCase
 		$this->assertEquals([], $permissions);
 	}
 	
+	/** Function name: test_permitted
+	 *
+	 * This function is testing the get function of the Permissions model.
+	 *
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
 	function test_permitted(){
 		$this->assertTrue(Permissions::permitted(41, 'ecnet_slot_verify'));
 		$this->assertFalse(Permissions::permitted(41, 'tasks_add'));
@@ -56,6 +65,14 @@ class PermissionsTest extends TestCase
 		$this->assertFalse(Permissions::permitted(null, null));
 	}
 	
+	/** Function name: test_getById
+	 *
+	 * This function is testing the get function of the Permissions model.
+	 *
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
 	function test_getById(){
 		$this->assertNull(Permissions::getById(null));
 		$this->assertNull(Permissions::getById(0));
@@ -64,6 +81,14 @@ class PermissionsTest extends TestCase
 		$this->assertInstanceOf(Permission::class, $permission);
 	}
 	
+	/** Function name: test_getByName
+	 *
+	 * This function is testing the get function of the Permissions model.
+	 *
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
 	function test_getByName(){
 		$this->assertNull(Permissions::getByName(null));
 		$this->assertNull(Permissions::getByName(''));
@@ -73,6 +98,14 @@ class PermissionsTest extends TestCase
 		$this->assertInstanceOf(Permission::class, $permission);
 	}
 	
+	/** Function name: test_getAllPermissions
+	 *
+	 * This function is testing the get function of the Permissions model.
+	 *
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
 	function test_getAllPermissions(){
 		try{
 			$permissions = Permissions::getAllPermissions();
@@ -86,6 +119,14 @@ class PermissionsTest extends TestCase
 		}
 	}
 	
+	/** Function name: test_getUsersWithPermission
+	 *
+	 * This function is testing the get function of the Permissions model.
+	 *
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
 	function test_getUsersWithPermission(){
 		$this->assertCount(0, Permissions::getUsersWithPermission(''));
 		$this->assertCount(0, Permissions::getUsersWithPermission(null));
@@ -93,6 +134,14 @@ class PermissionsTest extends TestCase
 		$this->assertCount(3, Permissions::getUsersWithPermission('ecnet_slot_verify'));
 	}
 	
+	/** Function name: test_hasGuestsDefaultPermission
+	 *
+	 * This function is testing the get function of the Permissions model.
+	 *
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
 	function test_hasGuestsDefaultPermission(){
 		$this->assertFalse(Permissions::hasGuestsDefaultPermission(null));
 		$this->assertFalse(Permissions::hasGuestsDefaultPermission(0));
@@ -101,6 +150,14 @@ class PermissionsTest extends TestCase
 		$this->assertFalse(Permissions::hasGuestsDefaultPermission('alma'));
 	}
 	
+	/** Function name: test_hasCollegistsDefaultPermission
+	 *
+	 * This function is testing the get function of the Permissions model.
+	 *
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
 	function test_hasCollegistsDefaultPermission(){
 		$this->assertFalse(Permissions::hasCollegistsDefaultPermission(null));
 		$this->assertFalse(Permissions::hasCollegistsDefaultPermission(0));
@@ -109,6 +166,14 @@ class PermissionsTest extends TestCase
 		$this->assertFalse(Permissions::hasCollegistsDefaultPermission('alma'));
 	}
 	
+	/** Function name: test_setDefaults_success
+	 *
+	 * This function is testing the get function of the Permissions model.
+	 *
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
 	function test_setDefaults_success(){
 		$this->assertFalse(Permissions::hasCollegistsDefaultPermission(5));
 		$this->assertTrue(Permissions::hasCollegistsDefaultPermission(10));
@@ -129,13 +194,15 @@ class PermissionsTest extends TestCase
 		$this->assertFalse(Permissions::hasGuestsDefaultPermission(7));
 	}
 	
+	/** Function name: test_setDefaults_fail
+	 *
+	 * This function is testing the get function of the Permissions model.
+	 *
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
 	function test_setDefaults_fail(){
-		try{
-			Permissions::setDefaults('collegist', [0, 2]);
-		}catch(\Exception $ex){
-			$this->fail("Unexpected exception! ".$ex->getMessage());
-		}
-		
 		try{
 			Permissions::setDefaults("alma", [1,2]);
 			$this->fail("An exception was expected!");
@@ -154,11 +221,20 @@ class PermissionsTest extends TestCase
 		
 		try{
 			Permissions::setDefaults('collegist', ['alma']);
+		}catch(DatabaseException $ex){
 		}catch(\Exception $ex){
 			$this->fail("Unexpected exception! ".$ex->getMessage());
 		}
 	}
 	
+	/** Function name: test_setDefaults_null
+	 *
+	 * This function is testing the get function of the Permissions model.
+	 *
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
 	function test_setDefaults_null(){
 		try{
 			Permissions::setDefaults('collegist', null);
@@ -174,6 +250,143 @@ class PermissionsTest extends TestCase
 		}catch(ValueMismatchException $ex){
 		}catch(\Exception $ex){
 			$this->fail("Not the expected exception! ".$ex->getMessage());
+		}
+	}
+	
+	/** Function name: test_removeAll_success
+	 *
+	 * This function is testing the get function of the Permissions model.
+	 *
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	function test_removeAll_success(){
+		$this->assertTrue(Permissions::permitted(1, 'ecnet_slot_verify'));
+		$this->assertTrue(Permissions::permitted(41, 'ecnet_slot_verify'));
+		$this->assertFalse(Permissions::permitted(41, 'tasks_add'));
+		try{
+			Permissions::removeAll(41);
+		}catch(\Exception $ex){
+			$this->fail("Unexpected exception: ".$ex->getMessage());
+		}
+		$this->assertTrue(Permissions::permitted(1, 'ecnet_slot_verify'));
+		$this->assertFalse(Permissions::permitted(41, 'ecnet_slot_verify'));
+		$this->assertFalse(Permissions::permitted(41, 'tasks_add'));
+		$this->assertCount(0, Permissions::getForUser(41));
+	}
+	
+	/** Function name: test_removeAll_fail
+	 *
+	 * This function is testing the get function of the Permissions model.
+	 *
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	function test_removeAll_fail(){
+		try{
+			Permissions::removeAll(-1);
+		}catch(\Exception $ex){
+			$this->fail("Not the expected exception: ".$ex->getMessage());
+		}
+	}
+	
+	/** Function name: test_removeAll_exceptions
+	 *
+	 * This function is testing the get function of the Permissions model.
+	 *
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	function test_removeAll_exceptions(){
+		try{
+			Permissions::removeAll(null);
+			$this->fail("An exception was expected!");
+		}catch(UserNotFoundException $ex){
+		}catch(\Exception $ex){
+			$this->fail("Unexpected exception: ".$ex->getMessage());
+		}
+	}
+	
+	/** Function name: test_setPermissionForUser_success
+	 *
+	 * This function is testing the get function of the Permissions model.
+	 *
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	function test_setPermissionForUser_success(){
+		$this->assertFalse(Permissions::permitted(41, 'tasks_add'));
+		$this->assertCount(3, Permissions::getForUser(41));
+		try{
+			Permissions::setPermissionForUser(41, 10);
+		}catch(\Exception $ex){
+			$this->fail("Unexpected exception: ".$ex->getMessage());
+		}
+		$this->assertTrue(Permissions::permitted(41, 'tasks_add'));
+		$this->assertCount(4, Permissions::getForUser(41));
+	}
+	
+	/** Function name: test_setPermissionForUser_fail
+	 *
+	 * This function is testing the get function of the Permissions model.
+	 *
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	function test_setPermissionForUser_fail(){
+		try{
+			Permissions::setPermissionForUser(-1, 10);
+			$this->fail("An exception was expected!");
+		}catch(DatabaseException $ex){
+		}catch(\Exception $ex){
+			$this->fail("Unexpected exception: ".$ex->getMessage());
+		}
+		
+		try{
+			Permissions::setPermissionForUser(41, -1);
+			$this->fail("An exception was expected!");
+		}catch(DatabaseException $ex){
+		}catch(\Exception $ex){
+			$this->fail("Unexpected exception: ".$ex->getMessage());
+		}
+	}
+	
+	/** Function name: test_setPermissionForUser_null
+	 *
+	 * This function is testing the get function of the Permissions model.
+	 *
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	function test_setPermissionForUser_null(){
+		try{
+			Permissions::setPermissionForUser(null, 10);
+			$this->fail("An exception was expected!");
+		}catch(UserNotFoundException $ex){
+		}catch(\Exception $ex){
+			$this->fail("Not the expected exception: ".$ex->getMessage());
+		}
+		
+		try{
+			Permissions::setPermissionForUser(41, null);
+			$this->fail("An exception was expected!");
+		}catch(DatabaseException $ex){
+		}catch(\Exception $ex){
+			$this->fail("Not the expected exception: ".$ex->getMessage());
+		}
+		
+		try{
+			Permissions::setPermissionForUser(null, null);
+			$this->fail("An exception was expected!");
+		}catch(UserNotFoundException $ex){
+		}catch(\Exception $ex){
+			$this->fail("Not the expected exception: ".$ex->getMessage());
 		}
 	}
 }
