@@ -544,11 +544,17 @@ class P_General{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	static function getDefaultPermissions($userType){
-		return DB::table('default_permissions')
+		$getPermissions = DB::table('default_permissions')
+			->join('permissions', 'permissions.id', '=', 'default_permissions.permission')
 			->where('registration_type', 'LIKE', $userType)
 			->orderBy('id', 'asc')
-			->get()
-			->toArray();
+			->select('permissions.*')
+			->get();
+		$permissions = [];
+		foreach($getPermissions as $permission){
+			array_push($permissions, new Permission($permission->id, $permission->permission_name, $permission->description));
+		}
+		return $permissions;
 	}
 	
 	/** Function name: hasDefaultPermission
