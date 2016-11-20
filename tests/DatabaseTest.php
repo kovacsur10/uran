@@ -2,7 +2,6 @@
 
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use App\Classes\Database;
-use App\Persistence\P_General;
 
 /** Class name: DatabaseTest
  * 

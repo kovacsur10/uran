@@ -8,6 +8,8 @@ use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
+use App\Exceptions\ValueMismatchException;
+use App\Exceptions\DatabaseException;
 
 class RoomsController extends Controller{	
     public function showMap($level = 2){
@@ -34,37 +36,33 @@ class RoomsController extends Controller{
 	public function assignResidents(Request $request, $guard){
 		$layout = new LayoutData();
 		if($layout->user()->permitted('rooms_assign')){
-			$error = 0;
 			$roomId = $layout->room()->getRoomId($request->room);
-			Database::beginTransaction(); //DATABASE TRANSACTION STARTS HERE
-			if($roomId === null){
-				$error = 1;
-			}else if(!$layout->room()->checkGuard($guard)){
-				$error = 2;
-			}else{
-				$layout->room()->emptyRoom($roomId);
-				for($i = 0; $i < $request->count; $i++){
-					if($request->input('resident'.$i) != 0){
-						$error = $layout->room()->setUserToRoom($roomId, $request->input('resident'.$i));
+			try{
+				Database::transaction(function() use($roomId, $guard, $layout, $request){
+					if($roomId === null){
+						throw new ValueMismatchException("The room identifier must not be null!");
+					}else if(!$layout->room()->checkGuard($guard)){
+						throw new DatabaseException("Guard checking was not successful!");
+					}else{
+						$layout->room()->emptyRoom($roomId);
+						for($i = 0; $i < $request->count; $i++){
+							if($request->input('resident'.$i) != 0){
+								$layout->room()->setUserToRoom($roomId, $request->input('resident'.$i));
+							}
+						}
 					}
-				}
-			}
-			
-			if($error === 0){
-				Database::commit();
-				return view('rooms.showroom', ["layout" => new LayoutData(),
-						"room" => $request->room]);
-			}else if($error === 2){
-				Database::rollback();
-				return view('errors.error', ["layout" => $layout,
-						"message" => $layout->language('error_rooms_guard_mismatch'),
-						"url" => '/rooms/room/'.$request->room]);
-			}else{
-				Database::rollback();
+				});
+			}catch(ValueMismatchException $ex){
 				return view('errors.error', ["layout" => $layout,
 						"message" => $layout->language('error_already_lives_somewhere'),
 						"url" => '/rooms/room/'.$request->room]);
-			} //DATABASE TRANSACTION ENDS HERE
+			}catch(\Exception $ex){
+				return view('errors.error', ["layout" => $layout,
+						"message" => $layout->language('error_rooms_guard_mismatch'),
+						"url" => '/rooms/room/'.$request->room]);
+			}
+			return view('rooms.showroom', ["layout" => new LayoutData(),
+				"room" => $request->room]);
 		}else{
 			return view('errors.authentication', ["layout" => $layout]);
 		}
