@@ -1,12 +1,10 @@
 <?php
 
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use App\Classes\Layout\Modules;
 use App\Classes\Data\Permission;
 use App\Classes\Layout\Permissions;
 use App\Exceptions\DatabaseException;
 use App\Exceptions\ValueMismatchException;
-use App\Classes\Database;
 use App\Exceptions\UserNotFoundException;
 
 /** Class name: PermissionsTest

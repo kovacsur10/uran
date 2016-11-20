@@ -3,6 +3,7 @@
 namespace App\Persistence;
 
 use DB;
+use App\Classes\Data\Room;
 
 /** Class name: P_Room
  *
@@ -23,25 +24,29 @@ class P_Room{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	static function getRoom($roomNumber){
-		DB::table('rooms_rooms')
+		$room = DB::table('rooms_rooms')
 			->where('room_number', 'LIKE', $roomNumber)
 			->first();
+		return $room === null ? null : new Room($room->id, $room->room_number, $room->max_collegist_count, $room->floor);
 	}
 	
 	/** Function name: getRooms
 	 *
 	 * This function returns the rooms.
 	 * 
-	 * @return array of Rooms
+	 * @return array of Room
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	static function getRooms(){
-		DB::table('rooms_rooms')
-			->select('room_number as room', 'max_collegist_count', 'floor')
+		$getRooms = DB::table('rooms_rooms')
 			->orderBy('id', 'asc')
-			->get()
-			->toArray();
+			->get();
+		$rooms = [];
+		foreach($getRooms as $room){
+			array_push($rooms, new Room($room->id, $room->room_number, $room->max_collegist_count, $room->floor));	
+		}
+		return $rooms;
 	}
 	
 	/** Function name: getAssignmentTable
@@ -132,12 +137,12 @@ class P_Room{
 	 * This function returns the last table
 	 * modification time.
 	 *
-	 * @return timestamp
+	 * @return timestamp|null
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	static function getModificationTime(){
-		DB::table('rooms_last_modified')
+		return DB::table('rooms_last_modified')
 			->value('last_modified');
 	}
 	

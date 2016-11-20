@@ -10,7 +10,7 @@ use App\Classes\Layout\Languages;
 use App\Classes\Layout\Modules;
 use App\Classes\Layout\Permissions;
 use App\Classes\Layout\Registrations;
-use App\Classes\Layout\Room;
+use App\Classes\Layout\Rooms;
 use App\Classes\Layout\Tasks;
 use App\Classes\Layout\User;
 
@@ -52,7 +52,7 @@ class LayoutData{
 	public function __construct(){
 		$this->logged = Session::has('user');
 		$this->user = new User(Session::get('user') == null ? null : Session::get('user')->id);
-		$this->room = new Room();
+		$this->room = new Rooms();
 		$this->modules = new Modules();
 		$this->permissions = new Permissions();
 		$this->base = new BaseData();

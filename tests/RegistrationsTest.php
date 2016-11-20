@@ -5,8 +5,6 @@ use App\Classes\Layout\Registrations;
 use App\Classes\Data\User;
 use App\Exceptions\ValueMismatchException;
 use App\Exceptions\DatabaseException;
-use App\Http\Controllers\Auth\RegisterController;
-use App\Persistence\P_User;
 
 /** Class name: RegistrationsTest
  *
