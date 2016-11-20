@@ -1,9 +1,7 @@
 <?php
 
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use App\Classes\Database;
 use App\Classes\Notifications;
-use App\Exceptions\DatabaseException;
 use App\Exceptions\UserNotFoundException;
 use App\Exceptions\ValueMismatchException;
 

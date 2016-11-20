@@ -8,7 +8,7 @@ use Carbon\Carbon;
 use App\Persistence\P_Room;
 use App\Exceptions\DatabaseException;
 
-/** Class name: Room
+/** Class name: Rooms
  *
  * This class handles the database operations
  * of the Rooms module.
@@ -22,7 +22,7 @@ use App\Exceptions\DatabaseException;
  * 
  * @author Máté Kovács <kovacsur10@gmail.com>
  */
-class Room{
+class Rooms{
 	
 // PRIVATE DATA
 	
@@ -33,7 +33,7 @@ class Room{
 	
 	/** Function name: __construct
 	 *
-	 * Constuctor of class Room.
+	 * Constuctor of class Rooms.
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
@@ -75,14 +75,17 @@ class Room{
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function getRoomId($roomNumber){
+	public static function getRoomId($roomNumber){
+		if($roomNumber === null){
+			return null;
+		}
 		try{
-			$roomId	= P_Room::getRoom($roomNumber)->id;
+			$room = P_Room::getRoom($roomNumber);
 		}catch(Exception $ex){
-			$roomId = null;
+			$room = null;
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'rooms_rooms' was not successful! ".$ex->getMessage());
 		}
-		return $roomId === null ? null : $roomId->id;
+		return $room === null ? null : $room->id();
 	}
 	
 	/** Function name: emptyRoom
@@ -134,11 +137,14 @@ class Room{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function getResidents($roomNumber){
+		if($roomNumber === null){
+			return [];
+		}
 		try{
-			$residents = P_Room::getResidents(Room::getAssignmentTableName($this->selectedTable), $roomNumber);
+			$residents = P_Room::getResidents(Rooms::getAssignmentTableName($this->selectedTable), $roomNumber);
 		}catch(\Exception $ex){
 			$residents = [];
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'rooms_rooms' joined to '".Room::getAssignmentTableName($this->selectedTable)."' and 'users' was not successful! ".$ex->getMessage());
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'rooms_rooms' joined to '".Rooms::getAssignmentTableName($this->selectedTable)."' and 'users' was not successful! ".$ex->getMessage());
 		}
 		return $residents;
 	}
@@ -249,7 +255,7 @@ class Room{
 	public function addNewTable($tableName){
 		$ret = false;
 		if(!$this->tableExists($tableName)){
-			$assignmentTable = Room::getAssignmentTableName($tableName);
+			$assignmentTable = Rooms::getAssignmentTableName($tableName);
 			$assignmentIdSeq = $assignmentTable."_id_seq";
 			try{	
 	 			P_Room::addAssigmentTable($assignmentTable, $tableName, $assignmentIdSeq);
@@ -421,7 +427,7 @@ class Room{
 	 * with room number, capacity and the floor
 	 * in the dormitory.
 	 * 
-	 * @return array of the Rooms
+	 * @return array of the Room
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
