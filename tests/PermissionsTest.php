@@ -22,7 +22,7 @@ class PermissionsTest extends TestCase
 
 	/** Function name: test_getForUser
 	 *
-	 * This function is testing the get function of the Permissions model.
+	 * This function is testing the getForUser function of the Permissions model.
 	 *
 	 * @return void
 	 *
@@ -48,7 +48,7 @@ class PermissionsTest extends TestCase
 	
 	/** Function name: test_permitted
 	 *
-	 * This function is testing the get function of the Permissions model.
+	 * This function is testing the permitted function of the Permissions model.
 	 *
 	 * @return void
 	 *
@@ -67,7 +67,7 @@ class PermissionsTest extends TestCase
 	
 	/** Function name: test_getById
 	 *
-	 * This function is testing the get function of the Permissions model.
+	 * This function is testing the getById function of the Permissions model.
 	 *
 	 * @return void
 	 *
@@ -83,7 +83,7 @@ class PermissionsTest extends TestCase
 	
 	/** Function name: test_getByName
 	 *
-	 * This function is testing the get function of the Permissions model.
+	 * This function is testing the getByName function of the Permissions model.
 	 *
 	 * @return void
 	 *
@@ -100,7 +100,7 @@ class PermissionsTest extends TestCase
 	
 	/** Function name: test_getAllPermissions
 	 *
-	 * This function is testing the get function of the Permissions model.
+	 * This function is testing the getAllPermissions function of the Permissions model.
 	 *
 	 * @return void
 	 *
@@ -121,7 +121,7 @@ class PermissionsTest extends TestCase
 	
 	/** Function name: test_getUsersWithPermission
 	 *
-	 * This function is testing the get function of the Permissions model.
+	 * This function is testing the getUsersWithPermission function of the Permissions model.
 	 *
 	 * @return void
 	 *
@@ -136,7 +136,7 @@ class PermissionsTest extends TestCase
 	
 	/** Function name: test_hasGuestsDefaultPermission
 	 *
-	 * This function is testing the get function of the Permissions model.
+	 * This function is testing the hasGuestsDefaultPermission function of the Permissions model.
 	 *
 	 * @return void
 	 *
@@ -152,7 +152,7 @@ class PermissionsTest extends TestCase
 	
 	/** Function name: test_hasCollegistsDefaultPermission
 	 *
-	 * This function is testing the get function of the Permissions model.
+	 * This function is testing the hasCollegistsDefaultPermission function of the Permissions model.
 	 *
 	 * @return void
 	 *
@@ -168,7 +168,7 @@ class PermissionsTest extends TestCase
 	
 	/** Function name: test_setDefaults_success
 	 *
-	 * This function is testing the get function of the Permissions model.
+	 * This function is testing the setDefaults function of the Permissions model.
 	 *
 	 * @return void
 	 *
@@ -196,7 +196,7 @@ class PermissionsTest extends TestCase
 	
 	/** Function name: test_setDefaults_fail
 	 *
-	 * This function is testing the get function of the Permissions model.
+	 * This function is testing the setDefaults function of the Permissions model.
 	 *
 	 * @return void
 	 *
@@ -229,7 +229,7 @@ class PermissionsTest extends TestCase
 	
 	/** Function name: test_setDefaults_null
 	 *
-	 * This function is testing the get function of the Permissions model.
+	 * This function is testing the setDefaults function of the Permissions model.
 	 *
 	 * @return void
 	 *
@@ -255,7 +255,7 @@ class PermissionsTest extends TestCase
 	
 	/** Function name: test_removeAll_success
 	 *
-	 * This function is testing the get function of the Permissions model.
+	 * This function is testing the removeAll function of the Permissions model.
 	 *
 	 * @return void
 	 *
@@ -278,7 +278,7 @@ class PermissionsTest extends TestCase
 	
 	/** Function name: test_removeAll_fail
 	 *
-	 * This function is testing the get function of the Permissions model.
+	 * This function is testing the removeAll function of the Permissions model.
 	 *
 	 * @return void
 	 *
@@ -294,7 +294,7 @@ class PermissionsTest extends TestCase
 	
 	/** Function name: test_removeAll_exceptions
 	 *
-	 * This function is testing the get function of the Permissions model.
+	 * This function is testing the removeAll function of the Permissions model.
 	 *
 	 * @return void
 	 *
@@ -312,7 +312,7 @@ class PermissionsTest extends TestCase
 	
 	/** Function name: test_setPermissionForUser_success
 	 *
-	 * This function is testing the get function of the Permissions model.
+	 * This function is testing the removeAll function of the Permissions model.
 	 *
 	 * @return void
 	 *
@@ -332,7 +332,7 @@ class PermissionsTest extends TestCase
 	
 	/** Function name: test_setPermissionForUser_fail
 	 *
-	 * This function is testing the get function of the Permissions model.
+	 * This function is testing the removeAll function of the Permissions model.
 	 *
 	 * @return void
 	 *
@@ -358,7 +358,7 @@ class PermissionsTest extends TestCase
 	
 	/** Function name: test_setPermissionForUser_null
 	 *
-	 * This function is testing the get function of the Permissions model.
+	 * This function is testing the removeAll function of the Permissions model.
 	 *
 	 * @return void
 	 *

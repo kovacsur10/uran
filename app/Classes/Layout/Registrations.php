@@ -10,6 +10,8 @@ use App\Exceptions\DatabaseException;
 use App\Classes\Database;
 use App\Classes\LayoutData;
 use App\Classes\Logger;
+use App\Exceptions\UserNotFoundException;
+use Mail;
 
 /** Class name: Registrations
  *
@@ -162,27 +164,26 @@ class Registrations{
 	 * @param text $city
 	 * @param text $phone
 	 * @param text $reason
-	 * @return int - error code
+	 * 
+	 * @throws ValueMismatchException when the user identifier is null!
+	 * @throws DatabaseException when the registration acception fails.
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public static function acceptGuest($userId, $country, $shire, $postalCode, $address, $city, $phone, $reason){
-		$errorCode = 0;
+		if($userId === null){
+			throw new ValueMismatchException("The user identifier must not be null!");
+		}
+		$status = P_User::getStatusCodeByName('visitor');
+		if($status === null){
+			throw new DatabaseException("User status code error!");
+		}
 		try{
-			$status = P_User::getStatusCodeByName('visitor');
+			P_User::promoteRegistrationUserToUser($userId, $country, $shire, $postalCode, $address, $city, $phone, $reason, null, null, null, null, null, null, null, null, null, $status->id());
 		}catch(\Exception $ex){
-			$errorCode = 1;
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'user_status_codes' was not successful! ".$ex->getMessage());
+			throw new DatabaseException("Guest registration acceptation failed!");
 		}
-		if($errorCode === 0){
-			try{
-				P_User::promoteRegistrationUserToUser($userId, $country, $shire, $postalCode, $address, $city, $phone, $reason, null, null, null, null, null, null, null, null, null, $status->id);
-			}catch(\Exception $ex){
-				$errorCode = 2;
-				Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Update table 'users' was not successful! ".$ex->getMessage());
-			}
-		}
-		return $errorCode;
 	}
 	
 	/** Function name: acceptCollegist
@@ -205,19 +206,22 @@ class Registrations{
 	 * @param int $applicationYear
 	 * @param int $faculty
 	 * @param int $workshop
-	 * @return int - error code
+	 * 
+	 * @throws ValueMismatchException when the user identifier is null!
+	 * @throws DatabaseException when the registration acception fails.
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public static function acceptCollegist($userId, $country, $shire, $postalCode, $address, $city, $phone, $cityOfBirth, $dateOfBirth, $nameOfMother, $yearOfLeavingExam, $highSchool, $neptunCode, $applicationYear, $faculty, $workshop){
-		$errorCode = 0;
+		if($userId === null){
+			throw new ValueMismatchException("The user identifier must not be null!");
+		}
 		try{
 			P_User::promoteRegistrationUserToUser($userId, $country, $shire, $postalCode, $address, $city, $phone, 'Uran: Collegist registration', $cityOfBirth, $dateOfBirth, $nameOfMother, $yearOfLeavingExam, $highSchool, $neptunCode, $applicationYear, $faculty, $workshop, 0);
 		}catch(\Exception $ex){
-			$errorCode = 1;
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Update table 'users' was not successful! ".$ex->getMessage());
+			throw new DatabaseException("Collegist registration acceptation failed!");
 		}
-		return $errorCode;
 	}
 	
 	/** Function name: register
@@ -258,7 +262,7 @@ class Registrations{
 		}
 		$password = password_hash($password, PASSWORD_DEFAULT);
 		if($reason === null){
-			$dateOfBirth = substr(str_replace('.', '-', $dateOfBirth), 0, -1);
+			$dateOfBirth = $dateOfBirth === null ? null : substr(str_replace('.', '-', $dateOfBirth), 0, -1);
 			if($cityOfBirth === null || $dateOfBirth === null || $nameOfMother === null || $yearOfLeavingExam === null || $highSchool === null || $neptun === null || $applicationYear === null ||$faculty === null || $workshop === null){
 				throw new ValueMismatchException("A mandatory parameter is null!");
 			}
@@ -279,71 +283,48 @@ class Registrations{
 		$registrationCode = sha1($username . $date . $email);
 		
 		//add registration to the database
-		Database::beginTransaction(); //DATABASE TRANSACTION STARTS HERE
 		try{
-			P_User::addRegistrationData($username, $password, $email, $name, $country, $shire, $postalCode, $address, $city, $reason, $phoneNumber, $defaultLanguage, $cityOfBirth, $dateOfBirth, $nameOfMother, $yearOfLeavingExam, $highSchool, $neptun, $applicationYear, $faculty, $workshop, $date);
-			$user = $this->getNotVerifiedUserData($username);
-		}catch(\Illuminate\Database\QueryException $e){
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
-			$this->registrationCleanUp();
-		}
-		if($user === null){
-			$this->registrationCleanUp();
-		}else{
-			try{
-				P_User::addRegistrationCodeEntry($user->id, $registrationCode);
-				$this->addUserDefaultPermissions($userType, $user->id);
-					
-				// ECNET PART
-				$layout = new LayoutData();
-				if($layout->modules()->isActivatedByName('ecnet')){
-					$layout->setUser(new EcnetUser(0));
-					$layout->user()->register($user->id);
+			Database::transaction(function() use($username, $password, $email, $name, $country, $shire, $postalCode, $address, $city, $reason, $phoneNumber, $defaultLanguage, $cityOfBirth, $dateOfBirth, $nameOfMother, $yearOfLeavingExam, $highSchool, $neptun, $applicationYear, $faculty, $workshop, $date, $registrationCode, $userType){
+				try{
+					P_User::addRegistrationData($username, $password, $email, $name, $country, $shire, $postalCode, $address, $city, $reason, $phoneNumber, $defaultLanguage, $cityOfBirth, $dateOfBirth, $nameOfMother, $yearOfLeavingExam, $highSchool, $neptun, $applicationYear, $faculty, $workshop, $date);
+					$userId = P_User::getRegistrationUserIdForUsername($username);
+				}catch(\Illuminate\Database\QueryException $ex){
+					Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
+					throw $ex;
 				}
-				// ECNET PART END
-				Database::commit();
-				//set up the language for the e-mail
-				if($layout->lang() == "hu_HU" || $layout->lang() == "en_US"){
-					$lang = $layout->lang();
+				
+				if($userId === null){
+					throw new UserNotFoundException();
 				}else{
-					$lang = "hu_HU";
+					P_User::addRegistrationCodeEntry($userId, $registrationCode);
+					Registrations::addUserDefaultPermissions($userType, $userId);
+						
+					// ECNET PART
+					$layout = new LayoutData();
+					if($layout->modules()->isActivatedByName('ecnet')){
+						$layout->setUser(new EcnetUser(0));
+						$layout->user()->register($userId);
+					}
+					// ECNET PART END
+					//set up the language for the e-mail
+					if($layout->lang() == "hu_HU" || $layout->lang() == "en_US"){
+						$lang = $layout->lang();
+					}else{
+						$lang = "hu_HU";
+					}
+					//send e-mail
+					Mail::send('mails.verification_'.$lang, ['name' => $name, 'link' => url('/register/'.$registrationCode)], function ($m) use ($email, $name, $layout) {
+						$m->to($email, $name);
+						$m->subject($layout->language('confirm_registration'));
+					});
 				}
-				//send e-mail
-				Mail::send('mails.verification_'.$lang, ['name' => $name, 'link' => url('/register/'.$registrationCode)], function ($m) use ($email, $name, $layout) {
-					$m->to($email, $name);
-					$m->subject($layout->language('confirm_registration'));
-				});
-			}catch(\Exception $ex){
-				Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
-				$this->registrationCleanUp();
-			}
+			});
+		}catch(\Exception $ex){
+			throw new DatabaseException("Registration could not be done!");
 		}
 	}
 	
 // PRIVATE FUNCTIONS
-	/** Function name: getNotVerifiedUserData
-	 *
-	 * This function returns the requested
-	 * registered, but not accepted
-	 * or rejected user.
-	 *
-	 * @param text $username - user's text identifier
-	 * @return User|null
-	 *
-	 * @throws DatabaseException is when the persistence layer returns an exception.
-	 *
-	 * @author Máté Kovács <kovacsur10@gmail.com>
-	 */
-	private static function getNotVerifiedUserData($username){
-		try{
-			$user = P_User::getRegistrationUserByUsername($username);
-		}catch(\Illuminate\Database\QueryException $e){
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'users' was not successful! ".$ex->getMessage());
-			throw new DatabaseException();
-		}
-		return $user;
-	}
-	
 	/** Function name: addUserDefaultPermissions
 	 *
 	 * This function gives the registered user
@@ -360,27 +341,10 @@ class Registrations{
 	 */
 	private static function addUserDefaultPermissions($userType, $userId){
 		//get the default permissions
-		$permissions = P_General::getDefaultPermissions();
+		$permissions = P_General::getDefaultPermissions($userType);
 		//set the user permissions
 		foreach($permissions as $permission){
-			P_User::addPermissionForUser($userId, $permission->permission);
+			P_User::addPermissionForUser($userId, $permission->id());
 		}
-	}
-	
-	/** Function name: registrationCleanUp
-	 *
-	 * This function cleans up when an error
-	 * occures during the registration.
-	 *
-	 * @throws DatabaseException always.
-	 *
-	 * @author Máté Kovács <kovacsur10@gmail.com>
-	 */
-	private static function registrationCleanUp(){
-		try{
-			Database::rollback();
-		}catch(\Exception $ex){
-		}
-		throw new DatabaseException("Registration could not be done!");
 	}
 }

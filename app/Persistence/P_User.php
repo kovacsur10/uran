@@ -257,9 +257,10 @@ class P_User{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	static function getStatusCodeByName($statusName){
-		return DB::table('user_status_codes')
+		$statusCode = DB::table('user_status_codes')
 			->where('status_name', 'LIKE', $statusName)
 			->first();
+		return $statusCode === null ? null : new StatusCode($statusCode->id, $statusCode->status_name);
 	}
 	
 //REGISTRATION USER
@@ -285,21 +286,21 @@ class P_User{
 		return $user === null ? null : new User($user->id, $user->name, $user->username, $user->password, $user->email, $user->registration_date, new StatusCode($user->status, $user->status_name), $user->last_online, $user->language, $user->registered, $user->verified, $user->verification_date, $user->code);
 	}
 	
-	/** Function name: getRegistrationUserByUsername
+	/** Function name: getRegistrationUserIdForUsername
 	 *
 	 * This function returns the requested registration
-	 * user.
+	 * user's identifier.
 	 *
 	 * @param text $username - user's text identifier
-	 * @return User|null
+	 * @return int|null
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	static function getRegistrationUserByUsername($username){
+	static function getRegistrationUserIdForUsername($username){
 		return DB::table('users')
 			->where('users.registered', '=', false)
 			->where('users.username', 'LIKE', $username)
-			->first();
+			->value('id');
 	}
 	
 	/** Function name: getRegistrationUsers
