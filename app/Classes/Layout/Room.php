@@ -6,6 +6,7 @@ use App\Classes\Database;
 use App\Classes\Logger;
 use Carbon\Carbon;
 use App\Persistence\P_Room;
+use App\Exceptions\DatabaseException;
 
 /** Class name: Room
  *
@@ -107,19 +108,18 @@ class Room{
 	 * 
 	 * @param int $roomId - identifier of the room
 	 * @param int $userId - identifier of the user
-	 * @return int - error code
+	 * 
+	 * @throws DatabaseException when the assignment was unsuccessful!
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function setUserToRoom($roomId, $userId){
-		$ret = 0;
 		try{
 			P_Room::addUserToRoom(Room::getAssignmentTableName($this->selectedTable), $roomId, $userId);
 		}catch(\Exception $ex){
-			$ret = 1;
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Insert into table '".Room::getAssignmentTableName($this->selectedTable)."' was not successful! ".$ex->getMessage());
+			throw new DatabaseException("Room-user assignment was not successful!");
 		}
-		return $ret;
 	}
 	
 	/** Function name: getResidents
@@ -307,15 +307,14 @@ class Room{
 	public function selectTable($tableName){
 		$ret = false;
 		if($this->tableExists($tableName)){
-			Database::beginTransaction();
 			try{
-				P_Room::unselectAssignmentTable($this->selectedTable);
-				P_Room::selectAssignmentTable($tableName);
-				Database::commit();
-				$this->refreshGuard();
+				Database::transaction(function(){
+					P_Room::unselectAssignmentTable($this->selectedTable);
+					P_Room::selectAssignmentTable($tableName);
+					$this->refreshGuard();
+				});
 				$ret = true;
-			}catch(Exception $ex){
-				Database::rollback();
+			}catch(\Exception $ex){
 				Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 			}
 		}
