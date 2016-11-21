@@ -51,7 +51,7 @@ class LayoutData{
 	 */
 	public function __construct(){
 		$this->logged = Session::has('user');
-		$this->user = new User(Session::get('user') == null ? null : Session::get('user')->id);
+		$this->user = new User(Session::get('user') == null ? null : Session::get('user')->id());
 		$this->room = new Rooms();
 		$this->modules = new Modules();
 		$this->permissions = new Permissions();
