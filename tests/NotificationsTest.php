@@ -4,6 +4,7 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use App\Classes\Notifications;
 use App\Exceptions\UserNotFoundException;
 use App\Exceptions\ValueMismatchException;
+use App\Classes\Layout\User;
 
 /** Class name: NotificationsTest
  *
@@ -209,6 +210,66 @@ class NotificationsTest extends TestCase
 		}catch(\Exception $ex){
 			$this->fail("Unexpected exception! ".$ex->getMessage());
 		}
+	}
+	
+	public function test_notify_success(){
+		$this->assertEquals(2, Notifications::getUnreadNotificationCount(41));
+		Notifications::notify(User::getUserData(1), 41, "test", "message", "route");
+		$this->assertEquals(3, Notifications::getUnreadNotificationCount(41));
+	}
+	
+	public function test_notify_null(){
+		$user = User::getUserData(1);
+		$this->assertEquals(2, Notifications::getUnreadNotificationCount(41));
+		Notifications::notify($user, null, "test", "message", "route");
+		$this->assertEquals(2, Notifications::getUnreadNotificationCount(41));
+		Notifications::notify($user, 41, null, "message", "route");
+		$this->assertEquals(2, Notifications::getUnreadNotificationCount(41));
+		Notifications::notify($user, 41, "test", null, "route");
+		$this->assertEquals(2, Notifications::getUnreadNotificationCount(41));
+		
+		Notifications::notify($user, 41, "test", "message", null);
+		$this->assertEquals(3, Notifications::getUnreadNotificationCount(41));
+	}
+	
+	public function test_notifyAdmin_success(){
+		$this->assertEquals(0, Notifications::getUnreadNotificationCount(34));
+		Notifications::notifyAdmin(User::getUserData(41), "test_permission", "test", "message", "route");
+		$this->assertEquals(1, Notifications::getUnreadNotificationCount(34));
+	}
+	
+	public function test_notifyAdmin_null(){
+		$user = User::getUserData(1);
+		$this->assertEquals(0, Notifications::getUnreadNotificationCount(34));
+		Notifications::notifyAdmin($user, null, "test", "message", "route");
+		$this->assertEquals(0, Notifications::getUnreadNotificationCount(34));
+		Notifications::notifyAdmin($user, "test_permission", null, "message", "route");
+		$this->assertEquals(0, Notifications::getUnreadNotificationCount(34));
+		Notifications::notifyAdmin($user, "test_permission", "test", null, "route");
+		$this->assertEquals(0, Notifications::getUnreadNotificationCount(34));
+		
+		Notifications::notifyAdmin($user, "test_permission", "test", "message", null);
+		$this->assertEquals(1, Notifications::getUnreadNotificationCount(34));
+	}
+	
+	public function test_notifyAdminFromServer_success(){
+		$this->assertEquals(0, Notifications::getUnreadNotificationCount(34));
+		Notifications::notifyAdminFromServer("test_permission", "test", "message", "route");
+		$this->assertEquals(1, Notifications::getUnreadNotificationCount(34));
+	}
+	
+	public function test_notifyAdminFromServer_null(){
+		$user = User::getUserData(1);
+		$this->assertEquals(0, Notifications::getUnreadNotificationCount(34));
+		Notifications::notifyAdminFromServer(null, "test", "message", "route");
+		$this->assertEquals(0, Notifications::getUnreadNotificationCount(34));
+		Notifications::notifyAdminFromServer("test_permission", null, "message", "route");
+		$this->assertEquals(0, Notifications::getUnreadNotificationCount(34));
+		Notifications::notifyAdminFromServer("test_permission", "test", null, "route");
+		$this->assertEquals(0, Notifications::getUnreadNotificationCount(34));
+		
+		Notifications::notifyAdminFromServer("test_permission", "test", "message", null);
+		$this->assertEquals(1, Notifications::getUnreadNotificationCount(34));
 	}
 	
 }

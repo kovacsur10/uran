@@ -108,7 +108,7 @@ class PermissionsTest extends TestCase
 		try{
 			$permissions = Permissions::getAllPermissions();
 			$this->assertNotNull($permissions);
-			$this->assertCount(15, $permissions);
+			$this->assertCount(16, $permissions);
 			foreach($permissions as $permission){
 				$this->assertInstanceOf(Permission::class, $permission);
 			}
