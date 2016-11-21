@@ -70,35 +70,38 @@ class RoomsController extends Controller{
 	
 	public function selectTable(Request $request, $level){
 		$layout = new LayoutData();
-		if($layout->room()->selectTable($request->table_version)){
-			$layout = new LayoutData();
-			return redirect('rooms/map/'.$level);
-		}else{
+		try{
+			$layout->room()->selectTable($request->table_version);
+		}catch(\Exception $ex){
 			return view('errors.error', ["layout" => $layout,
 					"message" => $layout->language('error_at_selecting_rooms_table'),
 					"url" => '/rooms/map/2']);
 		}
+		$layout = new LayoutData();
+		return redirect('rooms/map/'.$level);
 	}
 	
 	public function addTable(Request $request, $level){
 		$layout = new LayoutData();
-		if($layout->room()->addNewTable($request->newTableName)){
-			return redirect('rooms/map/'.$level);
-		}else{
+		try{
+			$layout->room()->addNewTable($request->newTableName);
+		}catch(\Exception $ex){
 			return view('errors.error', ["layout" => $layout,
 				"message" => $layout->language('error_at_adding_new_rooms_table'),
 				"url" => '/rooms/map/2']);
 		}
+		return redirect('rooms/map/'.$level);
 	}
 	
 	public function removeTable(Request $request, $level){
 		$layout = new LayoutData();
-		if($layout->room()->removeTable($request->table_version)){
-			return redirect('rooms/map/'.$level);
-		}else{
+		try{
+			$layout->room()->removeTable($request->table_version);
+		}catch(\Exception $ex){
 			return view('errors.error', ["layout" => $layout,
 				"message" => $layout->language('error_at_removing_new_rooms_table'),
 				"url" => '/rooms/map/2']);
 		}
+		return redirect('rooms/map/'.$level);
 	}
 }

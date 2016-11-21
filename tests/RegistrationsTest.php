@@ -380,7 +380,7 @@ class RegistrationsTest extends TestCase
 	 */
 	function test_register_success_collegist(){
 		try{
-			Registrations::register("testRegistrationFromUnitTest", "test", "kovacsur10+uranunittest@gmail.com", "Urán unit teszt", "HUN", "Veszprém", "8200", "Sigray utca 18", "Veszprém", null, "+36307501832", "HUN", "Veszprém", "1994-05-27 12:00:00", "anyja neve", 2008, "Unit test school", "AAAAAA", 2011, 1, 1);
+			Registrations::register("testRegistrationFromUnitTest", "test", "kovacsur10@freemail.hu", "Urán unit teszt", "HUN", "Veszprém", "8200", "Sigray utca 18", "Veszprém", null, "+36307501832", "HUN", "Veszprém", "1994-05-27 12:00:00", "anyja neve", 2008, "Unit test school", "AAAAAA", 2011, 1, 1);
 		}catch(\Exception $ex){
 			$this->fail("Unexpected exception: ".$ex->getMessage());
 		}
@@ -396,7 +396,7 @@ class RegistrationsTest extends TestCase
 	 */
 	function test_register_success_guest(){
 		try{
-			Registrations::register("testRegistrationFromUnitTest", "test", "kovacsur10+uranunittest@gmail.com", "Urán unit teszt", "HUN", "Veszprém", "8200", "Sigray utca 18", "Veszprém", 'this is a reason', "+36307501832", "HUN", null, null, null, null, null, null, null, null, null);
+			Registrations::register("testRegistrationFromUnitTest", "test", "kovacsur10@freemail.hu", "Urán unit teszt", "HUN", "Veszprém", "8200", "Sigray utca 18", "Veszprém", 'this is a reason', "+36307501832", "HUN", null, null, null, null, null, null, null, null, null);
 		}catch(\Exception $ex){
 			$this->fail("Unexpected exception: ".$ex->getMessage());
 		}
@@ -412,7 +412,7 @@ class RegistrationsTest extends TestCase
 	 */
 	function test_register_fail(){
 		try{
-			Registrations::register(null, "test", "kovacsur10+uranunittest@gmail.com", "Urán unit teszt", "HUN", "Veszprém", "8200", "Sigray utca 18", "Veszprém", "Ez egy ok!", "+36307501832", "HUN", "Veszprém", "1994-05-27", "anyja neve", 2008, "Unit test school", "AAAAAA", 2011, 1, 1);
+			Registrations::register(null, "test", "kovacsur10@freemail.hu", "Urán unit teszt", "HUN", "Veszprém", "8200", "Sigray utca 18", "Veszprém", "Ez egy ok!", "+36307501832", "HUN", "Veszprém", "1994-05-27", "anyja neve", 2008, "Unit test school", "AAAAAA", 2011, 1, 1);
 			$this->fail("An exception was expected!");
 		}catch(ValueMismatchException $ex){
 		}catch(\Exception $ex){
@@ -420,7 +420,7 @@ class RegistrationsTest extends TestCase
 		}
 		
 		try{
-			Registrations::register("testRegistrationFromUnitTest", null, "kovacsur10+uranunittest@gmail.com", "Urán unit teszt", "HUN", "Veszprém", "8200", "Sigray utca 18", "Veszprém", "Ez egy ok!", "+36307501832", "HUN", "Veszprém", "1994-05-27", "anyja neve", 2008, "Unit test school", "AAAAAA", 2011, 1, 1);
+			Registrations::register("testRegistrationFromUnitTest", null, "kovacsur10@freemail.hu", "Urán unit teszt", "HUN", "Veszprém", "8200", "Sigray utca 18", "Veszprém", "Ez egy ok!", "+36307501832", "HUN", "Veszprém", "1994-05-27", "anyja neve", 2008, "Unit test school", "AAAAAA", 2011, 1, 1);
 			$this->fail("An exception was expected!");
 		}catch(ValueMismatchException $ex){
 		}catch(\Exception $ex){
@@ -436,7 +436,7 @@ class RegistrationsTest extends TestCase
 		}
 		
 		try{
-			Registrations::register("testRegistrationFromUnitTest", "test", "kovacsur10+uranunittest@gmail.com", null, "HUN", "Veszprém", "8200", "Sigray utca 18", "Veszprém", "Ez egy ok!", "+36307501832", "HUN", "Veszprém", "1994-05-27", "anyja neve", 2008, "Unit test school", "AAAAAA", 2011, 1, 1);
+			Registrations::register("testRegistrationFromUnitTest", "test", "kovacsur10@freemail.hu", null, "HUN", "Veszprém", "8200", "Sigray utca 18", "Veszprém", "Ez egy ok!", "+36307501832", "HUN", "Veszprém", "1994-05-27", "anyja neve", 2008, "Unit test school", "AAAAAA", 2011, 1, 1);
 			$this->fail("An exception was expected!");
 		}catch(ValueMismatchException $ex){
 		}catch(\Exception $ex){
@@ -444,7 +444,7 @@ class RegistrationsTest extends TestCase
 		}
 		
 		try{
-			Registrations::register("testRegistrationFromUnitTest", "test", "kovacsur10+uranunittest@gmail.com", "Urán unit teszt", null, "Veszprém", "8200", "Sigray utca 18", "Veszprém", "Ez egy ok!", "+36307501832", "HUN", "Veszprém", "1994-05-27", "anyja neve", 2008, "Unit test school", "AAAAAA", 2011, 1, 1);
+			Registrations::register("testRegistrationFromUnitTest", "test", "kovacsur10@freemail.hu", "Urán unit teszt", null, "Veszprém", "8200", "Sigray utca 18", "Veszprém", "Ez egy ok!", "+36307501832", "HUN", "Veszprém", "1994-05-27", "anyja neve", 2008, "Unit test school", "AAAAAA", 2011, 1, 1);
 			$this->fail("An exception was expected!");
 		}catch(ValueMismatchException $ex){
 		}catch(\Exception $ex){
@@ -452,7 +452,7 @@ class RegistrationsTest extends TestCase
 		}
 		
 		try{
-			Registrations::register("testRegistrationFromUnitTest", "test", "kovacsur10+uranunittest@gmail.com", "Urán unit teszt", "HUN", null, "8200", "Sigray utca 18", "Veszprém", "Ez egy ok!", "+36307501832", "HUN", "Veszprém", "1994-05-27", "anyja neve", 2008, "Unit test school", "AAAAAA", 2011, 1, 1);
+			Registrations::register("testRegistrationFromUnitTest", "test", "kovacsur10@freemail.hu", "Urán unit teszt", "HUN", null, "8200", "Sigray utca 18", "Veszprém", "Ez egy ok!", "+36307501832", "HUN", "Veszprém", "1994-05-27", "anyja neve", 2008, "Unit test school", "AAAAAA", 2011, 1, 1);
 			$this->fail("An exception was expected!");
 		}catch(ValueMismatchException $ex){
 		}catch(\Exception $ex){
@@ -460,7 +460,7 @@ class RegistrationsTest extends TestCase
 		}
 		
 		try{
-			Registrations::register("testRegistrationFromUnitTest", "test", "kovacsur10+uranunittest@gmail.com", "Urán unit teszt", "HUN", "Veszprém", null, "Sigray utca 18", "Veszprém", "Ez egy ok!", "+36307501832", "HUN", "Veszprém", "1994-05-27", "anyja neve", 2008, "Unit test school", "AAAAAA", 2011, 1, 1);
+			Registrations::register("testRegistrationFromUnitTest", "test", "kovacsur10@freemail.hu", "Urán unit teszt", "HUN", "Veszprém", null, "Sigray utca 18", "Veszprém", "Ez egy ok!", "+36307501832", "HUN", "Veszprém", "1994-05-27", "anyja neve", 2008, "Unit test school", "AAAAAA", 2011, 1, 1);
 			$this->fail("An exception was expected!");
 		}catch(ValueMismatchException $ex){
 		}catch(\Exception $ex){
@@ -468,7 +468,7 @@ class RegistrationsTest extends TestCase
 		}
 		
 		try{
-			Registrations::register("testRegistrationFromUnitTest", "test", "kovacsur10+uranunittest@gmail.com", "Urán unit teszt", "HUN", "Veszprém", "8200", null, "Veszprém", "Ez egy ok!", "+36307501832", "HUN", "Veszprém", "1994-05-27", "anyja neve", 2008, "Unit test school", "AAAAAA", 2011, 1, 1);
+			Registrations::register("testRegistrationFromUnitTest", "test", "kovacsur10@freemail.hu", "Urán unit teszt", "HUN", "Veszprém", "8200", null, "Veszprém", "Ez egy ok!", "+36307501832", "HUN", "Veszprém", "1994-05-27", "anyja neve", 2008, "Unit test school", "AAAAAA", 2011, 1, 1);
 			$this->fail("An exception was expected!");
 		}catch(ValueMismatchException $ex){
 		}catch(\Exception $ex){
@@ -476,7 +476,7 @@ class RegistrationsTest extends TestCase
 		}
 		
 		try{
-			Registrations::register("testRegistrationFromUnitTest", "test", "kovacsur10+uranunittest@gmail.com", "Urán unit teszt", "HUN", "Veszprém", "8200", "Sigray utca 18", null, "Ez egy ok!", "+36307501832", "HUN", "Veszprém", "1994-05-27", "anyja neve", 2008, "Unit test school", "AAAAAA", 2011, 1, 1);
+			Registrations::register("testRegistrationFromUnitTest", "test", "kovacsur10@freemail.hu", "Urán unit teszt", "HUN", "Veszprém", "8200", "Sigray utca 18", null, "Ez egy ok!", "+36307501832", "HUN", "Veszprém", "1994-05-27", "anyja neve", 2008, "Unit test school", "AAAAAA", 2011, 1, 1);
 			$this->fail("An exception was expected!");
 		}catch(ValueMismatchException $ex){
 		}catch(\Exception $ex){
@@ -484,7 +484,7 @@ class RegistrationsTest extends TestCase
 		}
 		
 		try{
-			Registrations::register("testRegistrationFromUnitTest", "test", "kovacsur10+uranunittest@gmail.com", "Urán unit teszt", "HUN", "Veszprém", "8200", "Sigray utca 18", "Veszprém", "Ez egy ok!", null, "HUN", "Veszprém", "1994-05-27", "anyja neve", 2008, "Unit test school", "AAAAAA", 2011, 1, 1);
+			Registrations::register("testRegistrationFromUnitTest", "test", "kovacsur10@freemail.hu", "Urán unit teszt", "HUN", "Veszprém", "8200", "Sigray utca 18", "Veszprém", "Ez egy ok!", null, "HUN", "Veszprém", "1994-05-27", "anyja neve", 2008, "Unit test school", "AAAAAA", 2011, 1, 1);
 			$this->fail("An exception was expected!");
 		}catch(ValueMismatchException $ex){
 		}catch(\Exception $ex){
@@ -492,7 +492,7 @@ class RegistrationsTest extends TestCase
 		}
 		
 		try{
-			Registrations::register("testRegistrationFromUnitTest", "test", "kovacsur10+uranunittest@gmail.com", "Urán unit teszt", "HUN", "Veszprém", "8200", "Sigray utca 18", "Veszprém", "Ez egy ok!", "+36307501832", null, "Veszprém", "1994-05-27", "anyja neve", 2008, "Unit test school", "AAAAAA", 2011, 1, 1);
+			Registrations::register("testRegistrationFromUnitTest", "test", "kovacsur10@freemail.hu", "Urán unit teszt", "HUN", "Veszprém", "8200", "Sigray utca 18", "Veszprém", "Ez egy ok!", "+36307501832", null, "Veszprém", "1994-05-27", "anyja neve", 2008, "Unit test school", "AAAAAA", 2011, 1, 1);
 			$this->fail("An exception was expected!");
 		}catch(ValueMismatchException $ex){
 		}catch(\Exception $ex){
@@ -500,7 +500,7 @@ class RegistrationsTest extends TestCase
 		}
 		
 		try{
-			Registrations::register("testRegistrationFromUnitTest", "test", "kovacsur10+uranunittest@gmail.com", "Urán unit teszt", "HUN", "Veszprém", "8200", "Sigray utca 18", "Veszprém", null, "+36307501832", "HUN", null, "1994-05-27", "anyja neve", 2008, "Unit test school", "AAAAAA", 2011, 1, 1);
+			Registrations::register("testRegistrationFromUnitTest", "test", "kovacsur10@freemail.hu", "Urán unit teszt", "HUN", "Veszprém", "8200", "Sigray utca 18", "Veszprém", null, "+36307501832", "HUN", null, "1994-05-27", "anyja neve", 2008, "Unit test school", "AAAAAA", 2011, 1, 1);
 			$this->fail("An exception was expected!");
 		}catch(ValueMismatchException $ex){
 		}catch(\Exception $ex){
@@ -508,7 +508,7 @@ class RegistrationsTest extends TestCase
 		}
 		
 		try{
-			Registrations::register("testRegistrationFromUnitTest", "test", "kovacsur10+uranunittest@gmail.com", "Urán unit teszt", "HUN", "Veszprém", "8200", "Sigray utca 18", "Veszprém", null, "+36307501832", "HUN", "Veszprém", null, "anyja neve", 2008, "Unit test school", "AAAAAA", 2011, 1, 1);
+			Registrations::register("testRegistrationFromUnitTest", "test", "kovacsur10@freemail.hu", "Urán unit teszt", "HUN", "Veszprém", "8200", "Sigray utca 18", "Veszprém", null, "+36307501832", "HUN", "Veszprém", null, "anyja neve", 2008, "Unit test school", "AAAAAA", 2011, 1, 1);
 			$this->fail("An exception was expected!");
 		}catch(ValueMismatchException $ex){
 		}catch(\Exception $ex){
@@ -516,7 +516,7 @@ class RegistrationsTest extends TestCase
 		}
 		
 		try{
-			Registrations::register("testRegistrationFromUnitTest", "test", "kovacsur10+uranunittest@gmail.com", "Urán unit teszt", "HUN", "Veszprém", "8200", "Sigray utca 18", "Veszprém", null, "+36307501832", "HUN", "Veszprém", "1994-05-27", null, 2008, "Unit test school", "AAAAAA", 2011, 1, 1);
+			Registrations::register("testRegistrationFromUnitTest", "test", "kovacsur10@freemail.hu", "Urán unit teszt", "HUN", "Veszprém", "8200", "Sigray utca 18", "Veszprém", null, "+36307501832", "HUN", "Veszprém", "1994-05-27", null, 2008, "Unit test school", "AAAAAA", 2011, 1, 1);
 			$this->fail("An exception was expected!");
 		}catch(ValueMismatchException $ex){
 		}catch(\Exception $ex){
@@ -524,7 +524,7 @@ class RegistrationsTest extends TestCase
 		}
 		
 		try{
-			Registrations::register("testRegistrationFromUnitTest", "test", "kovacsur10+uranunittest@gmail.com", "Urán unit teszt", "HUN", "Veszprém", "8200", "Sigray utca 18", "Veszprém", null, "+36307501832", "HUN", "Veszprém", "1994-05-27", "anyja neve", null, "Unit test school", "AAAAAA", 2011, 1, 1);
+			Registrations::register("testRegistrationFromUnitTest", "test", "kovacsur10@freemail.hu", "Urán unit teszt", "HUN", "Veszprém", "8200", "Sigray utca 18", "Veszprém", null, "+36307501832", "HUN", "Veszprém", "1994-05-27", "anyja neve", null, "Unit test school", "AAAAAA", 2011, 1, 1);
 			$this->fail("An exception was expected!");
 		}catch(ValueMismatchException $ex){
 		}catch(\Exception $ex){
@@ -532,7 +532,7 @@ class RegistrationsTest extends TestCase
 		}
 		
 		try{
-			Registrations::register("testRegistrationFromUnitTest", "test", "kovacsur10+uranunittest@gmail.com", "Urán unit teszt", "HUN", "Veszprém", "8200", "Sigray utca 18", "Veszprém", null, "+36307501832", "HUN", "Veszprém", "1994-05-27", "anyja neve", 2008, null, "AAAAAA", 2011, 1, 1);
+			Registrations::register("testRegistrationFromUnitTest", "test", "kovacsur10@freemail.hu", "Urán unit teszt", "HUN", "Veszprém", "8200", "Sigray utca 18", "Veszprém", null, "+36307501832", "HUN", "Veszprém", "1994-05-27", "anyja neve", 2008, null, "AAAAAA", 2011, 1, 1);
 			$this->fail("An exception was expected!");
 		}catch(ValueMismatchException $ex){
 		}catch(\Exception $ex){
@@ -540,7 +540,7 @@ class RegistrationsTest extends TestCase
 		}
 		
 		try{
-			Registrations::register("testRegistrationFromUnitTest", "test", "kovacsur10+uranunittest@gmail.com", "Urán unit teszt", "HUN", "Veszprém", "8200", "Sigray utca 18", "Veszprém", null, "+36307501832", "HUN", "Veszprém", "1994-05-27", "anyja neve", 2008, "Unit test school", null, 2011, 1, 1);
+			Registrations::register("testRegistrationFromUnitTest", "test", "kovacsur10@freemail.hu", "Urán unit teszt", "HUN", "Veszprém", "8200", "Sigray utca 18", "Veszprém", null, "+36307501832", "HUN", "Veszprém", "1994-05-27", "anyja neve", 2008, "Unit test school", null, 2011, 1, 1);
 			$this->fail("An exception was expected!");
 		}catch(ValueMismatchException $ex){
 		}catch(\Exception $ex){
@@ -548,7 +548,7 @@ class RegistrationsTest extends TestCase
 		}
 		
 		try{
-			Registrations::register("testRegistrationFromUnitTest", "test", "kovacsur10+uranunittest@gmail.com", "Urán unit teszt", "HUN", "Veszprém", "8200", "Sigray utca 18", "Veszprém", null, "+36307501832", "HUN", "Veszprém", "1994-05-27", "anyja neve", 2008, "Unit test school", "AAAAAA", null, 1, 1);
+			Registrations::register("testRegistrationFromUnitTest", "test", "kovacsur10@freemail.hu", "Urán unit teszt", "HUN", "Veszprém", "8200", "Sigray utca 18", "Veszprém", null, "+36307501832", "HUN", "Veszprém", "1994-05-27", "anyja neve", 2008, "Unit test school", "AAAAAA", null, 1, 1);
 			$this->fail("An exception was expected!");
 		}catch(ValueMismatchException $ex){
 		}catch(\Exception $ex){
@@ -556,7 +556,7 @@ class RegistrationsTest extends TestCase
 		}
 		
 		try{
-			Registrations::register("testRegistrationFromUnitTest", "test", "kovacsur10+uranunittest@gmail.com", "Urán unit teszt", "HUN", "Veszprém", "8200", "Sigray utca 18", "Veszprém", null, "+36307501832", "HUN", "Veszprém", "1994-05-27", "anyja neve", 2008, "Unit test school", "AAAAAA", 2011, null, 1);
+			Registrations::register("testRegistrationFromUnitTest", "test", "kovacsur10@freemail.hu", "Urán unit teszt", "HUN", "Veszprém", "8200", "Sigray utca 18", "Veszprém", null, "+36307501832", "HUN", "Veszprém", "1994-05-27", "anyja neve", 2008, "Unit test school", "AAAAAA", 2011, null, 1);
 			$this->fail("An exception was expected!");
 		}catch(ValueMismatchException $ex){
 		}catch(\Exception $ex){
@@ -564,7 +564,7 @@ class RegistrationsTest extends TestCase
 		}
 		
 		try{
-			Registrations::register("testRegistrationFromUnitTest", "test", "kovacsur10+uranunittest@gmail.com", "Urán unit teszt", "HUN", "Veszprém", "8200", "Sigray utca 18", "Veszprém", null, "+36307501832", "HUN", "Veszprém", "1994-05-27", "anyja neve", 2008, "Unit test school", "AAAAAA", 2011, 1, null);
+			Registrations::register("testRegistrationFromUnitTest", "test", "kovacsur10@freemail.hu", "Urán unit teszt", "HUN", "Veszprém", "8200", "Sigray utca 18", "Veszprém", null, "+36307501832", "HUN", "Veszprém", "1994-05-27", "anyja neve", 2008, "Unit test school", "AAAAAA", 2011, 1, null);
 			$this->fail("An exception was expected!");
 		}catch(ValueMismatchException $ex){
 		}catch(\Exception $ex){

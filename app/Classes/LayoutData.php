@@ -116,7 +116,7 @@ class LayoutData{
 	 *
 	 * Getter function for rooms.
 	 * 
-	 * @return Room
+	 * @return Rooms
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */

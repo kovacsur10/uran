@@ -4,6 +4,9 @@ namespace App\Persistence;
 
 use DB;
 use App\Classes\Data\Room;
+use App\Classes\Data\User;
+use App\Classes\Data\StatusCode;
+use App\Classes\Data\AssignmentTable;
 
 /** Class name: P_Room
  *
@@ -27,6 +30,22 @@ class P_Room{
 		$room = DB::table('rooms_rooms')
 			->where('room_number', 'LIKE', $roomNumber)
 			->first();
+		return $room === null ? null : new Room($room->id, $room->room_number, $room->max_collegist_count, $room->floor);
+	}
+	
+	/** Function name: getRoomById
+	 *
+	 * This function returns the requested room.
+	 *
+	 * @param id $roomId - identifier of the room
+	 * @return Room|null
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	static function getRoomById($roomId){
+		$room = DB::table('rooms_rooms')
+		->where('id', '=', $roomId)
+		->first();
 		return $room === null ? null : new Room($room->id, $room->room_number, $room->max_collegist_count, $room->floor);
 	}
 	
@@ -59,7 +78,7 @@ class P_Room{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	static function getAssignmentTable($tableName){
-		DB::table('rooms_tables')
+		return DB::table('rooms_tables')
 			->where('table_name', 'LIKE', $tableName)
 			->first();
 	}
@@ -72,32 +91,37 @@ class P_Room{
 	 * If the excluded table is null, there's no exluded table.
 	 *
 	 * @param text|null $excludedTable - excluded table name
-	 * @return array of assignment tables
+	 * @return array of AssignmentTable
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	static function getAssignmentTables($excludedTable = null){
-		return DB::table('rooms_tables')
+		$getTables = DB::table('rooms_tables')
 			->when($excludedTable !== null, function($query) use($excludedTable){
 				return $query->where('table_name','NOT LIKE', $excludedTable);
 			})
 			->orderBy('id', 'asc')
-			->get()
-			->toArray();
+			->get();
+		$tables = [];
+		foreach($getTables as $table){
+			array_push($tables, new AssignmentTable($table->id, $table->table_name, $table->selected));
+		}
+		return $tables;
 	}
 	
-	/** Function name: getSelectedAssigmentTable
+	/** Function name: getSelectedAssigmentTableName
 	 *
 	 * This function returns the selected assignment table.
 	 *
-	 * @return AssignmentTable|null
+	 * @return text
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	static function getSelectedAssigmentTable(){
-		DB::table('rooms_tables')
+	static function getSelectedAssigmentTableName(){
+		$tableName = DB::table('rooms_tables')
 			->where('selected', '=', true)
-			->first();
+			->value('table_name');
+		return $tableName === null ? "" : $tableName;
 	}
 	
 	/** Function name: selectAssignmentTable
@@ -176,30 +200,39 @@ class P_Room{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	static function getRoomByUser($tableName, $userId){
-		return DB::table($tableName)
+		$room = DB::table($tableName)
+			->join('rooms_rooms', 'rooms_rooms.id', '=', $tableName.'.roomid')
 			->where('userid', '=', $userId)
+			->select('rooms_rooms.*')
 			->first();
+		return $room === null ? null : new Room($room->id, $room->room_number, $room->max_collegist_count, $room->floor);
 	}
 	
-	/** Function name: getRoomByUser
+	/** Function name: getResidents
 	 *
-	 * This function returns the room, where the
-	 * requested user lives.
+	 * This function returns the residents of the
+	 * requested room.
 	 *
 	 * @param text $tableName - assignment table name
 	 * @param text $roomNumber - room text identifier
-	 * @return array of users
+	 * @return array of User
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	static function getResidents($tableName, $roomNumber){
-		return DB::table('rooms_rooms')
+	static function getResidents($tableName, $roomNumber){		
+		$getUsers = DB::table('rooms_rooms')
 			->join($tableName, $tableName.'.roomid', '=', 'rooms_rooms.id')
 			->join('users', 'users.id', '=', $tableName.'.userid')
-			->select('users.id as id', 'users.name as name', 'users.username as username')
+			->join('registrations', 'registrations.user_id', '=', 'users.id')
+			->join('user_status_codes', 'user_status_codes.id', '=', 'users.status')
 			->where('rooms_rooms.room_number', 'LIKE', $roomNumber)
-			->get()
-			->toArray();
+			->select('users.*', 'registrations.*', 'user_status_codes.status_name as status_name')
+			->get();
+		$users = [];
+		foreach($getUsers as $user){
+			array_push($users, new User($user->id, $user->name, $user->username, $user->password, $user->email, $user->registration_date, new StatusCode($user->status, $user->status_name), $user->last_online, $user->language, $user->registered, $user->verified, $user->verification_date, $user->code));
+		}
+		return $users;
 	}
 	
 	/** Function name: clearRoom
@@ -285,7 +318,7 @@ class P_Room{
 	static function removeAssignmentTable($assigmentTableName, $tableName){
 		try{
 			P_General::beginTransaction();
-			DB::statement('DROP TABLE '.$assigmentTableName);
+			DB::statement('DROP TABLE "'.$assigmentTableName.'"');
 			DB::table('rooms_tables')
 				->where('table_name', 'LIKE', $tableName)
 				->delete();

@@ -7,6 +7,8 @@ use App\Classes\Logger;
 use Carbon\Carbon;
 use App\Persistence\P_Room;
 use App\Exceptions\DatabaseException;
+use App\Exceptions\RoomNotFoundException;
+use App\Exceptions\UserNotFoundException;
 
 /** Class name: Rooms
  *
@@ -83,7 +85,7 @@ class Rooms{
 			$room = P_Room::getRoom($roomNumber);
 		}catch(Exception $ex){
 			$room = null;
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'rooms_rooms' was not successful! ".$ex->getMessage());
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 		}
 		return $room === null ? null : $room->id();
 	}
@@ -95,13 +97,20 @@ class Rooms{
 	 * 
 	 * @param int $roomId - identifier of the room
 	 * 
+	 * @throws RoomNotFoundException when the room was not found.
+	 * @throws DatabaseException when the clear proccess fails.
+	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function emptyRoom($roomId){
+		if($roomId === null){
+			throw new RoomNotFoundException();
+		}
 		try{
-			P_Room::clearRoom(Room::getAssignmentTableName($this->selectedTable), $roomId);
+			P_Room::clearRoom(Rooms::getAssignmentTableName($this->selectedTable), $roomId);
 		}catch(\Exception $ex){
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Delete from table '".Room::getAssignmentTableName($this->selectedTable)."' was not successful! ".$ex->getMessage());
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
+			throw new DatabaseException("Could not clear the room!");
 		}
 	}
 	
@@ -113,14 +122,27 @@ class Rooms{
 	 * @param int $userId - identifier of the user
 	 * 
 	 * @throws DatabaseException when the assignment was unsuccessful!
+	 * @throws RoomNotFoundException when the provided room number is invalid!
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function setUserToRoom($roomId, $userId){
+		if($roomId === null){
+			throw new RoomNotFoundException();
+		}else if($userId === null){
+			throw new UserNotFoundException();
+		}
+		$roomName = $this->getNumberById($roomId);
+		if(Rooms::getFreePlaceCount($roomName) == 0){
+			throw new DatabaseException("The room is full!");
+		}
+		if($this->userHasResidence($userId)){
+			throw new DatabaseException("The user lives elsewhere!");
+		}
 		try{
-			P_Room::addUserToRoom(Room::getAssignmentTableName($this->selectedTable), $roomId, $userId);
+			P_Room::addUserToRoom(Rooms::getAssignmentTableName($this->selectedTable), $roomId, $userId);
 		}catch(\Exception $ex){
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Insert into table '".Room::getAssignmentTableName($this->selectedTable)."' was not successful! ".$ex->getMessage());
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 			throw new DatabaseException("Room-user assignment was not successful!");
 		}
 	}
@@ -132,7 +154,7 @@ class Rooms{
 	 * the id and the name of the users.
 	 * 
 	 * @param text $roomNumber - identifier of the room
-	 * @return array of residents of a room
+	 * @return array of User
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
@@ -144,7 +166,7 @@ class Rooms{
 			$residents = P_Room::getResidents(Rooms::getAssignmentTableName($this->selectedTable), $roomNumber);
 		}catch(\Exception $ex){
 			$residents = [];
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'rooms_rooms' joined to '".Rooms::getAssignmentTableName($this->selectedTable)."' and 'users' was not successful! ".$ex->getMessage());
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 		}
 		return $residents;
 	}
@@ -164,7 +186,7 @@ class Rooms{
 	public function getRoomResidentListText($roomNumber, $freeSpotText){
 		$text = "";
 		foreach($this->getResidents($roomNumber) as $resident){
-			$text .= $resident->name."<br>";
+			$text .= $resident->name()."<br>";
 		}
 		for($i = 0; $i < $this->getFreePlaceCount($roomNumber); $i++){
 			$text .= $freeSpotText."<br>";
@@ -183,13 +205,19 @@ class Rooms{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function getFreePlaceCount($roomNumber){
+		if($roomNumber === null){
+			return 0;
+		}
 		try{
-			$max_count = P_Room::getRoom($roomNumber);
+			$room = P_Room::getRoom($roomNumber);
+			if($room === null){
+				throw new DatabaseException("Room not found!");
+			}
 			$residents = count($this->getResidents($roomNumber));
-			$freePlaceCount = $max_count->max_collegist_count - $residents;
+			$freePlaceCount = $room->maxCollegistCount() - $residents;
 		}catch(\Exception $ex){
 			$freePlaceCount = 0;
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'rooms_rooms' was not successful! ".$ex->getMessage());
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 		}
 		return $freePlaceCount;
 	}
@@ -207,9 +235,12 @@ class Rooms{
 		$freePlaces = [];
 		if($this->rooms !== null){
 			foreach($this->rooms as $room){
-				$countOfPlaces = $this->getFreePlaceCount($room->room);
+				$countOfPlaces = $this->getFreePlaceCount($room->roomNumber());
 				if($countOfPlaces > 0){
-					array_push($freePlaces, [$room->room, $countOfPlaces]);
+					array_push($freePlaces, (object) [ 
+							"room" => $room->roomNumber(), 
+							"places" => $countOfPlaces
+					]);
 				}
 			}
 		}
@@ -227,11 +258,14 @@ class Rooms{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function userHasResidence($userId){
+		if($userId === null){
+			return false;
+		}
 		try{
-			$ret = P_Room::getRoomByUser(Room::getAssignmentTableName($this->selectedTable), $userId);
+			$ret = P_Room::getRoomByUser(Rooms::getAssignmentTableName($this->selectedTable), $userId);
 		}catch(\Exception $ex){
 			$ret = null;
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table '".Room::getAssignmentTableName($this->selectedTable)."' was not successful! ".$ex->getMessage());
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 		}
 		return $ret !== null;
 	}
@@ -248,23 +282,23 @@ class Rooms{
 	 * 		- already existing table
 	 * 
 	 * @param text $tableName - name of the assignment table
-	 * @return bool
+	 * 
+	 * @throws DatabaseException when the addition process fails.
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function addNewTable($tableName){
-		$ret = false;
-		if(!$this->tableExists($tableName)){
-			$assignmentTable = Rooms::getAssignmentTableName($tableName);
-			$assignmentIdSeq = $assignmentTable."_id_seq";
-			try{	
-	 			P_Room::addAssigmentTable($assignmentTable, $tableName, $assignmentIdSeq);
-	 			$ret = true;
-			}catch(Exception $ex){
-				Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
-			}
+		if(Rooms::tableExists($tableName) || $tableName == "" || $tableName === null){
+			throw new DatabaseException("Table already exists!");
 		}
-		return $ret;
+		$assignmentTable = Rooms::getAssignmentTableName($tableName);
+		$assignmentIdSeq = $assignmentTable."_id_seq";
+		try{	
+ 			P_Room::addAssigmentTable($assignmentTable, $tableName, $assignmentIdSeq);
+		}catch(Exception $ex){
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
+			throw new DatabaseException("Adding a new table failed.");
+		}
 	}
 	
 	/** Function name: removeTable
@@ -279,21 +313,21 @@ class Rooms{
 	 * 		- not existing table
 	 * 
 	 * @param text $tableName - name of the assignment table
-	 * @return bool
+	 * 
+	 * @throws DatabaseException when the remove process fails.
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function removeTable($tableName){
-		$ret = false;
-		if($this->tableExists($tableName) && $tableName !== $this->selectedTable){
-			try{
-				P_Room::removeAssignmentTable(Room::getAssignmentTableName($tableName), $tableName);
-				$ret = true;
-			}catch(Exception $ex){
-				Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
-			}
+		if(!Rooms::tableExists($tableName) || $tableName == $this->selectedTable || $tableName == "" || $tableName === null){
+			throw new DatabaseException("Table not exist or it is the active one!");
 		}
-		return $ret;
+		try{
+			P_Room::removeAssignmentTable(Rooms::getAssignmentTableName($tableName), $tableName);
+		}catch(Exception $ex){
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
+			throw new DatabaseException("Removing the table failed!");
+		}
 	}
 
 	/** Function name: selectTable
@@ -306,25 +340,25 @@ class Rooms{
 	 * Failures can be: database exception on update.
 	 * 
 	 * @param text $tableName - name of the assignment table
-	 * @return bool
+	 * 
+	 * @throws DatabaseException when the selection process fails.
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function selectTable($tableName){
-		$ret = false;
-		if($this->tableExists($tableName)){
-			try{
-				Database::transaction(function(){
-					P_Room::unselectAssignmentTable($this->selectedTable);
-					P_Room::selectAssignmentTable($tableName);
-					$this->refreshGuard();
-				});
-				$ret = true;
-			}catch(\Exception $ex){
-				Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
-			}
+		if(!Rooms::tableExists($tableName) || $tableName === null){
+			throw new DatabaseException("Table not found!");
 		}
-		return $ret;
+		try{
+			Database::transaction(function() use($tableName){
+				P_Room::unselectAssignmentTable($this->selectedTable);
+				P_Room::selectAssignmentTable($tableName);
+				$this->refreshGuard();
+			});
+		}catch(\Exception $ex){
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
+			throw new DatabaseException("Table selection failed!");
+		}
 	}
 	
 	/** Function name: getTables
@@ -334,16 +368,16 @@ class Rooms{
 	 * If there's no assignment table,
 	 * it returns an empty array.
 	 * 
-	 * @return array of the assignment tables
+	 * @return array of the AssignmentTable
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function getTables(){
+	public static function getTables(){
 		try{
 			$tables = P_Room::getAssignmentTables();
 		}catch(Exception $ex){
 			$tables = [];
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'rooms_tables' was not successful! ".$ex->getMessage());
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 		}
 		return $tables;
 	}
@@ -355,7 +389,7 @@ class Rooms{
 	 * If there's no assignment table,
 	 * it returns an empty array.
 	 * 
-	 * @return array of the assignment tables
+	 * @return array of the AssignmentTable
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
@@ -379,8 +413,11 @@ class Rooms{
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function checkGuard($guard){
-		return $this->getGuard() === $guard;
+	public static function checkGuard($guard){
+		if($guard === null){
+			return false;
+		}
+		return Rooms::getGuard() == $guard;
 	}
 	
 	/** Function name: getGuard
@@ -394,14 +431,14 @@ class Rooms{
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function getGuard(){
+	public static function getGuard(){
 		try{
 			$ret = P_Room::getModificationTime();
 		}catch(Exception $ex){
 			$ret = null;
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'rooms_last_modified' was not successful! ".$ex->getMessage());
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 		}
-		return $ret === null ? null : $ret->last_modified;
+		return $ret;
 	}
 	
 // PRIVATE FUNCTIONS
@@ -452,16 +489,12 @@ class Rooms{
 	 */
 	private function getSelectedTable(){
 		try{
-			$table = P_Room::getSelectedAssigmentTable();
+			$tableName = P_Room::getSelectedAssigmentTableName();
 		}catch(\Exception $ex){
-			$table = null;
+			$tableName = "";
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'rooms_tables' was not successful! ".$ex->getMessage());
 		}
-		if($table === null){
-			return "";
-		}else{
-			return $table->table_name;
-		}
+		return $tableName;
 	}
 	
 	/** Function name: tableExists
@@ -476,12 +509,12 @@ class Rooms{
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	private function tableExists($tableName){
+	private static function tableExists($tableName){
 		try{
 			$tables = P_Room::getAssignmentTable($tableName);
 		}catch(Exception $ex){
 			$tables = null;
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'rooms_tables' was not successful! ".$ex->getMessage());
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 		}
 		return $tables !== null || $tableName == "";
 	}
@@ -501,6 +534,29 @@ class Rooms{
 		}catch(\Exception $ex){
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Update table 'rooms_last_modified' was not successful! ".$ex->getMessage());
 			throw new Exception("CUSTOM EXCEPTION! The previous log message contains the error!");
+		}
+	}
+	
+	/** Function name: getNumberById
+	 *
+	 * This functions looks up a room number based on the id.
+	 * 
+	 * @param int $roomId - room identifier
+	 * @return text - room number
+	 *
+	 * @exception RoomNotFoundException when the room is not found!
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	private function getNumberById($roomId){
+		$i = 0;
+		while($i < count($this->rooms) && $this->rooms[$i]->id() != $roomId){
+			$i++;
+		}
+		if($i < count($this->rooms)){
+			return $this->rooms[$i]->roomNumber();
+		}else{
+			throw new RoomNotFoundException;
 		}
 	}
 		
