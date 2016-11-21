@@ -3,7 +3,7 @@
 namespace App\Classes;
 
 use Carbon\Carbon;
-use App\Classes\Layout\User;
+use App\Classes\Data\User;
 use App\Persistence\P_General;
 use App\Persistence\P_User;
 use App\Exceptions\DatabaseException;
@@ -50,7 +50,7 @@ class Notifications{
 	
 		if($from !== null && $toId !== null && $subject !== null && $message !== null){
 			try{
-				P_General::insertNewNotification($toId, $from->user()->id, $subject, $message, Carbon::now()->toDateTimeString(), false, $route);
+				P_General::insertNewNotification($toId, $from->id(), $subject, $message, Carbon::now()->toDateTimeString(), false, $route);
 			}catch(\Exception $ex){
 				Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Insert into table 'notifications' was not successful! ".$ex->getMessage());
 			}
@@ -110,7 +110,7 @@ class Notifications{
 			}
 			foreach($admins as $admin){
 				try{
-					P_General::insertNewNotification($admin->id, $from->user()->id, $subject, $message, Carbon::now()->toDateTimeString(), true, $route);
+					P_General::insertNewNotification($admin->id(), $from->id(), $subject, $message, Carbon::now()->toDateTimeString(), true, $route);
 				}catch(Exception $ex){
 					Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Insert into table 'notifications' was not successful! ".$ex->getMessage());
 				}
@@ -138,7 +138,7 @@ class Notifications{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public static function notifyAdminFromServer($adminPermission, $subject, $message, $route){
-		Notifications::notifyAdmin(new User(0), $adminPermission, $subject, $message, $route);
+		Notifications::notifyAdmin(\App\Classes\Layout\User::getUserData(0), $adminPermission, $subject, $message, $route);
 	}
 	
 	/** Function name: getNotifications
@@ -154,7 +154,7 @@ class Notifications{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public static function getNotifications($userId){
-		User::getUserData($userId); //check the user
+		\App\Classes\Layout\User::getUserData($userId); //check the user
 		try{
 			$ret = P_General::getNotificationsForUser($userId);
 		}catch(Exception $ex){
@@ -177,7 +177,7 @@ class Notifications{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public static function getUnreadNotificationCount($userId){
-		User::getUserData($userId); //check the user
+		\App\Classes\Layout\User::getUserData($userId); //check the user
 		try{
 			$count = P_General::getUnseenNotificationCountForUser($userId);
 		}catch(Exception $ex){
