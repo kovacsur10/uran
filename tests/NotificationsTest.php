@@ -212,12 +212,28 @@ class NotificationsTest extends TestCase
 		}
 	}
 	
+	/** Function name: test_notify_success
+	 *
+	 * This function is testing the notify function of the Notifications model.
+	 *
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
 	public function test_notify_success(){
 		$this->assertEquals(2, Notifications::getUnreadNotificationCount(41));
 		Notifications::notify(User::getUserData(1), 41, "test", "message", "route");
 		$this->assertEquals(3, Notifications::getUnreadNotificationCount(41));
 	}
 	
+	/** Function name: test_notify_null
+	 *
+	 * This function is testing the notify function of the Notifications model.
+	 *
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
 	public function test_notify_null(){
 		$user = User::getUserData(1);
 		$this->assertEquals(2, Notifications::getUnreadNotificationCount(41));
@@ -232,12 +248,28 @@ class NotificationsTest extends TestCase
 		$this->assertEquals(3, Notifications::getUnreadNotificationCount(41));
 	}
 	
+	/** Function name: test_notifyAdmin_success
+	 *
+	 * This function is testing the notifyAdmin function of the Notifications model.
+	 *
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
 	public function test_notifyAdmin_success(){
 		$this->assertEquals(0, Notifications::getUnreadNotificationCount(34));
 		Notifications::notifyAdmin(User::getUserData(41), "test_permission", "test", "message", "route");
 		$this->assertEquals(1, Notifications::getUnreadNotificationCount(34));
 	}
 	
+	/** Function name: test_notifyAdmin_null
+	 *
+	 * This function is testing the notifyAdmin function of the Notifications model.
+	 *
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
 	public function test_notifyAdmin_null(){
 		$user = User::getUserData(1);
 		$this->assertEquals(0, Notifications::getUnreadNotificationCount(34));
@@ -252,12 +284,28 @@ class NotificationsTest extends TestCase
 		$this->assertEquals(1, Notifications::getUnreadNotificationCount(34));
 	}
 	
+	/** Function name: test_notifyAdminFromServer_success
+	 *
+	 * This function is testing the notifyAdminFromServer function of the Notifications model.
+	 *
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
 	public function test_notifyAdminFromServer_success(){
 		$this->assertEquals(0, Notifications::getUnreadNotificationCount(34));
 		Notifications::notifyAdminFromServer("test_permission", "test", "message", "route");
 		$this->assertEquals(1, Notifications::getUnreadNotificationCount(34));
 	}
 	
+	/** Function name: test_notifyAdminFromServer_null
+	 *
+	 * This function is testing the notifyAdminFromServer function of the Notifications model.
+	 *
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
 	public function test_notifyAdminFromServer_null(){
 		$user = User::getUserData(1);
 		$this->assertEquals(0, Notifications::getUnreadNotificationCount(34));
