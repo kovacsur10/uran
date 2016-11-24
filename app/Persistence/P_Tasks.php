@@ -3,6 +3,10 @@
 namespace App\Persistence;
 
 use DB;
+use App\Classes\Data\TaskStatus;
+use App\Classes\Data\TaskType;
+use App\Classes\Data\TaskPriority;
+use App\Classes\Data\TaskComment;
 
 /** Class name: P_Tasks
  *
@@ -193,16 +197,17 @@ class P_Tasks{
 	 * requested identifier.
 	 *
 	 * @param int $commentId - comment identifier
-	 * @return Comment|null
+	 * @return TaskComment|null
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	static function getComment($commentId){
-		return DB::table('tasks_comments')
+		$comment = DB::table('tasks_comments')
 			->join('users', 'users.id', '=', 'tasks_comments.sender')
 			->where('tasks_comments.id', '=', $commentId)
 			->select('tasks_comments.id as id', 'users.name as poster', 'text as comment', 'datetime as date', 'users.username as poster_username')
 			->first();
+		return $comment === null ? null : new TaskComment($comment->id, $comment->comment, $comment->date, $comment->deleted, $comment->task, $comment->sender, $comment->poster_username, $comment->poster);
 	}
 	
 	/** Function name: getCommentsForTask
@@ -211,19 +216,23 @@ class P_Tasks{
 	 * to the provided task.
 	 *
 	 * @param int $taskId - task identifier
-	 * @return array of Comments
+	 * @return array of TaskComment
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	static function getCommentsForTask($taskId){
-		return DB::table('tasks_comments')
+		$getComments = DB::table('tasks_comments')
 			->join('users', 'users.id', '=', 'tasks_comments.sender')
 			->where('task', '=', $taskId)
 			->where('deleted', '=', false)
 			->select('tasks_comments.id as id', 'users.name as poster', 'text as comment', 'datetime as date', 'users.username as poster_username')
 			->orderBy('tasks_comments.id','desc')
-			->get()
-			->toArray();
+			->get();
+		$comments = [];
+		foreach($getComments as $comment){
+			array_push($comments, new TaskComment($comment->id, $comment->comment, $comment->date, $comment->deleted, $comment->task, $comment->sender, $comment->poster_username, $comment->poster));
+		}
+		return $comments;
 	}
 	
 	/** Function name: deleteComment
@@ -249,14 +258,15 @@ class P_Tasks{
 	 * requested identifier.
 	 *
 	 * @param int $statusId - status identifier
-	 * @return Status|null
+	 * @return TaskStatus|null
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	static function getStatusById($statusId){
-		return DB::table('tasks_status')
+		$status = DB::table('tasks_status')
 			->where('id', '=', $statusId)
 			->first();
+		return $status === null ? null : new TaskStatus($status->id, $status->status);
 	}
 	
 	/** Function name: getStatusByName
@@ -265,58 +275,71 @@ class P_Tasks{
 	 * requested text identifier.
 	 *
 	 * @param text $statusName - status text identifier
-	 * @return Status|null
+	 * @return TaskStatus|null
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	static function getStatusByName($statusName){
-		return DB::table('tasks_status')
+		$status = DB::table('tasks_status')
 			->where('status', 'LIKE', $statusName)
 			->first();
+		return $status === null ? null : new TaskStatus($status->id, $status->status);
 	}
 	
 	/** Function name: getStatusTypes
 	 *
 	 * This function returns the task status types.
 	 *
-	 * @return array of statuses
+	 * @return array of TaskStatus
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	static function getStatusTypes(){
-		return DB::table('tasks_status')
+		$getStatus = DB::table('tasks_status')
 			->orderBy('id', 'asc')
-			->get()
-			->toArray();
+			->get();
+		$states = [];
+		foreach($getStatus as $status){
+			array_push($states, new TaskStatus($status->id, $status->status));
+		}
+		return $states;
 	}
 	
 	/** Function name: getPriorities
 	 *
 	 * This function returns the task priorities.
 	 *
-	 * @return array of priorities
+	 * @return array of TaskPriority
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	static function getPriorities(){
-		return DB::table('tasks_priority')
+		$getPriorities = DB::table('tasks_priority')
 			->orderBy('id', 'asc')
-			->get()
-			->toArray();
+			->get();
+		$priorities = [];
+		foreach($getPriorities as $priority){
+			array_push($priorities, new TaskPriority($priority->id, $priority->name));
+		}
+		return $priorities;
 	}
 	
 	/** Function name: getTypes
 	 *
 	 * This function returns the task types.
 	 *
-	 * @return array of task types
+	 * @return array of TaskType
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	static function getTypes(){
-		return DB::table('tasks_type')
+		$getTypes = DB::table('tasks_type')
 			->orderBy('id', 'asc')
-			->get()
-			->toArray();
+			->get();
+		$types = [];
+		foreach($getTypes as $type){
+			array_push($types, new TaskType($type->id, $type->type));
+		}
+		return $types;
 	}
 }
