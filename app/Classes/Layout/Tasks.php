@@ -110,7 +110,7 @@ class Tasks{
 	 *
 	 * Getter function for the comments of the selected task.
 	 * 
-	 * @return array of comments
+	 * @return array of TaskComment
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
@@ -122,7 +122,7 @@ class Tasks{
 	 *
 	 * Getter function for the status types of the tasks.
 	 * 
-	 * @return array of status types
+	 * @return array of TaskStatus
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
@@ -476,7 +476,7 @@ class Tasks{
 	 *
 	 * This function returns the task priorities.
 	 * 
-	 * @return array of priorities
+	 * @return array of TaskPriority
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
@@ -494,7 +494,7 @@ class Tasks{
 	 *
 	 * This function returns the task types.
 	 * 
-	 * @return array of task types
+	 * @return array of TaskType
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
@@ -512,7 +512,7 @@ class Tasks{
 	 *
 	 * This function returns the task status types.
 	 * 
-	 * @return array of task status types
+	 * @return array of TaskStatus
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
@@ -531,7 +531,7 @@ class Tasks{
 	 * This function returns the tasks.
 	 * 
 	 * @param int $userId - user's identifier
-	 * @return array of tasks
+	 * @return array of Task
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
