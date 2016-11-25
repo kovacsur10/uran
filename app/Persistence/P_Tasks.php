@@ -7,6 +7,7 @@ use App\Classes\Data\TaskStatus;
 use App\Classes\Data\TaskType;
 use App\Classes\Data\TaskPriority;
 use App\Classes\Data\TaskComment;
+use App\Classes\Data\StatusCode;
 
 /** Class name: P_Tasks
  *
@@ -120,21 +121,26 @@ class P_Tasks{
 	 *
 	 * This function returns the tasks.
 	 *
-	 * @param int $taskId - task identifier
-	 * @return array of tasks
+	 * @param int|null $statusId - identifier of a task status
+	 * @param int|null $priorityId - identifier of a task priority
+	 * @param bool $onlyAssignedToUser - only get tasks assigned to a specific user
+	 * @param int|null $userId - assigned user's identifier
+	 * @param bool $hideClosed - get only the not closed tasks 
+	 * @param string $caption - caption filter
+	 * @return array of Task
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	static function getTasks($status = "", $priorityId = "", $onlyAssignedToUser = false, $userId = null, $hideClosed = false, $caption = ""){
+	static function getTasks(int $statusId = null, int $priorityId = null, bool $onlyAssignedToUser = false, int $userId = null, bool $hideClosed = false, string $caption = ""){
 		return DB::table('tasks_task')
 			->join('tasks_type', 'tasks_type.id', '=', 'tasks_task.type')
 			->join('tasks_status', 'tasks_status.id', '=', 'tasks_task.status')
 			->join('tasks_priority', 'tasks_priority.id', '=', 'tasks_task.priority')
 			->join('users', 'users.id', '=', 'tasks_task.created_by')
-			->when($status != "", function ($query) use($status){
+			->when($statusId !== null, function ($query) use($statusId){
 				return $query->where('tasks_status.id', '=', $statusId);
 			})
-			->when($priorityId != "", function ($query) use($priorityId){
+			->when($priorityId !== null, function ($query) use($priorityId){
 				return $query->where('tasks_priority.id', '=', $priorityId);
 			})
 			->when($onlyAssignedToUser, function ($query) use ($userId){

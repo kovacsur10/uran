@@ -35,24 +35,25 @@ class TasksTest extends TestCase
 		$this->assertClassHasAttribute('statusTypes', Tasks::class);
 		$this->assertClassHasAttribute('filters', Tasks::class);
 
-		$rooms = new Tasks();
-		$this->assertEquals('',$rooms->getFilter('priority'));
-		$this->assertEquals('',$rooms->getFilter('status'));
-		$this->assertEquals('',$rooms->getFilter('caption'));
-		$this->assertFalse($rooms->getFilter('myTasks'));
-		$this->assertTrue($rooms->getFilter('hideClosed'));
-		$this->assertNull($rooms->getTask());
-		$this->assertCount(0, $rooms->getComments());
-		$this->assertCount(5, $rooms->statusTypes());
-		foreach($rooms->statusTypes() as $status){
+		$tasks = new Tasks();
+		$this->assertNull($tasks->getFilter('priority'));
+		$this->assertNull($tasks->getFilter('status'));
+		$this->assertEquals('',$tasks->getFilter('caption'));
+		$this->assertFalse($tasks->getFilter('myTasks'));
+		$this->assertTrue($tasks->getFilter('hideClosed'));
+		$this->assertNull($tasks->getTask());
+		$this->assertNull($tasks->get());
+		$this->assertCount(0, $tasks->getComments());
+		$this->assertCount(5, $tasks->statusTypes());
+		foreach($tasks->statusTypes() as $status){
 			$this->assertInstanceOf(TaskStatus::class, $status);
 		}
-		$this->assertCount(3, $rooms->taskTypes());
-		foreach($rooms->taskTypes() as $type){
+		$this->assertCount(3, $tasks->taskTypes());
+		foreach($tasks->taskTypes() as $type){
 			$this->assertInstanceOf(TaskType::class, $type);
 		}
-		$this->assertCount(4, $rooms->priorities());
-		foreach($rooms->priorities() as $priority){
+		$this->assertCount(4, $tasks->priorities());
+		foreach($tasks->priorities() as $priority){
 			$this->assertInstanceOf(TaskPriority::class, $priority);
 		}
 	}
@@ -65,5 +66,46 @@ class TasksTest extends TestCase
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
+	function test_getFilter(){
+		$tasks = new Tasks();
+		//positive
+		$this->assertNull($tasks->getFilter('priority'));
+		$this->assertNull($tasks->getFilter('status'));
+		$this->assertEquals('',$tasks->getFilter('caption'));
+		$this->assertFalse($tasks->getFilter('myTasks'));
+		$this->assertTrue($tasks->getFilter('hideClosed'));
+		
+		//negative
+		$this->assertNull($tasks->getFilter(null));
+		$this->assertNull($tasks->getFilter(12));
+		$this->assertNull($tasks->getFilter('no_such_filter'));
+	}
+	
+	function test_filterTasks(){
+		$tasks = new Tasks();
+		
+		$this->assertNull($tasks->getFilter('priority'));
+		$this->assertNull($tasks->getFilter('status'));
+		$this->assertEquals('',$tasks->getFilter('caption'));
+		$this->assertFalse($tasks->getFilter('myTasks'));
+		$this->assertTrue($tasks->getFilter('hideClosed'));
+		$this->assertNull($tasks->get());
+		
+		$tasks->filterTasks(null, null, null, null, null);
+		$this->assertNull($tasks->getFilter('priority'));
+		$this->assertNull($tasks->getFilter('status'));
+		$this->assertEquals('',$tasks->getFilter('caption'));
+		$this->assertFalse($tasks->getFilter('myTasks'));
+		$this->assertTrue($tasks->getFilter('hideClosed'));
+		$this->assertNull($tasks->get());
+		
+		$tasks->filterTasks(null, '', 3, null, null);
+		$this->assertEquals(3, $tasks->getFilter('priority'));
+		$this->assertNull($tasks->getFilter('status'));
+		$this->assertEquals('',$tasks->getFilter('caption'));
+		$this->assertFalse($tasks->getFilter('myTasks'));
+		$this->assertTrue($tasks->getFilter('hideClosed'));
+		$this->assertCount(13, $tasks->get());
+	}
 	
 }

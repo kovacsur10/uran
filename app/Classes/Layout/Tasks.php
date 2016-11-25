@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use App\Classes\LayoutData;
 use App\Classes\Logger;
 use App\Persistence\P_Tasks;
+use App\Classes\Interfaces\Pageable;
 
 /** Class name: Tasks
  *
@@ -22,7 +23,7 @@ use App\Persistence\P_Tasks;
  * 
  * @author Máté Kovács <kovacsur10@gmail.com>
  */
-class Tasks{
+class Tasks extends Pageable{
 	
 // PRIVATE DATA
 	
@@ -44,8 +45,8 @@ class Tasks{
      */
 	public function __construct(){
 		$this->filters = [
-				'priority'		=> '',
-				'status' 		=> '',
+				'priority'		=> null,
+				'status' 		=> null,
 				'caption'		=> '',
 				'myTasks'		=> false,
 				'hideClosed'	=> true,
@@ -156,22 +157,28 @@ class Tasks{
 	 * on the given values. The tasks array is
 	 * updated with the filtered array data.
 	 * 
-	 * @param text $status - status filter
+	 * @param int|null $status - status indentifier filter
 	 * @param text $caption - caption filter
-	 * @param int $priority - priority identifier filter
+	 * @param int|null $priority - priority identifier filter
 	 * @param bool $myTasks - only user's tasks filter
 	 * @param bool $hideClosed - closed tasks filter 
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function filterTasks($status, $caption, $priority, $myTasks, $hideClosed){
+	public function filterTasks(int $statusId, string $caption, int $priority, bool $myTasks, bool $hideClosed){
 		$layout = new LayoutData();
-		$this->filters['status'] = $status;
-		$this->filters['caption'] = $caption;
+		$this->filters['status'] = $statusId;
+		if($caption !== null){
+			$this->filters['caption'] = $caption;
+		}
 		$this->filters['priority'] = $priority;
-		$this->filters['myTasks'] = $myTasks;
-		$this->filters['hideClosed'] = $hideClosed;
-		$this->tasks = $this->getTasks($layout->user()->user()->id);
+		if($myTasks !== null){
+			$this->filters['myTasks'] = $myTasks === true;
+		}
+		if($hideClosed !== null){
+			$this->filters['hideClosed'] = $hideClosed === true;
+		}
+		$this->tasks = $this->getTasks($layout->user()->user()->id());
 	}
 	
 	/** Function name: tasksToPages
@@ -185,8 +192,9 @@ class Tasks{
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function tasksToPages($from = 0, $count = 50){ //TODO: refactor
-		if($this->tasks === null){
+	public function tasksToPages($from = 0, $count = 50){
+		return $this->toPages($this->tasks, $from, $count);
+		/*if($this->tasks === null){
 			return null;
 		}else if($count === 0){
 			return array_slice($this->tasks, $from, count($this->tasks)-$from);
@@ -196,7 +204,7 @@ class Tasks{
 			return array_slice($this->tasks, $from, count($this->tasks) - $from);
 		}else{
 			return array_slice($this->tasks, $from, $count);
-        }
+        }*/
 	}
 	
 	/** Function name: getStatusById
