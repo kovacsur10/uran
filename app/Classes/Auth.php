@@ -6,11 +6,12 @@ use Carbon\Carbon;
 use App\Classes\LayoutData;
 use App\Classes\Logger;
 use App\Persistence\P_User;
-use App\Classes\Layout\User;
+use App\Classes\Layout\User as MU;
 use Illuminate\Support\Facades\Session;
 use App\Exceptions\UserNotFoundException;
 use App\Exceptions\ValueMismatchException;
 use App\Exceptions\DatabaseException;
+use App\Classes\Data\User;
 
 /** Class name: Auth
  *
@@ -53,15 +54,15 @@ class Auth{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public static function login($username, $password){
-		$user = User::getUserDataByUsername(strtolower($username));
-		if(password_verify($password, $user->password)){
+		$user = MU::getUserDataByUsername(strtolower($username));
+		if(password_verify($password, $user->password())){
 			try{
 				P_User::updateUserLoginTime($username, Carbon::now()->toDateTimeString());
 			}catch(\Illuminate\Database\QueryException $e){
 				Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 				throw new DatabaseException("User login time could not be updated!");
 			}
-			LayoutData::setLanguage($user->language);
+			LayoutData::setLanguage($user->language());
 			Session::put('user', $user);
 		}else{ //password doesn't match
 			throw new ValueMismatchException("Password mismatch!");
@@ -87,7 +88,7 @@ class Auth{
 			throw new ValueMismatchException("Password cannot be null!");
 		}
 		$username = strtolower($username);
-		User::getUserDataByUsername($username); //throws exception when user was not found
+		MU::getUserDataByUsername($username); //throws exception when user was not found
 		try{
 			P_User::updateUserPassword($username, password_hash($password, PASSWORD_DEFAULT));
 		}catch(Exception $ex){

@@ -28,7 +28,7 @@ class Pageable{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	protected function toPages($data, $from = 0, $count = 50){
-		if($data === null || $from < 0 || count($data) < $from || $count <= 0){
+		if($data === null || $from === null || $count === null || $from < 0 || count($data) < $from || $count <= 0){
 			return [];
 		}else if($count === 0 || (count($data) < $from + $count)){
 			return array_slice($data, $from, count($data) - $from);

@@ -3,9 +3,12 @@
 namespace App\Classes\Layout;
 
 use App\Classes\Layout\Permissions;
+use App\Classes\Data\Permission;
 use App\Classes\Notifications;
 use App\Persistence\P_User;
 use App\Exceptions\UserNotFoundException;
+use App\Classes\Interfaces\Pageable;
+use App\Classes\Logger;
 
 /** Class name: User
  *
@@ -22,7 +25,7 @@ use App\Exceptions\UserNotFoundException;
  * 
  * @author Máté Kovács <kovacsur10@gmail.com>
  */
-class User{
+class User extends Pageable{
 	
 // PRIVATE DATA
 	
@@ -41,7 +44,7 @@ class User{
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function __construct($userId){
+	public function __construct($userId = 0){
 		try{
 			$this->user = $this->getUserData($userId);
 		}catch(\Exception $ex){
@@ -53,7 +56,7 @@ class User{
 			$this->notifications = Notifications::getNotifications($userId);
 			$this->unreadNotificationCount = Notifications::getUnreadNotificationCount($userId);
 		}catch(\Exception $ex){
-			$this->notifications = null;
+			$this->notifications = [];
 			$this->unreadNotificationCount = 0;
 		}
 	}
@@ -135,15 +138,7 @@ class User{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function notifications($from = 0, $count = 5){
-		if($this->notifications === []){
-			return [];
-		}else if($from < 0 || count($this->notifications) < $from || $count < 0){
-			return [];
-		}else if(count($this->notifications) <= $from + $count){
-			return array_slice($this->notifications, $from, count($this->notifications) - $from);
-		}else{
-			return array_slice($this->notifications, $from, $count);
-		}
+		return $this->toPages($this->notifications, $from, $count);
 	}
 	
 	/** Function name: usersAllData
@@ -181,7 +176,7 @@ class User{
 	 */
 	public function permitted($what){
 		$i = 0;
-		while($i < count($this->permissions) && $this->permissions[$i]->permission_name != $what){
+		while($i < count($this->permissions) && $this->permissions[$i]->name() != $what){
 			$i++;
 		}
 		return $i < count($this->permissions);
