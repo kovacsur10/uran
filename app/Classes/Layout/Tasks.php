@@ -7,6 +7,9 @@ use App\Classes\LayoutData;
 use App\Classes\Logger;
 use App\Persistence\P_Tasks;
 use App\Classes\Interfaces\Pageable;
+use App\Exceptions\ValueMismatchException;
+use App\Exceptions\DatabaseException;
+use App\Classes\Database;
 
 /** Class name: Tasks
  *
@@ -49,9 +52,9 @@ class Tasks extends Pageable{
 				'status' 		=> null,
 				'caption'		=> '',
 				'myTasks'		=> false,
-				'hideClosed'	=> true,
+				'hideClosed'	=> false,
 		];
-		$this->tasks = $this->getTasks();
+		$this->getTasks();
 		$this->priorities = $this->getPriorities();
 		$this->types = $this->getTaskTypes();
 		$this->task = null;
@@ -165,20 +168,26 @@ class Tasks extends Pageable{
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function filterTasks(int $statusId, string $caption, int $priority, bool $myTasks, bool $hideClosed){
+	public function filterTasks($statusId, $caption, $priority, $myTasks, $hideClosed){
 		$layout = new LayoutData();
 		$this->filters['status'] = $statusId;
 		if($caption !== null){
 			$this->filters['caption'] = $caption;
+		}else{
+			$this->filters['caption'] = '';
 		}
 		$this->filters['priority'] = $priority;
 		if($myTasks !== null){
 			$this->filters['myTasks'] = $myTasks === true;
+		}else{
+			$this->filters['myTasks'] = false;
 		}
 		if($hideClosed !== null){
 			$this->filters['hideClosed'] = $hideClosed === true;
+		}else{
+			$this->filters['hideClosed'] = false;
 		}
-		$this->tasks = $this->getTasks($layout->user()->user()->id());
+		$this->getTasks($layout->user()->user() === null ? 0 : $layout->user()->user()->id());
 	}
 	
 	/** Function name: tasksToPages
@@ -188,23 +197,12 @@ class Tasks extends Pageable{
 	 * 
 	 * @param int $from - first task identifier
 	 * @param int $count - tasks count
-	 * @return array of tasks
+	 * @return array of Task
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function tasksToPages($from = 0, $count = 50){
 		return $this->toPages($this->tasks, $from, $count);
-		/*if($this->tasks === null){
-			return null;
-		}else if($count === 0){
-			return array_slice($this->tasks, $from, count($this->tasks)-$from);
-		}else if($from < 0 || count($this->tasks) < $from || $count <= 0){
-			return null;
-		}else if(count($this->tasks) < $from + $count){
-			return array_slice($this->tasks, $from, count($this->tasks) - $from);
-		}else{
-			return array_slice($this->tasks, $from, $count);
-        }*/
 	}
 	
 	/** Function name: getStatusById
@@ -221,6 +219,9 @@ class Tasks extends Pageable{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function getStatusById($statusId){
+		if($statusId === null){
+			return null;
+		}
 		try{
 			$status = P_Tasks::getStatusById($statusId);
 		}catch(\Exception $ex){
@@ -244,6 +245,9 @@ class Tasks extends Pageable{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function getStatusByName($statusName){
+		if($statusName === null){
+			return null;
+		}
 		try{
 			$status = P_Tasks::getStatusByName($statusName);
 		}catch(\Exception $ex){
@@ -267,11 +271,14 @@ class Tasks extends Pageable{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function getComment($commentId){
+		if($commentId === null){
+			return null;
+		}
 		try{
 			$comment = P_Tasks::getComment($commentId);
 		}catch(\Exception $ex){
 			$comment = null;
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'tasks_comments', joined to 'users' was not successful! ".$ex->getMessage());
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 		}
 		return $comment;
 	}
@@ -287,12 +294,15 @@ class Tasks extends Pageable{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function exists($taskId){
+		if($taskId === null){
+			return false;
+		}
 		try{
 			$id = P_Tasks::getTask($taskId);
 			$exist = ($id !== null);
 		}catch(\Exception $ex){
 			$exist = false;
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'tasks_task' was not successful! ".$ex->getMessage());
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 		}
 		return $exist;
 	}
@@ -308,6 +318,9 @@ class Tasks extends Pageable{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function commentExists($commentId){
+		if($commentId === null){
+			return false;
+		}
 		try{
 			$id = P_Tasks::getComment($commentId);
 			$exist = ($id !== null);
@@ -325,38 +338,29 @@ class Tasks extends Pageable{
 	 * 
 	 * @param int $taskId - task identifier
 	 * 
+	 * @throws ValueMismatchException when the parameter is null.
+	 * @throws DatabaseException when the selection fails.
+	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function setTask($taskId){
+		if($taskId === null){
+			throw new ValueMismatchException("Null value is not accepted!");
+		}
 		try{
 			$this->task = P_Tasks::getTask($taskId);
-			if($this->task->assigned_id !== null){
-				try{
-					$assigned = P_Tasks::getAssignedUserToTask($taskId);
-					$this->task->assigned_id = $assigned->id;
-					$this->task->assigned_name = $assigned->name;
-					$this->task->assigned_username = $assigned->username;
-				}catch(\Exception $ex){
-					Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'tasks_task', joined to 'users' was not successful! ".$ex->getMessage());
-				}
-			}else{
-				$this->task->assigned_name = null;
-				$this->task->assigned_username = null;
-			}
-				
-			//format deadline
-			if($this->task->deadline !== null){
-				$this->task->deadline = substr($this->task->deadline, 0, 10);
-			}
-				
 			try{
 				//set comments for the given task
 				$this->comments = P_Tasks::getCommentsForTask($taskId);
 			}catch(\Exception $ex){
-				Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'tasks_comments', joined to 'tasks_type', 'tasks_status', 'tasks_priority', 'users' was not successful! ".$ex->getMessage());
+				Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
+				throw new DatabaseException("Comment cannot be loaded!");
 			}
 		}catch(\Exception $ex){
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'tasks_task', joined to 'tasks_type', 'tasks_status', 'tasks_priority', 'users' was not successful! ".$ex->getMessage());
+			$this->task = null;
+			$this->comments = [];
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
+			throw new DatabaseException("The task selection failed!");
 		}
 	}
 	
@@ -373,18 +377,28 @@ class Tasks extends Pageable{
 	 * @param int $priority - priority identifier
 	 * @param int $status - task status type identifier
 	 * @param int $workingHours - working hours of the task
-	 * @param int $assignedUser - assigned user's identifier
+	 * @param int|null $assignedUser - assigned user's identifier
 	 * @param bool $closed - closed or not
+	 * 
+	 * @throws ValueMismatchException when the parameter is null!
+	 * @throws DatabaseException when the process failed!
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function update($taskId, $type, $text, $caption, $deadline, $priority, $status, $workingHours, $assignedUser, $closed){
+		if($taskId === null || $type === null || $text === null || $caption === null || $priority === null || $status === null || $workingHours === null || $closed === null){
+			throw new ValueMismatchException("A parameter is null, but cannot be that!");
+		}
 		try{
 			$closingTime = $closed ? (Carbon::now()->toDateTimeString()) : null;
 			$deadline = $deadline === null ? null : str_replace('.', '-', str_replace('. ', '-', $deadline));
-			P_Tasks::updateTask($taskId, $status, $type, $text, $caption, $priority, $workingHours, $assignedUser, $closingTime, $deadline);
+			Database::transaction(function() use($taskId, $status, $type, $text, $caption, $priority, $workingHours, $assignedUser, $closingTime, $deadline){
+				P_Tasks::updateTask($taskId, $status, $type, $text, $caption, $priority, $workingHours, $assignedUser, $closingTime, $deadline);
+				$this->getTasks();
+			});
 		}catch(\Exception $ex){
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Update table 'tasks_task' was not successful! ".$ex->getMessage());
+			throw new DatabaseException("Task update was not successful!");
 		}
 	}
 	
@@ -400,7 +414,7 @@ class Tasks extends Pageable{
 	 */
 	public function canModify(){
 		$layout = new LayoutData();
-		return ($this->task !== null) && ($layout->user()->user()->id === $this->task->owner_id || $layout->user()->permitted('tasks_admin'));
+		return ($this->task !== null) && ($layout->user()->user() !== null) && ($layout->user()->user()->id() === $this->task->creator()->id() || $layout->user()->permitted('tasks_admin'));
 	}
 	
 	/** Function name: addTask
@@ -415,13 +429,24 @@ class Tasks extends Pageable{
 	 * @param datetime|null $deadline - deadline of the task
 	 * @param int $priority - priority identifier
 	 * 
+	 * @throws ValueMismatchException when the parameter is null!
+	 * @throws DatabaseException when the process failed!
+	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function addTask($type, $createdById, $text, $caption, $deadline, $priority){
+		if($type === null || $createdById === null || $text === null || $caption === null || $priority === null){
+			throw new ValueMismatchException("A parameter is null, but cannot be that!");
+		}
 		try{
-			P_Tasks::addTask($type, $createdById, $text, $caption, $priority, Carbon::now()->toDateTimeString(), $deadline);
+			$time = Carbon::now()->toDateTimeString();
+			Database::transaction(function() use($type, $createdById, $text, $caption, $priority, $deadline, $time){
+				P_Tasks::addTask($type, $createdById, $text, $caption, $priority, $time, $deadline);
+				$this->getTasks();
+			});
 		}catch(\Exception $ex){
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Insert into table 'tasks_task' was not successful! ".$ex->getMessage());
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
+			throw new DatabaseException("Task addition was not successful!");
 		}
 	}
 	
@@ -432,13 +457,23 @@ class Tasks extends Pageable{
 	 * 
 	 * @param int $taskId - task identifier
 	 * 
+	 * @throws ValueMismatchException when the parameter is null!
+	 * @throws DatabaseException when the process failed!
+	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function removeTask($taskId){
+		if($taskId === null){
+			throw new ValueMismatchException("Parameter cannot be null!");
+		}
 		try{
-			P_Tasks::removeTask($taskId);
+			Database::transaction(function() use($taskId){
+				P_Tasks::removeTask($taskId);
+				$this->getTasks();
+			});
 		}catch(\Exception $ex){
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Update table 'tasks_task' was not successful! ".$ex->getMessage());
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
+			throw new DatabaseException("Task removal was not successful!");
 		}
 	}
 	
@@ -451,13 +486,20 @@ class Tasks extends Pageable{
 	 * @param int $userId - writer user's identifier 
 	 * @param text $text - text of the comment
 	 * 
+	 * @throws ValueMismatchException when a parameter is null.
+	 * @throws DatabaseException when the addition fails.
+	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function addComment($taskId, $userId, $text){
+		if($taskId === null || $userId === null || $text === null){
+			throw new ValueMismatchException("Null values are not permitted!");
+		}
 		try{
 			P_Tasks::addComment($text, $taskId, $userId, Carbon::now()->toDateTimeString());
 		}catch(\Exception $ex){
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'tasks_comments' was not successful! ".$ex->getMessage());
+			throw new DatabaseException("Adding the comment was unsuccessful!");
 		}
 	}
 	
@@ -468,13 +510,20 @@ class Tasks extends Pageable{
 	 * 
 	 * @param int $commentId - comment identifier
 	 * 
+	 * @throws ValueMismatchException when a parameter is null.
+	 * @throws DatabaseException when the removal fails.
+	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function removeComment($commentId){
+		if($commentId === null){
+			throw new ValueMismatchException("Null values are not permitted!");
+		}
 		try{
 			P_Tasks::deleteComment($commentId);
 		}catch(\Exception $ex){
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Update table 'tasks_comments' was not successful! ".$ex->getMessage());
+			throw new DatabaseException("Removing the comment was unsuccessful!");
 		}
 	}
 	
@@ -539,17 +588,15 @@ class Tasks extends Pageable{
 	 * This function returns the tasks.
 	 * 
 	 * @param int $userId - user's identifier
-	 * @return array of Task
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
     private function getTasks($userId = 0){
 		try{
-			$tasks = P_Tasks::getTasks($this->filters['status'], $this->filters['priority'], $this->filters['myTasks'], $userId, $this->filters['hideClosed'], $this->filters['caption']);				
+			$this->tasks = P_Tasks::getTasks($this->filters['status'], $this->filters['priority'], $this->filters['myTasks'], $userId, $this->filters['hideClosed'], $this->filters['caption']);				
 		}catch(\Exception $ex){
-			$tasks = [];
+			$this->tasks = [];
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 		}
-		return $tasks;
 	}
 }

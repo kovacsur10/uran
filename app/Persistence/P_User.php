@@ -191,14 +191,18 @@ class P_User{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	static function getUserByUsername($username){
-		return DB::table('users')
+		$user = DB::table('users')
 			->join('user_status_codes', 'user_status_codes.id', '=', 'users.status')
+			->join('registrations', 'registrations.user_id', '=', 'users.id')
 			->leftJoin('workshops', 'workshops.id', '=', 'users.workshop')
 			->leftJoin('faculties', 'faculties.id', '=', 'users.faculty')
 			->where('users.username', 'LIKE', $username)
-			->where('users.registered', '=', 1)
-			->select('users.id as id', 'users.username as username', 'users.password as password', 'users.email as email', 'users.registration_date as registration_date', 'users.name as name', 'users.country as country', 'users.shire as shire', 'users.city as city', 'users.postalcode as postalcode', 'users.address as address', 'users.phone as phone', 'users.reason as reason', 'users.neptun as neptun', 'users.city_of_birth as city_of_birth', 'users.date_of_birth as date_of_birth', 'users.name_of_mother as name_of_mother', 'users.high_school as high_school', 'users.year_of_leaving_exam as year_of_leaving_exam', 'user_status_codes.status_name as status', 'user_status_codes.id as status_id', 'workshops.name as workshop', 'workshops.id as workshop_id', 'faculties.name as faculty', 'faculties.id as faculty_id', 'users.from_year as admission_year', 'users.language as language')
+			->when($name != "admin", function($query){
+				return $query->where('users.registered', '=', true);
+			})
+			->select('users.*', 'registrations.*', 'user_status_codes.status_name as status_name')
 			->first();
+		return $user === null ? null : new User($user->id, $user->name, $user->username, $user->password, $user->email, $user->registration_date, new StatusCode($user->status, $user->status_name), $user->last_online, $user->language, $user->registered, $user->verified, $user->verification_date, $user->code);
 	}
 
 	/** Function name: getUsers
@@ -215,17 +219,24 @@ class P_User{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	static function getUsers($skipped = 0, $taken = -1){
-		return DB::table('users')
+		$getUsers = DB::table('users')
 			->join('user_status_codes', 'user_status_codes.id', '=', 'users.status')
-			->where('registered', '=', 1)
-			->select('*', 'users.id as id')
+			->join('registrations', 'registrations.user_id', '=', 'users.id')
+			->leftJoin('workshops', 'workshops.id', '=', 'users.workshop')
+			->leftJoin('faculties', 'faculties.id', '=', 'users.faculty')
+			->where('registered', '=', true)
+			->select('users.*', 'registrations.*', 'user_status_codes.status_name as status_name')
 			->orderBy('name', 'asc')
 			->skip($skipped)
 			->when($taken > -1, function($query) use ($taken){
 				return $query->take($taken);
 			})
-			->get()
-			->toArray();
+			->get();
+		$users = [];
+		foreach($getUsers as $user){
+			array_push($users, new User($user->id, $user->name, $user->username, $user->password, $user->email, $user->registration_date, new StatusCode($user->status, $user->status_name), $user->last_online, $user->language, $user->registered, $user->verified, $user->verification_date, $user->code));
+		}
+		return $users;
 	}
 	
 	/** Function name: getStatusCodes

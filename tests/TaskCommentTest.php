@@ -37,13 +37,13 @@ class TaskCommentTest extends TestCase
 
 		$task_comment = new TaskComment("1", 12, 1994, "true", "3", "2", 66, 42);
 		$this->assertEquals(1, $task_comment->id());
-		$this->assertEquals("alma", $task_comment->comment());
+		$this->assertEquals("12", $task_comment->comment());
 		$this->assertEquals("1994", $task_comment->creationDate());
 		$this->assertTrue($task_comment->isDeleted());
 		$this->assertEquals(3, $task_comment->taskId());
 		$this->assertEquals(2, $task_comment->authorId());
-		$this->assertEquals("korte", $task_comment->authorUsername());
-		$this->assertEquals("KorteName", $task_comment->authorName());
+		$this->assertEquals("66", $task_comment->authorUsername());
+		$this->assertEquals("42", $task_comment->authorName());
 	}
 
 	/** Function name: test_task_comment_attr

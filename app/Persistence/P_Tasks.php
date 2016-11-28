@@ -8,6 +8,8 @@ use App\Classes\Data\TaskType;
 use App\Classes\Data\TaskPriority;
 use App\Classes\Data\TaskComment;
 use App\Classes\Data\StatusCode;
+use App\Classes\Data\Task;
+use App\Classes\Data\User;
 
 /** Class name: P_Tasks
  *
@@ -58,7 +60,7 @@ class P_Tasks{
 	 * @param text $caption - caption
 	 * @param int $priority - priority identifier
 	 * @param int $workingHours - already worked hours on it
-	 * @param int $assignedUser - assigned user's identifier
+	 * @param int|null $assignedUser - assigned user's identifier
 	 * @param datetime|null $closedDate - task closing date
 	 * @param datetime|null $deadline - deadline
 	 * 
@@ -90,31 +92,33 @@ class P_Tasks{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	static function getTask($taskId){
-		return DB::table('tasks_task')
+		$task = DB::table('tasks_task')
 			->join('tasks_type', 'tasks_type.id', '=', 'tasks_task.type')
 			->join('tasks_status', 'tasks_status.id', '=', 'tasks_task.status')
 			->join('tasks_priority', 'tasks_priority.id', '=', 'tasks_task.priority')
-			->join('users', 'users.id', '=', 'tasks_task.created_by')
 			->where('tasks_task.id', '=', $taskId)
-			->select('tasks_task.id as id', 'created_datetime as date', 'tasks_status.status as status', 'tasks_type.type as type', 'users.id as owner_id', 'users.name as owner_user', 'users.username as owner_username', 'text', 'caption', 'closed_datetime as closed', 'deadline', 'tasks_priority.name as priority', 'tasks_task.hours as working_hours', 'assigned as assigned_id', 'deleted')
+			->select('created_by', 'assigned', 'tasks_task.id as id', 'created_datetime as date', 'tasks_status.id as status_id', 'tasks_status.status as status', 'tasks_type.id as type_id', 'tasks_type.type as type', 'text', 'caption', 'closed_datetime as closed', 'deadline', 'tasks_priority.id as priority_id', 'tasks_priority.name as priority', 'tasks_task.hours as working_hours', 'assigned as assigned_id', 'tasks_task.deleted as deleted')
 			->first();
-	}
-
-	/** Function name: getAssignedUserToTask
-	 *
-	 * This function returns the assigned user
-	 * data for a task.
-	 *
-	 * @param int $taskId - task identifier
-	 * @return Task|null
-	 *
-	 * @author Máté Kovács <kovacsur10@gmail.com>
-	 */
-	static function getAssignedUserToTask($taskId){
-		return DB::table('tasks_task')
-			->join('users', 'users.id', '=', 'tasks_task.assigned')
-			->where('tasks_task.id', '=', $taskId)
-			->first();
+		if($task !== null){
+			$creator = P_User::getUserById($task->created_by);
+		}
+		if($task !== null){
+			$assigned = $task->assigned === null ? null : P_User::getUserById($task->assigned);
+		}
+		return $task === null ? null : new Task(
+				$task->id,
+				$task->caption,
+				$task->text,
+				$task->date,
+				new TaskStatus($task->status_id, $task->status),
+				new TaskPriority($task->priority_id, $task->priority),
+				new TaskType($task->type_id, $task->type),
+				$creator,
+				$assigned,
+				$task->deadline,
+				$task->closed,
+				$task->working_hours,
+				$task->deleted);
 	}
 	
 	/** Function name: getTasks
@@ -132,11 +136,10 @@ class P_Tasks{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	static function getTasks(int $statusId = null, int $priorityId = null, bool $onlyAssignedToUser = false, int $userId = null, bool $hideClosed = false, string $caption = ""){
-		return DB::table('tasks_task')
+		$getTasks = DB::table('tasks_task')
 			->join('tasks_type', 'tasks_type.id', '=', 'tasks_task.type')
 			->join('tasks_status', 'tasks_status.id', '=', 'tasks_task.status')
 			->join('tasks_priority', 'tasks_priority.id', '=', 'tasks_task.priority')
-			->join('users', 'users.id', '=', 'tasks_task.created_by')
 			->when($statusId !== null, function ($query) use($statusId){
 				return $query->where('tasks_status.id', '=', $statusId);
 			})
@@ -153,10 +156,27 @@ class P_Tasks{
 				return $query->where('tasks_task.caption', 'LIKE', '%'.$caption.'%');
 			})
 			->where('tasks_task.deleted', '=', false)
-			->select('tasks_task.id as id', 'created_datetime as date', 'tasks_status.status as status', 'users.name as user', 'caption', 'tasks_priority.name as priority', 'users.username as username')
+			->select('created_by', 'assigned', 'tasks_task.id as id', 'created_datetime as date', 'tasks_status.id as status_id', 'tasks_status.status as status', 'tasks_type.id as type_id', 'tasks_type.type as type', 'text', 'caption', 'closed_datetime as closed', 'deadline', 'tasks_priority.id as priority_id', 'tasks_priority.name as priority', 'tasks_task.hours as working_hours', 'assigned as assigned_id', 'tasks_task.deleted as deleted')
 			->orderBy('tasks_task.id', 'desc')
-			->get()
-			->toArray();
+			->get();
+		$tasks = [];
+		foreach($getTasks as $task){
+			array_push($tasks, new Task(
+				$task->id,
+				$task->caption,
+				$task->text,
+				$task->date,
+				new TaskStatus($task->status_id, $task->status),
+				new TaskPriority($task->priority_id, $task->priority),
+				new TaskType($task->type_id, $task->type),
+				P_User::getUserById($task->created_by),
+				($task->assigned === null ? null : P_User::getUserById($task->assigned)),
+				$task->deadline,
+				$task->closed,
+				$task->working_hours,
+				$task->deleted));
+		}
+		return $tasks;
 	}
 	
 	/** Function name: removeTask
@@ -211,9 +231,10 @@ class P_Tasks{
 		$comment = DB::table('tasks_comments')
 			->join('users', 'users.id', '=', 'tasks_comments.sender')
 			->where('tasks_comments.id', '=', $commentId)
-			->select('tasks_comments.id as id', 'users.name as poster', 'text as comment', 'datetime as date', 'users.username as poster_username')
+			->where('tasks_comments.deleted', '=', false)
+			->select('tasks_comments.*', 'users.name as poster', 'users.username as poster_username')
 			->first();
-		return $comment === null ? null : new TaskComment($comment->id, $comment->comment, $comment->date, $comment->deleted, $comment->task, $comment->sender, $comment->poster_username, $comment->poster);
+		return $comment === null ? null : new TaskComment($comment->id, $comment->text, $comment->datetime, $comment->deleted, $comment->task, $comment->sender, $comment->poster_username, $comment->poster);
 	}
 	
 	/** Function name: getCommentsForTask
@@ -231,12 +252,12 @@ class P_Tasks{
 			->join('users', 'users.id', '=', 'tasks_comments.sender')
 			->where('task', '=', $taskId)
 			->where('deleted', '=', false)
-			->select('tasks_comments.id as id', 'users.name as poster', 'text as comment', 'datetime as date', 'users.username as poster_username')
+			->select('tasks_comments.*', 'users.name as poster', 'users.username as poster_username')
 			->orderBy('tasks_comments.id','desc')
 			->get();
 		$comments = [];
 		foreach($getComments as $comment){
-			array_push($comments, new TaskComment($comment->id, $comment->comment, $comment->date, $comment->deleted, $comment->task, $comment->sender, $comment->poster_username, $comment->poster));
+			array_push($comments, new TaskComment($comment->id, $comment->text, $comment->datetime, $comment->deleted, $comment->task, $comment->sender, $comment->poster_username, $comment->poster));
 		}
 		return $comments;
 	}
