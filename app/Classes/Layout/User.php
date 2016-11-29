@@ -9,6 +9,8 @@ use App\Persistence\P_User;
 use App\Exceptions\UserNotFoundException;
 use App\Classes\Interfaces\Pageable;
 use App\Classes\Logger;
+use App\Exceptions\ValueMismatchException;
+use App\Exceptions\DatabaseException;
 
 /** Class name: User
  *
@@ -75,13 +77,17 @@ class User extends Pageable{
 	
 	/** Function name: users
 	 *
-	 * Getter function for users.
+	 * This function returns a part
+	 * of the users from the first
+	 * requested user.
 	 * 
+	 * @param int $from - identifier of first notification
+	 * @param int $count - count of notifications
 	 * @return array of Users
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function users(){
+	public function users($from = 0, $count = 50){
 		try{
 			$users = P_User::getUsers();
 		}catch(\Exception $ex){
@@ -140,29 +146,7 @@ class User extends Pageable{
 	public function notifications($from = 0, $count = 5){
 		return $this->toPages($this->notifications, $from, $count);
 	}
-	
-	/** Function name: usersAllData
-	 *
-	 * This function returns a part
-	 * of the users from the first
-	 * requested user.
-	 * 
-	 * @param int $from - identifier of first notification
-	 * @param int $count - count of notifications
-	 * @return array of Users
-	 * 
-	 * @author Máté Kovács <kovacsur10@gmail.com>
-	 */
-	public function usersAllData($from = 0, $count = 50){
-		try{
-			$users = P_User::getUsers($from, $count);
-		}catch(\Exception $ex){
-			$users = [];
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'users', joined to 'user_status_codes' was not successful! ".$ex->getMessage());
-		}
-		return $users === null ? [] : $users;
-	}
-	
+		
 	/** Function name: permitted
 	 *
 	 * This function indicates whether
@@ -222,6 +206,9 @@ class User extends Pageable{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public static function getUserDataByUsername($username){
+		if($username == ''){
+			throw new UserNotFoundException();
+		}
 		try{
 			$user = P_User::getUserByUsername($username);
 		}catch(\Exception $ex){
@@ -240,13 +227,21 @@ class User extends Pageable{
 	 * 
 	 * @param text $lang - language identifier
 	 * 
+	 * @throws ValueMismatchException when the provided language code in not supported.
+	 * @throws DatabaseException when the update fails.
+	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function saveUserLanguage($lang){
-		try{
-			P_User::updateUserLanguage($this->user->id, $lang);
-		}catch(\Exception $ex){
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Update table 'users' was not successful! ".$ex->getMessage());
+		if($lang == 'hu_HU' || $lang == 'en_US'){
+			try{
+				P_User::updateUserLanguage($this->user->id(), $lang);
+			}catch(\Exception $ex){
+				Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Update table 'users' was not successful! ".$ex->getMessage());
+				throw new DatabaseException("Language update failed!");
+			}
+		}else{
+			throw new ValueMismatchException("The given language is not supported!");
 		}
 	}
 	
