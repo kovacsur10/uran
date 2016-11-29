@@ -197,7 +197,7 @@ class P_User{
 			->leftJoin('workshops', 'workshops.id', '=', 'users.workshop')
 			->leftJoin('faculties', 'faculties.id', '=', 'users.faculty')
 			->where('users.username', 'LIKE', $username)
-			->when($name != "admin", function($query){
+			->when($username != "admin", function($query){
 				return $query->where('users.registered', '=', true);
 			})
 			->select('users.*', 'registrations.*', 'user_status_codes.status_name as status_name')

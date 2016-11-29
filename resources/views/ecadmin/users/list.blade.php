@@ -8,7 +8,7 @@
                 <div class="panel-heading">{{ $layout->language('users_list') }}</div>
                 <div class="panel-body">
 				@if($layout->user()->permitted('user_handling'))
-					@foreach($layout->user()->usersAllData(0, 3) as $user)
+					@foreach($layout->user()->users(0, 3) as $user)
 					<div class="panel panel-default">
 						<div class="panel-heading"><a href="{{ url('/ecadmin/user/show/'.$user->id) }}">{{ $user->name }} - {{ $user->username }} - #{{ $user->id }}</a></div>
 						<div class="panel-body">

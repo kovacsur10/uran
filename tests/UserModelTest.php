@@ -2,6 +2,8 @@
 
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use App\Classes\Layout\User;
+use App\Exceptions\UserNotFoundException;
+use App\Exceptions\ValueMismatchException;
 
 /** Class name: UserModelTest
  *
@@ -47,7 +49,7 @@ class UserModelTest extends TestCase
 		$this->assertEquals(0, $user->unreadNotificationCount());
 	}
 
-	/** Function name: test_getRoomId
+	/** Function name: test_users
 	 *
 	 * This function is testing the getRoomId function of the User model.
 	 *
@@ -63,6 +65,14 @@ class UserModelTest extends TestCase
 		}
 	}
 	
+	/** Function name: test_notifications
+	 *
+	 * This function is testing the notifications function of the User model.
+	 *
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
 	function test_notifications(){
 		$user = new User(1);
 		$this->assertCount(5, $user->notifications());
@@ -72,13 +82,218 @@ class UserModelTest extends TestCase
 		$this->assertCount(1, $user->notifications(0, 1));
 		$this->assertCount(5, $user->notifications(0, 5));
 		$this->assertCount(10, $user->notifications(5, 10));
-		$this->assertCount(4, $user->notifications(100, 10));
+		$this->assertCount(3, $user->notifications(100, 10));
 		$this->assertCount(0, $user->notifications(110, 5));
 		$this->assertCount(0, $user->notifications(20, -4));
 		
 		$this->assertCount(0, $user->notifications(null, -4));
 		$this->assertCount(0, $user->notifications(20, null));
 		$this->assertCount(0, $user->notifications(null, null));
+	}
+	
+	/** Function name: test_permitted
+	 *
+	 * This function is testing the permitted function of the User model.
+	 *
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	function test_permitted(){
+		$user = new User();
+		$this->assertFalse($user->permitted(null));
+		$this->assertFalse($user->permitted(''));
+		$this->assertFalse($user->permitted('alma'));
+		$this->assertFalse($user->permitted('tasks_admin'));
+		$this->assertFalse($user->permitted('rooms_observe_assignment'));
+		
+		$user = new User(1);
+		$this->assertFalse($user->permitted(null));
+		$this->assertFalse($user->permitted(''));
+		$this->assertFalse($user->permitted('alma'));
+		$this->assertTrue($user->permitted('tasks_admin'));
+		$this->assertTrue($user->permitted('rooms_observe_assignment'));
+		
+		$user = new User(41);
+		$this->assertFalse($user->permitted(null));
+		$this->assertFalse($user->permitted(''));
+		$this->assertFalse($user->permitted('alma'));
+		$this->assertFalse($user->permitted('tasks_admin'));
+		$this->assertTrue($user->permitted('rooms_observe_assignment'));
+	}
+	
+	/** Function name: test_getUserData
+	 *
+	 * This function is testing the getUserData function of the User model.
+	 *
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	function test_getUserData(){
+		//exception cases
+		try{
+			$userData = User::getUserData(null);
+			$this->fail("Expected an exception!");
+		}catch(UserNotFoundException $ex){
+		}catch(\Exception $ex){
+			$this->fail("Not the expected exception: ".$ex->getMessage());
+		}
+		
+		try{
+			$userData = User::getUserData(100);
+			$this->fail("Expected an exception!");
+		}catch(UserNotFoundException $ex){
+		}catch(\Exception $ex){
+			$this->fail("Not the expected exception: ".$ex->getMessage());
+		}
+		
+		try{
+			$userData = User::getUserData(-2);
+			$this->fail("Expected an exception!");
+		}catch(UserNotFoundException $ex){
+		}catch(\Exception $ex){
+			$this->fail("Not the expected exception: ".$ex->getMessage());
+		}
+		
+		//good cases
+		try{
+			$userData = User::getUserData(0);
+			$this->assertNotNull($userData);
+			$this->assertInstanceOf(App\Classes\Data\User::class, $userData);
+			$this->assertEquals('admin', $userData->username());
+		}catch(\Exception $ex){
+			$this->fail("Not expected exception: ".$ex->getMessage());
+		}
+		
+		try{
+			$userData = User::getUserData(1);
+			$this->assertNotNull($userData);
+			$this->assertInstanceOf(App\Classes\Data\User::class, $userData);
+			$this->assertEquals('kovacsur10', $userData->username());
+		}catch(\Exception $ex){
+			$this->fail("Not expected exception: ".$ex->getMessage());
+		}
+	}
+	
+	/** Function name: test_getUserDataByUsername
+	 *
+	 * This function is testing the getUserDataByUsername function of the User model.
+	 *
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	function test_getUserDataByUsername(){
+		//exception cases
+		try{
+			$userData = User::getUserDataByUsername(null);
+			$this->fail("Expected an exception!");
+		}catch(UserNotFoundException $ex){
+		}catch(\Exception $ex){
+			$this->fail("Not the expected exception: ".$ex->getMessage());
+		}
+		
+		try{
+			$userData = User::getUserDataByUsername('');
+			$this->fail("Expected an exception!");
+		}catch(UserNotFoundException $ex){
+		}catch(\Exception $ex){
+			$this->fail("Not the expected exception: ".$ex->getMessage());
+		}
+		
+		try{
+			$userData = User::getUserDataByUsername('no_such_user');
+			$this->fail("Expected an exception!");
+		}catch(UserNotFoundException $ex){
+		}catch(\Exception $ex){
+			$this->fail("Not the expected exception: ".$ex->getMessage());
+		}
+		
+		//good cases
+		try{
+			$userData = User::getUserDataByUsername('admin');
+			$this->assertNotNull($userData);
+			$this->assertInstanceOf(App\Classes\Data\User::class, $userData);
+			$this->assertEquals(0, $userData->id());
+		}catch(\Exception $ex){
+			$this->fail("Not expected exception: ".$ex->getMessage());
+		}
+		
+		try{
+			$userData = User::getUserDataByUsername('kovacsur10');
+			$this->assertNotNull($userData);
+			$this->assertInstanceOf(App\Classes\Data\User::class, $userData);
+			$this->assertEquals(1, $userData->id());
+		}catch(\Exception $ex){
+			$this->fail("Not expected exception: ".$ex->getMessage());
+		}
+	}
+	
+	/** Function name: test_saveUserLanguage
+	 *
+	 * This function is testing the saveUserLanguage function of the User model.
+	 *
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	function test_saveUserLanguage(){
+		//fail cases
+		$user = new User(1);
+		$this->assertEquals('hu_HU', $user->user()->language());
+		try{
+			$user->saveUserLanguage('en_GB');
+			$this->fail("Expected an exception!");
+		}catch(ValueMismatchException $ex){
+		}catch(\Exception $ex){
+			$this->fail("Not the expected exception: ".$ex->getMessage());
+		}
+		$user = new User(1);
+		$this->assertEquals('hu_HU', $user->user()->language());
+		
+		$user = new User(1);
+		$this->assertEquals('hu_HU', $user->user()->language());
+		try{
+			$user->saveUserLanguage(null);
+			$this->fail("Expected an exception!");
+		}catch(ValueMismatchException $ex){
+		}catch(\Exception $ex){
+			$this->fail("Not the expected exception: ".$ex->getMessage());
+		}
+		$user = new User(1);
+		$this->assertEquals('hu_HU', $user->user()->language());
+		
+		//success cases
+		$user = new User(0);
+		$this->assertEquals('hu_HU', $user->user()->language());
+		try{
+			$user->saveUserLanguage('hu_HU');
+		}catch(\Exception $ex){
+			$this->fail("Not expected exception: ".$ex->getMessage());
+		}
+		$user = new User(1);
+		$this->assertEquals('hu_HU', $user->user()->language());
+		
+		$user = new User(1);
+		$this->assertEquals('hu_HU', $user->user()->language());
+		try{
+			$user->saveUserLanguage('hu_HU');
+		}catch(\Exception $ex){
+			$this->fail("Not expected exception: ".$ex->getMessage());
+		}
+		$user = new User(1);
+		$this->assertEquals('hu_HU', $user->user()->language());
+		
+		$user = new User(1);
+		$this->assertEquals('hu_HU', $user->user()->language());
+		try{
+			$user->saveUserLanguage('en_US');
+		}catch(\Exception $ex){
+			$this->fail("Not expected exception: ".$ex->getMessage());
+		}
+		$user = new User(1);
+		$this->assertEquals('en_US', $user->user()->language());
 	}
 	
 }
