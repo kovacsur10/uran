@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Ecnet;
 
 use App\Classes\LayoutData;
-use App\Classes\Layout\EcnetUser;
+use App\Classes\Layout\EcnetData;
 use App\Classes\Logger;
 use Validator;
 use App\Classes\Notifications;
@@ -19,7 +19,7 @@ class AccessController extends Controller{
 
 	public function showInternet(){
 		$layout = new LayoutData();
-		$layout->setUser(new EcnetUser(Session::get('user')->id));
+		$layout->setUser(new EcnetData(Session::get('user')->id));
 		$now = Carbon::now();
 		if($layout->user()->ecnetUser() === null){
 			Logger::warning('Ecnet user was not found!', null, null, 'ecnet/access');
@@ -33,7 +33,7 @@ class AccessController extends Controller{
 	
 	public function updateValidationTime(Request $request){
 		$layout = new LayoutData();
-		$layout->setUser(new EcnetUser(Session::get('user')->id));
+		$layout->setUser(new EcnetData(Session::get('user')->id));
         $this->validate($request, [
 			'new_valid_date' => 'required',
 		]);
@@ -53,7 +53,7 @@ class AccessController extends Controller{
 	
 	public function activate(Request $request){
 		$layout = new LayoutData();
-		$layout->setUser(new EcnetUser(Session::get('user')->id));
+		$layout->setUser(new EcnetData(Session::get('user')->id));
         $this->validate($request, [
 			'account' => 'required',
 		]);
@@ -69,7 +69,9 @@ class AccessController extends Controller{
 			}else{
 				$newTime = $request->custom_valid_date.' 05:00:00';
 			}
-			if($layout->user()->activateUserNet($request->account, $newTime) !== 0){
+			try{
+				$layout->user()->activateUserNet($request->account, $newTime);
+			}catch(\Exception $ex){
 				Logger::warning('Could not activate user internet access for user #'.print_r($request->account, true).'!', null, null, 'ecnet/access');
 				return view('errors.error', ["layout" => $layout,
 											 "message" => $layout->language('error_at_setting_users_internet_access_time'),
@@ -88,7 +90,7 @@ class AccessController extends Controller{
 	
 	public function setMACAddresses(Request $request){
 		$layout = new LayoutData();
-		$layout->setUser(new EcnetUser(Session::get('user')->id));
+		$layout->setUser(new EcnetData(Session::get('user')->id));
 		$addresses = [];
 		$newAddresses = [];
 		$existingAddresses = [];

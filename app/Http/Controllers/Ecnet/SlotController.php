@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Ecnet;
 
 use App\Classes\LayoutData;
-use App\Classes\Layout\EcnetUser;
+use App\Classes\Layout\EcnetData;
 use App\Classes\Logger;
 use App\Classes\Notifications;
 use Validator;
@@ -18,7 +18,7 @@ class SlotController extends Controller{
 	
 	public function showMACOrderForm(){
 		$layout = new LayoutData();
-		$layout->setUser(new EcnetUser(Session::get('user')->id));
+		$layout->setUser(new EcnetData(Session::get('user')->id));
 		
 		if($layout->user()->ecnetUser() === null){
 			Logger::warning('Ecnet user was not found!', null, null, 'ecnet/order');
@@ -30,11 +30,13 @@ class SlotController extends Controller{
 	
 	public function getSlot(Request $request){
 		$layout = new LayoutData();
-		$layout->setUser(new EcnetUser(Session::get('user')->id));
+		$layout->setUser(new EcnetData(Session::get('user')->id));
         $this->validate($request, [
 			'reason' => 'required',
 		]);
-		if($layout->user()->addMACSlotOrder($layout->user()->user()->id, $request->input('reason')) !== 0){
+		try{
+			$layout->user()->addMACSlotOrder($layout->user()->user()->id, $request->input('reason'));
+		}catch(\Exception $ex){
 			Logger::warning('Cannot order a slot!', null, null, 'ecnet/order');
 			return view('errors.error', ["layout" => $layout,
 										 "message" => $layout->language('error_at_sending_mac_slot_order'),
@@ -49,7 +51,7 @@ class SlotController extends Controller{
 	
 	public function allowOrDenyOrder(Request $request){
 		$layout = new LayoutData();
-		$layout->setUser(new EcnetUser(Session::get('user')->id));
+		$layout->setUser(new EcnetData(Session::get('user')->id));
         $this->validate($request, [
 			'optradio' => 'required',
 			'slot' => 'required',

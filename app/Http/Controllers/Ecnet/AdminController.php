@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Ecnet;
 
 use App\Classes\LayoutData;
 use App\Classes\Logger;
-use App\Classes\Layout\EcnetUser;
+use App\Classes\Layout\EcnetData;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
@@ -13,7 +13,7 @@ class AdminController extends Controller{
 	
 	public function showUsers($count = 50, $first = 0){
 		$layout = new LayoutData();
-		$layout->setUser(new EcnetUser(Session::get('user')->id));
+		$layout->setUser(new EcnetData(Session::get('user')->id));
 		if(Session::has('ecnet_username_filter') && Session::has('ecnet_name_filter')){
 			$layout->user()->filterUsers(Session::get('ecnet_username_filter'), Session::get('ecnet_name_filter'));
 		}
@@ -24,7 +24,7 @@ class AdminController extends Controller{
 	
 	public function showActiveUsers($type){
 		$layout = new LayoutData();
-		$layout->setUser(new EcnetUser(Session::get('user')->id));
+		$layout->setUser(new EcnetData(Session::get('user')->id));
 		if($type == "name" || $type == "username" || $type == "both"){
 			return view('ecnet.showactiveusers.'.$type, ["logged" => Session::has('user'),
 												  "layout" => $layout]);

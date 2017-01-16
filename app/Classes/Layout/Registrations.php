@@ -10,6 +10,7 @@ use App\Exceptions\DatabaseException;
 use App\Classes\Database;
 use App\Classes\LayoutData;
 use App\Classes\Logger;
+use App\Classes\Layout\EcnetData;
 use App\Exceptions\UserNotFoundException;
 use Mail;
 
@@ -302,7 +303,7 @@ class Registrations{
 					// ECNET PART
 					$layout = new LayoutData();
 					if($layout->modules()->isActivatedByName('ecnet')){
-						$layout->setUser(new EcnetUser(0));
+						$layout->setUser(new EcnetData(0));
 						$layout->user()->register($userId);
 					}
 					// ECNET PART END

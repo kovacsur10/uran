@@ -11,7 +11,7 @@ use App\Classes\Layout\Permissions;
 use App\Classes\Layout\Registrations;
 use App\Classes\Layout\Tasks;
 use App\Classes\Layout\Modules;
-use App\Classes\Layout\EcnetUser;
+use App\Classes\Layout\EcnetData;
 
 /** Class name: LayoutDataTest
  *
@@ -105,8 +105,8 @@ class LayoutDataTest extends TestCase
 		Session::set('user', \App\Classes\Layout\User::getUserData(1));
 		$layout = new LayoutData();
 		$this->assertInstanceOf(\App\Classes\Layout\User::class, $layout->user());
-		$layout->setUser(new EcnetUser(1));
-		$this->assertInstanceOf(EcnetUser::class, $layout->user());
+		$layout->setUser(new EcnetData(1));
+		$this->assertInstanceOf(EcnetData::class, $layout->user());
 	}
 	
 	/** Function name: test_language
