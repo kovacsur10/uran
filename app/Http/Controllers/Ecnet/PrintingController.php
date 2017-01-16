@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Ecnet;
 
 use App\Classes\LayoutData;
 use App\Classes\Logger;
-use App\Classes\Layout\EcnetUser;
+use App\Classes\Layout\EcnetData;
 use App\Classes\Notifications;
 use Validator;
 use App\Http\Controllers\Controller;
@@ -17,7 +17,7 @@ class PrintingController extends Controller{
 
     public function showAccount(){
 		$layout = new LayoutData();
-		$layout->setUser(new EcnetUser(Session::get('user')->id));
+		$layout->setUser(new EcnetData(Session::get('user')->id));
 		if($layout->user()->ecnetUser() === null){
 			Logger::error('Ecnet user was not found #'.print_r(Session::get('user')->id, true).'!', null, null, 'ecnet/account');
 			return view('errors.usernotfound', ["layout" => $layout]);
@@ -29,14 +29,18 @@ class PrintingController extends Controller{
 	
 	public function addMoney(Request $request){
 		$layout = new LayoutData();
-		$layout->setUser(new EcnetUser(Session::get('user')->id));
+		$layout->setUser(new EcnetData(Session::get('user')->id));
         $this->validate($request, [
 			'money' => 'required',
 			'reset' => 'required',
             'account' => 'required',
 		]);
 		if($layout->user()->permitted('ecnet_set_print_account')){
-			$money = $layout->user()->getMoneyByUserId($request->account);
+			try{
+				$money = $layout->user()->getEcnetUserData($request->account)->money();
+			}catch(\Exception $ex){
+				$money = null;
+			}
 			if($money === null){
 				Logger::warning('At ecnet money modification for user #'.$request->account.'. No money for that user. Maybe that user does not exist!', $oldmoney, $money, 'ecnet/account');
 				return view('errors.error', ["layout" => $layout,

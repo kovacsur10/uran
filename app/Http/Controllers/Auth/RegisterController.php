@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Classes\Database;
-use App\Classes\Layout\EcnetUser;
+use App\Classes\Layout\EcnetData;
 use App\Classes\LayoutData;
 use App\Classes\Notifications;
 use Validator;

@@ -4,8 +4,13 @@ namespace App\Classes\Layout;
 
 use Carbon\Carbon;
 use App\Persistence\P_Ecnet;
+use App\Classes\Data\EcnetUser;
+use App\Exceptions\UserNotFoundException;
+use App\Classes\Logger;
+use App\Exceptions\ValueMismatchException;
+use App\Exceptions\DatabaseException;
 
-/** Class name: EcnetUser
+/** Class name: EcnetData
  *
  * This class handles the ECnet
  * user database and other model
@@ -21,7 +26,7 @@ use App\Persistence\P_Ecnet;
  * 
  * @author Máté Kovács <kovacsur10@gmail.com>
  */
-class EcnetUser extends User{
+class EcnetData extends User{
 
 // PRIVATE DATA
 
@@ -29,24 +34,31 @@ class EcnetUser extends User{
 	private $validationTime;
 	private $macAddresses;
 	private $ecnetUsers;
-	private $filterName = "";
-	private $filterUsername = "";
+	private $filters;
 	
 // PUBLIC FUNCTIONS
 
 	/** Function name: __construct
 	 *
-	 * Constructor fot the EcnetUser class.
+	 * Constructor fot the EcnetData class.
 	 * 
 	 * @param int $userId - user's identifier
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function __construct($userId){
-		$this->ecnetUser = $this->getEcnetUserData($userId);
+	public function __construct($userId = 0){
+		try{
+			$this->ecnetUser = $this->getEcnetUserData($userId);
+		}catch(\Exception $ex){
+			$this->ecnetUser = null;
+		}
 		$this->validationTime = $this->getValidationTime();
 		$this->macAddresses = $this->getMACAddresses($userId);
 		$this->ecnetUsers = $this->getEcnetUsers();
+		$this->filters = [
+			'name' => null,
+			'username' => null
+		];
 		parent::__construct($userId);
 	}
 	
@@ -71,7 +83,7 @@ class EcnetUser extends User{
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function validationTime(){
+	public function validationTime() : string{
 		return $this->validationTime;
 	}
 	
@@ -96,7 +108,7 @@ class EcnetUser extends User{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function getNameFilter(){
-		return $this->filterName;
+		return $this->filters['name'];
 	}
 	
 	/** Function name: getUsernameFilter
@@ -108,7 +120,7 @@ class EcnetUser extends User{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function getUsernameFilter(){
-		return $this->filterUsername;
+		return $this->filters['username'];
 	}
 	
 	/** Function name: macAddressesOfUser
@@ -136,8 +148,14 @@ class EcnetUser extends User{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function filterUsers($username, $name){
-		$this->filterName = $name;
-		$this->filterUsername = $username;
+		if($username === ""){
+			$username = null;
+		}
+		if($name === ""){
+			$name = null;
+		}
+		$this->filters['name'] = $name;
+		$this->filters['username'] = $username;
 		$this->ecnetUsers = $this->getFilteredEcnetUsers($username, $name);
 	}
 	
@@ -160,13 +178,7 @@ class EcnetUser extends User{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function ecnetUsers($from = 0, $count = 50){
-		if($from < 0 || count($this->ecnetUsers) < $from || $count < 0){
-			return [];
-		}else if($count === 0 || count($this->ecnetUsers) < $from + $count){
-			return array_slice($this->ecnetUsers, $from, count($this->ecnetUsers) - $from);
-		}else{
-			return array_slice($this->ecnetUsers, $from, $count);
-		}
+		return $this->toPages($this->ecnetUsers, $from, $count);
 	}
 	
 	/** Function name: register
@@ -180,32 +192,42 @@ class EcnetUser extends User{
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function register($userId){
+	public static function register($userId = 0){
 		P_Ecnet::addNewUser($userId, Carbon::now()->toDateTimeString());
 	}
 	
-	//PRINTING CONTROLLER
-	
-	/** Function name: getMoneyByUserId
+	/** Function name: getEcnetUserData
 	 *
 	 * This function returns the requested
-	 * user's ECnet money.
-	 * 
+	 * user's data.
+	 *
 	 * @param int $userId - user's identifier
-	 * @return int - money
+	 * @return EcnetUser
 	 * 
+	 * @throws UserNotFoundException if the user was not found.
+	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function getMoneyByUserId($userId){
-		try{
-			$money = P_Ecnet::getUser($userId)->money;
-		}catch(\Exception $ex){
-			$money = null;
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'ecnet_user_data' was not successful! ".$ex->getMessage());
+	public static function getEcnetUserData($userId){
+		if($userId === null){
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). User id is null!");
+			throw new UserNotFoundException();
 		}
-		return $money;
+		try{
+			$userData = P_Ecnet::getUser($userId);
+		}catch(\Exception $ex){
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
+			throw new UserNotFoundException();
+		}
+		if($userData === null){
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). User was not found!");
+			throw new UserNotFoundException();
+		}
+		return $userData;
 	}
 	
+	//PRINTING CONTROLLER
+		
 	/** Function name: setMoneyForUser
 	 *
 	 * This function sets the requested
@@ -234,13 +256,16 @@ class EcnetUser extends User{
 	 * 
 	 * @param datetime $newTime - new default datetime
 	 * 
+	 * @throws ValueMismatchException if a wrongly formatted date is given.
+	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function changeDefaultValidDate($newTime){
+	public static function changeDefaultValidDate($newTime){
 		try{
 			P_Ecnet::updateValidDate($newTime);
 		}catch(\Exception $ex){
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
+			throw new ValueMismatchException("The date format is wrong!");
 		}
 	}
 	
@@ -251,24 +276,23 @@ class EcnetUser extends User{
 	 * 
 	 * @param int $userId - user's identifier
 	 * @param datetime $newTime - new default datetime
-	 * @return int - error code
+	 * 
+	 * @throws DatabaseException if an error occures.
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function activateUserNet($userId, $newTime){
-		$errorCode = 0;
+	public static function activateUserNet($userId, $newTime){
 		try{
 			P_Ecnet::updateUser($userId, $newTime, null, null);
 		}catch(\Exception $ex){
-			$errorCode = 1;
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Update table 'ecnet_user_data' was not successful! ".$ex->getMessage());
+			throw new DatabaseException("Could not activate the internet access for the user!");
 		}
-		return $errorCode;
 	}
 	
 	/** Function name: macAddressExists
 	 *
-	 * This function returns whethet the
+	 * This function returns whether the
 	 * requested MAC address exists in
 	 * the database or not.
 	 * 
@@ -277,7 +301,7 @@ class EcnetUser extends User{
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function macAddressExists($macAddress){
+	public static function macAddressExists($macAddress){
 		try{
 			$macAddress = P_Ecnet::getMacAddress($macAddress);
 		}catch(\Exception $ex){
@@ -294,13 +318,16 @@ class EcnetUser extends User{
 	 * 
 	 * @param text $macAddress - mac address
 	 * 
+	 * @throws DatabaseException if the deletion fails.
+	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function deleteMacAddress($macAddress){
+	public static function deleteMacAddress($macAddress){
 		try{
 			P_Ecnet::removeMacAddress($macAddress);
 		}catch(\Exception $ex){
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Delete from table 'ecnet_mac_addresses' was not successful! ".$ex->getMessage());
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
+			throw new DatabaseException("MAC address deletion was not successful!");
 		}
 	}
 	
@@ -312,13 +339,21 @@ class EcnetUser extends User{
 	 * @param int $userId - user's identifier
 	 * @param text $macAddress - mac address
 	 * 
+	 * @throws ValueMismatchException if the given MAC address is malformed.
+	 * @throws DatabaseException if the addition fails.
+	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function insertMacAddress($userId, $macAddress){
+	public static function insertMacAddress($userId, $macAddress){
+		$macAddress = strtoupper(str_replace("-", ":", $macAddress));
+		if(preg_match("/(?:[A-F0-9]{2}:){5}[A-F0-9]{2}/", $input_line, $output_array) !== 1){
+			throw new ValueMismatchException();
+		}
 		try{
 			P_Ecnet::addMacAddress($macAddress, $userId);
 		}catch(\Exception $ex){
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Insert into table 'ecnet_mac_addresses' was not successful! ".$ex->getMessage());
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
+			throw new DatabaseException("MAC address addition was not successful!");
 		}
 	}
 	
@@ -336,7 +371,7 @@ class EcnetUser extends User{
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function hasMACSlotOrder($userId){
+	public static function hasMACSlotOrder($userId){
 		try{
 			$order = P_Ecnet::getMacSlotOrdersForUser($userId);
 		}catch(\Exception $ex){
@@ -353,19 +388,18 @@ class EcnetUser extends User{
 	 * 
 	 * @param int $userId - user's identifier
 	 * @param text $reason - reason of the order
-	 * @return integer - error code
+	 * 
+	 * @throws DatabaseException if a server error occures.
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function addMACSlotOrder($userId, $reason){
-		$errorCode = 0;
+	public static function addMACSlotOrder($userId, $reason){
 		try{
 			P_Ecnet::addMacSlotOrder($userId, $reason, Carbon::now()->toDateTimeString());
 		}catch(\Exception $ex){
-			$errorCode = 1;
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Insert into table 'ecnet_mac_slot_orders' was not successful! ".$ex->getMessage());
+			throw new DatabaseException("Cannot add the MAC slot order!");
 		}
-		return $errorCode;
 	}
 	
 	/** Function name: getMacSlotOrders
@@ -452,26 +486,6 @@ class EcnetUser extends User{
 	
 // PRIVATE FUNCTIONS
 	
-	/** Function name: getEcnetUserData
-	 *
-	 * This function returns the requested
-	 * user's data.
-	 * 
-	 * @param int $userId - user's identifier
-	 * @return ECnetUser|null
-	 * 
-	 * @author Máté Kovács <kovacsur10@gmail.com>
-	 */
-	private function getEcnetUserData($userId){
-		try{
-			$userData = P_Ecnet::getUser($userId);
-		}catch(\Exception $ex){
-			$userData = null;
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'ecnet_user_data' was not successful! ".$ex->getMessage());
-		}
-		return $userData;
-	}
-	
 	/** Function name: getEcnetUsers
 	 *
 	 * This function returns the internet
@@ -528,7 +542,7 @@ class EcnetUser extends User{
 			$macAddresses = P_Ecnet::getMacAddressesForUser($userId);
 		}catch(\Exception $ex){
 			$macAddresses = [];
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'ecnet_mac_addresses' was not successful! ".$ex->getMessage());
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 		}
 		return $macAddresses;
 	}

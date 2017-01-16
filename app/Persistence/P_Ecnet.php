@@ -3,6 +3,7 @@
 namespace App\Persistence;
 
 use DB;
+use App\Classes\Data\EcnetUser;
 
 /** Class name: P_Ecnet
  *
@@ -36,14 +37,21 @@ class P_Ecnet{
 	 * This function returns an ECnet user.
 	 *
 	 * @param int $userId - user's identifier
-	 * @return EcnetUser|null
+	 * @return EcnetData|null
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	static function getUser($userId){
-		return DB::table('ecnet_user_data')
-			->where('user_id', '=', $userId)
+		$rawUser = DB::table('ecnet_user_data')
+			->join('users', 'users.id', '=', 'ecnet_user_data.user_id')
+			->where('ecnet_user_data.user_id', '=', $userId)
+			->select('users.id as id', 'users.username as username', 'users.name as name', 'ecnet_user_data.money as money', 'ecnet_user_data.valid_time as valid_time', 'ecnet_user_data.mac_slots as mac_slots')
 			->first();
+		if($rawUser === null){
+			return null;
+		}else{
+			return new EcnetUser($rawUser->id, $rawUser->name, $rawUser->username, $rawUser->valid_time, $rawUser->mac_slots, $rawUser->money);
+		}
 	}
 	
 	/** Function name: getUsers
@@ -56,12 +64,12 @@ class P_Ecnet{
 	 *
 	 * @param text|null $name - user's name
 	 * @param text|null $username - user's text identifier
-	 * @return array of ECnet users
+	 * @return array of EcnetUser
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	static function getUsers($name = null, $username = null){
-		return DB::table('ecnet_user_data')
+		$rawUsers = DB::table('ecnet_user_data')
 			->join('users', 'users.id', '=', 'ecnet_user_data.user_id')
 			->when($name !== null, function($query) use($name){
 				return $query->where('users.name', 'LIKE', '%'.$name.'%');
@@ -72,6 +80,11 @@ class P_Ecnet{
 			->select('users.id as id', 'users.username as username', 'users.name as name', 'ecnet_user_data.money as money', 'ecnet_user_data.valid_time as valid_time', 'ecnet_user_data.mac_slots as mac_slots')
 			->get()
 			->toArray();
+		$users = [];
+		foreach($rawUsers as $user){
+			array_push($users, new EcnetUser($user->id, $user->name, $user->username, $user->valid_time, $user->mac_slots, $user->money));
+		}
+		return $users;
 	}
 	
 	/** Function name: updateUser
