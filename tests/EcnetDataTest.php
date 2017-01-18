@@ -6,7 +6,6 @@ use App\Classes\Data\EcnetUser;
 use App\Exceptions\UserNotFoundException;
 use App\Exceptions\DatabaseException;
 use App\Exceptions\ValueMismatchException;
-use App\Classes\Database;
 
 /** Class name: EcnetDataTest
  *
@@ -165,7 +164,7 @@ class EcnetDataTest extends TestCase
 		$this->assertEquals(100, $user->ecnetUser()->money());
 	}
 	
-	/** Function name: test_changeDefaultValidDate
+	/** Function name: test_changeDefaultValidDate_null
 	 *
 	 * This function is testing the changeDefaultValidDate function of the EcnetData model.
 	 *
@@ -173,7 +172,7 @@ class EcnetDataTest extends TestCase
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	function test_changeDefaultValidDate(){
+	function test_changeDefaultValidDate_null(){
 		try{
 			EcnetData::changeDefaultValidDate(null);
 			$this->fail("An exception was expected!");
@@ -181,7 +180,17 @@ class EcnetDataTest extends TestCase
 		}catch(\Exception $ex){
 			$this->fail("Not the expected exception: ".$ex->getMessage());
 		}
-		
+	}
+	
+	/** Function name: test_changeDefaultValidDate_fail_1
+	 *
+	 * This function is testing the changeDefaultValidDate function of the EcnetData model.
+	 *
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	function test_changeDefaultValidDate_fail_1(){
 		try{
 			EcnetData::changeDefaultValidDate('');
 			$this->fail("An exception was expected!");
@@ -189,15 +198,35 @@ class EcnetDataTest extends TestCase
 		}catch(\Exception $ex){
 			$this->fail("Not the expected exception: ".$ex->getMessage());
 		}
-		
+	}
+	
+	/** Function name: test_changeDefaultValidDate_fail_2
+	 *
+	 * This function is testing the changeDefaultValidDate function of the EcnetData model.
+	 *
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	function test_changeDefaultValidDate_fail_2(){
 		try{
-			EcnetData::changeDefaultValidDate('');
+			EcnetData::changeDefaultValidDate('almafa');
 			$this->fail("An exception was expected!");
 		}catch(ValueMismatchException $ex){
 		}catch(\Exception $ex){
 			$this->fail("Not the expected exception: ".$ex->getMessage());
 		}
-		
+	}
+	
+	/** Function name: test_changeDefaultValidDate_success
+	 *
+	 * This function is testing the changeDefaultValidDate function of the EcnetData model.
+	 *
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	function test_changeDefaultValidDate_success(){				
 		try{
 			EcnetData::changeDefaultValidDate('2020-10-10 05:32:33');
 		}catch(\Exception $ex){
@@ -219,7 +248,7 @@ class EcnetDataTest extends TestCase
 		try{
 			EcnetData::activateUserNet(null, null);
 			$this->fail("An exception was expected!");
-		}catch(DatabaseException $ex){
+		}catch(ValueMismatchException $ex){
 		}catch(\Exception $ex){
 			$this->fail("Not the expected exception: ".$ex->getMessage());
 		}
@@ -227,7 +256,7 @@ class EcnetDataTest extends TestCase
 		try{
 			EcnetData::activateUserNet(null, "1994-05-27 12:23:53");
 			$this->fail("An exception was expected!");
-		}catch(DatabaseException $ex){
+		}catch(ValueMismatchException $ex){
 		}catch(\Exception $ex){
 			$this->fail("Not the expected exception: ".$ex->getMessage());
 		}
@@ -235,17 +264,15 @@ class EcnetDataTest extends TestCase
 		try{
 			EcnetData::activateUserNet(1, null);
 			$this->fail("An exception was expected!");
-		}catch(DatabaseException $ex){
+		}catch(ValueMismatchException $ex){
 		}catch(\Exception $ex){
 			$this->fail("Not the expected exception: ".$ex->getMessage());
 		}
 		
 		try{
 			EcnetData::activateUserNet(1, "1994-06-20");
-			$this->fail("An exception was expected!");
-		}catch(DatabaseException $ex){
 		}catch(\Exception $ex){
-			$this->fail("Not the expected exception: ".$ex->getMessage());
+			$this->fail("Unexpected exception: ".$ex->getMessage());
 		}
 		
 		try{
@@ -270,7 +297,26 @@ class EcnetDataTest extends TestCase
 		$this->assertFalse(EcnetData::macAddressExists("null"));
 		$this->assertFalse(EcnetData::macAddressExists("AA:AA:AA:AA:AA:AA"));
 		$this->assertFalse(EcnetData::macAddressExists("AA-AA-AA-AA-AA-AA"));
+		$this->assertTrue(EcnetData::macAddressExists("F4:33:CC:FF:53:61"));
 		$this->assertTrue(EcnetData::macAddressExists("F4:33:CC:ff:53:61"));
+	}
+	
+	/** Function name: test_deleteMacAddress_null
+	 *
+	 * This function is testing the deleteMacAddress function of the EcnetData model.
+	 *
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	function test_deleteMacAddress_null(){
+		try{
+			EcnetData::deleteMacAddress(null);
+			$this->fail("An exception was expected!");
+		}catch(ValueMismatchException $ex){
+		}catch(\Exception $ex){
+			$this->fail("Not the expected exception: ".$ex->getMessage());
+		}
 	}
 	
 	/** Function name: test_deleteMacAddress
@@ -281,15 +327,7 @@ class EcnetDataTest extends TestCase
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	function test_deleteMacAddress(){
-		try{
-			EcnetData::deleteMacAddress(null);
-			$this->fail("An exception was expected!");
-		}catch(DatabaseException $ex){
-		}catch(\Exception $ex){
-			$this->fail("Not the expected exception: ".$ex->getMessage());
-		}
-		
+	function test_deleteMacAddress(){	
 		try{
 			EcnetData::deleteMacAddress("AA:AA:AA:AA:AA:AA");
 		}catch(\Exception $ex){

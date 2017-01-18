@@ -278,14 +278,18 @@ class EcnetData extends User{
 	 * @param datetime $newTime - new default datetime
 	 * 
 	 * @throws DatabaseException if an error occures.
+	 * @throws ValueMismatchException if a parameter value is null.
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public static function activateUserNet($userId, $newTime){
+		if($userId === null || $newTime === null){
+			throw new ValueMismatchException("Parameter values cannot be null!");
+		}
 		try{
 			P_Ecnet::updateUser($userId, $newTime, null, null);
 		}catch(\Exception $ex){
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Update table 'ecnet_user_data' was not successful! ".$ex->getMessage());
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 			throw new DatabaseException("Could not activate the internet access for the user!");
 		}
 	}
@@ -303,6 +307,7 @@ class EcnetData extends User{
 	 */
 	public static function macAddressExists($macAddress){
 		try{
+			$macAddress = strtoupper($macAddress);
 			$macAddress = P_Ecnet::getMacAddress($macAddress);
 		}catch(\Exception $ex){
 			$macAddress = null;
@@ -319,10 +324,14 @@ class EcnetData extends User{
 	 * @param text $macAddress - mac address
 	 * 
 	 * @throws DatabaseException if the deletion fails.
+	 * @throws ValueMismatchException if a parameter value is null.
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public static function deleteMacAddress($macAddress){
+		if($macAddress === null){
+			throw new ValueMismatchException("The parameter values cannot be null.");
+		}
 		try{
 			P_Ecnet::removeMacAddress($macAddress);
 		}catch(\Exception $ex){
