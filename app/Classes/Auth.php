@@ -12,6 +12,7 @@ use App\Exceptions\UserNotFoundException;
 use App\Exceptions\ValueMismatchException;
 use App\Exceptions\DatabaseException;
 use App\Classes\Data\User;
+use Mail;
 
 /** Class name: Auth
  *
@@ -92,9 +93,77 @@ class Auth{
 		try{
 			P_User::updateUserPassword($username, password_hash($password, PASSWORD_DEFAULT));
 		}catch(Exception $ex){
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Update table 'users' was not successful! ".$ex->getMessage());
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 			throw new DatabaseException("Password update failed!");
 		}
+	}
+	
+	/** Function name: resetPassword
+	 *
+	 * This function start a password reset for the user.
+	 *
+	 * @param text $username - the user's username
+	 *
+	 * @throws UserNotFoundException when the username was not associated with a real user.
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	public static function resetPassword($username){
+		$layout = new LayoutData();
+		try{
+			$user = MU::getUserDataByUsername($username);
+		}catch(\Exception $ex){
+			throw new UserNotFoundException();
+		}
+
+		$day = Carbon::now()->dayOfYear;
+		$string = sha1($username.$user->registrationDate().$user->name().$day);
+		if(Session::has('lang')){
+			if(Session::get('lang') == "hu_HU" || Session::get('lang') == "en_US"){
+				$lang = Session::get('lang');
+			}else{
+				$lang = "hu_HU";
+			}
+		}else{
+			$lang = "hu_HU";
+		}
+		Mail::send('mails.resetpwd_'.$lang, ['name' => $user->name(), 'link' => url('/password/reset/'.$user->username().'/'.$string)], function ($m) use ($user, $layout) {
+			$m->to($user->email(), $user->name());
+			$m->subject($layout->language('forgotten_password'));
+		});
+	}
+	
+	/** Function name: endPasswordReset
+	 *
+	 * This function validates a password reset for the user.
+	 *
+	 * @param text $username - the user's username
+	 * @param text $code - the reset code
+	 * @return boolean - successfully resetted or not
+	 *
+	 * @throws UserNotFoundException when the username was not associated with a real user.
+	 * @throws ValueMismatchException if the provided code is null.
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	public static function endPasswordReset($username, $code){
+		if($code === null){
+			throw new ValueMismatchException("The code cannot be null!");
+		}
+		try{
+			$user = MU::getUserDataByUsername($username);
+		}catch(\Exception $ex){
+			throw new UserNotFoundException();
+		}
+		$day = Carbon::now()->dayOfYear;
+		$i = 0;
+		while($i < 5 && sha1($username.$user->registrationDate().$user->name().$day) !== $code){
+			$day--;
+			if($day < 0)
+				$day = 365;
+				$i++;
+		}
+		return $i < 5;
 	}
 	
 // PRIVATE FUNCTIONS

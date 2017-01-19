@@ -41,9 +41,9 @@ Route::group(['middleware' => 'web'], function () {
 	Route::post('admin/permissions/default/guest', 'Admin\DefaultPermissionsController@setGuest')->middleware('auth.logged');
 	
 	// Login and logout routes
-	Route::get('login', 'Auth\AuthController@showLoginForm')->middleware('auth.notlogged');
-	Route::post('login', 'Auth\AuthController@login')->middleware('auth.notlogged');
-	Route::get('logout', 'Auth\AuthController@logout')->middleware('auth.logged');
+	Route::get('login', 'Auth\AuthController@showLoginForm')->middleware('auth.notlogged');//TODO
+	Route::post('login', 'Auth\AuthController@login')->middleware('auth.notlogged');//TODO
+	Route::get('logout', 'Auth\AuthController@logout')->middleware('auth.logged');//TODO
 
 	// Registration Routes...
 	Route::get('register', 'Auth\RegisterController@showRegistrationChooserForm')->middleware('auth.notlogged');
@@ -54,10 +54,10 @@ Route::group(['middleware' => 'web'], function () {
 	Route::put('register/guest', 'Auth\RegisterController@registerGuest')->middleware('auth.notlogged');
 
 	// Password Reset Routes...
-	Route::get('password/reset', 'Auth\PasswordController@showResetForm')->middleware('auth.notlogged');
-	Route::get('password/reset/{username}/{code}', 'Auth\PasswordController@showPasswordForm')->middleware('auth.notlogged');
-	Route::post('password/reset', 'Auth\PasswordController@reset')->middleware('auth.notlogged');
-	Route::post('password/email', 'Auth\PasswordController@completeReset')->middleware('auth.notlogged');
+	Route::get('password/reset', 'Auth\PasswordController@showResetForm')->middleware('auth.notlogged');//DONE
+	Route::get('password/reset/{username}/{code}', 'Auth\PasswordController@showPasswordForm')->middleware('auth.notlogged');//DONE
+	Route::post('password/reset', 'Auth\PasswordController@reset')->middleware('auth.notlogged');//DONE
+	Route::post('password/email', 'Auth\PasswordController@completeReset')->middleware('auth.notlogged');//DONE
 
 	// User data routes
 	Route::get('data/show', 'User\UserController@showData')->middleware('auth.logged');
