@@ -9,6 +9,7 @@ use App\Exceptions\UserNotFoundException;
 use App\Classes\Logger;
 use App\Exceptions\ValueMismatchException;
 use App\Exceptions\DatabaseException;
+use App\Classes\Database;
 
 /** Class name: EcnetData
  *
@@ -243,7 +244,7 @@ class EcnetData extends User{
 		try{
 			P_Ecnet::updateUser($userId, null, null, $money);
 		}catch(\Excetion $ex){
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Update table 'ecnet_user_data' was not successful! ".$ex->getMessage());
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 		}
 	}
 	
@@ -261,6 +262,9 @@ class EcnetData extends User{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public static function changeDefaultValidDate($newTime){
+		if($newTime === null){
+			throw new ValueMismatchException("The date cannot be null!");
+		}
 		try{
 			P_Ecnet::updateValidDate($newTime);
 		}catch(\Exception $ex){
@@ -306,14 +310,20 @@ class EcnetData extends User{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public static function macAddressExists($macAddress){
-		try{
-			$macAddress = strtoupper($macAddress);
-			$macAddress = P_Ecnet::getMacAddress($macAddress);
-		}catch(\Exception $ex){
-			$macAddress = null;
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'ecnet_mac_addresses' was not successful! ".$ex->getMessage());
+		if($macAddress === null){
+			return false;
 		}
-		return $macAddress !== null;
+		$macAddress = strtoupper(str_replace("-", ":", $macAddress));
+		if(preg_match("/(?:[A-F0-9]{2}:){5}[A-F0-9]{2}/", $macAddress, $output_array) !== 1){
+			return false;
+		}
+		try{
+			$line = P_Ecnet::getMacAddress($macAddress);
+		}catch(\Exception $ex){
+			$line = null;
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
+		}
+		return $line !== null;
 	}
 	
 	/** Function name: deleteMacAddress
@@ -333,6 +343,7 @@ class EcnetData extends User{
 			throw new ValueMismatchException("The parameter values cannot be null.");
 		}
 		try{
+			$macAddress = strtoupper($macAddress);
 			P_Ecnet::removeMacAddress($macAddress);
 		}catch(\Exception $ex){
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
@@ -354,8 +365,11 @@ class EcnetData extends User{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public static function insertMacAddress($userId, $macAddress){
+		if($userId === null || $macAddress === null){
+			throw new ValueMismatchException("Null values are not allowed as parameter!");
+		}
 		$macAddress = strtoupper(str_replace("-", ":", $macAddress));
-		if(preg_match("/(?:[A-F0-9]{2}:){5}[A-F0-9]{2}/", $input_line, $output_array) !== 1){
+		if(preg_match("/(?:[A-F0-9]{2}:){5}[A-F0-9]{2}/", $macAddress, $output_array) !== 1){
 			throw new ValueMismatchException();
 		}
 		try{
@@ -385,7 +399,7 @@ class EcnetData extends User{
 			$order = P_Ecnet::getMacSlotOrdersForUser($userId);
 		}catch(\Exception $ex){
 			$order = [];
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'ecnet_mac_slot_orders' was not successful! ".$ex->getMessage());
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 		}
 		return ($order !== []);
 	}
@@ -399,14 +413,20 @@ class EcnetData extends User{
 	 * @param text $reason - reason of the order
 	 * 
 	 * @throws DatabaseException if a server error occures.
+	 * @throws ValueMismatchException if the parameters are null values.
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public static function addMACSlotOrder($userId, $reason){
+		if($userId === null || $reason === null){
+			throw new ValueMismatchException("Parameters cannot be null!");
+		}
 		try{
-			P_Ecnet::addMacSlotOrder($userId, $reason, Carbon::now()->toDateTimeString());
+			Database::transaction(function() use($userId, $reason){
+					P_Ecnet::addMacSlotOrder($userId, $reason, Carbon::now()->toDateTimeString());
+			});
 		}catch(\Exception $ex){
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Insert into table 'ecnet_mac_slot_orders' was not successful! ".$ex->getMessage());
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 			throw new DatabaseException("Cannot add the MAC slot order!");
 		}
 	}
@@ -416,18 +436,18 @@ class EcnetData extends User{
 	 * This function returns the existing
 	 * MAC slot orders.
 	 * 
-	 * @return array of MAC slot orders
+	 * @return array of MacSlotOrder
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function getMacSlotOrders(){
+	public static function getMacSlotOrders(){
 		try{
 			$orders = P_Ecnet::getMacSlotOrders();
 		}catch(\Exception $ex){
-			$order = [];
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'ecnet_mac_slot_orders', joined to 'users' was not successful! ".$ex->getMessage());
+			$orders = [];
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 		}
-		return $order;
+		return $orders;
 	}
 	
 	/** Function name: getMacSlotOrderById
@@ -436,16 +456,21 @@ class EcnetData extends User{
 	 * MAC slot order.
 	 * 
 	 * @param int $orderId - user's identifier
-	 * @return int - error code
+	 * @return order - MacSlotOrder|null
+	 * 
+	 * @throws ValueMismatchException if the parameter value is null.
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function getMacSlotOrderById($orderId){
+	public static function getMacSlotOrderById($orderId){
+		if($orderId === null){
+			throw new ValueMismatchException("Null value as parameter is forbidden!");
+		}
 		try{
 			$order = P_Ecnet::getMacSlotOrder($orderId);
 		}catch(\Exception $ex){
 			$order = null;
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'ecnet_user_data', joined to 'ecnet_mac_slot_orders' was not successful! ".$ex->getMessage());
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 		}
 		return $order;
 	}
@@ -457,19 +482,26 @@ class EcnetData extends User{
 	 * 
 	 * @param int $userId - user's identifier
 	 * @param int $macSlotCount - count of mac slots
-	 * @return int - error code
+	 * 
+	 * @throws ValueMismatchException if the parameter value is null.
+	 * @throws ValueMismatchException if the macSlotCount is negative.
+	 * @throws DatabaseException if an error occures.
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function setMacSlotCountForUser($userId, $macSlotCount){
-		$errorCode = 0;
+	public static function setMacSlotCountForUser($userId, $macSlotCount){
+		if($userId === null || $macSlotCount === null){
+			throw new ValueMismatchException("Null value as parameter is forbidden!");
+		}
+		if($macSlotCount < 0){
+			throw new ValueMismatchException("The count of the maximum MAC slots cannot be less, than zero!");
+		}
 		try{
 			P_Ecnet::updateUser($userId, null, $macSlotCount, null);
 		}catch(\Exception $ex){
-			$errorCode = 1;
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Update table 'ecnet_user_data' was not successful! ".$ex->getMessage());
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
+			throw new DatabaseException("Could not set the MAC slot count for the user!");
 		}
-		return $errorCode;
 	}
 
 	/** Function name: deleteMacSlotOrderById
@@ -478,19 +510,21 @@ class EcnetData extends User{
 	 * MAC slot order.
 	 * 
 	 * @param int $orderId - identifier of an order
-	 * @return integer - error code
+	 * 
+	 * @throws ValueMismatchException if the provided parameter value is null.
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function deleteMacSlotOrderById($orderId){
-		$errorCode = 0;
+	public static function deleteMacSlotOrderById($orderId){
+		if($orderId === null){
+			throw new ValueMismatchException("The parameter value cannot be null!");
+		}
 		try{
 			P_Ecnet::removeMacSlotOrder($orderId);
 		}catch(\Exception $ex){
-			$errorCode = 1;
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Delete from table 'ecnet_mac_slot_orders' was not successful! ".$ex->getMessage());
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
+			throw new DatabaseException("Could not delete the MAC slot order!");
 		}
-		return $errorCode;
 	}
 	
 // PRIVATE FUNCTIONS
@@ -510,7 +544,7 @@ class EcnetData extends User{
 			$users = P_Ecnet::getUsers();
 		}catch(\Exception $ex){
 			$users = [];
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'ecnet_user_data', joined to 'users' was not successful! ".$ex->getMessage());
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 		}
 		return $users;
 	}
@@ -530,7 +564,7 @@ class EcnetData extends User{
 			$datetime = P_Ecnet::getValidDate();
 		}catch(\Exception $ex){
 			$datetime = null;
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'ecnet_valid_date' was not successful! ".$ex->getMessage());
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 		}
 		return $datetime;
 	}
@@ -572,7 +606,7 @@ class EcnetData extends User{
 			$users = P_Ecnet::getUsers($name, $username);
 		}catch(\Exception $ex){
 			$users = [];
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'ecnet_user_data', joined to 'users' was not successful! ".$ex->getMessage());
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 		}
 		return $users;
 	}

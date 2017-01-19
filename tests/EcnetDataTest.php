@@ -6,6 +6,7 @@ use App\Classes\Data\EcnetUser;
 use App\Exceptions\UserNotFoundException;
 use App\Exceptions\DatabaseException;
 use App\Exceptions\ValueMismatchException;
+use App\Classes\Data\MacSlotOrder;
 
 /** Class name: EcnetDataTest
  *
@@ -343,7 +344,7 @@ class EcnetDataTest extends TestCase
 		$ecnetUser = new EcnetData(1);
 		$this->assertCount(1, $ecnetUser->macAddresses());
 		try{
-			EcnetData::deleteMacAddress("F4:33:CC:ff:53:61");
+			EcnetData::deleteMacAddress("F4:33:CC:FF:53:61");
 		}catch(\Exception $ex){
 			$this->fail("Unexpected exception: ".$ex->getMessage());
 		}
@@ -371,7 +372,7 @@ class EcnetDataTest extends TestCase
 		try{
 			EcnetData::insertMacAddress(null, "AA:AA:AA:AA:AA:AA");
 			$this->fail("An exception was expected!");
-		}catch(DatabaseException $ex){
+		}catch(ValueMismatchException $ex){
 		}catch(\Exception $ex){
 			$this->fail("Not the expected exception: ".$ex->getMessage());
 		}
@@ -423,6 +424,12 @@ class EcnetDataTest extends TestCase
 		}catch(\Exception $ex){
 			$this->fail("Unexpected exception: ".$ex->getMessage());
 		}
+		
+		try{
+			EcnetData::insertMacAddress(1, "AA:AA:bb:AA:AA:AA");
+		}catch(\Exception $ex){
+			$this->fail("Unexpected exception: ".$ex->getMessage());
+		}
 	}
 	
 	/** Function name: test_hasMACSlotOrder
@@ -440,6 +447,40 @@ class EcnetDataTest extends TestCase
 		$this->assertTrue(EcnetData::hasMACSlotOrder(25));
 	}
 	
+	/** Function name: test_addMACSlotOrder_null
+	 *
+	 * This function is testing the addMACSlotOrder function of the EcnetData model.
+	 *
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	function test_addMACSlotOrder_null(){
+		try{
+			EcnetData::addMACSlotOrder(null, null);
+			$this->fail("An exception was expected!");
+		}catch(ValueMismatchException $ex){
+		}catch(\Exception $ex){
+			$this->fail("Not the expected exception: ".$ex->getMessage());
+		}
+		
+		try{
+			EcnetData::addMACSlotOrder(1, null);
+			$this->fail("An exception was expected!");
+		}catch(ValueMismatchException $ex){
+		}catch(\Exception $ex){
+			$this->fail("Not the expected exception: ".$ex->getMessage());
+		}
+		
+		try{
+			EcnetData::addMACSlotOrder(null, "reason");
+			$this->fail("An exception was expected!");
+		}catch(ValueMismatchException $ex){
+		}catch(\Exception $ex){
+			$this->fail("Not the expected exception: ".$ex->getMessage());
+		}
+	}
+	
 	/** Function name: test_addMACSlotOrder
 	 *
 	 * This function is testing the addMACSlotOrder function of the EcnetData model.
@@ -448,33 +489,9 @@ class EcnetDataTest extends TestCase
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	function test_addMACSlotOrder(){
+	function test_addMACSlotOrder(){		
 		try{
-			EcnetData::addMACSlotOrder(null, null);
-			$this->fail("An exception was expected!");
-		}catch(DatabaseException $ex){
-		}catch(\Exception $ex){
-			$this->fail("Not the expected exception: ".$ex->getMessage());
-		}
-		
-		try{
-			EcnetData::addMACSlotOrder(1, null);
-			$this->fail("An exception was expected!");
-		}catch(DatabaseException $ex){
-		}catch(\Exception $ex){
-			$this->fail("Not the expected exception: ".$ex->getMessage());
-		}
-		
-		try{
-			EcnetData::addMACSlotOrder(null, "reason");
-			$this->fail("An exception was expected!");
-		}catch(DatabaseException $ex){
-		}catch(\Exception $ex){
-			$this->fail("Not the expected exception: ".$ex->getMessage());
-		}
-		
-		try{
-			EcnetData::addMACSlotOrder(0, "reason");
+			EcnetData::addMACSlotOrder(200, "reason");
 			$this->fail("An exception was expected!");
 		}catch(DatabaseException $ex){
 		}catch(\Exception $ex){
@@ -497,7 +514,11 @@ class EcnetDataTest extends TestCase
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	function test_getMacSlotOrders(){
-	
+		$orders = EcnetData::getMacSlotOrders();
+		$this->assertCount(1, $orders);
+		foreach($orders as $order){
+			$this->assertInstanceOf(MacSlotOrder::class, $order);
+		}
 	}
 	
 	/** Function name: test_getMacSlotOrderById
@@ -509,7 +530,27 @@ class EcnetDataTest extends TestCase
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	function test_getMacSlotOrderById(){
-	
+		try{
+			EcnetData::getMacSlotOrderById(null);
+			$this->fail("An exception was expected!");
+		}catch(ValueMismatchException $ex){
+		}catch(\Exception $ex){
+			$this->fail("Not the expected exception: ".$ex->getMessage());
+		}
+		
+		try{
+			$this->assertNull(EcnetData::getMacSlotOrderById(5));
+		}catch(\Exception $ex){
+			$this->fail("Unexpected exception: ".$ex->getMessage());
+		}
+		
+		try{
+			$order = EcnetData::getMacSlotOrderById(26);
+			$this->assertNotNull($order);
+			$this->assertInstanceOf(MacSlotOrder::class, $order);
+		}catch(\Exception $ex){
+			$this->fail("Unexpected exception: ".$ex->getMessage());
+		}
 	}
 	
 	/** Function name: test_setMacSlotCountForUser
@@ -521,7 +562,51 @@ class EcnetDataTest extends TestCase
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	function test_setMacSlotCountForUser(){
-	
+		try{
+			EcnetData::setMacSlotCountForUser(null, null);
+			$this->fail("An exception was expected!");
+		}catch(ValueMismatchException $ex){
+		}catch(\Exception $ex){
+			$this->fail("Not the expected exception: ".$ex->getMessage());
+		}
+		
+		try{
+			EcnetData::setMacSlotCountForUser(null, 2);
+			$this->fail("An exception was expected!");
+		}catch(ValueMismatchException $ex){
+		}catch(\Exception $ex){
+			$this->fail("Not the expected exception: ".$ex->getMessage());
+		}
+		
+		try{
+			EcnetData::setMacSlotCountForUser(1, null);
+			$this->fail("An exception was expected!");
+		}catch(ValueMismatchException $ex){
+		}catch(\Exception $ex){
+			$this->fail("Not the expected exception: ".$ex->getMessage());
+		}
+		
+		try{
+			EcnetData::setMacSlotCountForUser(1, -1);
+			$this->fail("An exception was expected!");
+		}catch(ValueMismatchException $ex){
+		}catch(\Exception $ex){
+			$this->fail("Not the expected exception: ".$ex->getMessage());
+		}
+		
+		try{
+			EcnetData::setMacSlotCountForUser(200, 3);
+		}catch(\Exception $ex){
+			$this->fail("Unexpected exception: ".$ex->getMessage());
+		}
+		
+		$this->assertEquals(3, EcnetData::getEcnetUserData(1)->maximumMacSlots());
+		try{
+			EcnetData::setMacSlotCountForUser(1, 6);
+		}catch(\Exception $ex){
+			$this->fail("Unexpected exception: ".$ex->getMessage());
+		}
+		$this->assertEquals(6, EcnetData::getEcnetUserData(1)->maximumMacSlots());
 	}
 	
 	/** Function name: test_deleteMacSlotOrderById
@@ -533,7 +618,27 @@ class EcnetDataTest extends TestCase
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	function test_deleteMacSlotOrderById(){
-	
+		try{
+			EcnetData::deleteMacSlotOrderById(null);
+			$this->fail("An exception was expected!");
+		}catch(ValueMismatchException $ex){		
+		}catch(\Exception $ex){
+			$this->fail("Not the expected exception: ".$ex->getMessage());
+		}
+		
+		$this->assertCount(1, EcnetData::getMacSlotOrders());
+		try{
+			EcnetData::deleteMacSlotOrderById(200);
+		}catch(\Exception $ex){
+			$this->fail("Not the expected exception: ".$ex->getMessage());
+		}
+		$this->assertCount(1, EcnetData::getMacSlotOrders());
+		try{
+			EcnetData::deleteMacSlotOrderById(26);
+		}catch(\Exception $ex){
+			$this->fail("Not the expected exception: ".$ex->getMessage());
+		}
+		$this->assertCount(0, EcnetData::getMacSlotOrders());
 	}
 }
 	

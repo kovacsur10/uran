@@ -4,6 +4,7 @@ namespace App\Persistence;
 
 use DB;
 use App\Classes\Data\EcnetUser;
+use App\Classes\Data\MacSlotOrder;
 
 /** Class name: P_Ecnet
  *
@@ -143,7 +144,7 @@ class P_Ecnet{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	static function getMacAddress($macAddress){
-		DB::table('ecnet_mac_addresses')
+		return DB::table('ecnet_mac_addresses')
 			->where('mac_address', 'LIKE', $macAddress)
 			->first();
 	}
@@ -203,16 +204,21 @@ class P_Ecnet{
 	 *
 	 * This function returns the MAC slot orders.
 	 *
-	 * @return array of MAC slot orders
+	 * @return array of MacSlotOrder
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	static function getMacSlotOrders(){
-		return DB::table('ecnet_mac_slot_orders')
+		$rawOrders = DB::table('ecnet_mac_slot_orders')
 			->join('users', 'users.id', '=', 'ecnet_mac_slot_orders.user_id')
-			->select('ecnet_mac_slot_orders.id', 'users.username', 'ecnet_mac_slot_orders.reason', 'ecnet_mac_slot_orders.order_time')
+			->select('ecnet_mac_slot_orders.id as id', 'users.username as username', 'ecnet_mac_slot_orders.reason as reason', 'ecnet_mac_slot_orders.order_time as order_time')
 			->get()
 			->toArray();
+		$orders = [];
+		foreach($rawOrders as $order){
+			array_push($orders, new MacSlotOrder($order->id, $order->reason, $order->order_time, $order->username));
+		}
+		return $orders;
 	}
 	
 	/** Function name: getMacSlotOrder
@@ -221,15 +227,17 @@ class P_Ecnet{
 	 * MAC slot order.
 	 *
 	 * @param int $orderId - MAC slot order identifier
-	 * @return MACslotOrder|null
+	 * @return MacSlotOrder|null
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	static function getMacSlotOrder($orderId){
-		return DB::table('ecnet_user_data')
-			->join('ecnet_mac_slot_orders', 'ecnet_mac_slot_orders.user_id', '=', 'ecnet_user_data.user_id')
+		$order = DB::table('ecnet_mac_slot_orders')
+			->join('users', 'users.id', '=', 'ecnet_mac_slot_orders.user_id')
 			->where('ecnet_mac_slot_orders.id', '=', $orderId)
+			->select('ecnet_mac_slot_orders.id as id', 'users.username as username', 'ecnet_mac_slot_orders.reason as reason', 'ecnet_mac_slot_orders.order_time as order_time')
 			->first();
+		return $order === null ? null : new MacSlotOrder($order->id, $order->reason, $order->order_time, $order->username);
 	}
 	
 	/** Function name: getMacSlotOrdersForUser
