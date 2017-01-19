@@ -5,6 +5,7 @@ use App\Classes\Notifications;
 use App\Exceptions\UserNotFoundException;
 use App\Exceptions\ValueMismatchException;
 use App\Classes\Layout\User;
+use App\Classes\Data\Notification;
 
 /** Class name: NotificationsTest
  *
@@ -34,6 +35,9 @@ class NotificationsTest extends TestCase
 		try{
 			$notifications = Notifications::getNotifications(41);
 			$this->assertCount(3, $notifications);
+			foreach($notifications as $notification){
+				$this->assertInstanceOf(Notification::class, $notification);
+			}
 		}catch(\Exception $ex){
 			$this->fail("An exception was not expected: ".$ex->getMessage());
 		}
@@ -84,7 +88,9 @@ class NotificationsTest extends TestCase
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function test_get_success(){
-		$this->assertNotNull(Notifications::get(237, 41), "The test notification should exist!");
+		$notification = Notifications::get(237, 41);
+		$this->assertNotNull($notification, "The test notification should exist!");
+		$this->assertInstanceOf(Notification::class, $notification);
 	}
 	
 	/** Function name: test_get_fail
@@ -167,7 +173,7 @@ class NotificationsTest extends TestCase
 	public function test_setRead(){
 		$notification = Notifications::get(237, 41);
 		$this->assertNotNull($notification, "The test notification should exist!");
-		$this->assertFalse($notification->seen, "The #237 test notification should be unseen!");
+		$this->assertFalse($notification->isSeen(), "The #237 test notification should be unseen!");
 		try{
 			Notifications::setRead(237);
 		}catch(\Exception $ex){
@@ -175,7 +181,7 @@ class NotificationsTest extends TestCase
 		}
 		$notification = Notifications::get(237, 41);
 		$this->assertNotNull($notification, "The test notification should exist!");
-		$this->assertTrue($notification->seen, "The #237 test notification should seen now!");
+		$this->assertTrue($notification->isSeen(), "The #237 test notification should seen now!");
 	}
 	
 	/** Function name: test_setRead_notreal

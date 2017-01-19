@@ -8,6 +8,7 @@ use App\Classes\Data\Workshop;
 use App\Classes\Data\Country;
 use App\Classes\Data\Module;
 use App\Classes\Data\Permission;
+use App\Classes\Data\Notification;
 
 /** Class name: P_General
  *
@@ -149,10 +150,13 @@ class P_General{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	static function getNotification($notificationId, $userId){
-		return DB::table('notifications')
-			->where('id', '=', $notificationId)
-			->where('user_id', '=', $userId)
+		$notification = DB::table('notifications')
+			->join('users', 'users.id', '=', 'notifications.from')
+			->select('notifications.id as id', 'users.name as name', 'users.username as username', 'notifications.subject as subject', 'notifications.message as message', 'notifications.time as time', 'notifications.seen as seen', 'notifications.admin as admin', 'notifications.route as route')
+			->where('notifications.id', '=', $notificationId)
+			->where('notifications.user_id', '=', $userId)
 			->first();
+		return $notification === null ? null : new Notification($notification->id, $notification->name, $notification->username, $notification->subject, $notification->message, $notification->time, $notification->seen, $notification->admin, $notification->route);
 	}
 	
 	/** Function name: getNotificationCountForUser
@@ -194,27 +198,23 @@ class P_General{
 	 * the requested user.
 	 * 
 	 * @param int $userId - receiver user's identifier
-	 * @return array of notifications 
-	 * 		[
-	 * 			id (int),
-	 * 			name (text),
-	 * 			username (text),
-	 * 			subject (text),
-	 * 			message (text),
-	 * 			time (datetime),
-	 * 			seen (bool)
-	 * 		]
+	 * @return array of Notification
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	static function getNotificationsForUser($userId){
-		return DB::table('notifications')
+		$rawNotifications = DB::table('notifications')
 			->join('users', 'users.id', '=', 'notifications.from')
-			->select('notifications.id as id', 'users.name as name', 'users.username as username', 'notifications.subject as subject', 'notifications.message as message', 'notifications.time as time', 'notifications.seen as seen')
-			->where('user_id', '=', $userId)
-			->orderBy('id', 'desc')
+			->select('notifications.id as id', 'users.name as name', 'users.username as username', 'notifications.subject as subject', 'notifications.message as message', 'notifications.time as time', 'notifications.seen as seen', 'notifications.admin as admin', 'notifications.route as route')
+			->where('notifications.user_id', '=', $userId)
+			->orderBy('notifications.id', 'desc')
 			->get()
 			->toArray();
+		$notifications = [];
+		foreach($rawNotifications as $notification){
+			array_push($notifications, new Notification($notification->id, $notification->name, $notification->username, $notification->subject, $notification->message, $notification->time, $notification->seen, $notification->admin, $notification->route));
+		}
+		return $notifications;
 	}
 	
 	/** Function name: getOldestNonAdminNotificationsForUser
@@ -231,13 +231,20 @@ class P_General{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	static function getOldestNonAdminNotificationsForUser($userId, $count){
-		return DB::table('notifications')
-			->where('user_id', '=', $userId)
-			->where('admin', '=', 'false')
-			->orderBy('id', 'asc')
+		$rawNotifications = DB::table('notifications')
+			->join('users', 'users.id', '=', 'notifications.from')
+			->select('notifications.id as id', 'users.name as name', 'users.username as username', 'notifications.subject as subject', 'notifications.message as message', 'notifications.time as time', 'notifications.seen as seen', 'notifications.admin as admin', 'notifications.route as route')
+			->where('notifications.user_id', '=', $userId)
+			->where('notifications.admin', '=', 'false')
+			->orderBy('notifications.id', 'asc')
 			->take($count)
 			->get()
 			->toArray();
+		$notifications = [];
+		foreach($rawNotifications as $notification){
+			array_push($notifications, new Notification($notification->id, $notification->name, $notification->username, $notification->subject, $notification->message, $notification->time, $notification->seen, $notification->admin, $notification->route));
+		}
+		return $notifications;
 	}
 	
 	/** Function name: deleteNotification

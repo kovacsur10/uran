@@ -2,33 +2,58 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Classes\Database;
-use App\Classes\Layout\EcnetData;
 use App\Classes\LayoutData;
 use App\Classes\Notifications;
 use Validator;
 use App\Http\Controllers\Controller;
-use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
-use Carbon\Carbon;
-use Mail;
-use App\Exceptions\DatabaseException;
-use App\Exceptions\ValueMismatchException;
 
+/** Class name: RegisterController
+ *
+ * This controller is for the registering.
+ *
+ * @author Máté Kovács <kovacsur10@gmail.com>
+ */
 class RegisterController extends Controller{	
 	
+	/** Function name: showRegistrationChooserForm
+	 *
+	 * This function shows the registration choosing windows.
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
 	public function showRegistrationChooserForm(){
         return view('auth.chooseregister', ["layout" => new LayoutData()]);
     }
 	
+    /** Function name: showCollegistRegistrationForm
+     *
+     * This function shows the registration page for the collegists.
+     *
+     * @author Máté Kovács <kovacsur10@gmail.com>
+     */
 	public function showCollegistRegistrationForm(){
         return view('auth.register.collegist', ["layout" => new LayoutData()]);
     }
 	
+    /** Function name: showGuestRegistrationForm
+     *
+     * This function shows the registration page for the guests.
+     *
+     * @author Máté Kovács <kovacsur10@gmail.com>
+     */
 	public function showGuestRegistrationForm(){
         return view('auth.register.guest', ["layout" => new LayoutData()]);
     }
 	
+    /** Function name: registerGuest
+     *
+     * This function makes a guest registration.
+     * 
+     * @param Request $request
+     *
+     * @author Máté Kovács <kovacsur10@gmail.com>
+     */
 	public function registerGuest(Request $request){
 		$layout = new LayoutData();
 		//validation part
@@ -62,6 +87,14 @@ class RegisterController extends Controller{
 			"url" => '/register']);
     }
 	
+    /** Function name: registerCollegist
+     *
+     * This function makes a collegist registration.
+     *
+     * @param Request $request
+     *
+     * @author Máté Kovács <kovacsur10@gmail.com>
+     */
 	public function registerCollegist(Request $request){
 		$layout = new LayoutData();
 		//validation part
@@ -103,6 +136,14 @@ class RegisterController extends Controller{
 			"url" => '/register']);
     }
 	
+    /** Function name: verify
+     *
+     * This function verifies a registration.
+     *
+     * @param string $code
+     *
+     * @author Máté Kovács <kovacsur10@gmail.com>
+     */
 	public function verify($code){
 		$layout = new LayoutData();
 		try{
