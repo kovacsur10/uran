@@ -206,7 +206,7 @@ class User extends Pageable{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public static function getUserDataByUsername($username){
-		if($username == ''){
+		if($username === '' || $username === null){
 			throw new UserNotFoundException();
 		}
 		try{

@@ -7,6 +7,7 @@ use App\Classes\Auth;
 use Illuminate\Support\Facades\Session;
 use App\Exceptions\ValueMismatchException;
 use App\Exceptions\UserNotFoundException;
+use Carbon\Carbon;
 
 /** Class name: AuthTest
  *
@@ -206,6 +207,95 @@ class AuthTest extends TestCase
 			Auth::login('forUnitTest','');
 		}catch(\Exception $ex){
 			$this->fail("Password was not updated, login exception: ".$ex->getMessage());
+		}
+	}
+	
+	/** Function name: test_resetPassword
+	 *
+	 * This function is testing the resetPassword function of the Auth model.
+	 *
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	public function test_resetPassword(){
+		try{
+			Auth::resetPassword(null);
+			$this->fail("An exception was expected!");
+		}catch(UserNotFoundException $ex){
+		}catch(\Exception $ex){
+			$this->fail("Not the expected exception: ".$ex->getMessage());
+		}
+		
+		try{
+			Auth::resetPassword('no_player_like_this');
+			$this->fail("An exception was expected!");
+		}catch(UserNotFoundException $ex){
+		}catch(\Exception $ex){
+			$this->fail("Not the expected exception: ".$ex->getMessage());
+		}
+		
+		try{
+			Auth::resetPassword('kovacsur10');
+		}catch(\Exception $ex){
+			$this->fail("Unexpected exception: ".$ex->getMessage());
+		}
+	}
+	
+	/** Function name: test_endPasswordReset
+	 *
+	 * This function is testing the endPasswordReset function of the Auth model.
+	 *
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	public function test_endPasswordReset(){
+		try{
+			Auth::endPasswordReset(null, null);
+			$this->fail("An exception was expected!");
+		}catch(ValueMismatchException $ex){
+		}catch(\Exception $ex){
+			$this->fail("Not the expected exception: ".$ex->getMessage());
+		}
+		
+		try{
+			Auth::endPasswordReset("alma", null);
+			$this->fail("An exception was expected!");
+		}catch(ValueMismatchException $ex){
+		}catch(\Exception $ex){
+			$this->fail("Not the expected exception: ".$ex->getMessage());
+		}
+		
+		try{
+			Auth::endPasswordReset(null, "alma");
+			$this->fail("An exception was expected!");
+		}catch(UserNotFoundException $ex){
+		}catch(\Exception $ex){
+			$this->fail("Not the expected exception: ".$ex->getMessage());
+		}
+	
+		try{
+			Auth::endPasswordReset('no_player_like_this', "alma");
+			$this->fail("An exception was expected!");
+		}catch(UserNotFoundException $ex){
+		}catch(\Exception $ex){
+			$this->fail("Not the expected exception: ".$ex->getMessage());
+		}
+	
+		try{
+			$this->assertFalse(Auth::endPasswordReset('kovacsur10', "code"));
+		}catch(\Exception $ex){
+			$this->fail("Unexpected exception: ".$ex->getMessage());
+		}
+		
+		try{
+			Auth::resetPassword('kovacsur10');
+			$day = Carbon::now()->dayOfYear;
+			$code = sha1("kovacsur102016-06-29 13:59:28Kovács Máté".$day);
+			$this->assertTrue(Auth::endPasswordReset('kovacsur10', $code));
+		}catch(\Exception $ex){
+			$this->fail("Unexpected exception: ".$ex->getMessage());
 		}
 	}
 }
