@@ -168,7 +168,7 @@
 
 								<ul class="dropdown-menu notifications">
 								
-									@if($data->user()->notifications() == null)
+									@if($data->user()->notifications() === null)
 										<li class="notification">
 											<div class="media">
 												<div class="media-body">
@@ -183,14 +183,14 @@
 										</li>
 									@else
 										@foreach($data->user()->notifications() as $notification)
-										<li style="{{ $notification->seen ? '' : 'background-color:#E0FFFF;' }}" class="notification">
-											<div style="cursor: pointer;" class="media" onclick="window.location='{{ url('notification/show/'.$notification->id) }}';">
+										<li style="{{ $notification->isSeen() ? '' : 'background-color:#E0FFFF;' }}" class="notification">
+											<div style="cursor: pointer;" class="media" onclick="window.location='{{ url('notification/show/'.$notification->id()) }}';">
 												<div class="media-body">
-													<strong class="notification-title"><a href="{{ url('/data/'.$notification->username) }}">{{ $notification->name }}</a>: {{ $notification->subject }}</strong>
-													<p class="notification-desc">{{ $notification->message }}</p>
+													<strong class="notification-title"><a href="{{ url('/data/'.$notification->username()) }}">{{ $notification->name() }}</a>: {{ $notification->subject() }}</strong>
+													<p class="notification-desc">{{ $notification->message() }}</p>
 
 													<div class="notification-meta">
-														<small class="timestamp">{{ str_replace("-", ". ", str_replace(" ", ". ", $notification->time)) }}</small>
+														<small class="timestamp">{{ str_replace("-", ". ", str_replace(" ", ". ", $notification->time())) }}</small>
 													</div>
 												</div>
 											</div>

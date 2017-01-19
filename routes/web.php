@@ -41,17 +41,17 @@ Route::group(['middleware' => 'web'], function () {
 	Route::post('admin/permissions/default/guest', 'Admin\DefaultPermissionsController@setGuest')->middleware('auth.logged');
 	
 	// Login and logout routes
-	Route::get('login', 'Auth\AuthController@showLoginForm')->middleware('auth.notlogged');//TODO
-	Route::post('login', 'Auth\AuthController@login')->middleware('auth.notlogged');//TODO
-	Route::get('logout', 'Auth\AuthController@logout')->middleware('auth.logged');//TODO
+	Route::get('login', 'Auth\AuthController@showLoginForm')->middleware('auth.notlogged');//DONE
+	Route::post('login', 'Auth\AuthController@login')->middleware('auth.notlogged');//DONE
+	Route::get('logout', 'Auth\AuthController@logout')->middleware('auth.logged');//DONE
 
 	// Registration Routes...
-	Route::get('register', 'Auth\RegisterController@showRegistrationChooserForm')->middleware('auth.notlogged');
-	Route::get('register/collegist', 'Auth\RegisterController@showCollegistRegistrationForm')->middleware('auth.notlogged');
-	Route::get('register/guest', 'Auth\RegisterController@showGuestRegistrationForm')->middleware('auth.notlogged');
-	Route::get('register/{code}', 'Auth\RegisterController@verify')->middleware('auth.notlogged');
-	Route::put('register/collegist', 'Auth\RegisterController@registerCollegist')->middleware('auth.notlogged');
-	Route::put('register/guest', 'Auth\RegisterController@registerGuest')->middleware('auth.notlogged');
+	Route::get('register', 'Auth\RegisterController@showRegistrationChooserForm')->middleware('auth.notlogged');//DONE
+	Route::get('register/collegist', 'Auth\RegisterController@showCollegistRegistrationForm')->middleware('auth.notlogged');//DONE
+	Route::get('register/guest', 'Auth\RegisterController@showGuestRegistrationForm')->middleware('auth.notlogged');//DONE
+	Route::get('register/{code}', 'Auth\RegisterController@verify')->middleware('auth.notlogged');//DONE
+	Route::put('register/collegist', 'Auth\RegisterController@registerCollegist')->middleware('auth.notlogged');//DONE
+	Route::put('register/guest', 'Auth\RegisterController@registerGuest')->middleware('auth.notlogged');//DONE
 
 	// Password Reset Routes...
 	Route::get('password/reset', 'Auth\PasswordController@showResetForm')->middleware('auth.notlogged');//DONE
@@ -64,24 +64,24 @@ Route::group(['middleware' => 'web'], function () {
 	Route::get('data/{username}', 'User\UserController@showPublicData')->middleware('auth.logged');
 	
 	// ECNET routes
-	Route::get('ecnet/account', 'Ecnet\PrintingController@showAccount')->middleware('auth.logged')->middleware('modules.ecnet');
-	Route::post('ecnet/addmoney', 'Ecnet\PrintingController@addMoney')->middleware('auth.logged')->middleware('modules.ecnet');
+	Route::get('ecnet/account', 'Ecnet\PrintingController@showAccount')->middleware('auth.logged')->middleware('modules.ecnet');//TODO
+	Route::post('ecnet/addmoney', 'Ecnet\PrintingController@addMoney')->middleware('auth.logged')->middleware('modules.ecnet');//TODO
 	
-	Route::get('ecnet/access', 'Ecnet\AccessController@showInternet')->middleware('auth.logged')->middleware('modules.ecnet');
-	Route::post('ecnet/setvalidtime', 'Ecnet\AccessController@updateValidationTime')->middleware('auth.logged')->middleware('modules.ecnet');
-	Route::post('ecnet/activate', 'Ecnet\AccessController@activate')->middleware('auth.logged')->middleware('modules.ecnet');
-	Route::post('ecnet/setmacs', 'Ecnet\AccessController@setMACAddresses')->middleware('auth.logged')->middleware('modules.ecnet');
+	Route::get('ecnet/access', 'Ecnet\AccessController@showInternet')->middleware('auth.logged')->middleware('modules.ecnet');//TODO
+	Route::post('ecnet/setvalidtime', 'Ecnet\AccessController@updateValidationTime')->middleware('auth.logged')->middleware('modules.ecnet');//TODO
+	Route::post('ecnet/activate', 'Ecnet\AccessController@activate')->middleware('auth.logged')->middleware('modules.ecnet');//TODO
+	Route::post('ecnet/setmacs', 'Ecnet\AccessController@setMACAddresses')->middleware('auth.logged')->middleware('modules.ecnet');//TODO
 	
-	Route::get('ecnet/order', 'Ecnet\SlotController@showMACOrderForm')->middleware('auth.logged')->middleware('modules.ecnet');
-	Route::post('ecnet/allowordenyorder', 'Ecnet\SlotController@allowOrDenyOrder')->middleware('auth.logged')->middleware('modules.ecnet');
-	Route::post('ecnet/getslot', 'Ecnet\SlotController@getSlot')->middleware('auth.logged')->middleware('modules.ecnet');
+	Route::get('ecnet/order', 'Ecnet\SlotController@showMACOrderForm')->middleware('auth.logged')->middleware('modules.ecnet');//TODO
+	Route::post('ecnet/allowordenyorder', 'Ecnet\SlotController@allowOrDenyOrder')->middleware('auth.logged')->middleware('modules.ecnet');//TODO
+	Route::post('ecnet/getslot', 'Ecnet\SlotController@getSlot')->middleware('auth.logged')->middleware('modules.ecnet');//TODO
 	
-	Route::get('ecnet/users', 'Ecnet\AdminController@showUsers')->middleware('auth.logged')->middleware('modules.ecnet');
-	Route::get('ecnet/users/resetfilter', 'Ecnet\AdminController@resetFilterUsers')->middleware('auth.logged')->middleware('modules.ecnet');
-	Route::get('ecnet/users/listactives/{type}', 'Ecnet\AdminController@showActiveUsers')->middleware('auth.logged')->middleware('modules.ecnet');
-	Route::get('ecnet/users/{count}', 'Ecnet\AdminController@showUsers')->middleware('auth.logged')->middleware('modules.ecnet');
-	Route::get('ecnet/users/{count}/{first}', 'Ecnet\AdminController@showUsers')->middleware('auth.logged')->middleware('modules.ecnet');
-	Route::post('ecnet/users', 'Ecnet\AdminController@filterUsers')->middleware('auth.logged')->middleware('modules.ecnet');
+	Route::get('ecnet/users', 'Ecnet\AdminController@showUsers')->middleware('auth.logged')->middleware('modules.ecnet');//TODO
+	Route::get('ecnet/users/resetfilter', 'Ecnet\AdminController@resetFilterUsers')->middleware('auth.logged')->middleware('modules.ecnet');//TODO
+	Route::get('ecnet/users/listactives/{type}', 'Ecnet\AdminController@showActiveUsers')->middleware('auth.logged')->middleware('modules.ecnet');//TODO
+	Route::get('ecnet/users/{count}', 'Ecnet\AdminController@showUsers')->middleware('auth.logged')->middleware('modules.ecnet');//TODO
+	Route::get('ecnet/users/{count}/{first}', 'Ecnet\AdminController@showUsers')->middleware('auth.logged')->middleware('modules.ecnet');//TODO
+	Route::post('ecnet/users', 'Ecnet\AdminController@filterUsers')->middleware('auth.logged')->middleware('modules.ecnet');//TODO
 	
 	// Rooms routes
 	Route::get('rooms/map/{level}', 'Rooms\RoomsController@showMap')->middleware('auth.logged')->middleware('modules.rooms');
@@ -93,8 +93,8 @@ Route::group(['middleware' => 'web'], function () {
 	Route::post('rooms/tables/remove/{level}', 'Rooms\RoomsController@removeTable')->middleware('auth.logged')->middleware('modules.rooms');
 	
 	// Notification routes
-	Route::get('notification/list/{first}', 'Notification\NotificationController@listNotifications')->middleware('auth.logged');
-	Route::get('notification/show/{id}', 'Notification\NotificationController@showNotification')->middleware('auth.logged');
+	Route::get('notification/list/{first}', 'Notification\NotificationController@listNotifications')->middleware('auth.logged');//DONE
+	Route::get('notification/show/{id}', 'Notification\NotificationController@showNotification')->middleware('auth.logged');//DONE
 	
 	// Tasks routes
 	Route::get('tasks/list', 'Tasks\TaskController@show')->middleware('auth.logged')->middleware('modules.tasks');
