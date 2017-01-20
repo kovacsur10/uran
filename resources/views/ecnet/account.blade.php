@@ -7,7 +7,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">{{ $layout->language('printing_account') }}</div>
                 <div class="panel-body">
-					<div class="well well-sm">{{ $layout->language('available_money') }}: {{ $layout->user()->ecnetUser()->money }} HUF</div>
+					<div class="well well-sm">{{ $layout->language('available_money') }}: {{ $layout->user()->ecnetUser()->money() }} HUF</div>
 					<div class="alert alert-info">
 						<strong>{{ $layout->language('note') }}:</strong> {{ $layout->language('money_upload_note_description') }}
 					</div>
@@ -52,7 +52,7 @@
 									<div class="col-md-6">
 										<select class="form-control"  name="account"  id="country_select" required="true">
 											@foreach($users as $us)
-											<option value="{{ $us->id }}">{{ $us->name }} ({{ $us->username }})</option>
+											<option value="{{ $us->id() }}">{{ $us->name() }} ({{ $us->username() }})</option>
 											@endforeach
 										</select>
 
