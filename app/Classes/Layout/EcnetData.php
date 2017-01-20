@@ -238,17 +238,73 @@ class EcnetData extends User{
 	 * @param int $userId - user's identifier
 	 * @param int $money - money
 	 * 
+	 * @throws DatabaseException if an error occures
+	 * @throws ValueMismatchException if a parameter value is null.
+	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function setMoneyForUser($userId, $money){
+	public static function setMoneyForUser($userId, $money){
+		if($userId === null || $money === null){
+			throw new ValueMismatchException("Parameter values cannot be null!");
+		}
 		try{
 			P_Ecnet::updateUser($userId, null, null, $money);
 		}catch(\Excetion $ex){
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
+			throw new DatabaseException("Could not set the account.");
 		}
 	}
 	
+	/** Function name: manageMacAddresses
+	 *
+	 * This function sets the MAC addresses for
+	 * the user. It removes the other, already set
+	 * addresses as well.
+	 *
+	 * @param array $addresses - MAC addresses that the user should have
+	 *
+	 * @throws DatabaseException if an error occures.
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
 	//ACCESS CONTROLLER
+	public function manageMacAddresses($addresses){
+		$newAddresses = [];
+		$existingAddresses = [];
+		$deletableAddresses = [];
+		//calculate existing and new addresses
+		foreach($addresses as $address){
+			if(!$this->macAddressExists($address)){
+				array_push($newAddresses, $address);
+			}else{
+				array_push($existingAddresses, $address);
+				if(($key = array_search($address, $deletableAddresses)) !== false) {
+					unset($deletableAddresses[$key]);
+				}
+			}
+		}
+		//calculate deletable addresses
+		foreach($this->macAddresses() as $address){
+			if(($key = array_search($address->mac_address, $addresses)) === false){
+				array_push($deletableAddresses, $address->mac_address);
+			}
+		}
+		//commit the changes
+		try{
+			$userId = $this->user()->id();
+			Database::transaction(function() use($deletableAddresses, $newAddresses, $userId){
+				foreach($deletableAddresses as $address){
+					EcnetData::deleteMacAddress($address);
+				}
+				foreach($newAddresses as $address){
+					EcnetData::insertMacAddress($userId, $address);
+				}
+			});
+		}catch(\Exception $ex){
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
+			throw new DatabaseException("An error occured at the commitment!");
+		}
+	}
 	
 	/** Function name: changeDefaultValidDate
 	 *

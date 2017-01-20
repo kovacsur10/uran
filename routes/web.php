@@ -64,12 +64,12 @@ Route::group(['middleware' => 'web'], function () {
 	Route::get('data/{username}', 'User\UserController@showPublicData')->middleware('auth.logged');
 	
 	// ECNET routes
-	Route::get('ecnet/account', 'Ecnet\PrintingController@showAccount')->middleware('auth.logged')->middleware('modules.ecnet');//TODO
-	Route::post('ecnet/addmoney', 'Ecnet\PrintingController@addMoney')->middleware('auth.logged')->middleware('modules.ecnet');//TODO
+	Route::get('ecnet/account', 'Ecnet\PrintingController@showAccount')->middleware('auth.logged')->middleware('modules.ecnet');//DONE
+	Route::post('ecnet/addmoney', 'Ecnet\PrintingController@addMoney')->middleware('auth.logged')->middleware('modules.ecnet');//DONE
 	
-	Route::get('ecnet/access', 'Ecnet\AccessController@showInternet')->middleware('auth.logged')->middleware('modules.ecnet');//TODO
-	Route::post('ecnet/setvalidtime', 'Ecnet\AccessController@updateValidationTime')->middleware('auth.logged')->middleware('modules.ecnet');//TODO
-	Route::post('ecnet/activate', 'Ecnet\AccessController@activate')->middleware('auth.logged')->middleware('modules.ecnet');//TODO
+	Route::get('ecnet/access', 'Ecnet\AccessController@showInternet')->middleware('auth.logged')->middleware('modules.ecnet');//DONE
+	Route::post('ecnet/setvalidtime', 'Ecnet\AccessController@updateValidationTime')->middleware('auth.logged')->middleware('modules.ecnet');//DONE
+	Route::post('ecnet/activate', 'Ecnet\AccessController@activate')->middleware('auth.logged')->middleware('modules.ecnet');//DONE
 	Route::post('ecnet/setmacs', 'Ecnet\AccessController@setMACAddresses')->middleware('auth.logged')->middleware('modules.ecnet');//TODO
 	
 	Route::get('ecnet/order', 'Ecnet\SlotController@showMACOrderForm')->middleware('auth.logged')->middleware('modules.ecnet');//TODO

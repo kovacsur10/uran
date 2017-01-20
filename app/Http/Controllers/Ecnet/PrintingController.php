@@ -11,15 +11,26 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
 
+/** Class name: PrintingController
+ *
+ * This controller is for handling the printing in the dormitory.
+ *
+ * @author Máté Kovács <kovacsur10@gmail.com>
+ */
 class PrintingController extends Controller{
 
 // PUBLIC FUNCTIONS
-
+	/** Function name: showAccount
+	 *
+	 * This function shows the money account page.
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
     public function showAccount(){
 		$layout = new LayoutData();
-		$layout->setUser(new EcnetData(Session::get('user')->id));
+		$layout->setUser(new EcnetData(Session::get('user')->id()));
 		if($layout->user()->ecnetUser() === null){
-			Logger::error('Ecnet user was not found #'.print_r(Session::get('user')->id, true).'!', null, null, 'ecnet/account');
+			Logger::error('Ecnet user was not found #'.print_r(Session::get('user')->id(), true).'!', null, null, 'ecnet/account');
 			return view('errors.usernotfound', ["layout" => $layout]);
 		}else{
 			return view('ecnet.account', ["layout" => $layout,
@@ -27,9 +38,15 @@ class PrintingController extends Controller{
 		}
 	}
 	
+	/** Function name: addMoney
+	 *
+	 * This function modifies a user's printing account.
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
 	public function addMoney(Request $request){
 		$layout = new LayoutData();
-		$layout->setUser(new EcnetData(Session::get('user')->id));
+		$layout->setUser(new EcnetData(Session::get('user')->id()));
         $this->validate($request, [
 			'money' => 'required',
 			'reset' => 'required',
@@ -48,17 +65,24 @@ class PrintingController extends Controller{
 											 "url" => '/ecnet/account']);
 			}
 			$oldmoney = $money;
-			if($request->money == 0){
+			if($request->money === "0"){
 				$money = $request->reset;
 			}else{
 				$money += $request->money;
 			}
-			$layout->user()->setMoneyForUser($request->account, $money);
-			Logger::log('Ecnet money was modified for user #'.$request->account.'.', $oldmoney, $money, 'ecnet/account');
-			Notifications::notify($layout->user(), $request->account, $layout->language('balance_was_modified'), $layout->language('balance_was_modified_description').' '.$oldmoney.' '.$layout->language('from_forint').' '.$money.' '.$layout->language('to_forint').'!', 'ecnet/account');
-			return view('success.success', ["layout" => $layout,
-											"message" => $layout->language('success_set_money'),
-											"url" => '/ecnet/account']);
+			try{
+				$layout->user()->setMoneyForUser($request->account, $money);
+				Logger::log('Ecnet money was modified for user #'.$request->account.'.', $oldmoney, $money, 'ecnet/account');
+				Notifications::notify($layout->user()->user(), $request->account, $layout->language('balance_was_modified'), $layout->language('balance_was_modified_description').' '.$oldmoney.' '.$layout->language('from_forint').' '.$money.' '.$layout->language('to_forint').'!', 'ecnet/account');
+				return view('success.success', ["layout" => $layout,
+												"message" => $layout->language('success_set_money'),
+												"url" => '/ecnet/account']);
+			}catch(\Exception $ex){
+				Logger::warning('At ecnet money modification for user #'.$request->account.'. Database error occured!', $oldmoney, $money, 'ecnet/account');
+				return view('errors.error', ["layout" => $layout,
+						"message" => $layout->language('error_at_money_adding'),
+						"url" => '/ecnet/account']);
+			}
 		}else{
 			Logger::warning('At ecnet money modification for user #'.$request->account.'. PERMISSIONS NEEDED!', null, null, 'ecnet/account');
 			return view('errors.authentication', ["layout" => $layout]);

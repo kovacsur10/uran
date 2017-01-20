@@ -145,7 +145,7 @@ class EcnetDataTest extends TestCase
 			$this->fail("Unexpected exception: ".$ex->getMessage());
 		}
 	}
-	
+
 	/** Function name: test_setMoneyForUser
 	 *
 	 * This function is testing the setMoneyForUser function of the EcnetData model.
@@ -155,14 +155,46 @@ class EcnetDataTest extends TestCase
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	function test_setMoneyForUser(){
-		$user = new EcnetData(1);
-		$this->assertEquals(0, $user->ecnetUser()->money());
-		$user->setMoneyForUser(1, 100);
-		$user = new EcnetData(1);
-		$this->assertEquals(100, $user->ecnetUser()->money());
-		$user->setMoneyForUser(0, 100);
-		$user = new EcnetData(1);
-		$this->assertEquals(100, $user->ecnetUser()->money());
+		try{
+			EcnetData::setMoneyForUser(null, null);
+			$this->fail("An exception was expected!");
+		}catch(ValueMismatchException $ex){
+		}catch(\Exception $ex){
+			$this->fail("Not the expected exception: ".$ex->getMessage());
+		}
+	
+		try{
+			EcnetData::setMoneyForUser(null, 200);
+			$this->fail("An exception was expected!");
+		}catch(ValueMismatchException $ex){
+		}catch(\Exception $ex){
+			$this->fail("Not the expected exception: ".$ex->getMessage());
+		}
+	
+		try{
+			EcnetData::setMoneyForUser(1, null);
+			$this->fail("An exception was expected!");
+		}catch(ValueMismatchException $ex){
+		}catch(\Exception $ex){
+			$this->fail("Not the expected exception: ".$ex->getMessage());
+		}
+	
+		$ecnetUser = new EcnetData(1);
+		$this->assertEquals(0, $ecnetUser->ecnetUser()->money());
+		try{
+			EcnetData::setMoneyForUser(1, 120);
+		}catch(\Exception $ex){
+			$this->fail("Unexpected exception: ".$ex->getMessage());
+		}
+		$ecnetUser = new EcnetData(1);
+		$this->assertEquals(120, $ecnetUser->ecnetUser()->money());
+		try{
+			EcnetData::setMoneyForUser(0, 200);
+		}catch(\Exception $ex){
+			$this->fail("Unexpected exception: ".$ex->getMessage());
+		}
+		$ecnetUser = new EcnetData(1);
+		$this->assertEquals(120, $ecnetUser->ecnetUser()->money());
 	}
 	
 	/** Function name: test_changeDefaultValidDate_null

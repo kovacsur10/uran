@@ -99,7 +99,7 @@ class Logger{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public static function error_log($message){
-		error_log(Carbon::now().": ".$message."\n", 3, '/var/log/uran_error.log');
+		error_log(Carbon::now().": ".$message."\n", 3, '/var/www/uran/storage/logs/uran_error.log');
 	}
 	
 // PRIVATE FUNCTIONS

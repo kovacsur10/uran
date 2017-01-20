@@ -10,7 +10,7 @@
 					@if($active)
 					<div class="alert alert-success">
 						<p>{{ $layout->language('internet_is_active') }}</p>
-						<p>{{ $layout->language('expiration_date') }}: {{ $layout->formatDate($layout->user()->ecnetUser()->valid_time) }}</p>
+						<p>{{ $layout->language('expiration_date') }}: {{ $layout->formatDate($layout->user()->ecnetUser()->valid()) }}</p>
 					</div>
 					@else
 					<div class="alert alert-danger">
@@ -52,7 +52,7 @@
 									<div class="col-md-6">
 										<select class="form-control"  name="account"  id="user_select" required="true">
 											@foreach($users as $us)
-											<option value="{{ $us->id }}">{{ $us->name }} ({{ $us->username }})</option>
+											<option value="{{ $us->id() }}">{{ $us->name() }} ({{ $us->username() }})</option>
 											@endforeach
 										</select>
 
@@ -156,7 +156,7 @@
 								</div>
 								@endforeach
 								
-								@for($i = 0; $i < $layout->user()->ecnetUser()->mac_slots - count($layout->user()->macAddresses()); $i++)
+								@for($i = 0; $i < $layout->user()->ecnetUser()->maximumMacSlots() - count($layout->user()->macAddresses()); $i++)
 								<div class="form-group{{ $errors->has('new_mac_address_'.$i) ? ' has-error' : '' }}">
 									<label class="col-md-4 control-label">{{ $layout->language('mac_address') }}</label>
 
