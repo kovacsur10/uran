@@ -71,7 +71,7 @@ class Notifications{
 				}
 				foreach($notifications as $notify){
 					try{
-						P_General::deleteNotification($notify->id);
+						P_General::deleteNotification($notify->id());
 					}catch(Exception $ex){
 						Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Delete from table 'notifications' was not successful! ".$ex->getMessage());
 					}

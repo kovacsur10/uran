@@ -5,6 +5,7 @@ namespace App\Persistence;
 use DB;
 use App\Classes\Data\EcnetUser;
 use App\Classes\Data\MacSlotOrder;
+use App\Classes\Data\MacAddress;
 
 /** Class name: P_Ecnet
  *
@@ -51,7 +52,8 @@ class P_Ecnet{
 		if($rawUser === null){
 			return null;
 		}else{
-			return new EcnetUser($rawUser->id, $rawUser->name, $rawUser->username, $rawUser->valid_time, $rawUser->mac_slots, $rawUser->money);
+			$macs = P_Ecnet::getMacAddressesForUser($userId);
+			return new EcnetUser($rawUser->id, $rawUser->name, $rawUser->username, $rawUser->valid_time, $rawUser->mac_slots, $macs, $rawUser->money);
 		}
 	}
 	
@@ -83,7 +85,8 @@ class P_Ecnet{
 			->toArray();
 		$users = [];
 		foreach($rawUsers as $user){
-			array_push($users, new EcnetUser($user->id, $user->name, $user->username, $user->valid_time, $user->mac_slots, $user->money));
+			$macs = P_Ecnet::getMacAddressesForUser($user->id);
+			array_push($users, new EcnetUser($user->id, $user->name, $user->username, $user->valid_time, $user->mac_slots, $macs, $user->money));
 		}
 		return $users;
 	}
@@ -139,14 +142,15 @@ class P_Ecnet{
 	 * address data.
 	 *
 	 * @param text $macAddress - MAC address
-	 * @return MACaddress|null
+	 * @return MacAddress|null
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	static function getMacAddress($macAddress){
-		return DB::table('ecnet_mac_addresses')
+		$address = DB::table('ecnet_mac_addresses')
 			->where('mac_address', 'LIKE', $macAddress)
 			->first();
+		return $address === null ? null : new MacAddress($address->id, $address->mac_address);
 	}
 	
 	/** Function name: getMacAddressesForUser
@@ -160,10 +164,15 @@ class P_Ecnet{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	static function getMacAddressesForUser($userId){
-		return DB::table('ecnet_mac_addresses')
+		$rawAddresses = DB::table('ecnet_mac_addresses')
 			->where('user_id', '=', $userId)
 			->get()
 			->toArray();
+		$addresses = [];
+		foreach($rawAddresses as $address){
+			array_push($addresses, new MacAddress($address->id, $address->mac_address));
+		}
+		return $addresses;
 	}
 	
 	/** Function name: removeMacAddress

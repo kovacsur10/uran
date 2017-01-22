@@ -48,7 +48,7 @@
 									<div class="col-md-6">
 										<select class="form-control"  name="slot"  id="slot_select" required="true">
 											@foreach($layout->user()->getMacSlotOrders() as $order)
-											<option value="{{ $order->id }}">{{ $order->username }} ({{ $order->order_time }}: {{ $order->reason }})</option>
+											<option value="{{ $order->id() }}">{{ $order->username() }} ({{ $order->time() }}: {{ $order->reason() }})</option>
 											@endforeach
 										</select>
 
