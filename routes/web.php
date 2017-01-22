@@ -70,18 +70,18 @@ Route::group(['middleware' => 'web'], function () {
 	Route::get('ecnet/access', 'Ecnet\AccessController@showInternet')->middleware('auth.logged')->middleware('modules.ecnet');//DONE
 	Route::post('ecnet/setvalidtime', 'Ecnet\AccessController@updateValidationTime')->middleware('auth.logged')->middleware('modules.ecnet');//DONE
 	Route::post('ecnet/activate', 'Ecnet\AccessController@activate')->middleware('auth.logged')->middleware('modules.ecnet');//DONE
-	Route::post('ecnet/setmacs', 'Ecnet\AccessController@setMACAddresses')->middleware('auth.logged')->middleware('modules.ecnet');//TODO
+	Route::post('ecnet/setmacs', 'Ecnet\AccessController@setMACAddresses')->middleware('auth.logged')->middleware('modules.ecnet');//DONE
 	
-	Route::get('ecnet/order', 'Ecnet\SlotController@showMACOrderForm')->middleware('auth.logged')->middleware('modules.ecnet');//TODO
-	Route::post('ecnet/allowordenyorder', 'Ecnet\SlotController@allowOrDenyOrder')->middleware('auth.logged')->middleware('modules.ecnet');//TODO
-	Route::post('ecnet/getslot', 'Ecnet\SlotController@getSlot')->middleware('auth.logged')->middleware('modules.ecnet');//TODO
+	Route::get('ecnet/order', 'Ecnet\SlotController@showMACOrderForm')->middleware('auth.logged')->middleware('modules.ecnet');//DONE
+	Route::post('ecnet/allowordenyorder', 'Ecnet\SlotController@allowOrDenyOrder')->middleware('auth.logged')->middleware('modules.ecnet');//DONE
+	Route::post('ecnet/getslot', 'Ecnet\SlotController@getSlot')->middleware('auth.logged')->middleware('modules.ecnet');//DONE
 	
-	Route::get('ecnet/users', 'Ecnet\AdminController@showUsers')->middleware('auth.logged')->middleware('modules.ecnet');//TODO
-	Route::get('ecnet/users/resetfilter', 'Ecnet\AdminController@resetFilterUsers')->middleware('auth.logged')->middleware('modules.ecnet');//TODO
-	Route::get('ecnet/users/listactives/{type}', 'Ecnet\AdminController@showActiveUsers')->middleware('auth.logged')->middleware('modules.ecnet');//TODO
-	Route::get('ecnet/users/{count}', 'Ecnet\AdminController@showUsers')->middleware('auth.logged')->middleware('modules.ecnet');//TODO
-	Route::get('ecnet/users/{count}/{first}', 'Ecnet\AdminController@showUsers')->middleware('auth.logged')->middleware('modules.ecnet');//TODO
-	Route::post('ecnet/users', 'Ecnet\AdminController@filterUsers')->middleware('auth.logged')->middleware('modules.ecnet');//TODO
+	Route::get('ecnet/users', 'Ecnet\AdminController@showUsers')->middleware('auth.logged')->middleware('modules.ecnet');//DONE
+	Route::get('ecnet/users/resetfilter', 'Ecnet\AdminController@resetFilterUsers')->middleware('auth.logged')->middleware('modules.ecnet');//DONE
+	Route::get('ecnet/users/listactives/{type}', 'Ecnet\AdminController@showActiveUsers')->middleware('auth.logged')->middleware('modules.ecnet');//DONE
+	Route::get('ecnet/users/{count}', 'Ecnet\AdminController@showUsers')->middleware('auth.logged')->middleware('modules.ecnet');//DONE
+	Route::get('ecnet/users/{count}/{first}', 'Ecnet\AdminController@showUsers')->middleware('auth.logged')->middleware('modules.ecnet');//DONE
+	Route::post('ecnet/users', 'Ecnet\AdminController@filterUsers')->middleware('auth.logged')->middleware('modules.ecnet');//DONE
 	
 	// Rooms routes
 	Route::get('rooms/map/{level}', 'Rooms\RoomsController@showMap')->middleware('auth.logged')->middleware('modules.rooms');

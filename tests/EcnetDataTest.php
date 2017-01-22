@@ -30,7 +30,6 @@ class EcnetDataTest extends TestCase
 	function test_class(){
 		$this->assertClassHasAttribute('ecnetUser', EcnetData::class);
 		$this->assertClassHasAttribute('validationTime', EcnetData::class);
-		$this->assertClassHasAttribute('macAddresses', EcnetData::class);
 		$this->assertClassHasAttribute('ecnetUsers', EcnetData::class);
 		$this->assertClassHasAttribute('filters', EcnetData::class);
 	
@@ -39,7 +38,6 @@ class EcnetDataTest extends TestCase
 		$this->assertNotNull(0, $user->ecnetUser());
 		$this->assertNotNull(0, $user->validationTime());
 		$this->assertEquals("2016-09-30 05:00:00", $user->validationTime());
-		$this->assertCount(0, $user->macAddresses());
 		$this->assertEquals('', $user->getNameFilter());
 		$this->assertEquals('', $user->getUsernameFilter());
 	
@@ -48,7 +46,6 @@ class EcnetDataTest extends TestCase
 		$this->assertCount(15, $user->permissions());
 		$this->assertNotNull(0, $user->validationTime());
 		$this->assertEquals("2016-09-30 05:00:00", $user->validationTime());
-		$this->assertCount(1, $user->macAddresses());
 		$this->assertEquals('', $user->getNameFilter());
 		$this->assertEquals('', $user->getUsernameFilter());
 	
@@ -57,25 +54,8 @@ class EcnetDataTest extends TestCase
 		$this->assertCount(0, $user->permissions());
 		$this->assertNotNull(0, $user->validationTime());
 		$this->assertEquals("2016-09-30 05:00:00", $user->validationTime());
-		$this->assertCount(0, $user->macAddresses());
 		$this->assertEquals('', $user->getNameFilter());
 		$this->assertEquals('', $user->getUsernameFilter());
-	}
-	
-	/** Function name: test_macAddressesOfUser
-	 *
-	 * This function is testing the macAddressesOfUser function of the EcnetData model.
-	 *
-	 * @return void
-	 *
-	 * @author Máté Kovács <kovacsur10@gmail.com>
-	 */
-	function test_macAddressesOfUser(){
-		$user = new EcnetData(0);
-		$this->assertCount(1, $user->macAddressesOfUser(1));
-		$this->assertCount(0, $user->macAddressesOfUser(0));
-		$this->assertCount(0, $user->macAddressesOfUser(null));
-		$this->assertCount(0, $user->macAddressesOfUser("alma"));
 	}
 	
 	/** Function name: test_register
@@ -374,14 +354,14 @@ class EcnetDataTest extends TestCase
 		}
 		
 		$ecnetUser = new EcnetData(1);
-		$this->assertCount(1, $ecnetUser->macAddresses());
+		$this->assertCount(1, $ecnetUser->ecnetUser()->macAddresses());
 		try{
 			EcnetData::deleteMacAddress("F4:33:CC:FF:53:61");
 		}catch(\Exception $ex){
 			$this->fail("Unexpected exception: ".$ex->getMessage());
 		}
 		$ecnetUser = new EcnetData(1);
-		$this->assertCount(0, $ecnetUser->macAddresses());
+		$this->assertCount(0, $ecnetUser->ecnetUser()->macAddresses());
 	}
 	
 	/** Function name: test_insertMacAddress_fail

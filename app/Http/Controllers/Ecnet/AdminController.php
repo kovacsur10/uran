@@ -9,11 +9,25 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
 
+/** Class name: AccessController
+ *
+ * This controller is for handling the internet access.
+ *
+ * @author Máté Kovács <kovacsur10@gmail.com>
+ */
 class AdminController extends Controller{	
-	
+	/** Function name: showUsers
+	 *
+	 * This function shows the ECnet user administrator page.
+	 * 
+	 * @param int $count - count of users to show
+	 * @param int $first - first user's identifier to show
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
 	public function showUsers($count = 50, $first = 0){
 		$layout = new LayoutData();
-		$layout->setUser(new EcnetData(Session::get('user')->id));
+		$layout->setUser(new EcnetData(Session::get('user')->id()));
 		if(Session::has('ecnet_username_filter') && Session::has('ecnet_name_filter')){
 			$layout->user()->filterUsers(Session::get('ecnet_username_filter'), Session::get('ecnet_name_filter'));
 		}
@@ -22,10 +36,19 @@ class AdminController extends Controller{
 										"firstUser" => $first]);
 	}
 	
+	/** Function name: showActiveUsers
+	 *
+	 * This function shows the ECnet users list
+	 * based on a type filter.
+	 *
+	 * @param string $type - flag
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
 	public function showActiveUsers($type){
 		$layout = new LayoutData();
-		$layout->setUser(new EcnetData(Session::get('user')->id));
-		if($type == "name" || $type == "username" || $type == "both"){
+		$layout->setUser(new EcnetData(Session::get('user')->id()));
+		if($type === "name" || $type === "username" || $type === "both"){
 			return view('ecnet.showactiveusers.'.$type, ["logged" => Session::has('user'),
 												  "layout" => $layout]);
 		}else{
@@ -36,13 +59,21 @@ class AdminController extends Controller{
 		}
 	}
 	
+	/** Function name: filterUsers
+	 *
+	 * This function filters the list of ECnet users.
+	 *
+	 * @param Request $request
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
 	public function filterUsers(Request $request){
-		if($request->input('username') == null){
+		if($request->input('username') === null){
 			Session::put('ecnet_username_filter', '');
 		}else{
 			Session::put('ecnet_username_filter', $request->input('username'));
 		}
-		if($request->input('name') == null){
+		if($request->input('name') === null){
 			Session::put('ecnet_name_filter', '');
 		}else{
 			Session::put('ecnet_name_filter', $request->input('name'));
@@ -50,6 +81,14 @@ class AdminController extends Controller{
 		return redirect('ecnet/users');
 	}
 	
+	/** Function name: resetFilterUsers
+	 *
+	 * This function resets the filters.
+	 *
+	 * @param string $type - flag
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
 	public function resetFilterUsers(){
 		Session::forget('ecnet_username_filter');
 		Session::forget('ecnet_name_filter');

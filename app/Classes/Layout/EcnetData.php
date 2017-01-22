@@ -33,7 +33,6 @@ class EcnetData extends User{
 
 	private $ecnetUser;
 	private $validationTime;
-	private $macAddresses;
 	private $ecnetUsers;
 	private $filters;
 	
@@ -54,7 +53,6 @@ class EcnetData extends User{
 			$this->ecnetUser = null;
 		}
 		$this->validationTime = $this->getValidationTime();
-		$this->macAddresses = $this->getMACAddresses($userId);
 		$this->ecnetUsers = $this->getEcnetUsers();
 		$this->filters = [
 			'name' => null,
@@ -88,18 +86,6 @@ class EcnetData extends User{
 		return $this->validationTime;
 	}
 	
-	/** Function name: macAddresses
-	 *
-	 * The getter function of the ECnet user's MAC addresses.
-	 * 
-	 * @return array of MAC addresses
-	 * 
-	 * @author Máté Kovács <kovacsur10@gmail.com>
-	 */
-	public function macAddresses(){
-		return $this->macAddresses;
-	}
-	
 	/** Function name: getNameFilter
 	 *
 	 * The getter function of the name filter of the ECnet admin panel.
@@ -122,20 +108,6 @@ class EcnetData extends User{
 	 */
 	public function getUsernameFilter(){
 		return $this->filters['username'];
-	}
-	
-	/** Function name: macAddressesOfUser
-	 *
-	 * This function returns the set MAC
-	 * addresses of the requested user.
-	 * 
-	 * @param int $userId - user's identifier
-	 * @return array of MAC addresses
-	 * 
-	 * @author Máté Kovács <kovacsur10@gmail.com>
-	 */
-	public function macAddressesOfUser($userId){
-		return $this->getMACAddresses($userId);
 	}
 	
 	/** Function name: filterUsers
@@ -168,9 +140,6 @@ class EcnetData extends User{
 	 * returned user should be the from indexed user,
 	 * the maximum count of the returned user is
 	 * the second parameter.
-	 * 
-	 * If the count equals to 0, the return count
-	 * is "unlimited".
 	 * 
 	 * @param int $from - first user id
 	 * @param int $count - visible count
@@ -270,16 +239,12 @@ class EcnetData extends User{
 	//ACCESS CONTROLLER
 	public function manageMacAddresses($addresses){
 		$newAddresses = [];
-		$existingAddresses = [];
 		$deletableAddresses = [];
 		//calculate existing and new addresses
 		foreach($addresses as $address){
-			if(!$this->macAddressExists($address)){
-				array_push($newAddresses, $address);
-			}else{
-				array_push($existingAddresses, $address);
-				if(($key = array_search($address, $deletableAddresses)) !== false) {
-					unset($deletableAddresses[$key]);
+			if($address !== ''){
+				if(!$this->macAddressExists($address)){
+					array_push($newAddresses, $address);
 				}
 			}
 		}
@@ -293,6 +258,10 @@ class EcnetData extends User{
 		try{
 			$userId = $this->user()->id();
 			Database::transaction(function() use($deletableAddresses, $newAddresses, $userId){
+				/*print_r($deletableAddresses);
+				print_r($newAddresses);
+				print_r($userId);
+				die();*/
 				foreach($deletableAddresses as $address){
 					EcnetData::deleteMacAddress($address);
 				}
@@ -512,9 +481,10 @@ class EcnetData extends User{
 	 * MAC slot order.
 	 * 
 	 * @param int $orderId - user's identifier
-	 * @return order - MacSlotOrder|null
+	 * @return MacSlotOrder
 	 * 
 	 * @throws ValueMismatchException if the parameter value is null.
+	 * @throws DatabaseException if a database error occures.
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
@@ -525,8 +495,8 @@ class EcnetData extends User{
 		try{
 			$order = P_Ecnet::getMacSlotOrder($orderId);
 		}catch(\Exception $ex){
-			$order = null;
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
+			throw new DatabaseException("An internal database error occured!");
 		}
 		return $order;
 	}
@@ -623,27 +593,6 @@ class EcnetData extends User{
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 		}
 		return $datetime;
-	}
-	
-	/** Function name: getMACAddresses
-	 *
-	 * This function returns the internet
-	 * validation date for the current user
-	 * if that exists.
-	 * 
-	 * @param int $userId - user's identifier
-	 * @return array of MAC addresses
-	 * 
-	 * @author Máté Kovács <kovacsur10@gmail.com>
-	 */
-	private function getMACAddresses($userId){
-		try{
-			$macAddresses = P_Ecnet::getMacAddressesForUser($userId);
-		}catch(\Exception $ex){
-			$macAddresses = [];
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
-		}
-		return $macAddresses;
 	}
 	
 	/** Function name: getFilteredEcnetUsers

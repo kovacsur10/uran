@@ -14,6 +14,7 @@ class EcnetUser{
 	private $id;
 	private $validTime;
 	private $maxMacSlotCount;
+	private $macAddresses;
 	private $money;
 
 	private $name;
@@ -30,16 +31,18 @@ class EcnetUser{
 	 * @param string $username - user's text identifier
 	 * @param datetime $validTime - datetime, internet is valid until this date
 	 * @param int $maxMacSlotCount - maximum MAC address slot count
+	 * @param array $macSlotCount - MAC address slot count
 	 * @param int $money - account status
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function __construct(int $id, string $name, string $username, string $validTime, int $maxMacSlotCount, int $money){
+	public function __construct(int $id, string $name, string $username, string $validTime, int $maxMacSlotCount, $macAddresses, int $money){
 		$this->id = $id;
 		$this->name = $name;
 		$this->username = $username;
 		$this->validTime = $validTime;
 		$this->maxMacSlotCount = $maxMacSlotCount;
+		$this->macAddresses = $macAddresses;
 		$this->money = $money;
 	}
 
@@ -97,10 +100,20 @@ class EcnetUser{
 	 *
 	 * This is the getter for maxMacSlotCount.
 	 *
-	 * @return int - The registration_date of the user.
+	 * @return int - Maximum count of MAC slots.
 	 */
 	public function maximumMacSlots() : int{
 		return $this->maxMacSlotCount;
+	}
+	
+	/** Function name: macAddresses
+	 *
+	 * This is the getter for macAddresses.
+	 *
+	 * @return int - Currently used MAC addresses.
+	 */
+	public function macAddresses(){
+		return $this->macAddresses;
 	}
 
 }
