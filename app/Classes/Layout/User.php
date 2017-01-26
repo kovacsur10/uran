@@ -53,7 +53,7 @@ class User extends Pageable{
 			$this->user = null;
 		}
 		$tmpPermissions = new Permissions();
-		$this->permissions = $tmpPermissions->getForUser($userId); //TODO: permission változott!!!
+		$this->permissions = $tmpPermissions->getForUser($userId);
 		try{
 			$this->notifications = Notifications::getNotifications($userId);
 			$this->unreadNotificationCount = Notifications::getUnreadNotificationCount($userId);
@@ -199,7 +199,7 @@ class User extends Pageable{
 	 * about the target. (Excluded the modules.)
 	 * 
 	 * @param text $username - user's name
-	 * @return User|null the requested user's data
+	 * @return User the requested user's data
 	 * 
 	 * @throws UserNotFoundException when the user cannot be found or a database error occurs.
 	 * 
