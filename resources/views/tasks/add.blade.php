@@ -34,7 +34,7 @@
 												<label  class="control-label" for="priority">{{ $layout->language('priority') }}:</label>
 												<select class="form-control"  name="priority"  id="priority" required="true" autocomplete="off">
 													@foreach($layout->tasks()->priorities() as $priority)
-														<option value="{{ $priority->id }}" {{ $layout->errors()->getOld('priority') == $priority->id ? 'selected' : '' }}>{{ $layout->language($priority->name) }}</option>
+														<option value="{{ $priority->id() }}" {{ $layout->errors()->getOld('priority') == $priority->id() ? 'selected' : '' }}>{{ $layout->language($priority->name()) }}</option>
 													@endforeach
 												</select>
 												@if ($layout->errors()->has('priority'))
@@ -47,7 +47,7 @@
 												<label  class="control-label" for="type">{{ $layout->language('type') }}:</label>
 												<select class="form-control"  name="type"  id="type" required="true" autocomplete="off">
 													@foreach($layout->tasks()->taskTypes() as $type)
-														<option value="{{ $type->id }}" {{ $layout->errors()->getOld('type') == $type->id ? 'selected' : '' }}>{{ $layout->language($type->type) }}</option>
+														<option value="{{ $type->id() }}" {{ $layout->errors()->getOld('type') == $type->id() ? 'selected' : '' }}>{{ $layout->language($type->name()) }}</option>
 													@endforeach
 												</select>
 												@if ($layout->errors()->has('type'))

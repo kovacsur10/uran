@@ -41,7 +41,7 @@
 										<select class="form-control" name="status"> 	
 											<option class="form-control" name="status" value=""></option>
 											@foreach($layout->tasks()->statusTypes() as $status)
-												<option class="form-control" name="status" value="{{ $status->id }}" {{ $layout->tasks()->getFilter('status') == $status->id ? "selected" : "" }}>{{ $layout->language($status->status) }}</option>
+												<option class="form-control" name="status" value="{{ $status->id() }}" {{ $layout->tasks()->getFilter('status') == $status->id() ? "selected" : "" }}>{{ $layout->language($status->name()) }}</option>
 											@endforeach
 										</select>
 										
@@ -60,7 +60,7 @@
 										<select class="form-control" name="priority"> 	
 											<option class="form-control" name="priority" value=""></option>
 											@foreach($layout->tasks()->priorities() as $priority)
-												<option class="form-control" name="priority" value="{{ $priority->id }}"  {{ $layout->tasks()->getFilter('priority') == $priority->id ? "selected" : "" }}>{{ $layout->language($priority->name) }}</option>
+												<option class="form-control" name="priority" value="{{ $priority->id() }}"  {{ $layout->tasks()->getFilter('priority') == $priority->id() ? "selected" : "" }}>{{ $layout->language($priority->name()) }}</option>
 											@endforeach
 										</select>
 										
@@ -168,24 +168,24 @@
 					</div>
 					@if($layout->tasks()->tasksToPages($firstTask, $tasksToShow) != null)
 						@foreach($layout->tasks()->tasksToPages($firstTask, $tasksToShow) as $task)
-						  @if($task->status === 'closed')
+						  @if($task->status()->name() === 'closed')
 						  <div class="alert alert-info">
-						  @elseif($task->priority === 'high' || $task->priority === 'highest')
-						  <div class="alert alert-{{ $task->priority === 'high' ? 'warning' : 'danger' }}">
+						  @elseif($task->priority()->name() === 'high' || $task->priority()->name() === 'highest')
+						  <div class="alert alert-{{ $task->priority()->name() === 'high' ? 'warning' : 'danger' }}">
 						  @else
 						  <div class="well well-sm">
 						  @endif
-							@if($layout->user()->permitted('tasks_admin') || $task->username === $layout->user()->user()->username)
-							<a href="{{ url('/tasks/task/'.$task->id.'/remove') }}">
+							@if($layout->user()->permitted('tasks_admin') || $task->creator()->username() === $layout->user()->user()->username())
+							<a href="{{ url('/tasks/task/'.$task->id().'/remove') }}">
 								<div style="width:20px;height:20px;overflow:hidden;float:right;">✖</div>
 							</a>
 							@endif
-							<a href="{{ url('/tasks/task/'.$task->id) }}">
+							<a href="{{ url('/tasks/task/'.$task->id()) }}">
 								<div class="row" style="margin-right:20px;">
-									<div class="col-sm-6">{{ $task->caption }}</div>
-									<div class="col-sm-2">{{ $task->user }}</div>
-									<div class="col-sm-2">{{ $layout->language($task->status) }}</div>
-									<div class="col-sm-2">{{ $layout->formatDate($task->date) }}</div>
+									<div class="col-sm-6">{{ $task->caption() }}</div>
+									<div class="col-sm-2">{{ $task->creator()->name() }}</div>
+									<div class="col-sm-2">{{ $layout->language($task->status()->name()) }}</div>
+									<div class="col-sm-2">{{ $layout->formatDate($task->createdOn()) }}</div>
 								</div>
 							</a>
 						</div>

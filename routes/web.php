@@ -97,21 +97,21 @@ Route::group(['middleware' => 'web'], function () {
 	Route::get('notification/show/{id}', 'Notification\NotificationController@showNotification')->middleware('auth.logged');//DONE
 	
 	// Tasks routes
-	Route::get('tasks/list', 'Tasks\TaskController@show')->middleware('auth.logged')->middleware('modules.tasks');//TODO
-	Route::get('tasks/task/{id}', 'Tasks\TaskController@showTask')->middleware('auth.logged')->middleware('modules.tasks');//TODO
-	Route::post('tasks/task/{taskId}/modify', 'Tasks\TaskController@modify')->middleware('auth.logged')->middleware('modules.tasks');//TODO
-	Route::put('tasks/task/{taskId}/addcomment', 'Tasks\TaskController@addComment')->middleware('auth.logged')->middleware('modules.tasks');//TODO
-	Route::get('tasks/task/{taskId}/removecomment/{commentId}', 'Tasks\TaskController@removeComment')->middleware('auth.logged')->middleware('modules.tasks');//TODO
-	Route::get('tasks/new', 'Tasks\TaskController@add')->middleware('auth.logged')->middleware('modules.tasks');//TODO
-	Route::put('tasks/new', 'Tasks\TaskController@addNew')->middleware('auth.logged')->middleware('modules.tasks');//TODO
-	Route::get('tasks/task/{taskId}/remove', 'Tasks\TaskController@remove')->middleware('auth.logged')->middleware('modules.tasks');//TODO
-	Route::post('tasks/tasks', 'Tasks\TaskController@filterTasks')->middleware('auth.logged')->middleware('modules.tasks');//TODO
-	Route::get('tasks/resetfilter', 'Tasks\TaskController@resetFilterTasks')->middleware('auth.logged')->middleware('modules.tasks');//TODO
-	Route::get('tasks/tasks/{count}', 'Tasks\TaskController@show')->middleware('auth.logged')->middleware('modules.ecnet');//TODO
-	Route::get('tasks/tasks/{count}/{first}', 'Tasks\TaskController@show')->middleware('auth.logged')->middleware('modules.ecnet');//TODO
+	Route::get('tasks/list', 'Tasks\TaskController@show')->middleware('auth.logged')->middleware('modules.tasks');//DONE
+	Route::get('tasks/task/{id}', 'Tasks\TaskController@showTask')->middleware('auth.logged')->middleware('modules.tasks');//DONE
+	Route::post('tasks/task/{taskId}/modify', 'Tasks\TaskController@modify')->middleware('auth.logged')->middleware('modules.tasks');//DONE
+	Route::put('tasks/task/{taskId}/addcomment', 'Tasks\TaskController@addComment')->middleware('auth.logged')->middleware('modules.tasks');//DONE
+	Route::get('tasks/task/{taskId}/removecomment/{commentId}', 'Tasks\TaskController@removeComment')->middleware('auth.logged')->middleware('modules.tasks');//DONE
+	Route::get('tasks/new', 'Tasks\TaskController@add')->middleware('auth.logged')->middleware('modules.tasks');//DONE
+	Route::put('tasks/new', 'Tasks\TaskController@addNew')->middleware('auth.logged')->middleware('modules.tasks');//DONE
+	Route::get('tasks/task/{taskId}/remove', 'Tasks\TaskController@remove')->middleware('auth.logged')->middleware('modules.tasks');//DONE
+	Route::post('tasks/tasks', 'Tasks\TaskController@filterTasks')->middleware('auth.logged')->middleware('modules.tasks');//DONE
+	Route::get('tasks/resetfilter', 'Tasks\TaskController@resetFilterTasks')->middleware('auth.logged')->middleware('modules.tasks');//DONE
+	Route::get('tasks/tasks/{count}', 'Tasks\TaskController@show')->middleware('auth.logged')->middleware('modules.ecnet');//DONE
+	Route::get('tasks/tasks/{count}/{first}', 'Tasks\TaskController@show')->middleware('auth.logged')->middleware('modules.ecnet');//DONE
 	
 	// ECouncil routes
-	Route::get('ecouncil/records/list', 'ECouncil\RecordController@show')->middleware('auth.logged')->middleware('modules.ecouncil');//TODO
+	Route::get('ecouncil/records/list', 'ECouncil\RecordController@show')->middleware('auth.logged')->middleware('modules.ecouncil');//DONE
 	
 	// Basic routes
     Route::get('/', 'HomeController@index');//DONE

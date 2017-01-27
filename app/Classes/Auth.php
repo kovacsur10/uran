@@ -39,6 +39,21 @@ class Auth{
 		if(Session::has('user')){
 			Session::forget('user');
 		}
+		if(Session::has('tasks_status_filter')){
+			Session::forget('tasks_status_filter');
+		}
+		if(Session::has('tasks_caption_filter')){
+			Session::forget('tasks_caption_filter');
+		}
+		if(Session::has('tasks_priority_filter')){
+			Session::forget('tasks_priority_filter');
+		}
+		if(Session::has('tasks_mytasks_filter')){
+			Session::forget('tasks_mytasks_filter');
+		}
+		if(Session::has('tasks_hide_closed_filter')){
+			Session::forget('tasks_hide_closed_filter');
+		}
 	}
 	
 	/** Function name: login
