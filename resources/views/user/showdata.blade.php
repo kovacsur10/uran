@@ -11,7 +11,7 @@
 					<div class="well well-sm">{{ $layout->language('username') }}: {{ $layout->user()->user()->username() }}</div>
 					<div class="well well-sm">{{ $layout->language('email_address') }}: {{$layout->user()->user()->email()}}</div>
 					<div class="well well-sm">{{ $layout->language('registration_date') }}: {{ $layout->formatDate($layout->user()->user()->registrationDate()) }}</div>
-					<div class="well well-sm">{{ $layout->language('address') }}: {{ $layout->language($layout->user()->user()->country) }}, {{ $layout->user()->user()->city }} megye, {{ $layout->user()->user()->postalcode }} {{ $layout->user()->user()->city }}, {{ $layout->user()->user()->address }}</div>
+					<div class="well well-sm">{{ $layout->language('address') }}: {{ $layout->language($layout->user()->user()->country()) }}, {{ $layout->user()->user()->shire() }} megye, {{ $layout->user()->user()->postalCode() }} {{ $layout->user()->user()->city() }}, {{ $layout->user()->user()->address() }}</div>
                 </div>
             </div>
         </div>
