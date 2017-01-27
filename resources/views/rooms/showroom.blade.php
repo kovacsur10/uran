@@ -24,12 +24,12 @@
 											<select class="form-control"  name="resident{{ $j }}"  id="resident_select{{ $j }}">
 												<option value="0">{{ $layout->language('free_spot') }}</option>
 												@foreach($layout->user()->users() as $user)
-													@if(!$layout->room()->userHasResidence($user->id) || $user->name == $resident->name)
-														<option value="{{ $user->id }}"
-														@if($user->name == $resident->name)
+													@if(!$layout->room()->userHasResidence($user->id()) || $user->name() == $resident->name())
+														<option value="{{ $user->id() }}"
+														@if($user->name() == $resident->name())
 															selected
 														@endif
-														>{{ $user->name }} ({{ $user->username }})</option>
+														>{{ $user->name() }} ({{ $user->username() }})</option>
 													@endif
 												@endforeach
 											</select>
@@ -53,8 +53,8 @@
 											<select class="form-control"  name="resident{{ $i+$j }}"  id="resident_select{{ $i+$j }}">
 												<option value="0" selected>{{ $layout->language('free_spot') }}</option>
 												@foreach($layout->user()->users() as $user)
-													@if(!$layout->room()->userHasResidence($user->id))
-														<option value="{{ $user->id }}">{{ $user->name }} ({{ $user->username }})</option>
+													@if(!$layout->room()->userHasResidence($user->id()))
+														<option value="{{ $user->id() }}">{{ $user->name() }} ({{ $user->username() }})</option>
 													@endif
 												@endforeach
 											</select>

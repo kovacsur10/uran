@@ -81,15 +81,15 @@ class User extends Pageable{
 	 * of the users from the first
 	 * requested user.
 	 * 
-	 * @param int $from - identifier of first notification
-	 * @param int $count - count of notifications
+	 * @param int $from - identifier of first users
+	 * @param int $count - count of users
 	 * @return array of Users
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function users($from = 0, $count = 50){
 		try{
-			$users = P_User::getUsers();
+			$users = P_User::getUsers($from, $count);
 		}catch(\Exception $ex){
 			$users = [];
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'users' was not successful! ".$ex->getMessage());
