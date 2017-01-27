@@ -22,6 +22,12 @@ class User{
 	private $language;
 	private $registered;
 	
+	private $country;
+	private $city;
+	private $shire;
+	private $address;
+	private $postal_code;
+	
 	private $registration_verification_status;
 	private $registration_verification_date;
 	private $registration_code;
@@ -42,10 +48,15 @@ class User{
 	 * @param string|null $last_online - datetime of last login
 	 * @param string $language - default language of the user
 	 * @param bool $registered - registration status
+	 * @param string $country - address part, country
+	 * @param string $city - address part, city
+	 * @param string $shire - address part, shire/region
+	 * @param string $address - address part, address
+	 * @param string $postal_code - address part, postal code
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function __construct(int $id, string $name, string $username, string $password, string $email, string $registration_date, StatusCode $status, string $last_online = null, string $language, bool $registered, bool $registration_verification_status, string $registration_verification_date = null, string $registration_code){
+	public function __construct(int $id, string $name, string $username, string $password, string $email, string $registration_date, StatusCode $status, string $last_online = null, string $language, bool $registered, bool $registration_verification_status, string $registration_verification_date = null, string $registration_code, string $country, string $city, string $shire, string $address, string $postal_code){
 		$this->id = $id;
 		$this->name = $name;
 		$this->username = $username;
@@ -55,6 +66,11 @@ class User{
 		$this->status = $status;
 		$this->last_online = $last_online;
 		$this->language = $language;
+		$this->country = $country;
+		$this->city = $city;
+		$this->shire = $shire;
+		$this->address = $address;
+		$this->postal_code = $postal_code;
 		$this->registered = $registered;
 		$this->registration_verification_status = $registration_verification_status;
 		$this->registration_verification_date = $registration_verification_date;
@@ -155,7 +171,7 @@ class User{
 	 *
 	 * This is the getter for status.
 	 *
-	 * @return bool - The status of the user.
+	 * @return StatusCode - The status of the user.
 	 */
 	public function status() : StatusCode{
 		return $this->status;
@@ -165,7 +181,7 @@ class User{
 	 *
 	 * This is the getter for registration_verification_date.
 	 *
-	 * @return bool - The registered of the user.
+	 * @return date - The registration verification date of the user.
 	 */
 	public function verificationDate(){
 		return $this->registration_verification_date;
@@ -175,7 +191,7 @@ class User{
 	 *
 	 * This is the getter for registration_verification_status.
 	 *
-	 * @return bool - The registered of the user.
+	 * @return bool - User verification status.
 	 */
 	public function verified() : bool{
 		return $this->registration_verification_status;
@@ -185,10 +201,60 @@ class User{
 	 *
 	 * This is the getter for registration_code.
 	 *
-	 * @return bool - The registered of the user.
+	 * @return string - The registration code of the user.
 	 */
 	public function registrationCode() : string{
 		return $this->registration_code;
+	}
+	
+	/** Function name: country
+	 *
+	 * This is the getter for country.
+	 *
+	 * @return string - The country part of the user's address.
+	 */
+	public function country() : string{
+		return $this->country;
+	}
+	
+	/** Function name: city
+	 *
+	 * This is the getter for city.
+	 *
+	 * @return string - The city part of the user's address.
+	 */
+	public function city() : string{
+		return $this->city;
+	}
+	
+	/** Function name: shire
+	 *
+	 * This is the getter for shire.
+	 *
+	 * @return string - The shire part of the user's address.
+	 */
+	public function shire() : string{
+		return $this->shire;
+	}
+	
+	/** Function name: address
+	 *
+	 * This is the getter for address.
+	 *
+	 * @return string - The address part of the user's address.
+	 */
+	public function address() : string{
+		return $this->address;
+	}
+	
+	/** Function name: postalCode
+	 *
+	 * This is the getter for postal_code.
+	 *
+	 * @return string - The postal code part of the user's address.
+	 */
+	public function postalCode() : string{
+		return $this->postal_code;
 	}
 
 }

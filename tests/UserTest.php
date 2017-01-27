@@ -26,7 +26,7 @@ class UserTest extends TestCase
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	function test_permission(){
-		$user = new User(1, "user", "username", "pazzword", "e@mail", "2016 date", new StatusCode(1, "stat"), "2016-11-11", "hu_HU", true, true, "2010-12-11 23:11:23", "thisistheregcode");
+		$user = new User(1, "user", "username", "pazzword", "e@mail", "2016 date", new StatusCode(1, "stat"), "2016-11-11", "hu_HU", true, true, "2010-12-11 23:11:23", "thisistheregcode", "Hungary", "Veszprém1", "Veszprém2", "Budapest út 11-13.", "8200");
 		$this->assertEquals(1, $user->id());
 		$this->assertEquals("user", $user->name());
 		$this->assertEquals("username", $user->username());
@@ -40,6 +40,11 @@ class UserTest extends TestCase
 		$this->assertTrue($user->verified());
 		$this->assertEquals("2010-12-11 23:11:23", $user->verificationDate());
 		$this->assertEquals("thisistheregcode", $user->registrationCode());
+		$this->assertEquals("Hungary", $user->country());
+		$this->assertEquals("Veszprém1", $user->city());
+		$this->assertEquals("Veszprém2", $user->shire());
+		$this->assertEquals("Budapest út 11-13.", $user->address());
+		$this->assertEquals("8200", $user->postalCode());
 	}
 
 	/** Function name: test_permission_attr
@@ -66,5 +71,10 @@ class UserTest extends TestCase
 		$this->assertClassHasAttribute('registration_verification_date', User::class);
 		$this->assertClassHasAttribute('registration_code', User::class);
 		$this->assertClassHasAttribute('registration_verification_status', User::class);
+		$this->assertClassHasAttribute('city', User::class);
+		$this->assertClassHasAttribute('country', User::class);
+		$this->assertClassHasAttribute('shire', User::class);
+		$this->assertClassHasAttribute('address', User::class);
+		$this->assertClassHasAttribute('postal_code', User::class);
 	}
 }

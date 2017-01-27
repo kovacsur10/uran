@@ -35,7 +35,7 @@ class UserController extends Controller{
 		try{
 			$targetId = $layout->user()->getUserDataByUsername($username);
 			return view('user.showpublicdata', ["layout" => $layout,
-					"target" => new User($targetId->id)]);
+					"target" => new User($targetId->id())]);
 		}catch(\Exception $ex){
 			return view('errors.error', ["layout" => $layout,
 										 "message" => $layout->language('error_at_finding_the_user'),
