@@ -6,8 +6,22 @@ use App\Classes\LayoutData;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
 
+/** Class name: LanguageController
+ *
+ * This controller is for handling the website language.
+ *
+ * @author Máté Kovács <kovacsur10@gmail.com>
+ */
 class LanguageController extends Controller{
 
+	/** Function name: set
+	 *
+	 * This function sets the language of the website.
+	 * 
+	 * @param string $language - the language to use/set
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
 	public function set($language){
 		$layout = new LayoutData();
 		$layout->setLanguage($language);

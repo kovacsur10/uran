@@ -17,7 +17,7 @@
 
 Route::group(['middleware' => 'web'], function () {
 	// Language router
-	Route::get('lang/set/{language}', 'Language\LanguageController@set');//TODO
+	Route::get('lang/set/{language}', 'Language\LanguageController@set');//DONE
 	
 	// ECadmin routes
 	Route::get('ecadmin/user/list', 'ECAdmin\UserController@show')->middleware('auth.logged');//TODO
@@ -60,8 +60,8 @@ Route::group(['middleware' => 'web'], function () {
 	Route::post('password/email', 'Auth\PasswordController@completeReset')->middleware('auth.notlogged');//DONE
 
 	// User data routes
-	Route::get('data/show', 'User\UserController@showData')->middleware('auth.logged');//TODO
-	Route::get('data/{username}', 'User\UserController@showPublicData')->middleware('auth.logged');//TODO
+	Route::get('data/show', 'User\UserController@showData')->middleware('auth.logged');//DONE
+	Route::get('data/{username}', 'User\UserController@showPublicData')->middleware('auth.logged');//DONE
 	
 	// ECNET routes
 	Route::get('ecnet/account', 'Ecnet\PrintingController@showAccount')->middleware('auth.logged')->middleware('modules.ecnet');//DONE
@@ -114,7 +114,7 @@ Route::group(['middleware' => 'web'], function () {
 	Route::get('ecouncil/records/list', 'ECouncil\RecordController@show')->middleware('auth.logged')->middleware('modules.ecouncil');//TODO
 	
 	// Basic routes
-    Route::get('/', 'HomeController@index');//TODO
+    Route::get('/', 'HomeController@index');//DONE
 
-    Route::get('home', 'HomeController@index');//TODO
+    Route::get('home', 'HomeController@index');//DONE
 });
