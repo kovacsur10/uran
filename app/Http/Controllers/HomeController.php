@@ -7,22 +7,34 @@ use App\Http\Requests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 
+/** Class name: HomeController
+ *
+ * This controller is for handling website home page related things.
+ *
+ * @author Máté Kovács <kovacsur10@gmail.com>
+ */
 class HomeController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
+	/** Function name: __construct
+	 *
+	 * This function creates a new controller instance.
+	 *
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
     public function __construct()
     {
         //$this->middleware('auth');
     }
 
-    /**
-     * Show the application dashboard.
+    /** Function name: index
+     *
+     * This function shows the application dashboard.
      *
      * @return \Illuminate\Http\Response
+     *
+     * @author Máté Kovács <kovacsur10@gmail.com>
      */
     public function index()
     {
