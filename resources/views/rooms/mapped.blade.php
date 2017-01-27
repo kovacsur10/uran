@@ -22,7 +22,7 @@
 										<div class="col-md-6">
 											<select class="form-control"  name="table_version"  id="table_version_select" required="true">
 												@foreach($layout->room()->getTablesEX() as $table)
-													<option value="{{ $table->table_name }}">{{ $table->table_name }}</option>
+													<option value="{{ $table->name() }}">{{ $table->name() }}</option>
 												@endforeach
 											</select>
 											
@@ -55,7 +55,7 @@
 										<div class="col-md-6">
 											<select class="form-control"  name="table_version"  id="table_version_select" required="true">
 												@foreach($layout->room()->getTablesEX() as $table)
-													<option value="{{ $table->table_name }}">{{ $table->table_name }}</option>
+													<option value="{{ $table->name() }}">{{ $table->name() }}</option>
 												@endforeach
 											</select>
 											
@@ -255,11 +255,11 @@
 									<tbody>
 										@foreach($layout->room()->rooms() as $room)
 											<tr>
-												<td>{{ $room->room }}</td>
-												@foreach($layout->room()->getResidents($room->room) as $resident)
-													<td>{{ $resident->name }}</td>
+												<td>{{ $room->roomNumber() }}</td>
+												@foreach($layout->room()->getResidents($room->roomNumber()) as $resident)
+													<td>{{ $resident->name() }}</td>
 												@endforeach
-												@for($i = 0; $i < $layout->room()->getFreePlaceCount($room->room); $i++)
+												@for($i = 0; $i < $layout->room()->getFreePlaceCount($room->roomNumber()); $i++)
 													<td style="background-color:lightgray;"></td>
 												@endfor
 												<?php /*@for($i = 0; $i < 4 - count($layout->room()->getResidents($room->room)) - $layout->room()->getFreePlaceCount($room->room); $i++)

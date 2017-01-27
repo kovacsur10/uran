@@ -84,13 +84,13 @@ Route::group(['middleware' => 'web'], function () {
 	Route::post('ecnet/users', 'Ecnet\AdminController@filterUsers')->middleware('auth.logged')->middleware('modules.ecnet');//DONE
 	
 	// Rooms routes
-	Route::get('rooms/map/{level}', 'Rooms\RoomsController@showMap')->middleware('auth.logged')->middleware('modules.rooms');//TODO
-	Route::get('rooms/room/{id}', 'Rooms\RoomsController@listRoomMembers')->middleware('auth.logged')->middleware('modules.rooms');//TODO
-	Route::get('rooms/download', 'Rooms\RoomsController@downloadList')->middleware('auth.logged')->middleware('modules.rooms');//TODO
-	Route::post('rooms/assign/{guard}', 'Rooms\RoomsController@assignResidents')->middleware('auth.logged')->middleware('modules.rooms');//TODO
-	Route::post('rooms/tables/select/{level}', 'Rooms\RoomsController@selectTable')->middleware('auth.logged')->middleware('modules.rooms');//TODO
-	Route::post('rooms/tables/add/{level}', 'Rooms\RoomsController@addTable')->middleware('auth.logged')->middleware('modules.rooms');//TODO
-	Route::post('rooms/tables/remove/{level}', 'Rooms\RoomsController@removeTable')->middleware('auth.logged')->middleware('modules.rooms');//TODO
+	Route::get('rooms/map/{level}', 'Rooms\RoomsController@showMap')->middleware('auth.logged')->middleware('modules.rooms');//DONE
+	Route::get('rooms/room/{id}', 'Rooms\RoomsController@listRoomMembers')->middleware('auth.logged')->middleware('modules.rooms');//DONE
+	Route::get('rooms/download', 'Rooms\RoomsController@downloadList')->middleware('auth.logged')->middleware('modules.rooms');//DONE
+	Route::post('rooms/assign/{guard}', 'Rooms\RoomsController@assignResidents')->middleware('auth.logged')->middleware('modules.rooms');//DONE
+	Route::post('rooms/tables/select/{level}', 'Rooms\RoomsController@selectTable')->middleware('auth.logged')->middleware('modules.rooms');//DONE
+	Route::post('rooms/tables/add/{level}', 'Rooms\RoomsController@addTable')->middleware('auth.logged')->middleware('modules.rooms');//DONE
+	Route::post('rooms/tables/remove/{level}', 'Rooms\RoomsController@removeTable')->middleware('auth.logged')->middleware('modules.rooms');//DONE
 	
 	// Notification routes
 	Route::get('notification/list/{first}', 'Notification\NotificationController@listNotifications')->middleware('auth.logged');//DONE

@@ -15,11 +15,11 @@
 			// loop over the rows, outputting them
 			foreach($layout->room()->rooms() as $room){
 				$row = [];
-				array_push($row, (string)$room->room);
-				foreach($layout->room()->getResidents($room->room) as $resident){
-					array_push($row, $resident->name);
+				array_push($row, (string)$room->roomNumber());
+				foreach($layout->room()->getResidents($room->roomNumber()) as $resident){
+					array_push($row, $resident->name());
 				}
-				for($i = 0; $i < $layout->room()->getFreePlaceCount($room->room); $i++){
+				for($i = 0; $i < $layout->room()->getFreePlaceCount($room->roomNumber()); $i++){
 					array_push($row, "üres");
 				}
 				fputcsv($output, $row, ";");
