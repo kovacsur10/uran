@@ -170,7 +170,7 @@ class Tasks extends Pageable{
 	 */
 	public function filterTasks($statusId, $caption, $priority, $myTasks, $hideClosed){
 		$layout = new LayoutData();
-		if($priority === null || $priority === ''){
+		if($statusId === null || $statusId === ''){
 			$this->filters['status'] = null;
 		}else{
 			$this->filters['status'] = $statusId;
@@ -394,7 +394,7 @@ class Tasks extends Pageable{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function update($taskId, $type, $text, $caption, $deadline, $priority, $status, $workingHours, $assignedUser, $closed){
-		if($taskId === null || $type === null || $text === null || $caption === null || $priority === null || $status === null || $workingHours === null){
+		if($taskId === null || $type === null || $text === null || $caption === null || $priority === null || $status === null || $workingHours === null || $closed === null){
 			throw new ValueMismatchException("A parameter is null, but cannot be that!");
 		}
 		try{
