@@ -6,6 +6,7 @@ use DB;
 use App\Classes\Data\StatusCode;
 use App\Classes\Data\Permission;
 use App\Classes\Data\User;
+use App\Classes\Data\PersonalData;
 
 /** Class name: P_User
  *
@@ -38,7 +39,14 @@ class P_User{
 			->get();
 		$users = [];
 		foreach($getUsers as $user){
-			array_push($users, new User($user->id, $user->name, $user->username, $user->password, $user->email, $user->registration_date, new StatusCode($user->status, $user->status_name), $user->last_online, $user->language, $user->registered, $user->verified, $user->verification_date, $user->code, $user->country, $user->city, $user->shire, $user->address, $user->postalcode));
+			if($user->neptun !== null){
+				$faculty = null;
+				$workshop = null;
+				$collegistData = new PersonalData($user->neptun, $user->city_of_birth, $user->date_of_birth, $user->name_of_mother, $user->high_school, $user->year_of_leaving_exam, $user->from_year, $faculty, $workshop);
+			}else{
+				$collegistData = null;
+			}
+			array_push($users, new User($user->id, $user->name, $user->username, $user->password, $user->email, $user->registration_date, new StatusCode($user->status, $user->status_name), $user->last_online, $user->language, $user->registered, $user->verified, $user->verification_date, $user->code, $user->country, $user->city, $user->shire, $user->address, $user->postalcode, $user->reason, $collegistData, $user->phone));
 		}
 		return $users;
 	}
@@ -176,7 +184,14 @@ class P_User{
 			})
 			->select('users.*', 'registrations.*', 'user_status_codes.status_name as status_name')
 			->first();
-		return $user === null ? null : new User($user->id, $user->name, $user->username, $user->password, $user->email, $user->registration_date, new StatusCode($user->status, $user->status_name), $user->last_online, $user->language, $user->registered, $user->verified, $user->verification_date, $user->code, $user->country, $user->city, $user->shire, $user->address, $user->postalcode);
+		if(isset($user->neptun) && $user->neptun !== null){
+			$faculty = null;
+			$workshop = null;
+			$collegistData = new PersonalData($user->neptun, $user->city_of_birth, $user->date_of_birth, $user->name_of_mother, $user->high_school, $user->year_of_leaving_exam, $user->from_year, $faculty, $workshop);
+		}else{
+			$collegistData = null;
+		}
+		return $user === null ? null : new User($user->id, $user->name, $user->username, $user->password, $user->email, $user->registration_date, new StatusCode($user->status, $user->status_name), $user->last_online, $user->language, $user->registered, $user->verified, $user->verification_date, $user->code, $user->country, $user->city, $user->shire, $user->address, $user->postalcode, $user->reason, $collegistData, $user->phone);
 	}
 	
 	/** Function name: getUserByUsername
@@ -202,7 +217,14 @@ class P_User{
 			})
 			->select('users.*', 'registrations.*', 'user_status_codes.status_name as status_name')
 			->first();
-		return $user === null ? null : new User($user->id, $user->name, $user->username, $user->password, $user->email, $user->registration_date, new StatusCode($user->status, $user->status_name), $user->last_online, $user->language, $user->registered, $user->verified, $user->verification_date, $user->code, $user->country, $user->city, $user->shire, $user->address, $user->postalcode);
+		if($user->neptun !== null){
+			$faculty = null;
+			$workshop = null;
+			$collegistData = new PersonalData($user->neptun, $user->city_of_birth, $user->date_of_birth, $user->name_of_mother, $user->high_school, $user->year_of_leaving_exam, $user->from_year, $faculty, $workshop);
+		}else{
+			$collegistData = null;
+		}
+		return $user === null ? null : new User($user->id, $user->name, $user->username, $user->password, $user->email, $user->registration_date, new StatusCode($user->status, $user->status_name), $user->last_online, $user->language, $user->registered, $user->verified, $user->verification_date, $user->code, $user->country, $user->city, $user->shire, $user->address, $user->postalcode, $user->reason, $collegistData, $user->phone);
 	}
 
 	/** Function name: getUsers
@@ -234,7 +256,14 @@ class P_User{
 			->get();
 		$users = [];
 		foreach($getUsers as $user){
-			array_push($users, new User($user->id, $user->name, $user->username, $user->password, $user->email, $user->registration_date, new StatusCode($user->status, $user->status_name), $user->last_online, $user->language, $user->registered, $user->verified, $user->verification_date, $user->code, $user->country, $user->city, $user->shire, $user->address, $user->postalcode));
+			if($user->neptun !== null){
+				$faculty = null;
+				$workshop = null;
+				$collegistData = new PersonalData($user->neptun, $user->city_of_birth, $user->date_of_birth, $user->name_of_mother, $user->high_school, $user->year_of_leaving_exam, $user->from_year, $faculty, $workshop);
+			}else{
+				$collegistData = null;
+			}
+			array_push($users, new User($user->id, $user->name, $user->username, $user->password, $user->email, $user->registration_date, new StatusCode($user->status, $user->status_name), $user->last_online, $user->language, $user->registered, $user->verified, $user->verification_date, $user->code, $user->country, $user->city, $user->shire, $user->address, $user->postalcode, $user->reason, $collegistData, $user->phone));
 		}
 		return $users;
 	}
@@ -294,7 +323,14 @@ class P_User{
 			->where('users.id', '=', $userId)
 			->select('users.*', 'registrations.*', 'user_status_codes.status_name as status_name')
 			->first();
-		return $user === null ? null : new User($user->id, $user->name, $user->username, $user->password, $user->email, $user->registration_date, new StatusCode($user->status, $user->status_name), $user->last_online, $user->language, $user->registered, $user->verified, $user->verification_date, $user->code, $user->country, $user->city, $user->shire, $user->address, $user->postalcode);
+		if($user->neptun !== null){
+			$faculty = null;
+			$workshop = null;
+			$collegistData = new PersonalData($user->neptun, $user->city_of_birth, $user->date_of_birth, $user->name_of_mother, $user->high_school, $user->year_of_leaving_exam, $user->from_year, $faculty, $workshop);
+		}else{
+			$collegistData = null;
+		}
+		return $user === null ? null : new User($user->id, $user->name, $user->username, $user->password, $user->email, $user->registration_date, new StatusCode($user->status, $user->status_name), $user->last_online, $user->language, $user->registered, $user->verified, $user->verification_date, $user->code, $user->country, $user->city, $user->shire, $user->address, $user->postalcode, $user->reason, $collegistData, $user->phone);
 	}
 	
 	/** Function name: getRegistrationUserIdForUsername
@@ -333,7 +369,14 @@ class P_User{
 			->get();
 		$users = [];
 		foreach($getUsers as $user){
-			array_push($users, new User($user->id, $user->name, $user->username, $user->password, $user->email, $user->registration_date, new StatusCode($user->status, $user->status_name), $user->last_online, $user->language, $user->registered, $user->verified, $user->verification_date, $user->code, $user->country, $user->city, $user->shire, $user->address, $user->postalcode));
+			if($user->neptun !== null){
+				$faculty = null;
+				$workshop = null;
+				$collegistData = new PersonalData($user->neptun, $user->city_of_birth, $user->date_of_birth, $user->name_of_mother, $user->high_school, $user->year_of_leaving_exam, $user->from_year, $faculty, $workshop);
+			}else{
+				$collegistData = null;
+			}
+			array_push($users, new User($user->id, $user->name, $user->username, $user->password, $user->email, $user->registration_date, new StatusCode($user->status, $user->status_name), $user->last_online, $user->language, $user->registered, $user->verified, $user->verification_date, $user->code, $user->country, $user->city, $user->shire, $user->address, $user->postalcode, $user->reason, $collegistData, $user->phone));
 		}
 		return $users;
 	}

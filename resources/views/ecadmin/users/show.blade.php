@@ -8,9 +8,9 @@
                 <div class="panel-heading"><a href="{{ url('ecadmin/user/list') }}">{{ $layout->language('user') }}</a></div>
                 <div class="panel-body">
 				@if($layout->user()->permitted('user_handling'))
-					<?php $user = $target->getUserData($target->user()->id); ?>
+					<?php $user = $target->getUserData($target->user()->id()); ?>
 				
-					<form class="form-horizontal" role="form" method="POST" action="{{ url('/ecadmin/user/show/'.$user->id) }}">
+					<form class="form-horizontal" role="form" method="POST" action="{{ url('/ecadmin/user/show/'.$user->id()) }}">
 						{!! csrf_field() !!}
 					
 						<div class="panel panel-default">
@@ -20,19 +20,19 @@
 									<li class="list-group-item">
 										<div class="row">
 											<div class="col-xs-4">{{ $layout->language('identifier') }}:</div>
-											<div class="col-xs-8">{{ $user->id }}</div>
+											<div class="col-xs-8">{{ $user->id() }}</div>
 										</div>
 									</li>
 									<li class="list-group-item">
 										<div class="row">
 											<div class="col-xs-4">{{ $layout->language('username') }}:</div>
-											<div class="col-xs-8">{{ $user->username }}</div>
+											<div class="col-xs-8">{{ $user->username() }}</div>
 										</div>
 									</li>
 									<li class="list-group-item">
 										<div class="row">
 											<div class="col-xs-4">{{ $layout->language('registration_date') }}:</div>
-											<div class="col-xs-8">{{ $layout->formatDate($user->registration_date) }}</div>
+											<div class="col-xs-8">{{ $layout->formatDate($user->registrationDate()) }}</div>
 										</div>
 									</li>
 								</ul>
@@ -46,25 +46,25 @@
 									<li class="list-group-item">
 										<div class="row">
 											<div class="col-xs-4">{{ $layout->language('name') }}:</div>
-											<div class="col-xs-8">{{ $user->name }}</div>
+											<div class="col-xs-8">{{ $user->name() }}</div>
 										</div>
 									</li>
 									<li class="list-group-item">
 										<div class="row">
 											<div class="col-xs-4">{{ $layout->language('date_of_birth') }}:</div>
-											<div class="col-xs-8">{{ $layout->formatDate($user->date_of_birth) }}</div>
+											<div class="col-xs-8">{{ $user->collegistData() === null ? $layout->language('TODO') : $user->collegistData()->dateOfBirth() }}</div>
 										</div>
 									</li>
 									<li class="list-group-item">
 										<div class="row">
 											<div class="col-xs-4">{{ $layout->language('place_of_birth') }}:</div>
-											<div class="col-xs-8">{{ $user->city_of_birth }}</div>
+											<div class="col-xs-8">{{ $user->collegistData() === null ? $layout->language('TODO') : $user->collegistData()->cityOfBirth() }}</div>
 										</div>
 									</li>
 									<li class="list-group-item">
 										<div class="row">
 											<div class="col-xs-4">{{ $layout->language('name_of_mother') }}:</div>
-											<div class="col-xs-8">{{ $user->name_of_mother }}</div>
+											<div class="col-xs-8">{{ $user->collegistData() === null ? $layout->language('TODO') : $user->collegistData()->nameOfMother() }}</div>
 										</div>
 									</li>
 								</ul>
@@ -78,13 +78,13 @@
 									<li class="list-group-item">
 										<div class="row">
 											<div class="col-xs-4">{{ $layout->language('email_address') }}:</div>
-											<div class="col-xs-8"><input class="form-control" type="text" name="email" value="{{ $user->email }}"></div>
+											<div class="col-xs-8"><input class="form-control" type="text" name="email" value="{{ $user->email() }}"></div>
 										</div>
 									</li>
 									<li class="list-group-item">
 										<div class="row">
 											<div class="col-xs-4">{{ $layout->language('phone_number') }}:</div>
-											<div class="col-xs-8"><input class="form-control" type="text" name="phone" value="{{ $user->phone }}"></div>
+											<div class="col-xs-8"><input class="form-control" type="text" name="phone" value="{{ $user->phoneNumber() }}"></div>
 										</div>
 									</li>
 								</ul>
@@ -101,7 +101,7 @@
 											<div class="col-xs-8">
 												<select class="form-control"  name="country"  id="country_select" required="true" autocomplete="off">
 												@foreach($layout->base()->countries() as $country)
-													<option {{ $user->country === $country->id ? "selected" : "" }} value="{{ $country->id }}">{{ $layout->language($country->id) }}</option>
+													<option {{ $user->country() === $country->name() ? "selected" : "" }} value="{{ $country->id() }}">{{ $layout->language($country->id()) }}</option>
 												@endforeach
 												</select>
 											</div>
@@ -110,25 +110,25 @@
 									<li class="list-group-item">
 										<div class="row">
 											<div class="col-xs-4">{{ $layout->language('shire') }}:</div>
-											<div class="col-xs-8"><input class="form-control" type="text" name="shire" value="{{ $user->shire }}"></div>
+											<div class="col-xs-8"><input class="form-control" type="text" name="shire" value="{{ $user->shire() }}"></div>
 										</div>
 									</li>
 									<li class="list-group-item">
 										<div class="row">
 											<div class="col-xs-4">{{ $layout->language('city') }}:</div>
-											<div class="col-xs-8"><input class="form-control" type="text" name="city" value="{{ $user->city }}"></div>
+											<div class="col-xs-8"><input class="form-control" type="text" name="city" value="{{ $user->city() }}"></div>
 										</div>
 									</li>
 									<li class="list-group-item">
 										<div class="row">
 											<div class="col-xs-4">{{ $layout->language('postalcode') }}:</div>
-											<div class="col-xs-8"><input class="form-control" type="text" name="postalcode" value="{{ $user->postalcode }}"></div>
+											<div class="col-xs-8"><input class="form-control" type="text" name="postalcode" value="{{ $user->postalCode() }}"></div>
 										</div>
 									</li>
 									<li class="list-group-item">
 										<div class="row">
 											<div class="col-xs-4">{{ $layout->language('address') }}:</div>
-											<div class="col-xs-8"><input class="form-control" type="text" name="address" value="{{ $user->address }}"></div>
+											<div class="col-xs-8"><input class="form-control" type="text" name="address" value="{{ $user->address() }}"></div>
 										</div>
 									</li>
 								</ul>
@@ -142,28 +142,28 @@
 									<li class="list-group-item">
 										<div class="row">
 											<div class="col-xs-4">{{ $layout->language('high_school') }}:</div>
-											<div class="col-xs-8">{{ $user->high_school }}</div>
+											<div class="col-xs-8">{{ $user->collegistData() === null ? $layout->language('TODO') : $user->collegistData()->highSchool() }}</div>
 										</div>
 									</li>
 									<li class="list-group-item">
 										<div class="row">
 											<div class="col-xs-4">{{ $layout->language('year_of_leaving_exam') }}:</div>
-											<div class="col-xs-8">{{ $user->year_of_leaving_exam }}</div>
+											<div class="col-xs-8">{{ $user->collegistData() === null ? $layout->language('TODO') : $user->collegistData()->leavingExamYear() }}</div>
 										</div>
 									</li>
 									<li class="list-group-item">
 										<div class="row">
 											<div class="col-xs-4">{{ $layout->language('from_year') }}:</div>
-											<div class="col-xs-8">{{ $user->admission_year }}</div>
+											<div class="col-xs-8">{{ $user->collegistData() === null ? $layout->language('TODO') : $user->collegistData()->admissionYear() }}</div>
 										</div>
 									</li>
 									<li class="list-group-item">
 										<div class="row">
 											<div class="col-xs-4">{{ $layout->language('neptun') }}:</div>
-											<div class="col-xs-8">{{ $user->neptun }}</div>
+											<div class="col-xs-8">{{ $user->collegistData() === null ? $layout->language('TODO') : $user->collegistData()->neptun() }}</div>
 										</div>
 									</li>
-									<li class="list-group-item">
+									<?php /* <li class="list-group-item">
 										<div class="row">
 											<div class="col-xs-4">{{ $layout->language('faculty') }}</div>
 											<div class="col-xs-8">
@@ -186,14 +186,14 @@
 												</select>
 											</div>
 										</div>
-									</li>
+									</li> */ ?>
 									<li class="list-group-item">
 										<div class="row">
 											<div class="col-xs-4">{{ $layout->language('status') }}</div>
 											<div class="col-xs-8">
 												<select class="form-control"  name="status"  id="status_select" required="true" autocomplete="off">
 												@foreach($layout->base()->statusCodes() as $status)
-													<option {{ $user->status_id === $status->id() ? "selected" : "" }} value="{{ $status->id() }}">{{ $status->statusName() }}</option>
+													<option {{ $user->status()->id() === $status->id() ? "selected" : "" }} value="{{ $status->id() }}">{{ $status->statusName() }}</option>
 												@endforeach
 												</select>
 											</div>

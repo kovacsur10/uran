@@ -20,7 +20,7 @@ Route::group(['middleware' => 'web'], function () {
 	Route::get('lang/set/{language}', 'Language\LanguageController@set');//DONE
 	
 	// ECadmin routes
-	Route::get('ecadmin/user/list', 'ECAdmin\UserController@show')->middleware('auth.logged');//TODO
+	Route::get('ecadmin/user/list', 'ECAdmin\UserController@show')->middleware('auth.logged');//DONE
 	Route::get('ecadmin/user/show/{userId}', 'ECAdmin\UserController@showUser')->middleware('auth.logged');//TODO
 	Route::post('ecadmin/user/show/{userId}', 'ECAdmin\UserController@updateUser')->middleware('auth.logged');//TODO
 	
