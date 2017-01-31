@@ -28,6 +28,10 @@ class User{
 	private $address;
 	private $postal_code;
 	
+	private $phone;
+	private $reason;
+	private $personal_data;
+	
 	private $registration_verification_status;
 	private $registration_verification_date;
 	private $registration_code;
@@ -53,10 +57,13 @@ class User{
 	 * @param string $shire - address part, shire/region
 	 * @param string $address - address part, address
 	 * @param string $postal_code - address part, postal code
+	 * @param string|null $reason - user's reason of registration
+	 * @param PersonalData|null $personal_data - user's personal data (collegist data)
+	 * @param string $phone_number - user's phone number
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function __construct(int $id, string $name, string $username, string $password, string $email, string $registration_date, StatusCode $status, string $last_online = null, string $language, bool $registered, bool $registration_verification_status, string $registration_verification_date = null, string $registration_code, string $country, string $city, string $shire, string $address, string $postal_code){
+	public function __construct(int $id, string $name, string $username, string $password, string $email, string $registration_date, StatusCode $status, string $last_online = null, string $language, bool $registered, bool $registration_verification_status, string $registration_verification_date = null, string $registration_code, string $country, string $city, string $shire, string $address, string $postal_code, string $reason = null, PersonalData $personal_data = null, string $phone_number){
 		$this->id = $id;
 		$this->name = $name;
 		$this->username = $username;
@@ -75,6 +82,9 @@ class User{
 		$this->registration_verification_status = $registration_verification_status;
 		$this->registration_verification_date = $registration_verification_date;
 		$this->registration_code = $registration_code;
+		$this->reason = $reason;
+		$this->personal_data = $personal_data;
+		$this->phone = $phone_number;
 	}
 
 	/** Function name: id
@@ -255,6 +265,36 @@ class User{
 	 */
 	public function postalCode() : string{
 		return $this->postal_code;
+	}
+	
+	/** Function name: phoneNumber
+	 *
+	 * This is the getter for phone.
+	 *
+	 * @return string - The user's phone number.
+	 */
+	public function phoneNumber() : string{
+		return $this->phone;
+	}
+	
+	/** Function name: reason
+	 *
+	 * This is the getter for reason.
+	 *
+	 * @return string|null - The user's reason of registration.
+	 */
+	public function reason(){
+		return $this->reason;
+	}
+	
+	/** Function name: collegistData
+	 *
+	 * This is the getter for personal_data.
+	 *
+	 * @return PersonalData|null - The user's collegist data.
+	 */
+	public function collegistData(){
+		return $this->personal_data;
 	}
 
 }
