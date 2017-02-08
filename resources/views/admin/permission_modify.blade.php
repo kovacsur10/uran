@@ -18,7 +18,7 @@
 									<label  class="col-md-4 control-label" for="user">{{ $layout->language('user') }}</label>
 									<div class="col-md-6">
 										<select class="form-control" name="user" id="user">
-											<option value="{{ $userid }}" selected>{{ $layout->user()->getUserData($userid)->name }} ({{ $layout->user()->getUserData($userid)->username }})</option>
+											<option value="{{ $userid }}" selected>{{ $layout->user()->getUserData($userid)->name() }} ({{ $layout->user()->getUserData($userid)->username() }})</option>
 										</select>
 									</div>
 								</div>
@@ -27,7 +27,7 @@
 									<div class="col-md-6 col-md-offset-3">
 										@foreach($layout->permissions()->getAllPermissions() as $permission)
 											<div class="checkbox">
-												<label><input type="checkbox" name="permissions[]" value="{{ $permission->id }}" {{ $layout->permissions()->permitted($userid, $permission->permission_name) ? 'checked' : '' }}> {{ $permission->description }} ({{ $permission->permission_name }})</label>
+												<label><input type="checkbox" name="permissions[]" value="{{ $permission->id() }}" {{ $layout->permissions()->permitted($userid, $permission->name()) ? 'checked' : '' }}> {{ $permission->description() }} ({{ $permission->name() }})</label>
 											</div>
 										@endforeach
 									</div>

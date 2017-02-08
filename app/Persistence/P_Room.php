@@ -9,6 +9,7 @@ use App\Classes\Data\StatusCode;
 use App\Classes\Data\AssignmentTable;
 use App\Classes\Data\PersonalData;
 use App\Classes\Data\Faculty;
+use App\Classes\Data\Workshop;
 
 /** Class name: P_Room
  *
@@ -233,8 +234,18 @@ class P_Room{
 		$users = [];
 		foreach($getUsers as $user){
 			if($user->neptun !== null){
-				$faculty = null;
-				$workshop = null;
+				$facultyData = DB::table('users')
+					->join('faculties', 'faculties.id', '=', 'users.faculty')
+					->select('faculties.id as id', 'faculties.name as name')
+					->where('users.id', '=', $user->id)
+					->first();
+				$workshopData = DB::table('users')
+					->join('workshops', 'workshops.id', '=', 'users.workshop')
+					->select('workshops.id as id', 'workshops.name as name')
+					->where('users.id', '=', $user->id)
+					->first();
+				$faculty = new Faculty($facultyData->id, $facultyData->name);
+				$workshop = new Workshop($workshopData->id, $workshopData->name);
 				$collegistData = new PersonalData($user->neptun, $user->city_of_birth, $user->date_of_birth, $user->name_of_mother, $user->high_school, $user->year_of_leaving_exam, $user->from_year, $faculty, $workshop);
 			}else{
 				$collegistData = null;

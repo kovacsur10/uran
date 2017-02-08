@@ -19,7 +19,7 @@
 									<div class="col-md-6">
 										<select class="form-control"  name="user"  id="user">
 											@foreach($layout->user()->users() as $user)
-												<option value="{{ $user->id }}">{{ $user->name }} ({{ $user->username }})</option>
+												<option value="{{ $user->id() }}">{{ $user->name() }} ({{ $user->username() }})</option>
 											@endforeach
 										</select>
 
@@ -53,7 +53,7 @@
 									<div class="col-md-6">
 										<select class="form-control" name="permission" id="permission">
 											@foreach($layout->permissions()->getAllPermissions() as $permission)
-												<option value="{{ $permission->permission_name }}">{{ $permission->description }} ({{ $permission->permission_name }})</option>
+												<option value="{{ $permission->name() }}">{{ $permission->description() }} ({{ $permission->name() }})</option>
 											@endforeach
 										</select>
 									</div>

@@ -6,11 +6,22 @@ use App\Classes\LayoutData;
 use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Database\QueryException;
 use Mail;
 
+/** Class name: RegistrationController
+ *
+ * This controller is for handling the registrations.
+ *
+ * @author Máté Kovács <kovacsur10@gmail.com>
+ */
 class RegistrationController extends Controller{
 
+	/** Function name: showList
+	 *
+	 * This function shows the registrations.
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
     public function showList(){
 		$layout = new LayoutData();
 		if($layout->user()->permitted('accept_user_registration')){
@@ -20,9 +31,17 @@ class RegistrationController extends Controller{
 		}
     }
 	
+    /** Function name: show
+     *
+     * This function shows the requested user registration request.
+     * 
+     * @param int id - registration user identifier
+     *
+     * @author Máté Kovács <kovacsur10@gmail.com>
+     */
 	public function show($id){
 		$layout = new LayoutData();
-		$layout->registrations()->setRegistrationUserById($id);
+		$layout->registrations()->setRegistrationUser($id);
 		if($layout->user()->permitted('accept_user_registration')){
 			return view('admin.registration.show', ["layout" => $layout]);
 		}else{
@@ -30,6 +49,14 @@ class RegistrationController extends Controller{
 		}
     }
 	
+    /** Function name: reject
+     *
+     * This function rejects a user registration.
+     * 
+     * @param int id - registration user identifier
+     *
+     * @author Máté Kovács <kovacsur10@gmail.com>
+     */
 	public function reject($id){
 		$layout = new LayoutData();
 		if($layout->user()->permitted('accept_user_registration')){
@@ -48,6 +75,14 @@ class RegistrationController extends Controller{
 		}
     }
 	
+    /** Function name: accept
+     *
+     * This function accepts a user registration.
+     *
+     * @param Request request
+     *
+     * @author Máté Kovács <kovacsur10@gmail.com>
+     */
 	public function accept(Request $request){
 		$layout = new LayoutData();
 		if($layout->user()->permitted('accept_user_registration')){

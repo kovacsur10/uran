@@ -22,7 +22,7 @@
 									<div class="col-md-6 col-md-offset-3">
 										@foreach($layout->permissions()->getAllPermissions() as $permission)
 											<div class="checkbox">
-												<label><input type="checkbox" name="permissions[]" value="{{ $permission->id }}" {{ $layout->permissions()->hasCollegistsDefaultPermission($permission->id) ? 'checked' : '' }}> {{ $permission->description }} ({{ $permission->permission_name }})</label>
+												<label><input type="checkbox" name="permissions[]" value="{{ $permission->id() }}" {{ $layout->permissions()->hasCollegistsDefaultPermission($permission->id()) ? 'checked' : '' }}> {{ $permission->description() }} ({{ $permission->name() }})</label>
 											</div>
 										@endforeach
 									</div>
@@ -49,7 +49,7 @@
 									<div class="col-md-6 col-md-offset-3">
 										@foreach($layout->permissions()->getAllPermissions() as $permission)
 											<div class="checkbox">
-												<label><input type="checkbox" name="permissions[]" value="{{ $permission->id }}" {{ $layout->permissions()->hasGuestsDefaultPermission($permission->id) ? 'checked' : '' }}> {{ $permission->description }} ({{ $permission->permission_name }})</label>
+												<label><input type="checkbox" name="permissions[]" value="{{ $permission->id() }}" {{ $layout->permissions()->hasGuestsDefaultPermission($permission->id()) ? 'checked' : '' }}> {{ $permission->description() }} ({{ $permission->name() }})</label>
 											</div>
 										@endforeach
 									</div>

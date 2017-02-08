@@ -7,13 +7,33 @@ use App\Classes\Notifications;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
+/** Class name: ModuleController
+ *
+ * This controller is for handling the module system of the website.
+ *
+ * @author Máté Kovács <kovacsur10@gmail.com>
+ */
 class DefaultPermissionsController extends Controller{
 
+	/** Function name: show
+	 *
+	 * This function shows the current default permissions.
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
 	public function show(){
 		$layout = new LayoutData();
         return view('admin.defaultpermissions', ["layout" => $layout]);
     }
 	
+    /** Function name: setGuest
+     *
+     * This function sets the default guest permissions table.
+     *
+     * @param Request request
+     *
+     * @author Máté Kovács <kovacsur10@gmail.com>
+     */
 	public function setGuest(Request $request){
 		$layout = new LayoutData();
 		$permissions = [];
@@ -29,6 +49,14 @@ class DefaultPermissionsController extends Controller{
 		}
     }
 	
+    /** Function name: setCollegist
+     *
+     * This function sets the default collegist permissions table.
+     *
+     * @param Request request
+     *
+     * @author Máté Kovács <kovacsur10@gmail.com>
+     */
 	public function setCollegist(Request $request){
 		$layout = new LayoutData();
 		$permissions = [];

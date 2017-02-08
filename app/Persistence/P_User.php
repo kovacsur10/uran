@@ -7,6 +7,8 @@ use App\Classes\Data\StatusCode;
 use App\Classes\Data\Permission;
 use App\Classes\Data\User;
 use App\Classes\Data\PersonalData;
+use App\Classes\Data\Faculty;
+use App\Classes\Data\Workshop;
 
 /** Class name: P_User
  *
@@ -40,8 +42,18 @@ class P_User{
 		$users = [];
 		foreach($getUsers as $user){
 			if($user->neptun !== null){
-				$faculty = null;
-				$workshop = null;
+				$facultyData = DB::table('users')
+					->join('faculties', 'faculties.id', '=', 'users.faculty')
+					->select('faculties.id as id', 'faculties.name as name')
+					->where('users.id', '=', $user->id)
+					->first();
+				$workshopData = DB::table('users')
+					->join('workshops', 'workshops.id', '=', 'users.workshop')
+					->select('workshops.id as id', 'workshops.name as name')
+					->where('users.id', '=', $user->id)
+					->first();
+				$faculty = new Faculty($facultyData->id, $facultyData->name);
+				$workshop = new Workshop($workshopData->id, $workshopData->name);
 				$collegistData = new PersonalData($user->neptun, $user->city_of_birth, $user->date_of_birth, $user->name_of_mother, $user->high_school, $user->year_of_leaving_exam, $user->from_year, $faculty, $workshop);
 			}else{
 				$collegistData = null;
@@ -185,8 +197,18 @@ class P_User{
 			->select('users.*', 'registrations.*', 'user_status_codes.status_name as status_name')
 			->first();
 		if(isset($user->neptun) && $user->neptun !== null){
-			$faculty = null;
-			$workshop = null;
+			$facultyData = DB::table('users')
+				->join('faculties', 'faculties.id', '=', 'users.faculty')
+				->select('faculties.id as id', 'faculties.name as name')
+				->where('users.id', '=', $user->id)
+				->first();
+			$workshopData = DB::table('users')
+				->join('workshops', 'workshops.id', '=', 'users.workshop')
+				->select('workshops.id as id', 'workshops.name as name')
+				->where('users.id', '=', $user->id)
+				->first();
+			$faculty = new Faculty($facultyData->id, $facultyData->name);
+			$workshop = new Workshop($workshopData->id, $workshopData->name);
 			$collegistData = new PersonalData($user->neptun, $user->city_of_birth, $user->date_of_birth, $user->name_of_mother, $user->high_school, $user->year_of_leaving_exam, $user->from_year, $faculty, $workshop);
 		}else{
 			$collegistData = null;
@@ -218,8 +240,18 @@ class P_User{
 			->select('users.*', 'registrations.*', 'user_status_codes.status_name as status_name')
 			->first();
 		if($user->neptun !== null){
-			$faculty = null;
-			$workshop = null;
+			$facultyData = DB::table('users')
+				->join('faculties', 'faculties.id', '=', 'users.faculty')
+				->select('faculties.id as id', 'faculties.name as name')
+				->where('users.id', '=', $user->id)
+				->first();
+			$workshopData = DB::table('users')
+				->join('workshops', 'workshops.id', '=', 'users.workshop')
+				->select('workshops.id as id', 'workshops.name as name')
+				->where('users.id', '=', $user->id)
+				->first();
+			$faculty = new Faculty($facultyData->id, $facultyData->name);
+			$workshop = new Workshop($workshopData->id, $workshopData->name);
 			$collegistData = new PersonalData($user->neptun, $user->city_of_birth, $user->date_of_birth, $user->name_of_mother, $user->high_school, $user->year_of_leaving_exam, $user->from_year, $faculty, $workshop);
 		}else{
 			$collegistData = null;
@@ -257,8 +289,18 @@ class P_User{
 		$users = [];
 		foreach($getUsers as $user){
 			if($user->neptun !== null){
-				$faculty = null;
-				$workshop = null;
+				$facultyData = DB::table('users')
+					->join('faculties', 'faculties.id', '=', 'users.faculty')
+					->select('faculties.id as id', 'faculties.name as name')
+					->where('users.id', '=', $user->id)
+					->first();
+				$workshopData = DB::table('users')
+					->join('workshops', 'workshops.id', '=', 'users.workshop')
+					->select('workshops.id as id', 'workshops.name as name')
+					->where('users.id', '=', $user->id)
+					->first();
+				$faculty = new Faculty($facultyData->id, $facultyData->name);
+				$workshop = new Workshop($workshopData->id, $workshopData->name);
 				$collegistData = new PersonalData($user->neptun, $user->city_of_birth, $user->date_of_birth, $user->name_of_mother, $user->high_school, $user->year_of_leaving_exam, $user->from_year, $faculty, $workshop);
 			}else{
 				$collegistData = null;
@@ -324,8 +366,18 @@ class P_User{
 			->select('users.*', 'registrations.*', 'user_status_codes.status_name as status_name')
 			->first();
 		if($user->neptun !== null){
-			$faculty = null;
-			$workshop = null;
+			$facultyData = DB::table('users')
+				->join('faculties', 'faculties.id', '=', 'users.faculty')
+				->select('faculties.id as id', 'faculties.name as name')
+				->where('users.id', '=', $user->id)
+				->first();
+			$workshopData = DB::table('users')
+				->join('workshops', 'workshops.id', '=', 'users.workshop')
+				->select('workshops.id as id', 'workshops.name as name')
+				->where('users.id', '=', $user->id)
+				->first();
+			$faculty = new Faculty($facultyData->id, $facultyData->name);
+			$workshop = new Workshop($workshopData->id, $workshopData->name);
 			$collegistData = new PersonalData($user->neptun, $user->city_of_birth, $user->date_of_birth, $user->name_of_mother, $user->high_school, $user->year_of_leaving_exam, $user->from_year, $faculty, $workshop);
 		}else{
 			$collegistData = null;
@@ -366,12 +418,23 @@ class P_User{
 			->where('users.registered', '=', false)
 			->where('users.id', '!=', 0)
 			->orderBy('users.name', 'asc')
+			->select('registrations.*', 'user_status_codes.*', 'users.*', 'users.id as id')
 			->get();
 		$users = [];
 		foreach($getUsers as $user){
 			if($user->neptun !== null){
-				$faculty = null;
-				$workshop = null;
+				$facultyData = DB::table('users')
+					->join('faculties', 'faculties.id', '=', 'users.faculty')
+					->select('faculties.id as id', 'faculties.name as name')
+					->where('users.id', '=', $user->id)
+					->first();
+				$workshopData = DB::table('users')
+					->join('workshops', 'workshops.id', '=', 'users.workshop')
+					->select('workshops.id as id', 'workshops.name as name')
+					->where('users.id', '=', $user->id)
+					->first();
+				$faculty = new Faculty($facultyData->id, $facultyData->name);
+				$workshop = new Workshop($workshopData->id, $workshopData->name);
 				$collegistData = new PersonalData($user->neptun, $user->city_of_birth, $user->date_of_birth, $user->name_of_mother, $user->high_school, $user->year_of_leaving_exam, $user->from_year, $faculty, $workshop);
 			}else{
 				$collegistData = null;
