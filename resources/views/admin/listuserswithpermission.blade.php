@@ -13,7 +13,7 @@
 						<div class="panel-body">
 							<ul>
 								@foreach($users as $user)
-									<li>{{ $user->name }} ({{ $user->username }})</li>
+									<li>{{ $user->name() }} ({{ $user->username() }})</li>
 								@endforeach
 							</ul>
 						</div>

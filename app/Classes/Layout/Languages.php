@@ -102,6 +102,7 @@ class Languages{
 		//permissions
 			'assign_permissions' => 'Jogok hozzárendelése',
 			'error_at_setting_the_permissions' => 'Hiba a jogosultságok beállításakor!',
+			'success_at_setting_the_permissions' => 'Sikeresen módosítottad a felhasználó jogait!',
 			'list_permissions' => 'Jogok listázása',
 			'permissions_handling' => 'Jogok kezelése',
 			'set_permissions' => 'Jogosultságok beállítása',
@@ -645,6 +646,7 @@ class Languages{
 		//permissions
 			'assign_permissions' => 'Assign permissions',
 			'error_at_setting_the_permissions' => 'Error at setting the permissions!',
+			'success_at_setting_the_permissions' => 'You modified the user\'s permissions successfully!',
 			'list_permissions' => 'List permissions',
 			'permissions_handling' => 'Permission handler',
 			'set_permissions' => 'Set permissions',

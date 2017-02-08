@@ -39,7 +39,7 @@ class PersonalData{
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function __construct(string $neptun, string $city_of_birth, string $date_of_birth, string $name_of_mother, string $high_school, string $year_of_leaving_exam, string $admission_year, Faculty $faculty = null, Workshop $workshop = null){
+	public function __construct(string $neptun, string $city_of_birth, string $date_of_birth, string $name_of_mother, string $high_school, string $year_of_leaving_exam, string $admission_year, Faculty $faculty, Workshop $workshop){
 		$this->neptun = $neptun;
 		$this->city_of_birth = $city_of_birth;
 		$this->date_of_birth = $date_of_birth;

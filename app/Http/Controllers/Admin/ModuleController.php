@@ -9,13 +9,33 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
 
+/** Class name: ModuleController
+ *
+ * This controller is for handling the module system of the website.
+ *
+ * @author Máté Kovács <kovacsur10@gmail.com>
+ */
 class ModuleController extends Controller{
 
+	/** Function name: show
+	 *
+	 * This function shows the available modules.
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
     public function show(){
 		$layout = new LayoutData();
         return view('admin.modules', ["layout" => $layout]);
     }
 	
+    /** Function name: activate
+     *
+     * This function activetes a module.
+     *
+     * @param Request request
+     *
+     * @author Máté Kovács <kovacsur10@gmail.com>
+     */
 	public function activate(Request $request){
 		$layout = new LayoutData();
 		if($layout->user()->permitted('module_admin')){
@@ -34,6 +54,14 @@ class ModuleController extends Controller{
 		}
     }
 	
+    /** Function name: deactivate
+     *
+     * This function inactivates a module.
+     *
+     * @param Request request
+     *
+     * @author Máté Kovács <kovacsur10@gmail.com>
+     */
 	public function deactivate(Request $request){
 		$layout = new LayoutData();
 		if($layout->user()->permitted('module_admin')){
