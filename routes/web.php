@@ -32,6 +32,8 @@ Route::group(['middleware' => 'web'], function () {
 	Route::get('admin/registration/show', 'Admin\RegistrationController@showList')->middleware('auth.logged');
 	Route::get('admin/registration/show/{id}', 'Admin\RegistrationController@show')->middleware('auth.logged');
 	Route::post('admin/registration/accept', 'Admin\RegistrationController@accept')->middleware('auth.logged');
+	Route::get('admin/groups/list', 'Admin\GroupController@showGroups')->middleware('auth.logged');
+	Route::post('admin/groups/modify', 'Admin\GroupController@showModifyPage')->middleware('auth.logged');
 	
 	// Login and logout routes
 	Route::get('login', 'Auth\AuthController@showLoginForm')->middleware('auth.notlogged');

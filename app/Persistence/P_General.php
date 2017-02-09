@@ -9,6 +9,7 @@ use App\Classes\Data\Country;
 use App\Classes\Data\Module;
 use App\Classes\Data\Permission;
 use App\Classes\Data\Notification;
+use App\Classes\Data\PermissionGroup;
 
 /** Class name: P_General
  *
@@ -538,6 +539,64 @@ class P_General{
 			->where('permission_name', 'LIKE', $permissionName)
 			->first();
 		return $permission === null ? null : new Permission($permission->id, $permission->permission_name, $permission->description);
+	}
+	
+	/** Function name: getPermissionGroup
+	 *
+	 * This function returns the requested
+	 * permission group.
+	 * 
+	 * @param int $id - identifier of a group
+	 * @return PermissionGroup|null
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	static function getPermissionGroup($id){
+		$group = DB::table('groups')
+			->where('id', '=', $id)
+			->first();
+		if($group !== null){
+			$rawPermissions = DB::table('permissions')
+				->join('group_permissions', 'group_permissions.permission_id', '=', 'permissions.id')
+				->where('group_permissions.group_id', '=', $group->id)
+				->select('permissions.*')
+				->get();
+			$permissions = [];
+			foreach($rawPermissions as $permission){
+				$permissions[] = new Permission($permission->id, $permission->permission_name, $permission->description);
+			}
+			return new PermissionGroup($group->id, $group->group_name, $permissions);
+		}else{
+			return null;
+		}
+	}
+	
+	/** Function name: getPermissionGroups
+	 *
+	 * This function returns the available
+	 * permission groups.
+	 *
+	 * @return array of PermissionGroup
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	static function getPermissionGroups(){
+		$groupsRaw = DB::table('groups')
+			->get();
+		$groups = [];
+		foreach($groupsRaw as $group){
+			$rawPermissions = DB::table('permissions')
+				->join('group_permissions', 'group_permissions.permission_id', '=', 'permissions.id')
+				->where('group_permissions.group_id', '=', $group->id)
+				->select('permissions.*')
+				->get();
+			$permissions = [];
+			foreach($rawPermissions as $permission){
+				$permissions[] = new Permission($permission->id, $permission->permission_name, $permission->description);
+			}
+			$groups[] = new PermissionGroup($group->id, $group->group_name, $permissions);
+		}
+		return $groups;
 	}
 	
 }

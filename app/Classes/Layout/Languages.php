@@ -106,6 +106,8 @@ class Languages{
 			'list_permissions' => 'Jogok listázása',
 			'permissions_handling' => 'Jogok kezelése',
 			'set_permissions' => 'Jogosultságok beállítása',
+			'permission_group' => 'Jogkör',
+			'permission_group_handling' => 'Jogkörök beállítása',
 		//modules
 			'error_at_module_activation' => 'Hiba a modul aktiválásakor!',
 			'module' => 'Modul',
@@ -646,6 +648,8 @@ class Languages{
 			'list_permissions' => 'List permissions',
 			'permissions_handling' => 'Permission handler',
 			'set_permissions' => 'Set permissions',
+			'permission_group' => 'Permission group',
+			'permission_group_handling' => 'Permission group handling',
 		//modules
 			'error_at_module_activation' => 'Error at activating the modul!',
 			'module' => 'Module',
