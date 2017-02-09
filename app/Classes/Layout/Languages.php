@@ -106,10 +106,6 @@ class Languages{
 			'list_permissions' => 'Jogok listázása',
 			'permissions_handling' => 'Jogok kezelése',
 			'set_permissions' => 'Jogosultságok beállítása',
-			'default_permissions_handling' => 'Alapértelmezett jogok beállítása',
-			'default_permissions_collegist' => 'Alapértelmezett jogok collegistáknak',
-			'default_permissions_guest' => 'Alapértelmezett jogok vendégeknek',
-			'whats_are_default_permissions_description' => 'Az alapértelmezett jogok azok a jogok, amiket egy újonnan regisztrált tag felhasználói fiókja megkap automatikusan!',
 		//modules
 			'error_at_module_activation' => 'Hiba a modul aktiválásakor!',
 			'module' => 'Modul',
@@ -650,10 +646,6 @@ class Languages{
 			'list_permissions' => 'List permissions',
 			'permissions_handling' => 'Permission handler',
 			'set_permissions' => 'Set permissions',
-			'default_permissions_handling' => 'Set the default permissions',
-			'default_permissions_collegist' => 'Default permissions for collegists',
-			'default_permissions_guest' => 'Default permissions for guests',
-			'whats_are_default_permissions_description' => 'Default permissions are the sets of permissions that a freshly registered user get automatically at registration!',
 		//modules
 			'error_at_module_activation' => 'Error at activating the modul!',
 			'module' => 'Module',

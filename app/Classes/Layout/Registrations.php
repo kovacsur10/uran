@@ -298,7 +298,8 @@ class Registrations{
 					throw new UserNotFoundException();
 				}else{
 					P_User::addRegistrationCodeEntry($userId, $registrationCode);
-					Registrations::addUserDefaultPermissions($userType, $userId);
+					//Registrations::addUserDefaultPermissions($userType, $userId);
+					//TODO: replace the old default permissions method
 						
 					// ECNET PART
 					$layout = new LayoutData();
@@ -326,26 +327,4 @@ class Registrations{
 	}
 	
 // PRIVATE FUNCTIONS
-	/** Function name: addUserDefaultPermissions
-	 *
-	 * This function gives the registered user
-	 * the default permissions based on the user
-	 * type.
-	 *
-	 * @param text $userType - user's type
-	 * @param int $userId - user's identifier
-	 * @return int - error code
-	 *
-	 * @throws QueryException when the persistence layer fails.
-	 *
-	 * @author Máté Kovács <kovacsur10@gmail.com>
-	 */
-	private static function addUserDefaultPermissions($userType, $userId){
-		//get the default permissions
-		$permissions = P_General::getDefaultPermissions($userType);
-		//set the user permissions
-		foreach($permissions as $permission){
-			P_User::addPermissionForUser($userId, $permission->id());
-		}
-	}
 }

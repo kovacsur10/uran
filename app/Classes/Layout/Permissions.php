@@ -17,7 +17,6 @@ use App\Exceptions\UserNotFoundException;
  *
  * Functionality:
  * 		- user permissions
- * 		- default permissions
  * 
  * Functions that can throw exceptions:
  * 
@@ -157,67 +156,6 @@ class Permissions{
 		return $users;
 	}
 	
-	/** Function name: hasGuestsDefaultPermission
-	 *
-	 * This function returns an boolean value
-	 * which means that the permission is in the
-	 * set of the guests' default permissions.
-	 * 
-	 * @param int $permissionId - identifier of permission
-	 * @return bool - has the permission or not
-	 * 
-	 * @author Máté Kovács <kovacsur10@gmail.com>
-	 */
-	public static function hasGuestsDefaultPermission($permissionId){
-		return Permissions::hasDefaultPermission('guest', $permissionId);
-	}
-	
-	/** Function name: hasCollegistsDefaultPermission
-	 *
-	 * This function returns an boolean value
-	 * which means that the permission is in the
-	 * set of the collegists' default permissions.
-	 * 
-	 * @param int $permissionId - identifier of permission
-	 * @return bool - has the permission or not
-	 * 
-	 * @author Máté Kovács <kovacsur10@gmail.com>
-	 */
-	public static function hasCollegistsDefaultPermission($permissionId){
-		return Permissions::hasDefaultPermission('collegist', $permissionId);
-	}
-	
-	/** Function name: setDefaults
-	 *
-	 * This function sets the default
-	 * permissions to the given user type.
-	 * 
-	 * @param text $userType - user type
-	 * @param arrayOfId $permissions - identifiers of the permissions
-	 * 
-	 * @throws DatabaseException when the default permissions cannot be set!
-	 * @throws ValueMismatchException when the user type not exist or anything is null!
-	 * 
-	 * @author Máté Kovács <kovacsur10@gmail.com>
-	 */
-	public static function setDefaults($userType, $permissions){
-		if(($userType != "guest" && $userType != "collegist") || $permissions === null){
-			throw new ValueMismatchException("The provided user type does not exist!");
-		}
-		try{
-			Database::transaction(function() use($userType, $permissions){
-				//first, delete all the permissions
-				P_General::deleteDefaultPermissionsForRegistrationType($userType);
-				//add the new permissions
-				foreach($permissions as $permission){
-					P_General::insertNewDefaultPermission($userType, $permission);
-				}
-			});
-		}catch(\Exception $ex){
-			throw new DatabaseException("Cannot set default permissions! (".$ex->getMessage().")");
-		}
-	}
-	
 	/** Function name: removeAll
 	 *
 	 * This function removes all of
@@ -272,29 +210,4 @@ class Permissions{
 	}
 	
 // PRIVATE FUNCTIONS	
-	
-	/** Function name: hasDefaultPermission
-	 *
-	 * This function returns that boolean value
-	 * that the requested user type has the 
-	 * requested permission or not.
-	 * 
-	 * @param text $userType - user type, "collegist" or "guest"
-	 * @param int $permissionId - indentifier of a permission
-	 * @return bool
-	 * 
-	 * @author Máté Kovács <kovacsur10@gmail.com>
-	 */
-	private static function hasDefaultPermission($userType, $permissionId){
-		if($userType === null || $permissionId === null){
-			return false;
-		}
-		try{
-			$permission = P_General::hasDefaultPermission($userType, $permissionId);
-		}catch(\Exception $ex){
-			$permission = null;
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'default_permissions' was not successful! ".$ex->getMessage());
-		}
-		return ($permission !== null);
-	}
 }
