@@ -6,6 +6,7 @@ use App\Classes\Layout\Permissions;
 use App\Exceptions\DatabaseException;
 use App\Exceptions\ValueMismatchException;
 use App\Exceptions\UserNotFoundException;
+use App\Classes\Data\PermissionGroup;
 
 /** Class name: PermissionsTest
  *
@@ -264,6 +265,60 @@ class PermissionsTest extends TestCase
 			Permissions::setPermissionForUser(null, null);
 			$this->fail("An exception was expected!");
 		}catch(UserNotFoundException $ex){
+		}catch(\Exception $ex){
+			$this->fail("Not the expected exception: ".$ex->getMessage());
+		}
+	}
+	
+	/** Function name: test_getPermissionGroups
+	 *
+	 * This function is testing the getPermissionGroups function of the Permissions model.
+	 *
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	function test_getPermissionGroups(){
+		try{
+			$groups = Permissions::getPermissionGroups();
+			$this->assertCount(3, $groups);
+			foreach($groups as $group){
+				$this->assertInstanceOf(PermissionGroup::class, $group);
+			}
+		}catch(\Exception $ex){
+			$this->fail("Unexpected exception: ".$ex->getMessage());
+		}
+	}
+	
+	/** Function name: test_getPermissionGroup
+	 *
+	 * This function is testing the getPermissionGroup function of the Permissions model.
+	 *
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	function test_getPermissionGroup(){
+		try{
+			$group = Permissions::getPermissionGroup(1);
+			$this->assertNotNull($group);
+			$this->assertInstanceOf(PermissionGroup::class, $group);
+		}catch(\Exception $ex){
+			$this->fail("Unexpected exception: ".$ex->getMessage());
+		}
+		
+		try{
+			$group = Permissions::getPermissionGroup(null);
+			$this->fail("An exception was expected!");
+		}catch(ValueMismatchException $ex){
+		}catch(\Exception $ex){
+			$this->fail("Not the expected exception: ".$ex->getMessage());
+		}
+		
+		try{
+			$group = Permissions::getPermissionGroup(0);
+			$this->fail("An exception was expected!");
+		}catch(DatabaseException $ex){
 		}catch(\Exception $ex){
 			$this->fail("Not the expected exception: ".$ex->getMessage());
 		}

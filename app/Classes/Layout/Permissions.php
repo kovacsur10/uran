@@ -9,6 +9,7 @@ use App\Classes\Database;
 use App\Exceptions\DatabaseException;
 use App\Exceptions\ValueMismatchException;
 use App\Exceptions\UserNotFoundException;
+use App\Classes\Data\PermissionGroup;
 
 /** Class name: Permissions
  *
@@ -207,6 +208,51 @@ class Permissions{
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Insert into table 'user_permissions' was not successful! ".$ex->getMessage());
 			throw new DatabaseException("Setting a permission for user was not successful!");
 		}
+	}
+	
+	/** Function name: getPermissionGroups
+	 * 
+	 * This function returns the available
+	 * permission groups.
+	 * 
+	 * @return array of PermissionGroup
+	 * 
+	 * @throws DatabaseException if a database exception has occurred.
+	 */
+	public static function getPermissionGroups(){
+		try{
+			$groups = P_General::getPermissionGroups();
+		}catch(\Exception $ex){
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
+			throw new DatabaseException("Could not get the permission groups!");
+		}
+		return $groups;
+	}
+	
+	/** Function name: getPermissionGroup
+	 *
+	 * This function returns the requested permission group.
+	 *
+	 * @param int $id - identifier of a permissions group
+	 * @return PermissionGroup
+	 *
+	 * @throws ValueMismatchException if the given identifier is null.
+	 * @throws DatabaseException if a database exception has occurred.
+	 */
+	public static function getPermissionGroup($id){
+		if($id === null){
+			throw new ValueMismatchException("Identifier cannot be null!");
+		}
+		try{
+			$group = P_General::getPermissionGroup($id);
+		}catch(\Exception $ex){
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
+			throw new DatabaseException("Could not get the permission group!");
+		}
+		if($group === null){
+			throw new DatabaseException("Element could not be found!");
+		}
+		return $group;
 	}
 	
 // PRIVATE FUNCTIONS	

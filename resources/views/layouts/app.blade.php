@@ -106,7 +106,7 @@
 							<ul class="dropdown-menu" role="menu">
 								@if($data->user()->permitted('permission_admin'))
 								<li><a href="{{ url('/admin/permissions') }}">{{ $layout->language('permissions_handling') }}</a></li>
-								<li><a href="{{ url('/admin/permissions/default') }}">{{ $layout->language('default_permissions_handling') }}</a></li>
+								<li><a href="{{ url('/admin/groups/list') }}">{{ $layout->language('permission_group_handling') }}</a></li>
 								@endif
 								@if($data->user()->permitted('module_admin'))
 								<li><a href="{{ url('/admin/modules') }}">{{ $layout->language('modules_handling') }}</a></li>
