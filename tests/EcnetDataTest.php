@@ -43,7 +43,7 @@ class EcnetDataTest extends TestCase
 	
 		$user = new EcnetData(1);
 		$this->assertInstanceOf(EcnetData::class, $user);
-		$this->assertCount(15, $user->permissions());
+		$this->assertCount(16, $user->permissions());
 		$this->assertNotNull(0, $user->validationTime());
 		$this->assertEquals("2016-09-30 05:00:00", $user->validationTime());
 		$this->assertEquals('', $user->getNameFilter());

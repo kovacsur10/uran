@@ -40,33 +40,63 @@ class Permissions{
 	 * @param text $permissionName - text identifier of the permission
 	 * @return bool - permitted or not
 	 * 
+	 * @throws ValueMismatchException - if a parameter is null.
+	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public static function permitted($userId, $permissionName){
-		$permissions = Permissions::getForUser($userId);
-		$i = 0;
-		while($i < count($permissions) && $permissions[$i]->name() !== $permissionName){
-			$i++;
+		if($userId === null || $permissionName === null){
+			throw new ValueMismatchException("Parameters cannot be null!");
 		}
-		return $i < count($permissions);
+		$permissions = Permissions::getForUser($userId);
+		
+		foreach($permissions as $permission){
+			if($permission->name() === $permissionName){
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	/** Function name: getForUser
 	 *
 	 * This function returns the available
 	 * permissions of the requested user.
+	 *
+	 * @param int $userId - user's identifier
+	 * @return array of Permission
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	public static function getForUser($userId){
+		try{
+			$permissionsFromGroups = Permissions::getForUserFromGroups($userId);
+			$permissions = Permissions::getForUserExplicitPermissions($userId);
+			$permissions = array_unique(array_merge($permissions, $permissionsFromGroups));
+		}catch(\Exception $ex){
+			$permissions = [];
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
+		}
+		return $permissions;
+	}
+	
+	/** Function name: getForUserExplicitPermissions
+	 *
+	 * This function returns the available
+	 * permissions of the requested user,
+	 * that were explicitly given to the user.
 	 * 
 	 * @param int $userId - user's identifier
 	 * @return array of Permission
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public static function getForUser($userId){
+	public static function getForUserExplicitPermissions($userId){
 		try{
 			$permissions = P_User::getUserPermissions($userId);
 		}catch(\Exception $ex){
 			$permissions = [];
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'permissions', joined to 'user_permissions' was not successful! ".$ex->getMessage());
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 		}
 		return $permissions;
 	}
@@ -86,7 +116,7 @@ class Permissions{
 			$permission = P_General::getPermissionById($permissionId);
 		}catch(\Exception $ex){
 			$permission = null;
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'permissions' was not successful! ".$ex->getMessage());
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 		}
 		return $permission;
 	}
@@ -109,7 +139,7 @@ class Permissions{
 			$permission = P_General::getPermissionByName($permissionName);
 		}catch(\Exception $ex){
 			$permission = null;
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'permissions' was not successful! ".$ex->getMessage());
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 		}
 		return $permission;
 	}
@@ -128,7 +158,7 @@ class Permissions{
 			$permissions = P_General::getPermissions();
 		}catch(\Exception $ex){
 			$permissions = [];
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'permissions' was not successful! ".$ex->getMessage());
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 		}
 		return $permissions;
 	}
@@ -152,7 +182,7 @@ class Permissions{
 			$users = P_User::getUsersWithPermission($permissionName);
 		}catch(\Exception $ex){
 			$users = [];
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'permissions', joined to 'user_permissions' and 'users' was not successful! ".$ex->getMessage());
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 		}
 		return $users;
 	}
@@ -177,7 +207,7 @@ class Permissions{
 		try{
 			P_User::removePermissionsForUser($userId);
 		}catch(\Exception $ex){
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Delete from table 'user_permissions' was not successful! ".$ex->getMessage());
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 			throw new DatabaseException("Removing all permissions for user was not successful!");
 		}
 	}
@@ -205,7 +235,7 @@ class Permissions{
 		try{
 			P_User::addPermissionForUser($userId, $permissionId);
 		}catch(\Exception $ex){
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Insert into table 'user_permissions' was not successful! ".$ex->getMessage());
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 			throw new DatabaseException("Setting a permission for user was not successful!");
 		}
 	}
@@ -218,6 +248,8 @@ class Permissions{
 	 * @return array of PermissionGroup
 	 * 
 	 * @throws DatabaseException if a database exception has occurred.
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public static function getPermissionGroups(){
 		try{
@@ -238,6 +270,8 @@ class Permissions{
 	 *
 	 * @throws ValueMismatchException if the given identifier is null.
 	 * @throws DatabaseException if a database exception has occurred.
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public static function getPermissionGroup($id){
 		if($id === null){
@@ -253,6 +287,103 @@ class Permissions{
 			throw new DatabaseException("Element could not be found!");
 		}
 		return $group;
+	}
+	
+	/** Function name: setGroupPersmissions
+	 *
+	 * This function returns the requested permission group.
+	 *
+	 * @param int $groupId - identifier of a permission group
+	 * @param array $permissionsToHave - permission id array
+	 *
+	 * @throws ValueMismatchException if the given identifier is null.
+	 * @throws DatabaseException if a database exception has occurred.
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	public static function setGroupPersmissions($groupId, $permissionsToHave){
+		if($groupId === null || $permissionsToHave === null || !is_array($permissionsToHave)){
+			throw new ValueMismatchException("Parameter values are not accepted with null value!");
+		}
+		$group = Permissions::getPermissionGroup($groupId);
+		$newPermissions = $permissionsToHave;
+		$deletablePermissions = [];
+		foreach($group->permissions() as $perm){
+			$key = array_search($perm->id(), $newPermissions);
+			if($key !== false){
+				unset($newPermissions[$key]);
+			}else{
+				$deletablePermissions[] = $perm->id();
+			}
+		}
+		try{
+			Database::transaction(function() use($groupId, $deletablePermissions, $newPermissions){
+				foreach($deletablePermissions as $permId){
+					P_General::deleteGroupPermission($groupId, $permId);
+				}
+				foreach($newPermissions as $permId){
+					P_General::addGroupPermission($groupId, $permId);
+				}
+			});
+		}catch(\Exception $ex){
+			throw new DatabaseException("The permissions handling failed!");
+		}
+	}
+	
+	/** Function name: getGroupsForUser
+	 *
+	 * This function returns the user's permission groups.
+	 * 
+	 * @param int $userId - user's identifier
+	 * @return array of PermissionGroup
+	 * 
+	 * @throws ValueMismatchException - if a parameter is null.
+	 * @throws DatabaseException - if a database error has occurred.
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	public static function getGroupsForUser($userId){
+		if($userId === null){
+			throw new ValueMismatchException("Identifier cannot be null!");
+		}
+		try{
+			$groups = P_User::getUserPermissionGroups($userId);
+		}catch(\Exception $ex){
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
+			throw new DatabaseException("Could not get the permission groups!");
+		}
+		return $groups;
+	}
+	
+	/** Function name: getForUserFromGroups
+	 *
+	 * This function returns the user's permissions from the
+	 * group the user is in.
+	 * 
+	 * @param int $userId - user's identifier
+	 * @return array of Permission
+	 * 
+	 * @throws ValueMismatchException - if a parameter is null.
+	 * @throws DatabaseException - if a database error has occurred.
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	public static function getForUserFromGroups($userId){
+		$permissions = [];
+		if($userId === null){
+			throw new ValueMismatchException("Identifier cannot be null!");
+		}
+		try{
+			$groups = Permissions::getGroupsForUser($userId);
+			foreach($groups as $group){
+				$permissions = array_merge($permissions, $group->permissions());
+			}
+			$permissions = array_unique($permissions);
+		}catch(\Exception $ex){
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
+			throw new DatabaseException("Could not create the appended permission list!");
+		}
+		return $permissions;
 	}
 	
 // PRIVATE FUNCTIONS	

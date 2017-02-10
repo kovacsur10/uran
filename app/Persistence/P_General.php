@@ -599,4 +599,37 @@ class P_General{
 		return $groups;
 	}
 	
+	/** Function name: addGroupPermission
+	 *
+	 * This function adds a new permission to a group.
+	 *
+	 * @param int $groupId - permission group identifier
+	 * @param int $permissionId - permission identifier
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	static function addGroupPermission($groupId, $permissionId){
+		DB::table('group_permissions')
+			->insert([
+				'permission_id' => $permissionId,
+				'group_id' => $groupId
+			]);
+	}
+	
+	/** Function name: deleteGroupPermission
+	 *
+	 * This function removes an existing permission from a group.
+	 * 
+	 * @param int $groupId - permission group identifier
+	 * @param int $permissionId - permission identifier
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	static function deleteGroupPermission($groupId, $permissionId){
+		DB::table('group_permissions')
+			->where('group_id', '=', $groupId)
+			->where('permission_id', '=', $permissionId)
+			->delete();
+	}
+	
 }

@@ -38,7 +38,7 @@ class UserModelTest extends TestCase
 		
 		$user = new User(1);
 		$this->assertInstanceOf(\App\Classes\Data\User::class, $user->user());
-		$this->assertCount(15, $user->permissions());
+		$this->assertCount(16, $user->permissions());
 		$this->assertEquals(103, $user->notificationCount());
 		$this->assertEquals(3, $user->unreadNotificationCount());
 		

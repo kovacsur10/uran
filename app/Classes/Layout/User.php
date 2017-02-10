@@ -159,11 +159,12 @@ class User extends Pageable{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function permitted($what){
-		$i = 0;
-		while($i < count($this->permissions) && $this->permissions[$i]->name() != $what){
-			$i++;
+		foreach($this->permissions as $permission){
+			if($permission->name() === $what){
+				return true;
+			}
 		}
-		return $i < count($this->permissions);
+		return false;
 	}
 	
 	/** Function name: getUserData

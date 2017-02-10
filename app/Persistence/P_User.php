@@ -9,6 +9,7 @@ use App\Classes\Data\User;
 use App\Classes\Data\PersonalData;
 use App\Classes\Data\Faculty;
 use App\Classes\Data\Workshop;
+use App\Classes\Data\PermissionGroup;
 
 /** Class name: P_User
  *
@@ -118,6 +119,38 @@ class P_User{
 					'user_id' => $userId,
 					'permission_id' => $permissionId
 			]);
+	}
+	
+	/** Function name: getUserPermissionGroups
+	 *
+	 * This function returns the available groups
+	 * for the requested user.
+	 *
+	 * @param int $userId - user's identifier
+	 * @return array of PermissionGroup
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	static function getUserPermissionGroups($userId){
+		$groupsRaw = DB::table('user_groups')
+			->join('groups', 'groups.id', '=', 'user_groups.group_id')
+			->where('user_groups.user_id', '=', $userId)
+			->select('groups.*')
+			->get();
+		$groups = [];
+		foreach($groupsRaw as $group){
+			$rawPermissions = DB::table('permissions')
+				->join('group_permissions', 'group_permissions.permission_id', '=', 'permissions.id')
+				->where('group_permissions.group_id', '=', $group->id)
+				->select('permissions.*')
+				->get();
+			$permissions = [];
+			foreach($rawPermissions as $permission){
+				$permissions[] = new Permission($permission->id, $permission->permission_name, $permission->description);
+			}
+			$groups[] = new PermissionGroup($group->id, $group->group_name, $permissions);
+		}
+		return $groups;
 	}
 	
 	/** Function name: updateUserLoginTime

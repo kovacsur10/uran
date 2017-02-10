@@ -63,4 +63,13 @@ class Permission{
 		return $this->description;
 	}
 
+	/** Function name: __toString
+	 *
+	 * This is for identifying as a string.
+	 *
+	 * @return string - The name identifier.
+	 */
+	public function __toString(){
+		return $this->name;
+	}
 }
