@@ -108,6 +108,8 @@ class Languages{
 			'set_permissions' => 'Jogosultságok beállítása',
 			'permission_group' => 'Jogkör',
 			'permission_group_handling' => 'Jogkörök beállítása',
+			'error_at_setting_the_group_permissions' => 'Sikertelen a jogkör jogainak a beállítása!',
+			'success_at_setting_the_group_permissions' => 'Sikeres a jogkör jogainak a beállítása!',
 		//modules
 			'error_at_module_activation' => 'Hiba a modul aktiválásakor!',
 			'module' => 'Modul',
@@ -650,6 +652,8 @@ class Languages{
 			'set_permissions' => 'Set permissions',
 			'permission_group' => 'Permission group',
 			'permission_group_handling' => 'Permission group handling',
+			'error_at_setting_the_group_permissions' => 'Error at setting the permissions of the group!',
+			'success_at_setting_the_group_permissions' => 'Setting the group permissions was successful!',
 		//modules
 			'error_at_module_activation' => 'Error at activating the modul!',
 			'module' => 'Module',

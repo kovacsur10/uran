@@ -8,7 +8,7 @@
                 <div class="panel-heading"><a href="{{ url('/admin/groups/list') }}">{{ $layout->language('permission_group_handling') }}</a></div>
                 <div class="panel-body">
 				@if($layout->user()->permitted('permission_admin'))
-					<form class="form-horizontal" role="form" method="POST" action="{{ url('/admin/groups/modify') }}">
+					<form class="form-horizontal" role="form" method="POST" action="{{ url('/admin/groups/modify_values') }}">
 						{!! csrf_field() !!}
 						
 						<div class="form-group">
