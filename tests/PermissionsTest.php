@@ -108,6 +108,86 @@ class PermissionsTest extends TestCase
 		}
 	}
 	
+	/** Function name: test_permittedExplicitly
+	 *
+	 * This function is testing the permittedExplicitly function of the Permissions model.
+	 *
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	function test_permittedExplicitly(){
+		$this->assertTrue(Permissions::permittedExplicitly(41, 'accept_user_registration'));
+		$this->assertTrue(Permissions::permittedExplicitly(41, 'rooms_observe_assignment'));
+		$this->assertTrue(Permissions::permittedExplicitly(41, 'ecnet_slot_verify'));
+		$this->assertFalse(Permissions::permittedExplicitly(41, 'user_handling'));
+		$this->assertFalse(Permissions::permittedExplicitly(41, 'tasks_add'));
+		$this->assertFalse(Permissions::permittedExplicitly(41, 'almafa'));
+		$this->assertFalse(Permissions::permittedExplicitly(41, ''));
+		try{
+			$this->assertFalse(Permissions::permittedExplicitly(41, null));
+			$this->fail("An exception was expected!");
+		}catch(ValueMismatchException $ex){
+		}catch(\Exception $ex){
+			$this->fail("Not the expected exception: ".$ex->getMessage());
+		}
+		$this->assertFalse(Permissions::permittedExplicitly(-1, 'ecnet_slot_verify'));
+		try{
+			$this->assertFalse(Permissions::permittedExplicitly(null, 'ecnet_slot_verify'));
+			$this->fail("An exception was expected!");
+		}catch(ValueMismatchException $ex){
+		}catch(\Exception $ex){
+			$this->fail("Not the expected exception: ".$ex->getMessage());
+		}
+		try{
+			$this->assertFalse(Permissions::permittedExplicitly(null, null));
+			$this->fail("An exception was expected!");
+		}catch(ValueMismatchException $ex){
+		}catch(\Exception $ex){
+			$this->fail("Not the expected exception: ".$ex->getMessage());
+		}
+	}
+	
+	/** Function name: test_permittedFromGroups
+	 *
+	 * This function is testing the permittedFromGroups function of the Permissions model.
+	 *
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	function test_permittedFromGroups(){
+		$this->assertTrue(Permissions::permittedFromGroups(41, 'rooms_observe_assignment'));
+		$this->assertTrue(Permissions::permittedFromGroups(41, 'tasks_add_comment'));
+		$this->assertTrue(Permissions::permittedFromGroups(41, 'tasks_add'));
+		$this->assertTrue(Permissions::permittedFromGroups(41, 'record_read'));
+		$this->assertFalse(Permissions::permittedFromGroups(41, 'tasks_admin'));
+		$this->assertFalse(Permissions::permittedFromGroups(41, 'almafa'));
+		$this->assertFalse(Permissions::permittedFromGroups(41, ''));
+		try{
+			$this->assertFalse(Permissions::permittedFromGroups(41, null));
+			$this->fail("An exception was expected!");
+		}catch(ValueMismatchException $ex){
+		}catch(\Exception $ex){
+			$this->fail("Not the expected exception: ".$ex->getMessage());
+		}
+		$this->assertFalse(Permissions::permittedFromGroups(-1, 'ecnet_slot_verify'));
+		try{
+			$this->assertFalse(Permissions::permittedFromGroups(null, 'ecnet_slot_verify'));
+			$this->fail("An exception was expected!");
+		}catch(ValueMismatchException $ex){
+		}catch(\Exception $ex){
+			$this->fail("Not the expected exception: ".$ex->getMessage());
+		}
+		try{
+			$this->assertFalse(Permissions::permittedFromGroups(null, null));
+			$this->fail("An exception was expected!");
+		}catch(ValueMismatchException $ex){
+		}catch(\Exception $ex){
+			$this->fail("Not the expected exception: ".$ex->getMessage());
+		}
+	}
+	
 	/** Function name: test_getById
 	 *
 	 * This function is testing the getById function of the Permissions model.
@@ -174,7 +254,7 @@ class PermissionsTest extends TestCase
 		$this->assertCount(0, Permissions::getUsersWithPermission(''));
 		$this->assertCount(0, Permissions::getUsersWithPermission(null));
 		$this->assertCount(0, Permissions::getUsersWithPermission('not_existing_permission_name'));
-		$this->assertCount(3, Permissions::getUsersWithPermission('ecnet_slot_verify'));
+		$this->assertCount(4, Permissions::getUsersWithPermission('ecnet_slot_verify'));
 	}
 	
 	/** Function name: test_removeAll_success
@@ -368,18 +448,18 @@ class PermissionsTest extends TestCase
 		}
 	}
 	
-	/** Function name: test_setGroupPersmissions
+	/** Function name: test_setGroupPermissions
 	 *
-	 * This function is testing the setGroupPersmissions function of the Permissions model.
+	 * This function is testing the setGroupPermissions function of the Permissions model.
 	 *
 	 * @return void
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	function test_setGroupPersmissions(){
+	function test_setGroupPermissions(){
 		try{
 			$this->assertCount(4, Permissions::getPermissionGroup(2)->permissions());
-			Permissions::setGroupPersmissions(2, [2, 6, 7, 8, 10]);
+			Permissions::setGroupPermissions(2, [2, 6, 7, 8, 10]);
 			$group = Permissions::getPermissionGroup(2);
 			$this->assertCount(5, $group->permissions());
 			$shouldBeEmpty = [2, 6, 7, 8, 10];
@@ -394,7 +474,7 @@ class PermissionsTest extends TestCase
 		}
 		
 		try{
-			Permissions::setGroupPersmissions(2, 56);
+			Permissions::setGroupPermissions(2, 56);
 			$this->fail("An exception was expected!");
 		}catch(ValueMismatchException $ex){
 		}catch(\Exception $ex){
@@ -402,7 +482,7 @@ class PermissionsTest extends TestCase
 		}
 		
 		try{
-			Permissions::setGroupPersmissions(null, [2, 6, 7, 8, 10]);
+			Permissions::setGroupPermissions(null, [2, 6, 7, 8, 10]);
 			$this->fail("An exception was expected!");
 		}catch(ValueMismatchException $ex){
 		}catch(\Exception $ex){
@@ -410,7 +490,7 @@ class PermissionsTest extends TestCase
 		}
 		
 		try{
-			Permissions::setGroupPersmissions(2, null);
+			Permissions::setGroupPermissions(2, null);
 			$this->fail("An exception was expected!");
 		}catch(ValueMismatchException $ex){
 		}catch(\Exception $ex){
@@ -418,7 +498,7 @@ class PermissionsTest extends TestCase
 		}
 		
 		try{
-			Permissions::setGroupPersmissions(null, null);
+			Permissions::setGroupPermissions(null, null);
 			$this->fail("An exception was expected!");
 		}catch(ValueMismatchException $ex){
 		}catch(\Exception $ex){
@@ -489,4 +569,47 @@ class PermissionsTest extends TestCase
 			$this->fail("Unexpected exception: ".$ex->getMessage());
 		}
 	}
+	
+	/** Function name: test_memberOfPermissionGroups
+	 *
+	 * This function is testing the memberOfPermissionGroups function of the Permissions model.
+	 *
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	public function test_memberOfPermissionGroups(){
+		try{
+			$this->assertTrue(Permissions::memberOfPermissionGroups(34, 1));
+			$this->assertTrue(Permissions::memberOfPermissionGroups(34, 2));
+			$this->assertFalse(Permissions::memberOfPermissionGroups(34, 3));
+		}catch(\Exception $ex){
+			$this->fail("Unexpected exception: ".$ex->getMessage());
+		}
+	
+		try{
+			Permissions::memberOfPermissionGroups(34, null);
+			$this->fail("An exception was expected!");
+		}catch(ValueMismatchException $ex){
+		}catch(\Exception $ex){
+			$this->fail("Not the expected exception: ".$ex->getMessage());
+		}
+	
+		try{
+			Permissions::memberOfPermissionGroups(null, 2);
+			$this->fail("An exception was expected!");
+		}catch(ValueMismatchException $ex){
+		}catch(\Exception $ex){
+			$this->fail("Not the expected exception: ".$ex->getMessage());
+		}
+		
+		try{
+			Permissions::memberOfPermissionGroups(null, null);
+			$this->fail("An exception was expected!");
+		}catch(ValueMismatchException $ex){
+		}catch(\Exception $ex){
+			$this->fail("Not the expected exception: ".$ex->getMessage());
+		}
+	}
+	
 }

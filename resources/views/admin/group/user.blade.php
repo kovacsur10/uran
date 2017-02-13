@@ -5,13 +5,13 @@
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
             <div class="panel panel-default">
-                <div class="panel-heading"><a href="{{ url('/admin/permissions') }}">{{ $layout->language('permissions_handling') }}</a></div>
+                <div class="panel-heading"><a href="{{ url('/admin/groups/list') }}">{{ $layout->language('permission_group_handling') }}</a></div>
                 <div class="panel-body">
 				@if($layout->user()->permitted('permission_admin'))
 					<div class="panel panel-default">
-						<div class="panel-heading">{{ $layout->language('assign_permissions') }}</div>
+						<div class="panel-heading">{{ $layout->language('assign_permission_groups') }}</div>
 						<div class="panel-body">
-							<form class="form-horizontal" role="form" method="POST" action="{{ url('/admin/permissions/set') }}">
+							<form class="form-horizontal" role="form" method="POST" action="{{ url('admin/groups/user_modification') }}">
 								{!! csrf_field() !!}
 								
 								<div class="form-group">
@@ -25,14 +25,11 @@
 								
 								<div class="form-group">
 									<div class="col-md-8 col-md-offset-2">
-										@foreach($layout->permissions()->getAllPermissions() as $permission)
+										@foreach($layout->permissions()->getPermissionGroups() as $group)
 											<div class="checkbox">
-												<label class="checkbox-inline">
-													<input type="checkbox" disabled="disabled" name="permissionsFromGroups[]" value="{{ $permission->id() }}" {{ $layout->permissions()->permittedFromGroups($userid, $permission->name()) ? 'checked' : '' }}>&nbsp;
-												</label>
-												<label class="checkbox-inline">
-													<input type="checkbox" name="permissions[]" value="{{ $permission->id() }}" {{ $layout->permissions()->permittedExplicitly($userid, $permission->name()) ? 'checked' : '' }}>
-													{{ $permission->description() }} ({{ $permission->name() }})
+												<label>
+													<input type="checkbox" name="groups[]" value="{{ $group->id() }}" {{ $layout->permissions()->memberOfPermissionGroups($userid, $group->id()) ? 'checked' : '' }}>
+													{{ $group->name() }}
 												</label>
 											</div>
 										@endforeach
@@ -42,7 +39,7 @@
 								<div class="form-group">
 									<div class="col-md-6 col-md-offset-3">
 										<button type="submit" class="btn btn-primary">
-											{{ $layout->language('set_permissions') }}
+											{{ $layout->language('set_permission_groups') }}
 										</button>
 									</div>
 								</div>

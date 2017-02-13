@@ -560,6 +560,7 @@ class P_General{
 				->join('group_permissions', 'group_permissions.permission_id', '=', 'permissions.id')
 				->where('group_permissions.group_id', '=', $group->id)
 				->select('permissions.*')
+				->orderBy('permissions.id', 'asc')
 				->get();
 			$permissions = [];
 			foreach($rawPermissions as $permission){
@@ -582,6 +583,7 @@ class P_General{
 	 */
 	static function getPermissionGroups(){
 		$groupsRaw = DB::table('groups')
+			->orderBy('groups.id', 'asc')
 			->get();
 		$groups = [];
 		foreach($groupsRaw as $group){
@@ -589,6 +591,7 @@ class P_General{
 				->join('group_permissions', 'group_permissions.permission_id', '=', 'permissions.id')
 				->where('group_permissions.group_id', '=', $group->id)
 				->select('permissions.*')
+				->orderBy('permissions.id', 'asc')
 				->get();
 			$permissions = [];
 			foreach($rawPermissions as $permission){
