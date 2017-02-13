@@ -25,12 +25,28 @@ class GroupController extends Controller{
 		$layout = new LayoutData();
 		return view('admin.group.list', ["layout" => $layout]);
 	}
+	
+	/** Function name: showUserModificationPage
+	 *
+	 * This function shows a user's permission group
+	 * modifier page.
+	 * 
+	 * @param Request $request
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	public function showUserModificationPage(Request $request){
+		$layout = new LayoutData();
+		return view('admin.group.user', ["layout" => $layout,
+			"userid" => $request->user
+		]);
+	}
 
 	/** Function name: showModifyPage
 	 *
 	 * This function shows the modification page for a specific permission group.
 	 *
-	 * $param Request $request
+	 * @param Request $request
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
@@ -52,7 +68,7 @@ class GroupController extends Controller{
 	 *
 	 * This function modifies the group permissions.
 	 *
-	 * $param Request $request
+	 * @param Request $request
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */

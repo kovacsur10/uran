@@ -9,6 +9,7 @@ use App\Persistence\P_User;
 use App\Exceptions\DatabaseException;
 use App\Exceptions\UserNotFoundException;
 use App\Exceptions\ValueMismatchException;
+use App\Classes\Layout\Permissions;
 
 /** Class name: Notifications
  *
@@ -103,7 +104,7 @@ class Notifications{
 	public static function notifyAdmin(User $from, $adminPermission, $subject, $message, $route){
 		if($from !== null && $adminPermission !== null && $subject !== null && $message !== null){
 			try{
-				$admins = P_User::getUsersWithPermission($adminPermission);
+				$admins = Permissions::getUsersWithPermission($adminPermission);
 			}catch(Exception $ex){
 				$admins = [];
 				Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'notifications' joined to 'user_permissions' and 'permissions' was not successful! ".$ex->getMessage());

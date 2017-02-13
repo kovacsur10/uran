@@ -34,7 +34,7 @@ class Permissions{
 	 * This function returns a boolean
 	 * value. True is returned if the
 	 * requested user has the requested
-	 * permission.
+	 * permission or has the permission from a group.
 	 * 
 	 * @param int $userId - user's identifier
 	 * @param text $permissionName - text identifier of the permission
@@ -50,6 +50,64 @@ class Permissions{
 		}
 		$permissions = Permissions::getForUser($userId);
 		
+		foreach($permissions as $permission){
+			if($permission->name() === $permissionName){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/** Function name: permittedExplicitly
+	 *
+	 * This function returns a boolean
+	 * value. True is returned if the
+	 * requested user has the requested
+	 * permission.
+	 *
+	 * @param int $userId - user's identifier
+	 * @param text $permissionName - text identifier of the permission
+	 * @return bool - permitted or not
+	 *
+	 * @throws ValueMismatchException - if a parameter is null.
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	public static function permittedExplicitly($userId, $permissionName){
+		if($userId === null || $permissionName === null){
+			throw new ValueMismatchException("Parameters cannot be null!");
+		}
+		$permissions = Permissions::getForUserExplicitPermissions($userId);
+	
+		foreach($permissions as $permission){
+			if($permission->name() === $permissionName){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/** Function name: permittedFromGroups
+	 *
+	 * This function returns a boolean
+	 * value. True is returned if the
+	 * requested user has the requested
+	 * permission from groups.
+	 *
+	 * @param int $userId - user's identifier
+	 * @param text $permissionName - text identifier of the permission
+	 * @return bool - permitted or not
+	 *
+	 * @throws ValueMismatchException - if a parameter is null.
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	public static function permittedFromGroups($userId, $permissionName){
+		if($userId === null || $permissionName === null){
+			throw new ValueMismatchException("Parameters cannot be null!");
+		}
+		$permissions = Permissions::getForUserFromGroups($userId);
+	
 		foreach($permissions as $permission){
 			if($permission->name() === $permissionName){
 				return true;
@@ -301,7 +359,7 @@ class Permissions{
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public static function setGroupPersmissions($groupId, $permissionsToHave){
+	public static function setGroupPermissions($groupId, $permissionsToHave){
 		if($groupId === null || $permissionsToHave === null || !is_array($permissionsToHave)){
 			throw new ValueMismatchException("Parameter values are not accepted with null value!");
 		}
@@ -384,6 +442,38 @@ class Permissions{
 			throw new DatabaseException("Could not create the appended permission list!");
 		}
 		return $permissions;
+	}
+	
+	/** Function name: memberOfPermissionGroups
+	 *
+	 * This function returns if the a user is
+	 * the member of a group or not.
+	 * 
+	 * @param int $userId - user's identifier
+	 * @param int $groupId - identifier of the group
+	 * @return bool - member of the group or not
+	 *
+	 * @throws ValueMismatchException if a parameter value is null.
+	 * @throws DatabaseException if a database exception has occurred.
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	public static function memberOfPermissionGroups($userId, $groupId){
+		if($userId === null || $groupId === null){
+			throw new ValueMismatchException("Parameter values cannot be null!");
+		}
+		try{
+			$groups = Permissions::getGroupsForUser($userId);
+		}catch(\Exception $ex){
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
+			throw new DatabaseException("Could not get the permission groups!");
+		}
+		foreach($groups as $group){
+			if($group->id() === $groupId){
+				return true;
+			}
+		}
+		return false;
 	}
 	
 // PRIVATE FUNCTIONS	
