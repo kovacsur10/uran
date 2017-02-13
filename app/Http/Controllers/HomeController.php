@@ -6,6 +6,8 @@ use App\Classes\LayoutData;
 use App\Http\Requests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
+use App\Classes\Auth;
+use App\Http\Controllers\Auth\AuthController;
 
 /** Class name: HomeController
  *
@@ -36,8 +38,11 @@ class HomeController extends Controller
      *
      * @author Máté Kovács <kovacsur10@gmail.com>
      */
-    public function index()
-    {
-        return view('home', ["layout" => new LayoutData()]);
+    public function index(){
+    	if(Auth::isLoggedIn()){
+    		return view('home', ["layout" => new LayoutData()]);
+    	}else{
+    		return AuthController::showLoginForm();
+    	}
     }
 }
