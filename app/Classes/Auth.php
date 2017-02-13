@@ -29,6 +29,18 @@ use Mail;
 class Auth{
 	
 // PUBLIC FUNCTIONS
+	/** Function name: isLoggedIn
+	 *
+	 * This function returns if a user is logged in or not.
+	 *
+	 * @return bool - logged in or not
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	public static function isLoggedIn(){
+		return Session::has('user');
+	}
+	
 	/** Function name: logout
 	 *
 	 * This function logs out the current user.

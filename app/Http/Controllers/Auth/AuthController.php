@@ -22,7 +22,7 @@ class AuthController extends Controller{
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-    public function showLoginForm(){
+    public static function showLoginForm(){
         return view('auth.login', ["layout" => new LayoutData()]);
     }
 	
