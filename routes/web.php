@@ -37,6 +37,7 @@ Route::group(['middleware' => 'web'], function () {
 	Route::post('admin/groups/modify_values', 'Admin\GroupController@modify')->middleware('auth.logged');
 	Route::post('admin/groups/user', 'Admin\GroupController@showUserModificationPage')->middleware('auth.logged');
 	Route::post('admin/groups/user_modification', 'Admin\GroupController@modifyUser')->middleware('auth.logged');
+	Route::post('admin/groups/users', 'Admin\GroupController@getUsersWithGroup')->middleware('auth.logged');
 	
 	// Login and logout routes
 	Route::get('login', 'Auth\AuthController@showLoginForm')->middleware('auth.notlogged');

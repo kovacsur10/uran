@@ -40,6 +40,7 @@ class P_User{
 			->where('permissions.permission_name', 'LIKE', $permissionName)
 			->where('users.registered', '=', true)
 			->select('users.*', 'registrations.*', 'user_status_codes.status_name as status_name')
+			->distinct()
 			->get();
 		$users = [];
 		foreach($getUsers as $user){
@@ -73,6 +74,7 @@ class P_User{
 			->where('permissions.permission_name', 'LIKE', $permissionName)
 			->where('users.registered', '=', true)
 			->select('users.*', 'registrations.*', 'user_status_codes.status_name as status_name')
+			->distinct()
 			->get();
 		foreach($getUsers as $user){
 			if($user->neptun !== null){
@@ -93,7 +95,7 @@ class P_User{
 				$collegistData = null;
 			}
 			$newUser = new User($user->id, $user->name, $user->username, $user->password, $user->email, $user->registration_date, new StatusCode($user->status, $user->status_name), $user->last_online, $user->language, $user->registered, $user->verified, $user->verification_date, $user->code, $user->country, $user->city, $user->shire, $user->address, $user->postalcode, $user->reason, $collegistData, $user->phone);
-			if(!in_array($newUser, $users, true)){
+			if(!in_array($newUser, $users)){
 				$users[] = $newUser;
 			}
 		}
@@ -155,6 +157,52 @@ class P_User{
 					'user_id' => $userId,
 					'permission_id' => $permissionId
 			]);
+	}
+	
+	/** Function name: getUsersWithGroup
+	 *
+	 * This function returns those users, who
+	 * have the requested group.
+	 *
+	 * @param int $groupId - group identifier
+	 * @return array of User
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	static function getUsersWithGroup($groupId){
+		//get groups
+		$getUsers = DB::table('users')
+			->join('registrations', 'user_id', '=', 'users.id')
+			->join('user_groups', 'user_groups.user_id', '=', 'users.id')
+			->join('groups', 'groups.id', '=', 'user_groups.group_id')
+			->join('user_status_codes', 'user_status_codes.id', '=', 'users.status')
+			->where('groups.id', '=', $groupId)
+			->where('users.registered', '=', true)
+			->select('users.*', 'registrations.*', 'user_status_codes.status_name as status_name')
+			->distinct()
+			->get();
+		$users = [];
+		foreach($getUsers as $user){
+			if($user->neptun !== null){
+				$facultyData = DB::table('users')
+					->join('faculties', 'faculties.id', '=', 'users.faculty')
+					->select('faculties.id as id', 'faculties.name as name')
+					->where('users.id', '=', $user->id)
+					->first();
+				$workshopData = DB::table('users')
+					->join('workshops', 'workshops.id', '=', 'users.workshop')
+					->select('workshops.id as id', 'workshops.name as name')
+					->where('users.id', '=', $user->id)
+					->first();
+				$faculty = new Faculty($facultyData->id, $facultyData->name);
+				$workshop = new Workshop($workshopData->id, $workshopData->name);
+				$collegistData = new PersonalData($user->neptun, $user->city_of_birth, $user->date_of_birth, $user->name_of_mother, $user->high_school, $user->year_of_leaving_exam, $user->from_year, $faculty, $workshop);
+			}else{
+				$collegistData = null;
+			}
+			$users[] = new User($user->id, $user->name, $user->username, $user->password, $user->email, $user->registration_date, new StatusCode($user->status, $user->status_name), $user->last_online, $user->language, $user->registered, $user->verified, $user->verification_date, $user->code, $user->country, $user->city, $user->shire, $user->address, $user->postalcode, $user->reason, $collegistData, $user->phone);;
+		}
+		return $users;
 	}
 	
 	/** Function name: getUserPermissionGroups

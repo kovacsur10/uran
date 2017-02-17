@@ -113,6 +113,7 @@ class Languages{
 			'assign_permission_groups' => 'Jogkörök hozzárendelése',
 			'set_permission_groups' => 'Jogkörök mentése',
 			'error_at_showing_permission_group_modification_page' => 'Hiba a jogkörök módosítása oldal megnyitásakor!',
+			'list_permission_groups' => 'Jogkörök listázása',
 		//modules
 			'error_at_module_activation' => 'Hiba a modul aktiválásakor!',
 			'module' => 'Modul',
@@ -660,6 +661,7 @@ class Languages{
 			'assign_permission_groups' => 'Assign permission groups',
 			'set_permission_groups' => 'Set groups',
 			'error_at_showing_permission_group_modification_page' => 'Error at showing the permissions group modification page!',
+			'list_permission_groups' => 'List permission groups',
 		//modules
 			'error_at_module_activation' => 'Error at activating the modul!',
 			'module' => 'Module',

@@ -296,5 +296,15 @@ class User{
 	public function collegistData(){
 		return $this->personal_data;
 	}
+	
+	/** Function name: __toString
+	 *
+	 * This is for identifying as a string.
+	 *
+	 * @return string - The username identifier.
+	 */
+	public function __toString(){
+		return $this->username;
+	}
 
 }

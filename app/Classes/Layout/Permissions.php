@@ -227,7 +227,7 @@ class Permissions{
 	 * the users, who have the requested
 	 * permission.
 	 * 
-	 * @param int $permissionId - identifier of permission
+	 * @param string $permissionName - name identifier of permission
 	 * @return array of User
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
@@ -238,6 +238,30 @@ class Permissions{
 		}
 		try{
 			$users = P_User::getUsersWithPermission($permissionName);
+		}catch(\Exception $ex){
+			$users = [];
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
+		}
+		return $users;
+	}
+	
+	/** Function name: getUsersWithGroup
+	 *
+	 * This function returns all of
+	 * the users, who are member of the
+	 * requested group.
+	 *
+	 * @param int $groupId - identifier of group
+	 * @return array of User
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	public static function getUsersWithGroup($groupId){
+		if($groupId === null){
+			return [];
+		}
+		try{
+			$users = P_User::getUsersWithGroup($groupId);
 		}catch(\Exception $ex){
 			$users = [];
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
