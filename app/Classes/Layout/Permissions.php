@@ -476,5 +476,30 @@ class Permissions{
 		return false;
 	}
 	
+	/** Function name: memberOfPermissionGroups
+	 *
+	 * This function returns if the a user is
+	 * the member of a group or not.
+	 *
+	 * @param int $userId - user's identifier
+	 * @param array $groupIds - identifiers of the groups
+	 *
+	 * @throws ValueMismatchException if a parameter value is null.
+	 * @throws DatabaseException if a database exception has occurred.
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	public static function saveUserPermissionGroups($userId, $groupIds){
+		if($userId === null || $groupIds === null || !is_array($groupIds)){
+			throw new ValueMismatchException("Parameter values cannot be null!");
+		}
+		try{
+			P_User::setUserPermissionGroups($userId, $groupIds);
+		}catch(\Exception $ex){
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
+			throw new DatabaseException("Could not set the permission groups for the user!");
+		}
+	}
+	
 // PRIVATE FUNCTIONS	
 }

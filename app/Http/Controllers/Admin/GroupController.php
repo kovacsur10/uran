@@ -59,7 +59,7 @@ class GroupController extends Controller{
 			]);
 		}catch(\Exception $ex){
 			return view('errors.error', ["layout" => $layout,
-				"message" => $layout->language('error_at_showing_permission_group_modification_page'), //TODO
+				"message" => $layout->language('error_at_showing_permission_group_modification_page'),
 				"url" => '/admin/groups/list']);
 		}
 	}
@@ -77,6 +77,32 @@ class GroupController extends Controller{
 		if($layout->user()->permitted('permission_admin')){
 			try{
 				$layout->permissions()->setGroupPersmissions($request->group, $request->permissions);
+			}catch(\Exception $ex){
+				return view('errors.error', ["layout" => $layout,
+						"message" => $layout->language('error_at_setting_the_group_permissions'),
+						"url" => '/admin/groups/list']);
+			}
+			return view('success.success', ["layout" => $layout,
+					"message" => $layout->language('success_at_setting_the_group_permissions'),
+					"url" => '/admin/groups/list']);
+		}else{
+			return view('errors.authentication', ["layout" => $layout]);
+		}
+	}
+	
+	/** Function name: modifyUser
+	 *
+	 * This function modifies a user's permission groups.
+	 *
+	 * @param Request $request
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	public function modifyUser(Request $request){
+		$layout = new LayoutData();
+		if($layout->user()->permitted('permission_admin')){
+			try{
+				$layout->permissions()->saveUserPermissionGroups($request->user, $request->groups);
 			}catch(\Exception $ex){
 				return view('errors.error', ["layout" => $layout,
 						"message" => $layout->language('error_at_setting_the_group_permissions'),

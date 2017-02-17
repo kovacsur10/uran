@@ -5,6 +5,8 @@ use App\Classes\Layout\Registrations;
 use App\Classes\Data\User;
 use App\Exceptions\ValueMismatchException;
 use App\Exceptions\DatabaseException;
+use App\Persistence\P_User;
+use App\Classes\Layout\Permissions;
 
 /** Class name: RegistrationsTest
  *
@@ -381,6 +383,10 @@ class RegistrationsTest extends TestCase
 	function test_register_success_collegist(){
 		try{
 			Registrations::register("testRegistrationFromUnitTest", "test", "kovacsur10@freemail.hu", "Urán unit teszt", "HUN", "Veszprém", "8200", "Sigray utca 18", "Veszprém", null, "+36307501832", "HUN", "Veszprém", "1994-05-27 12:00:00", "anyja neve", 2008, "Unit test school", "AAAAAA", 2011, 1, 1);
+			$userId = P_User::getRegistrationUserIdForUsername("testRegistrationFromUnitTest");
+			$groups = Permissions::getGroupsForUser($userId);
+			$this->assertCount(1, $groups);
+			$this->assertEquals(2, $groups[0]->id());
 		}catch(\Exception $ex){
 			$this->fail("Unexpected exception: ".$ex->getMessage());
 		}
@@ -397,6 +403,10 @@ class RegistrationsTest extends TestCase
 	function test_register_success_guest(){
 		try{
 			Registrations::register("testRegistrationFromUnitTest", "test", "kovacsur10@freemail.hu", "Urán unit teszt", "HUN", "Veszprém", "8200", "Sigray utca 18", "Veszprém", 'this is a reason', "+36307501832", "HUN", null, null, null, null, null, null, null, null, null);
+			$userId = P_User::getRegistrationUserIdForUsername("testRegistrationFromUnitTest");
+			$groups = Permissions::getGroupsForUser($userId);
+			$this->assertCount(1, $groups);
+			$this->assertEquals(1, $groups[0]->id());
 		}catch(\Exception $ex){
 			$this->fail("Unexpected exception: ".$ex->getMessage());
 		}
