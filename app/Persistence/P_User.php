@@ -10,6 +10,7 @@ use App\Classes\Data\PersonalData;
 use App\Classes\Data\Faculty;
 use App\Classes\Data\Workshop;
 use App\Classes\Data\PermissionGroup;
+use App\Classes\Database;
 
 /** Class name: P_User
  *
@@ -186,6 +187,32 @@ class P_User{
 			$groups[] = new PermissionGroup($group->id, $group->group_name, $permissions);
 		}
 		return $groups;
+	}
+	
+	/** Function name: setUserPermissionGroups
+	 *
+	 * This function sets the user the provided
+	 * permission groups. The rest will be deleted,
+	 * if they were set.
+	 *
+	 * @param int $userId - user's identifier
+	 * @param arrayOfInt $permissionGroupIds - array of permission group identifiers
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	static function setUserPermissionGroups($userId, $permissionGroupIds){
+		Database::transaction(function() use($userId, $permissionGroupIds){
+			DB::table('user_groups')
+				->where('user_id', '=', $userId)
+				->delete();
+			foreach($permissionGroupIds as $groupId){
+				DB::table('user_groups')
+					->insert([
+							'user_id' => $userId,
+							'group_id' => $groupId
+					]);
+			}
+		});
 	}
 	
 	/** Function name: updateUserLoginTime

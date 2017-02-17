@@ -612,4 +612,62 @@ class PermissionsTest extends TestCase
 		}
 	}
 	
+	/** Function name: test_saveUserPermissionGroups
+	 *
+	 * This function is testing the saveUserPermissionGroups function of the Permissions model.
+	 *
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	public function test_saveUserPermissionGroups(){
+		try{
+			$this->assertTrue(Permissions::memberOfPermissionGroups(34, 1));
+			$this->assertTrue(Permissions::memberOfPermissionGroups(34, 2));
+			$this->assertFalse(Permissions::memberOfPermissionGroups(34, 3));
+			Permissions::saveUserPermissionGroups(34, [1, 3]);
+			$this->assertTrue(Permissions::memberOfPermissionGroups(34, 1));
+			$this->assertFalse(Permissions::memberOfPermissionGroups(34, 2));
+			$this->assertTrue(Permissions::memberOfPermissionGroups(34, 3));
+			Permissions::saveUserPermissionGroups(34, []);
+			$this->assertFalse(Permissions::memberOfPermissionGroups(34, 1));
+			$this->assertFalse(Permissions::memberOfPermissionGroups(34, 2));
+			$this->assertFalse(Permissions::memberOfPermissionGroups(34, 3));
+		}catch(\Exception $ex){
+			$this->fail("Unexpected exception: ".$ex->getMessage());
+		}
+		
+		try{
+			Permissions::saveUserPermissionGroups(34, null);
+			$this->fail("An exception was expected!");
+		}catch(ValueMismatchException $ex){
+		}catch(\Exception $ex){
+			$this->fail("Not the expected exception: ".$ex->getMessage());
+		}
+		
+		try{
+			Permissions::saveUserPermissionGroups(34, 2);
+			$this->fail("An exception was expected!");
+		}catch(ValueMismatchException $ex){
+		}catch(\Exception $ex){
+			$this->fail("Not the expected exception: ".$ex->getMessage());
+		}
+		
+		try{
+			Permissions::saveUserPermissionGroups(null, 2);
+			$this->fail("An exception was expected!");
+		}catch(ValueMismatchException $ex){
+		}catch(\Exception $ex){
+			$this->fail("Not the expected exception: ".$ex->getMessage());
+		}
+		
+		try{
+			Permissions::saveUserPermissionGroups(null, null);
+			$this->fail("An exception was expected!");
+		}catch(ValueMismatchException $ex){
+		}catch(\Exception $ex){
+			$this->fail("Not the expected exception: ".$ex->getMessage());
+		}
+	}
+	
 }

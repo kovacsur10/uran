@@ -13,6 +13,7 @@ use App\Classes\Logger;
 use App\Classes\Layout\EcnetData;
 use App\Exceptions\UserNotFoundException;
 use Mail;
+use App\Classes\Data\Permission;
 
 /** Class name: Registrations
  *
@@ -25,7 +26,6 @@ use Mail;
  *
  * Functions that can throw exceptions:
  * 		addCode
- * 		addUserDefaultPermissions
  * 
  * @author Máté Kovács <kovacsur10@gmail.com>
  */
@@ -298,9 +298,8 @@ class Registrations{
 					throw new UserNotFoundException();
 				}else{
 					P_User::addRegistrationCodeEntry($userId, $registrationCode);
-					//Registrations::addUserDefaultPermissions($userType, $userId);
-					//TODO: replace the old default permissions method
-						
+					Registrations::addUserDefaultPermissionsGroups($userType, $userId);
+
 					// ECNET PART
 					$layout = new LayoutData();
 					if($layout->modules()->isActivatedByName('ecnet')){
@@ -327,4 +326,11 @@ class Registrations{
 	}
 	
 // PRIVATE FUNCTIONS
+	private static function addUserDefaultPermissionsGroups($userType, $userId){
+		if($userType === 'collegist'){
+			Permissions::saveUserPermissionGroups($userId, [2]);
+		}else if($userType === 'guest'){
+			Permissions::saveUserPermissionGroups($userId, [1]);
+		}
+	}
 }
