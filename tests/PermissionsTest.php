@@ -254,7 +254,22 @@ class PermissionsTest extends TestCase
 		$this->assertCount(0, Permissions::getUsersWithPermission(''));
 		$this->assertCount(0, Permissions::getUsersWithPermission(null));
 		$this->assertCount(0, Permissions::getUsersWithPermission('not_existing_permission_name'));
-		$this->assertCount(4, Permissions::getUsersWithPermission('ecnet_slot_verify'));
+		$this->assertCount(3, Permissions::getUsersWithPermission('ecnet_slot_verify'));
+	}
+	
+	/** Function name: test_getUsersWithGroup
+	 *
+	 * This function is testing the getUsersWithGroup function of the Permissions model.
+	 *
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	function test_getUsersWithGroup(){
+		$this->assertCount(0, Permissions::getUsersWithGroup(-2));
+		$this->assertCount(0, Permissions::getUsersWithGroup(null));
+		$this->assertCount(3, Permissions::getUsersWithGroup(2));
+		$this->assertCount(0, Permissions::getUsersWithGroup(60));
 	}
 	
 	/** Function name: test_removeAll_success

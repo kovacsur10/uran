@@ -115,6 +115,27 @@ class GroupController extends Controller{
 			return view('errors.authentication', ["layout" => $layout]);
 		}
 	}
+	
+	/** Function name: getUsersWithGroup
+	 *
+	 * This function shows a list of the users, who have the given group.
+	 *
+	 * @param Request request
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	public function getUsersWithGroup(Request $request){
+		$layout = new LayoutData();
+		if($layout->user()->permitted('permission_admin')){
+			$users = $layout->permissions()->getUsersWithGroup($request->group);
+			$group = $layout->permissions()->getPermissionGroup($request->group);
+			return view('admin.group.listuserswithgroups', ["layout" => $layout,
+					"users" => $users,
+					"group" => $group]);
+		}else{
+			return view('errors.authentication', ["layout" => $layout]);
+		}
+	}
 }
 	
 ?>

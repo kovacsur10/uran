@@ -74,6 +74,34 @@
 							</form>
 						</div>
 					</div>
+					
+					<div class="panel panel-default">
+						<div class="panel-heading">{{ $layout->language('list_permission_groups') }}</div>
+						<div class="panel-body">
+							<form class="form-horizontal" role="form" method="POST" action="{{ url('/admin/groups/users') }}">
+								{!! csrf_field() !!}
+								
+								<div class="form-group">
+									<label  class="col-md-4 control-label" for="permission">{{ $layout->language('permission_group') }}</label>
+									<div class="col-md-6">
+										<select class="form-control" name="group" id="group">
+											@foreach($layout->permissions()->getPermissionGroups() as $group)
+												<option value="{{ $group->id() }}">{{ $group->name() }}</option>
+											@endforeach
+										</select>
+									</div>
+								</div>
+								
+								<div class="form-group">
+									<div class="col-md-6 col-md-offset-4">
+										<button type="submit" class="btn btn-primary">
+											{{ $layout->language('list') }}
+										</button>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
 				@endif
                 </div>
             </div>
