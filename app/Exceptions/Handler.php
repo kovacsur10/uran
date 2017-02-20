@@ -7,6 +7,7 @@ use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use App\Classes\LayoutData;
 use Symfony\Component\HttpKernel\Exception as SymfonyException;
+use Illuminate\Session\TokenMismatchException;
 
 class Handler extends ExceptionHandler
 {
@@ -48,6 +49,15 @@ class Handler extends ExceptionHandler
     {
 		if($exception instanceof SymfonyException\NotFoundHttpException) {
 			return response()->view('errors.404', ["layout" => new LayoutData()], 404);
+		}
+		if($exception instanceof TokenMismatchException){
+			return response()->view('errors.tokenmismatch', ["layout" => new LayoutData()], 404);
+		}
+		if($exception instanceof \Exception){
+			return response()->view('errors.error', ["layout" => new LayoutData(),
+				'message' => "Crescit sub pondere palma!",
+				'url' => url('login')
+			], 404);
 		}
 	
         return parent::render($request, $exception);
