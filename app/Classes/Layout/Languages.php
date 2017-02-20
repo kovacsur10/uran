@@ -99,6 +99,7 @@ class Languages{
 			'openable' => 'lenyitható',
 			'set_up' => 'Beállít',
 			'add' => 'Hozzáad',
+			'error_you_should_not_wait_too_long_description' => 'Ajjaj! Máskor ne várjál ennyi ideig adatküldés előtt!',
 		//permissions
 			'assign_permissions' => 'Jogok hozzárendelése',
 			'error_at_setting_the_permissions' => 'Hiba a jogosultságok beállításakor!',
@@ -647,6 +648,7 @@ class Languages{
 			'openable' => 'collapsible',
 			'set_up' => 'Set up',
 			'add' => 'Add',
+			'error_you_should_not_wait_too_long_description' => 'Ooops! Next time avoid waiting for too long before submitting a form!',
 		//permissions
 			'assign_permissions' => 'Assign permissions',
 			'error_at_setting_the_permissions' => 'Error at setting the permissions!',
