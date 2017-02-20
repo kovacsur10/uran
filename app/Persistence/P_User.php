@@ -21,6 +21,104 @@ use App\Classes\Database;
  */
 class P_User{
 	
+	/** Function name: getUserWorkshops
+	 *
+	 * This function returns the requested user's
+	 * workshops.
+	 *
+	 * @param int $userId - user's identifier
+	 * @return array of Workshop
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	static function getUserWorkshops($userId){
+		$workshopsData = DB::table('user_workshops')
+			->join('workshops', 'workshops.id', '=', 'user_workshops.workshop_id')
+			->where('user_workshops.user_id', '=', $userId)
+			->select('workshops.id as id', 'workshops.name as name')
+			->get();
+		$workshops = [];
+		foreach($workshopsData as $workshop){
+			$workshops[] = new Workshop($workshop->id, $workshop->name);
+		}
+		return $workshops;
+	}
+	
+	/** Function name: setUserWorkshops
+	 *
+	 * This function sets the user's workshops.
+	 *
+	 * @param int $userId - user's identifier
+	 * @param arrayOfInt $workshopIds - user's worshops' identifiers
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	static function setUserWorkshops($userId, $workshopIds){
+		if($workshopIds !== null){
+			Database::transaction(function() use($userId, $workshopIds){
+				DB::table('user_workshops')
+					->where('user_id', '=', $userId)
+					->delete();
+				foreach($workshopIds as $workshopId){
+					DB::table('user_workshops')
+						->insert([
+							'user_id' => $userId,
+							'workshop_id' => $workshopId
+						]);
+				}
+			});
+		}
+	}
+	
+	/** Function name: getUserFaculties
+	 *
+	 * This function returns the requested user's
+	 * faculties.
+	 *
+	 * @param int $userId - user's identifier
+	 * @return array of Faculty
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	static function getUserFaculties($userId){	
+		$facultiesData = DB::table('user_faculties')
+			->join('faculties', 'faculties.id', '=', 'user_faculties.faculty_id')
+			->select('faculties.id as id', 'faculties.name as name')
+			->where('user_faculties.user_id', '=', $userId)
+			->get();
+		$faculties = [];
+		foreach($facultiesData as $faculty){
+			$faculties[] = new Faculty($faculty->id, $faculty->name);
+		}
+		return $faculties;
+	}
+	
+	/** Function name: setUserFaculties
+	 *
+	 * This function sets the user's faculties.
+	 *
+	 * @param int $userId - user's identifier
+	 * @param arrayOfInt $facultiesIds - user's faculties' identifiers
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	static function setUserFaculties($userId, $facultiesIds){
+		if($facultiesIds !== null){
+			Database::transaction(function() use($userId, $facultiesIds){
+				DB::table('user_faculties')
+					->where('user_id', '=', $userId)
+					->delete();
+				foreach($facultiesIds as $facultyId){
+					DB::table('user_faculties')
+						->insert([
+								'user_id' => $userId,
+								'faculty_id' => $facultyId
+						]);
+				}
+			});
+		}
+	}
+	
 	/** Function name: getUsersWithPermission
 	 *
 	 * This function returns those users, who
@@ -45,19 +143,9 @@ class P_User{
 		$users = [];
 		foreach($getUsers as $user){
 			if($user->neptun !== null){
-				$facultyData = DB::table('users')
-					->join('faculties', 'faculties.id', '=', 'users.faculty')
-					->select('faculties.id as id', 'faculties.name as name')
-					->where('users.id', '=', $user->id)
-					->first();
-				$workshopData = DB::table('users')
-					->join('workshops', 'workshops.id', '=', 'users.workshop')
-					->select('workshops.id as id', 'workshops.name as name')
-					->where('users.id', '=', $user->id)
-					->first();
-				$faculty = new Faculty($facultyData->id, $facultyData->name);
-				$workshop = new Workshop($workshopData->id, $workshopData->name);
-				$collegistData = new PersonalData($user->neptun, $user->city_of_birth, $user->date_of_birth, $user->name_of_mother, $user->high_school, $user->year_of_leaving_exam, $user->from_year, $faculty, $workshop);
+				$faculties = P_User::getUserFaculties($user->id);
+				$workshops = P_User::getUserWorkshops($user->id);
+				$collegistData = new PersonalData($user->neptun, $user->city_of_birth, $user->date_of_birth, $user->name_of_mother, $user->high_school, $user->year_of_leaving_exam, $user->from_year, $faculties, $workshops);
 			}else{
 				$collegistData = null;
 			}
@@ -78,19 +166,9 @@ class P_User{
 			->get();
 		foreach($getUsers as $user){
 			if($user->neptun !== null){
-				$facultyData = DB::table('users')
-				->join('faculties', 'faculties.id', '=', 'users.faculty')
-				->select('faculties.id as id', 'faculties.name as name')
-				->where('users.id', '=', $user->id)
-				->first();
-				$workshopData = DB::table('users')
-				->join('workshops', 'workshops.id', '=', 'users.workshop')
-				->select('workshops.id as id', 'workshops.name as name')
-				->where('users.id', '=', $user->id)
-				->first();
-				$faculty = new Faculty($facultyData->id, $facultyData->name);
-				$workshop = new Workshop($workshopData->id, $workshopData->name);
-				$collegistData = new PersonalData($user->neptun, $user->city_of_birth, $user->date_of_birth, $user->name_of_mother, $user->high_school, $user->year_of_leaving_exam, $user->from_year, $faculty, $workshop);
+				$faculties = P_User::getUserFaculties($user->id);
+				$workshops = P_User::getUserWorkshops($user->id);
+				$collegistData = new PersonalData($user->neptun, $user->city_of_birth, $user->date_of_birth, $user->name_of_mother, $user->high_school, $user->year_of_leaving_exam, $user->from_year, $faculties, $workshops);
 			}else{
 				$collegistData = null;
 			}
@@ -184,19 +262,9 @@ class P_User{
 		$users = [];
 		foreach($getUsers as $user){
 			if($user->neptun !== null){
-				$facultyData = DB::table('users')
-					->join('faculties', 'faculties.id', '=', 'users.faculty')
-					->select('faculties.id as id', 'faculties.name as name')
-					->where('users.id', '=', $user->id)
-					->first();
-				$workshopData = DB::table('users')
-					->join('workshops', 'workshops.id', '=', 'users.workshop')
-					->select('workshops.id as id', 'workshops.name as name')
-					->where('users.id', '=', $user->id)
-					->first();
-				$faculty = new Faculty($facultyData->id, $facultyData->name);
-				$workshop = new Workshop($workshopData->id, $workshopData->name);
-				$collegistData = new PersonalData($user->neptun, $user->city_of_birth, $user->date_of_birth, $user->name_of_mother, $user->high_school, $user->year_of_leaving_exam, $user->from_year, $faculty, $workshop);
+				$faculties = P_User::getUserFaculties($user->id);
+				$workshops = P_User::getUserWorkshops($user->id);
+				$collegistData = new PersonalData($user->neptun, $user->city_of_birth, $user->date_of_birth, $user->name_of_mother, $user->high_school, $user->year_of_leaving_exam, $user->from_year, $faculties, $workshops);
 			}else{
 				$collegistData = null;
 			}
@@ -331,8 +399,6 @@ class P_User{
 		$user = DB::table('users')
 			->join('user_status_codes', 'user_status_codes.id', '=', 'users.status')
 			->join('registrations', 'registrations.user_id', '=', 'users.id')
-			->leftJoin('workshops', 'workshops.id', '=', 'users.workshop')
-			->leftJoin('faculties', 'faculties.id', '=', 'users.faculty')
 			->where('users.id', '=', $userId)
 			->when($userId !== 0, function($query){
 				return $query->where('users.registered', '=', true);
@@ -340,19 +406,9 @@ class P_User{
 			->select('users.*', 'registrations.*', 'user_status_codes.status_name as status_name')
 			->first();
 		if(isset($user->neptun) && $user->neptun !== null){
-			$facultyData = DB::table('users')
-				->join('faculties', 'faculties.id', '=', 'users.faculty')
-				->select('faculties.id as id', 'faculties.name as name')
-				->where('users.id', '=', $user->id)
-				->first();
-			$workshopData = DB::table('users')
-				->join('workshops', 'workshops.id', '=', 'users.workshop')
-				->select('workshops.id as id', 'workshops.name as name')
-				->where('users.id', '=', $user->id)
-				->first();
-			$faculty = new Faculty($facultyData->id, $facultyData->name);
-			$workshop = new Workshop($workshopData->id, $workshopData->name);
-			$collegistData = new PersonalData($user->neptun, $user->city_of_birth, $user->date_of_birth, $user->name_of_mother, $user->high_school, $user->year_of_leaving_exam, $user->from_year, $faculty, $workshop);
+			$faculties = P_User::getUserFaculties($user->id);
+			$workshops = P_User::getUserWorkshops($user->id);
+			$collegistData = new PersonalData($user->neptun, $user->city_of_birth, $user->date_of_birth, $user->name_of_mother, $user->high_school, $user->year_of_leaving_exam, $user->from_year, $faculties, $workshops);
 		}else{
 			$collegistData = null;
 		}
@@ -374,8 +430,6 @@ class P_User{
 		$user = DB::table('users')
 			->join('user_status_codes', 'user_status_codes.id', '=', 'users.status')
 			->join('registrations', 'registrations.user_id', '=', 'users.id')
-			->leftJoin('workshops', 'workshops.id', '=', 'users.workshop')
-			->leftJoin('faculties', 'faculties.id', '=', 'users.faculty')
 			->where('users.username', 'LIKE', $username)
 			->when($username != "admin", function($query){
 				return $query->where('users.registered', '=', true);
@@ -383,19 +437,9 @@ class P_User{
 			->select('users.*', 'registrations.*', 'user_status_codes.status_name as status_name')
 			->first();
 		if($user->neptun !== null){
-			$facultyData = DB::table('users')
-				->join('faculties', 'faculties.id', '=', 'users.faculty')
-				->select('faculties.id as id', 'faculties.name as name')
-				->where('users.id', '=', $user->id)
-				->first();
-			$workshopData = DB::table('users')
-				->join('workshops', 'workshops.id', '=', 'users.workshop')
-				->select('workshops.id as id', 'workshops.name as name')
-				->where('users.id', '=', $user->id)
-				->first();
-			$faculty = new Faculty($facultyData->id, $facultyData->name);
-			$workshop = new Workshop($workshopData->id, $workshopData->name);
-			$collegistData = new PersonalData($user->neptun, $user->city_of_birth, $user->date_of_birth, $user->name_of_mother, $user->high_school, $user->year_of_leaving_exam, $user->from_year, $faculty, $workshop);
+			$faculties = P_User::getUserFaculties($user->id);
+			$workshops = P_User::getUserWorkshops($user->id);
+			$collegistData = new PersonalData($user->neptun, $user->city_of_birth, $user->date_of_birth, $user->name_of_mother, $user->high_school, $user->year_of_leaving_exam, $user->from_year, $faculties, $workshops);
 		}else{
 			$collegistData = null;
 		}
@@ -419,8 +463,6 @@ class P_User{
 		$getUsers = DB::table('users')
 			->join('user_status_codes', 'user_status_codes.id', '=', 'users.status')
 			->join('registrations', 'registrations.user_id', '=', 'users.id')
-			->leftJoin('workshops', 'workshops.id', '=', 'users.workshop')
-			->leftJoin('faculties', 'faculties.id', '=', 'users.faculty')
 			->where('registered', '=', true)
 			->select('users.*', 'registrations.*', 'user_status_codes.status_name as status_name')
 			->orderBy('name', 'asc')
@@ -432,19 +474,9 @@ class P_User{
 		$users = [];
 		foreach($getUsers as $user){
 			if($user->neptun !== null){
-				$facultyData = DB::table('users')
-					->join('faculties', 'faculties.id', '=', 'users.faculty')
-					->select('faculties.id as id', 'faculties.name as name')
-					->where('users.id', '=', $user->id)
-					->first();
-				$workshopData = DB::table('users')
-					->join('workshops', 'workshops.id', '=', 'users.workshop')
-					->select('workshops.id as id', 'workshops.name as name')
-					->where('users.id', '=', $user->id)
-					->first();
-				$faculty = new Faculty($facultyData->id, $facultyData->name);
-				$workshop = new Workshop($workshopData->id, $workshopData->name);
-				$collegistData = new PersonalData($user->neptun, $user->city_of_birth, $user->date_of_birth, $user->name_of_mother, $user->high_school, $user->year_of_leaving_exam, $user->from_year, $faculty, $workshop);
+				$faculties = P_User::getUserFaculties($user->id);
+				$workshops = P_User::getUserWorkshops($user->id);
+				$collegistData = new PersonalData($user->neptun, $user->city_of_birth, $user->date_of_birth, $user->name_of_mother, $user->high_school, $user->year_of_leaving_exam, $user->from_year, $faculties, $workshops);
 			}else{
 				$collegistData = null;
 			}
@@ -509,19 +541,9 @@ class P_User{
 			->select('users.*', 'registrations.*', 'user_status_codes.status_name as status_name')
 			->first();
 		if($user->neptun !== null){
-			$facultyData = DB::table('users')
-				->join('faculties', 'faculties.id', '=', 'users.faculty')
-				->select('faculties.id as id', 'faculties.name as name')
-				->where('users.id', '=', $user->id)
-				->first();
-			$workshopData = DB::table('users')
-				->join('workshops', 'workshops.id', '=', 'users.workshop')
-				->select('workshops.id as id', 'workshops.name as name')
-				->where('users.id', '=', $user->id)
-				->first();
-			$faculty = new Faculty($facultyData->id, $facultyData->name);
-			$workshop = new Workshop($workshopData->id, $workshopData->name);
-			$collegistData = new PersonalData($user->neptun, $user->city_of_birth, $user->date_of_birth, $user->name_of_mother, $user->high_school, $user->year_of_leaving_exam, $user->from_year, $faculty, $workshop);
+			$faculties = P_User::getUserFaculties($user->id);
+			$workshops = P_User::getUserWorkshops($user->id);
+			$collegistData = new PersonalData($user->neptun, $user->city_of_birth, $user->date_of_birth, $user->name_of_mother, $user->high_school, $user->year_of_leaving_exam, $user->from_year, $faculties, $workshops);
 		}else{
 			$collegistData = null;
 		}
@@ -566,19 +588,9 @@ class P_User{
 		$users = [];
 		foreach($getUsers as $user){
 			if($user->neptun !== null){
-				$facultyData = DB::table('users')
-					->join('faculties', 'faculties.id', '=', 'users.faculty')
-					->select('faculties.id as id', 'faculties.name as name')
-					->where('users.id', '=', $user->id)
-					->first();
-				$workshopData = DB::table('users')
-					->join('workshops', 'workshops.id', '=', 'users.workshop')
-					->select('workshops.id as id', 'workshops.name as name')
-					->where('users.id', '=', $user->id)
-					->first();
-				$faculty = new Faculty($facultyData->id, $facultyData->name);
-				$workshop = new Workshop($workshopData->id, $workshopData->name);
-				$collegistData = new PersonalData($user->neptun, $user->city_of_birth, $user->date_of_birth, $user->name_of_mother, $user->high_school, $user->year_of_leaving_exam, $user->from_year, $faculty, $workshop);
+				$faculties = P_User::getUserFaculties($user->id);
+				$workshops = P_User::getUserWorkshops($user->id);
+				$collegistData = new PersonalData($user->neptun, $user->city_of_birth, $user->date_of_birth, $user->name_of_mother, $user->high_school, $user->year_of_leaving_exam, $user->from_year, $faculties, $workshops);
 			}else{
 				$collegistData = null;
 			}
@@ -611,38 +623,41 @@ class P_User{
 	 * @param text $highSchool
 	 * @param text $neptun
 	 * @param int $applicationYear
-	 * @param int $faculty
-	 * @param int $workshop
+	 * @param arrayOfInt $faculties
+	 * @param arrayOfInt $workshops
 	 * @param datetime $date
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	static function addRegistrationData($username, $password, $email, $name, $country, $shire, $postalCode, $address, $city, $reason, $phoneNumber, $defaultLanguage, $cityOfBirth, $dateOfBirth, $nameOfMother, $yearOfLeavingExam, $highSchool, $neptun, $applicationYear, $faculty, $workshop, $date){
-		DB::table('users')
-			->insert([
-					'username' => $username,
-					'password' => $password,
-					'email' => $email,
-					'name' => $name,
-					'registration_date' => $date,
-					'country' => $country,
-					'shire' => $shire,
-					'postalcode' => $postalCode,
-					'address' => $address,
-					'city' => $city,
-					'reason' => $reason,
-					'phone' => $phoneNumber,
-					'language' => $defaultLanguage,
-					'city_of_birth' => $cityOfBirth,
-					'date_of_birth' => $dateOfBirth,
-					'name_of_mother' => $nameOfMother,
-					'year_of_leaving_exam' => $yearOfLeavingExam,
-					'high_school' => $highSchool,
-					'neptun' => $neptun,
-					'from_year' => $applicationYear,
-					'faculty' => $faculty,
-					'workshop' => $workshop,
-			]);
+	static function addRegistrationData($username, $password, $email, $name, $country, $shire, $postalCode, $address, $city, $reason, $phoneNumber, $defaultLanguage, $cityOfBirth, $dateOfBirth, $nameOfMother, $yearOfLeavingExam, $highSchool, $neptun, $applicationYear, $faculties, $workshops, $date){
+		Database::transaction(function() use($username, $password, $email, $name, $country, $shire, $postalCode, $address, $city, $reason, $phoneNumber, $defaultLanguage, $cityOfBirth, $dateOfBirth, $nameOfMother, $yearOfLeavingExam, $highSchool, $neptun, $applicationYear, $faculties, $workshops, $date){
+			DB::table('users')
+				->insert([
+						'username' => $username,
+						'password' => $password,
+						'email' => $email,
+						'name' => $name,
+						'registration_date' => $date,
+						'country' => $country,
+						'shire' => $shire,
+						'postalcode' => $postalCode,
+						'address' => $address,
+						'city' => $city,
+						'reason' => $reason,
+						'phone' => $phoneNumber,
+						'language' => $defaultLanguage,
+						'city_of_birth' => $cityOfBirth,
+						'date_of_birth' => $dateOfBirth,
+						'name_of_mother' => $nameOfMother,
+						'year_of_leaving_exam' => $yearOfLeavingExam,
+						'high_school' => $highSchool,
+						'neptun' => $neptun,
+						'from_year' => $applicationYear,
+				]);
+			$userId = P_User::getRegistrationUserIdForUsername($username);
+			P_User::setUserFaculties($userId, $faculties);
+			P_User::setUserWorkshops($userId, $workshops);
+		});
 	}
 	
 	/** Function name: addRegistrationCodeEntry
@@ -704,36 +719,38 @@ class P_User{
 	 * @param text $highSchool
 	 * @param text $neptunCode
 	 * @param int $applicationYear
-	 * @param int $faculty
-	 * @param int $workshop
+	 * @param arrayOfInt $faculties
+	 * @param arrayOfInt $workshops
 	 * @param int $status
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	static function promoteRegistrationUserToUser($userId, $country, $shire, $postalCode, $address, $city, $phone, $reason, $cityOfBirth, $dateOfBirth, $nameOfMother, $yearOfLeavingExam, $highSchool, $neptunCode, $applicationYear, $faculty, $workshop, $status){
-		DB::table('users')
-			->where('id', '=', $userId)
-			->where('registered', '=', false)
-			->update([
-					'registered' => true,
-					'country' => $country,
-					'shire' => $shire,
-					'postalcode' => $postalCode,
-					'address' => $address,
-					'city' => $city,
-					'phone' => $phone,
-					'reason' => $reason,
-					'city_of_birth' => $cityOfBirth,
-					'name_of_mother' => $nameOfMother,
-					'date_of_birth' => $dateOfBirth,
-					'year_of_leaving_exam' => $yearOfLeavingExam,
-					'high_school' => $highSchool,
-					'neptun' => $neptunCode,
-					'from_year' => $applicationYear,
-					'faculty' => $faculty,
-					'workshop' => $workshop,
-					'status' => $status,
-			]);
+	static function promoteRegistrationUserToUser($userId, $country, $shire, $postalCode, $address, $city, $phone, $reason, $cityOfBirth, $dateOfBirth, $nameOfMother, $yearOfLeavingExam, $highSchool, $neptunCode, $applicationYear, $faculties, $workshops, $status){
+		Database::transaction(function() use($userId, $country, $shire, $postalCode, $address, $city, $phone, $reason, $cityOfBirth, $dateOfBirth, $nameOfMother, $yearOfLeavingExam, $highSchool, $neptunCode, $applicationYear, $faculties, $workshops, $status){
+			DB::table('users')
+				->where('id', '=', $userId)
+				->where('registered', '=', false)
+				->update([
+						'registered' => true,
+						'country' => $country,
+						'shire' => $shire,
+						'postalcode' => $postalCode,
+						'address' => $address,
+						'city' => $city,
+						'phone' => $phone,
+						'reason' => $reason,
+						'city_of_birth' => $cityOfBirth,
+						'name_of_mother' => $nameOfMother,
+						'date_of_birth' => $dateOfBirth,
+						'year_of_leaving_exam' => $yearOfLeavingExam,
+						'high_school' => $highSchool,
+						'neptun' => $neptunCode,
+						'from_year' => $applicationYear,
+						'status' => $status,
+				]);
+			P_User::setUserFaculties($userId, $faculties);
+			P_User::setUserWorkshops($userId, $workshops);
+		});
 	}
 	
 	/** Function name: removeRegistrationUser

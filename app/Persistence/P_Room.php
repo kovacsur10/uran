@@ -234,19 +234,9 @@ class P_Room{
 		$users = [];
 		foreach($getUsers as $user){
 			if($user->neptun !== null){
-				$facultyData = DB::table('users')
-					->join('faculties', 'faculties.id', '=', 'users.faculty')
-					->select('faculties.id as id', 'faculties.name as name')
-					->where('users.id', '=', $user->id)
-					->first();
-				$workshopData = DB::table('users')
-					->join('workshops', 'workshops.id', '=', 'users.workshop')
-					->select('workshops.id as id', 'workshops.name as name')
-					->where('users.id', '=', $user->id)
-					->first();
-				$faculty = new Faculty($facultyData->id, $facultyData->name);
-				$workshop = new Workshop($workshopData->id, $workshopData->name);
-				$collegistData = new PersonalData($user->neptun, $user->city_of_birth, $user->date_of_birth, $user->name_of_mother, $user->high_school, $user->year_of_leaving_exam, $user->from_year, $faculty, $workshop);
+				$faculties = P_User::getUserFaculties($user->id);
+				$workshops = P_User::getUserWorkshops($user->id);
+				$collegistData = new PersonalData($user->neptun, $user->city_of_birth, $user->date_of_birth, $user->name_of_mother, $user->high_school, $user->year_of_leaving_exam, $user->from_year, $faculties, $workshops);
 			}else{
 				$collegistData = null;
 			}

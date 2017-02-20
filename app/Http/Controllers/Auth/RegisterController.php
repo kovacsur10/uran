@@ -75,7 +75,7 @@ class RegisterController extends Controller{
 		
 		//registration part
         try{
-        	$layout->registrations()->register($request->input('username'), $request->input('password'), $request->input('email'), $request->input('name'), $request->input('country'), $request->input('shire'), $request->input('postalCode'), $request->input('address'), $request->input('city'), $request->input('reason'), $request->input('phone'), $layout->lang(), null, null, null, null, null, null, null, null, null);
+        	$layout->registrations()->register($request->input('username'), $request->input('password'), $request->input('email'), $request->input('name'), $request->input('country'), $request->input('shire'), $request->input('postalcode'), $request->input('address'), $request->input('city'), $request->input('reason'), $request->input('phone'), $layout->lang(), null, null, null, null, null, null, null, null, null);
         }catch(\Exception $ex){
         	return view('errors.error', ["layout" => $layout,
         			"message" => $layout->language('error_at_sending_registration_verification_email'),
@@ -115,8 +115,8 @@ class RegisterController extends Controller{
 			'high_school' => 'required',
 			'neptun' => 'required|min:6|max:6',
 			'from_year' => 'required',
-			'faculty' => 'required',
-			'workshop' => 'required',
+			'faculties' => 'required',
+			'workshops' => 'required',
 			'accept' => 'required',
 		]);
 		$this->validate($request, array('year_of_leaving_exam' => array('required', 'regex:/(^(?:19[6-9][0-9])|(?:200[0-9])|(?:201[0-6])$)/')));
@@ -124,7 +124,7 @@ class RegisterController extends Controller{
 		
 		//registration part
 		try{
-			$layout->registrations()->register($request->input('username'), $request->input('password'), $request->input('email'), $request->input('name'), $request->input('country'), $request->input('shire'), $request->input('postalCode'), $request->input('address'), $request->input('city'), null, $request->input('phone'), $layout->lang(), $request->input('city_of_birth'), $request->input('date_of_birth'), $request->input('name_of_mother'), $request->input('year_of_leaving_exam'), $request->input('high_school'), $request->input('neptun'), $request->input('from_year'), $request->input('faculty'), $request->input('workshop'));
+			$layout->registrations()->register($request->input('username'), $request->input('password'), $request->input('email'), $request->input('name'), $request->input('country'), $request->input('shire'), $request->input('postalcode'), $request->input('address'), $request->input('city'), null, $request->input('phone'), $layout->lang(), $request->input('city_of_birth'), $request->input('date_of_birth'), $request->input('name_of_mother'), $request->input('year_of_leaving_exam'), $request->input('high_school'), $request->input('neptun'), $request->input('from_year'), $request->input('faculties'), $request->input('workshops'));
 		}catch(\Exception $ex){
 			return view('errors.error', ["layout" => $layout,
 					"message" => $layout->language('error_at_sending_registration_verification_email'),

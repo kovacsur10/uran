@@ -127,6 +127,9 @@ class Permissions{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public static function getForUser($userId){
+		if($userId === null){
+			return [];
+		}
 		try{
 			$permissionsFromGroups = Permissions::getForUserFromGroups($userId);
 			$permissions = Permissions::getForUserExplicitPermissions($userId);

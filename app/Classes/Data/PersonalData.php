@@ -18,8 +18,8 @@ class PersonalData{
 	private $year_of_leaving_exam;
 	private $neptun;
 	private $admission_year;
-	private $faculty;
-	private $workshop;
+	private $faculties;
+	private $workshops;
 
 	// PUBLIC FUNCTIONS
 
@@ -34,12 +34,12 @@ class PersonalData{
 	 * @param string $high_school - the user's name of the high school
 	 * @param string $year_of_leaving_exam - the user's year of the leaving exam
 	 * @param string $admission_year - the user's admission year to the dormitory
-	 * @param Faculty $faculty - the user's faculty
-	 * @param Workshop $workshop - the user's workshop
+	 * @param arrayOfFaculty $faculties - the user's faculties
+	 * @param arrayOfWorkshop $workshops - the user's workshops
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function __construct(string $neptun, string $city_of_birth, string $date_of_birth, string $name_of_mother, string $high_school, string $year_of_leaving_exam, string $admission_year, Faculty $faculty, Workshop $workshop){
+	public function __construct(string $neptun, string $city_of_birth, string $date_of_birth, string $name_of_mother, string $high_school, string $year_of_leaving_exam, string $admission_year, $faculties, $workshops){
 		$this->neptun = $neptun;
 		$this->city_of_birth = $city_of_birth;
 		$this->date_of_birth = $date_of_birth;
@@ -47,8 +47,8 @@ class PersonalData{
 		$this->high_school = $high_school;
 		$this->year_of_leaving_exam = $year_of_leaving_exam;
 		$this->admission_year = $admission_year;
-		$this->faculty = $faculty;
-		$this->workshop = $workshop;
+		$this->faculties = $faculties;
+		$this->workshops = $workshops;
 	}
 
 	/** Function name: neptun
@@ -121,24 +121,24 @@ class PersonalData{
 		return $this->admission_year;
 	}
 	
-	/** Function name: faculty
+	/** Function name: faculties
 	 *
-	 * This is the getter for faculty.
+	 * This is the getter for faculties.
 	 *
-	 * @return Faculty - The user's faculty.
+	 * @return Faculty - The user's faculties.
 	 */
-	public function faculty() : Faculty{
-		return $this->faculty;
+	public function faculties(){
+		return $this->faculties;
 	}
 	
-	/** Function name: workshop
+	/** Function name: workshops
 	 *
-	 * This is the getter for workshop.
+	 * This is the getter for workshops.
 	 *
-	 * @return Workshop - The user's workshop.
+	 * @return Workshop - The user's workshops.
 	 */
-	public function workshop() : Workshop{
-		return $this->workshop;
+	public function workshops(){
+		return $this->workshops;
 	}
 
 }

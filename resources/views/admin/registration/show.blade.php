@@ -158,23 +158,24 @@
 									<div class="row">
 										<div class="col-md-6">{{ $layout->language('faculty') }}</div>
 										<div class="col-md-6">
-											<select class="form-control alert-{{ $userData->collegistData() !== null ? 'info' : 'danger' }}"  name="faculty"  id="faculty_select" required="true">
 											@foreach($layout->base()->faculties() as $faculty)
-												<option {{ ($userData->collegistData() !== null && $userData->collegistData()->faculty()->id() === $faculty->id()) ? "selected" : "" }} value="{{ $faculty->id() }}">{{ $faculty->name() }}</option>
+												<div class="checkbox alert-{{ $userData->collegistData() !== null ? 'info' : 'danger' }}">
+													<label><input type="checkbox" name="faculties[]" value="{{ $faculty->id() }}" {{ ($userData->collegistData() !== null && in_array($faculty, $userData->collegistData()->faculties())) ? 'checked' : '' }}>{{ $faculty->name() }}</label>
+												</div>
 											@endforeach
-											</select>
 										</div>
 									</div>
 								</li>
+								
 								<li class="list-group-item">
 									<div class="row">
 										<div class="col-md-6">{{ $layout->language('workshop') }}</div>
 										<div class="col-md-6">
-											<select class="form-control alert-{{ $userData->collegistData() !== null ? 'info' : 'danger' }}"  name="workshop"  id="workshop_select" required="true">
 											@foreach($layout->base()->workshops() as $workshop)
-												<option {{ ($userData->collegistData() !== null && $userData->collegistData()->workshop()->id() === $workshop->id()) ? "selected" : "" }} value="{{ $workshop->id() }}">{{ $workshop->name() }}</option>
+												<div class="checkbox alert-{{ $userData->collegistData() !== null ? 'info' : 'danger' }}">
+													<label><input type="checkbox" name="workshops[]" value="{{ $workshop->id() }}" {{ ($userData->collegistData() !== null && in_array($workshop, $userData->collegistData()->workshops())) ? 'checked' : '' }}>{{ $workshop->name() }}</label>
+												</div>
 											@endforeach
-											</select>
 										</div>
 									</div>
 								</li>

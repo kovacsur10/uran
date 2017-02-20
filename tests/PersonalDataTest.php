@@ -27,7 +27,7 @@ class PersonalDataTest extends TestCase
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	function test_personal_data(){
-		$user = new PersonalData("hq574o", "Budapest", "1992-02-20", "anyuka", "HS", "2012", "2015", new Faculty(1, "asd"), new Workshop(2, "qwe"));
+		$user = new PersonalData("hq574o", "Budapest", "1992-02-20", "anyuka", "HS", "2012", "2015", [new Faculty(1, "asd")], [new Workshop(2, "qwe")]);
 		$this->assertEquals("hq574o", $user->neptun());
 		$this->assertEquals("Budapest", $user->cityOfBirth());
 		$this->assertEquals("1992-02-20", $user->dateOfBirth());
@@ -35,8 +35,8 @@ class PersonalDataTest extends TestCase
 		$this->assertEquals("HS", $user->highSchool());
 		$this->assertEquals("2012", $user->leavingExamYear());
 		$this->assertEquals("2015", $user->admissionYear());
-		$this->assertEquals(new Faculty(1, "asd"), $user->faculty());
-		$this->assertEquals(new Workshop(2, "qwe"), $user->workshop());
+		$this->assertEquals([new Faculty(1, "asd")], $user->faculties());
+		$this->assertEquals([new Workshop(2, "qwe")], $user->workshops());
 	}
 
 	/** Function name: test_personal_data_attr
@@ -57,7 +57,7 @@ class PersonalDataTest extends TestCase
 		$this->assertClassHasAttribute('year_of_leaving_exam', PersonalData::class);
 		$this->assertClassHasAttribute('neptun', PersonalData::class);
 		$this->assertClassHasAttribute('admission_year', PersonalData::class);
-		$this->assertClassHasAttribute('faculty', PersonalData::class);
-		$this->assertClassHasAttribute('workshop', PersonalData::class);
+		$this->assertClassHasAttribute('faculties', PersonalData::class);
+		$this->assertClassHasAttribute('workshops', PersonalData::class);
 	}
 }
