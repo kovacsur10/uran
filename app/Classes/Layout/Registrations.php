@@ -205,20 +205,20 @@ class Registrations{
 	 * @param text $highSchool
 	 * @param text $neptunCode
 	 * @param int $applicationYear
-	 * @param int $faculty
-	 * @param int $workshop
+	 * @param arrayOfInt $faculties
+	 * @param arrayOfInt $workshops
 	 * 
 	 * @throws ValueMismatchException when the user identifier is null!
 	 * @throws DatabaseException when the registration acception fails.
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public static function acceptCollegist($userId, $country, $shire, $postalCode, $address, $city, $phone, $cityOfBirth, $dateOfBirth, $nameOfMother, $yearOfLeavingExam, $highSchool, $neptunCode, $applicationYear, $faculty, $workshop){
+	public static function acceptCollegist($userId, $country, $shire, $postalCode, $address, $city, $phone, $cityOfBirth, $dateOfBirth, $nameOfMother, $yearOfLeavingExam, $highSchool, $neptunCode, $applicationYear, $faculties, $workshops){
 		if($userId === null){
 			throw new ValueMismatchException("The user identifier must not be null!");
 		}
 		try{
-			P_User::promoteRegistrationUserToUser($userId, $country, $shire, $postalCode, $address, $city, $phone, 'Uran: Collegist registration', $cityOfBirth, $dateOfBirth, $nameOfMother, $yearOfLeavingExam, $highSchool, $neptunCode, $applicationYear, $faculty, $workshop, 0);
+			P_User::promoteRegistrationUserToUser($userId, $country, $shire, $postalCode, $address, $city, $phone, 'Uran: Collegist registration', $cityOfBirth, $dateOfBirth, $nameOfMother, $yearOfLeavingExam, $highSchool, $neptunCode, $applicationYear, $faculties, $workshops, 0);
 		}catch(\Exception $ex){
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Update table 'users' was not successful! ".$ex->getMessage());
 			throw new DatabaseException("Collegist registration acceptation failed!");
@@ -248,23 +248,35 @@ class Registrations{
 	 * @param text|null $highSchool - in case of 'collegist' user
 	 * @param text|null $neptun - in case of 'collegist' user
 	 * @param int|null $applicationYear - in case of 'collegist' user
-	 * @param int|null $faculty - in case of 'collegist' user
-	 * @param int|null $workshop - in case of 'collegist' user
+	 * @param arrayOfInt|null $faculties - in case of 'collegist' user
+	 * @param arrayOfInt|null $workshops - in case of 'collegist' user
 	 * 
 	 * @throws ValueMismatchException when the provided data is not correct, it cannot be a 'guest' or 'collegist' user.
 	 * @throws DatabaseException when the registration cannot be made because of a database error.
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public static function register($username, $password, $email, $name, $country, $shire, $postalCode, $address, $city, $reason, $phoneNumber, $defaultLanguage, $cityOfBirth, $dateOfBirth, $nameOfMother, $yearOfLeavingExam, $highSchool, $neptun, $applicationYear, $faculty, $workshop){		
+	public static function register($username, $password, $email, $name, $country, $shire, $postalCode, $address, $city, $reason, $phoneNumber, $defaultLanguage, $cityOfBirth, $dateOfBirth, $nameOfMother, $yearOfLeavingExam, $highSchool, $neptun, $applicationYear, $faculties, $workshops){		
 		//validate input data
 		if($username === null || $password === null || $email === null || $name === null || $country === null || $shire === null || $postalCode === null ||$address === null || $city === null || $phoneNumber === null || $defaultLanguage === null){
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). A parameter value is null! The following parameters are null: "
+					.($username === null ? " username" : "" )
+					.($password === null ? " password" : "" )
+					.($email === null ? " email" : "" )
+					.($name === null ? " name" : "" )
+					.($shire === null ? " shite" : "" )
+					.($postalCode === null ? " postalCode" : "" )
+					.($address === null ? " address" : "" )
+					.($city === null ? " city" : "" )
+					.($phoneNumber === null ? " phoneNumber" : "" )
+					.($defaultLanguage === null ? " defaultLanguage" : "" )
+			);
 			throw new ValueMismatchException("A mandatory parameter is null!");
 		}
 		$password = password_hash($password, PASSWORD_DEFAULT);
 		if($reason === null){
 			$dateOfBirth = $dateOfBirth === null ? null : substr(str_replace('.', '-', $dateOfBirth), 0, -1);
-			if($cityOfBirth === null || $dateOfBirth === null || $nameOfMother === null || $yearOfLeavingExam === null || $highSchool === null || $neptun === null || $applicationYear === null ||$faculty === null || $workshop === null){
+			if($cityOfBirth === null || $dateOfBirth === null || $nameOfMother === null || $yearOfLeavingExam === null || $highSchool === null || $neptun === null || $applicationYear === null ||$faculties === null || $workshops === null){
 				throw new ValueMismatchException("A mandatory parameter is null!");
 			}
 			$userType = 'collegist';
@@ -276,8 +288,8 @@ class Registrations{
 			$highSchool = null;
 			$neptun = null;
 			$applicationYear = null;
-			$faculty = null;
-			$workshop = null;
+			$faculties = null;
+			$workshops = null;
 			$userType = 'guest';
 		}
 		$date = Carbon::now()->toDateTimeString();
@@ -285,16 +297,17 @@ class Registrations{
 		
 		//add registration to the database
 		try{
-			Database::transaction(function() use($username, $password, $email, $name, $country, $shire, $postalCode, $address, $city, $reason, $phoneNumber, $defaultLanguage, $cityOfBirth, $dateOfBirth, $nameOfMother, $yearOfLeavingExam, $highSchool, $neptun, $applicationYear, $faculty, $workshop, $date, $registrationCode, $userType){
+			Database::transaction(function() use($username, $password, $email, $name, $country, $shire, $postalCode, $address, $city, $reason, $phoneNumber, $defaultLanguage, $cityOfBirth, $dateOfBirth, $nameOfMother, $yearOfLeavingExam, $highSchool, $neptun, $applicationYear, $faculties, $workshops, $date, $registrationCode, $userType){
 				try{
-					P_User::addRegistrationData($username, $password, $email, $name, $country, $shire, $postalCode, $address, $city, $reason, $phoneNumber, $defaultLanguage, $cityOfBirth, $dateOfBirth, $nameOfMother, $yearOfLeavingExam, $highSchool, $neptun, $applicationYear, $faculty, $workshop, $date);
+					P_User::addRegistrationData($username, $password, $email, $name, $country, $shire, $postalCode, $address, $city, $reason, $phoneNumber, $defaultLanguage, $cityOfBirth, $dateOfBirth, $nameOfMother, $yearOfLeavingExam, $highSchool, $neptun, $applicationYear, $faculties, $workshops, $date);
 					$userId = P_User::getRegistrationUserIdForUsername($username);
-				}catch(\Illuminate\Database\QueryException $ex){
+				}catch(\Exception $ex){
 					Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 					throw $ex;
 				}
 				
 				if($userId === null){
+					Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). The registration user was not found!");
 					throw new UserNotFoundException();
 				}else{
 					P_User::addRegistrationCodeEntry($userId, $registrationCode);

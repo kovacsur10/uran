@@ -302,35 +302,33 @@
 									</div>
 								</div>
 								
-								<div class="form-group{{ $errors->has('faculty') ? ' has-error' : '' }}">
-									<label  class="col-md-4 control-label" for="faculty_select">{{ $layout->language('faculty') }}</label>
+								<div class="form-group{{ $errors->has('faculties') ? ' has-error' : '' }}">
+									<label  class="col-md-4 control-label" for="faculties">{{ $layout->language('faculty') }}</label>
 									<div class="col-md-6">
-										<select class="form-control"  name="faculty"  id="faculty_select" required="true">
-											@foreach($layout->base()->faculties() as $faculty)
-												<option value="{{ $faculty->id() }}" {{ old('faculty') == $faculty->id() ? 'selected' : '' }}>{{ $faculty->name() }}</option>
-											@endforeach
-										</select>
-										
-										@if ($errors->has('faculty'))
+										@foreach($layout->base()->faculties() as $faculty)
+											<div class="checkbox">
+												<label><input type="checkbox" name="faculties[]" value="{{ $faculty->id() }}" {{ old('faculties') !== null && in_array($faculty->id(), old('faculties')) ? 'checked' : '' }}>{{ $faculty->name() }}</label>
+											</div>
+										@endforeach
+										@if ($errors->has('faculties'))
 											<span class="help-block">
-												<strong>{{ $errors->first('faculty') }}</strong>
+												<strong>{{ $errors->first('faculties') }}</strong>
 											</span>
 										@endif
 									</div>
 								</div>
 								
-								<div class="form-group{{ $errors->has('workshop') ? ' has-error' : '' }}">
-									<label  class="col-md-4 control-label" for="workshop_select">{{ $layout->language('workshop') }}</label>
+								<div class="form-group{{ $errors->has('workshops') ? ' has-error' : '' }}">
+									<label  class="col-md-4 control-label" for="workshops">{{ $layout->language('workshop') }}</label>
 									<div class="col-md-6">
-										<select class="form-control"  name="workshop"  id="workshop_select" required="true">
-											@foreach($layout->base()->workshops() as $workshop)
-												<option value="{{ $workshop->id() }}" {{ old('workshop') == $workshop->id() ? 'selected' : '' }}>{{ $workshop->name() }}</option>
-											@endforeach
-										</select>
-										
-										@if ($errors->has('workshop'))
+										@foreach($layout->base()->workshops() as $workshop)
+											<div class="checkbox">
+												<label><input type="checkbox" name="workshops[]" value="{{ $workshop->id() }}" {{ old('workshops') !== null && in_array($workshop->id(), old('workshops')) ? 'checked' : '' }}>{{ $workshop->name() }}</label>
+											</div>
+										@endforeach
+										@if ($errors->has('workshops'))
 											<span class="help-block">
-												<strong>{{ $errors->first('workshop') }}</strong>
+												<strong>{{ $errors->first('workshops') }}</strong>
 											</span>
 										@endif
 									</div>

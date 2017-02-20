@@ -52,7 +52,7 @@ class UserTest extends TestCase
 		$this->assertNull($user->collegistData());
 		$this->assertEquals("0036123456", $user->phoneNumber());
 		
-		$user = new User(1, "user", "username", "pazzword", "e@mail", "2016 date", new StatusCode(1, "stat"), null, "hu_HU", true, true, "2010-12-11 23:11:23", "thisistheregcode", "Hungary", "Veszprém1", "Veszprém2", "Budapest út 11-13.", "8200", null, new PersonalData("123456", "Budapest", "2007-01-01", "anyuka", "HS", "2013", "2015", new Faculty(1, "asd"), new Workshop(2, "qwe")), "0036123456");
+		$user = new User(1, "user", "username", "pazzword", "e@mail", "2016 date", new StatusCode(1, "stat"), null, "hu_HU", true, true, "2010-12-11 23:11:23", "thisistheregcode", "Hungary", "Veszprém1", "Veszprém2", "Budapest út 11-13.", "8200", null, new PersonalData("123456", "Budapest", "2007-01-01", "anyuka", "HS", "2013", "2015", [new Faculty(1, "asd")], [new Workshop(2, "qwe")]), "0036123456");
 		$this->assertEquals(1, $user->id());
 		$this->assertEquals("user", $user->name());
 		$this->assertEquals("username", $user->username());
@@ -72,7 +72,7 @@ class UserTest extends TestCase
 		$this->assertEquals("Budapest út 11-13.", $user->address());
 		$this->assertEquals("8200", $user->postalCode());
 		$this->assertNull($user->reason());
-		$this->assertEquals(new PersonalData("123456", "Budapest", "2007-01-01", "anyuka", "HS", "2013", "2015", new Faculty(1, "asd"), new Workshop(2, "qwe")), $user->collegistData());
+		$this->assertEquals(new PersonalData("123456", "Budapest", "2007-01-01", "anyuka", "HS", "2013", "2015", [new Faculty(1, "asd")], [new Workshop(2, "qwe")]), $user->collegistData());
 		$this->assertEquals("0036123456", $user->phoneNumber());
 	}
 

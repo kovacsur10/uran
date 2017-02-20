@@ -142,9 +142,9 @@ class TaskController extends Controller{
 				//alert for changing the status
 				$newStatus = $layout->tasks()->getStatusById($request->status)->name();
 				if($newStatus !== $layout->tasks()->getTask()->status()->name()){
-					Notifications::notify($layout->user()->user(), $layout->tasks()->getTask()->creator()->id(), 'Feladat státusz változás', 'Egy általad létrehozott feladat státusza megváltozott ('.$layout->language($layout->tasks()->getTask()->name()).' -> '.$layout->language($newStatus).')!', 'tasks/task/'.$taskId);
+					Notifications::notify($layout->user()->user(), $layout->tasks()->getTask()->creator()->id(), 'Feladat státusz változás', 'Egy általad létrehozott feladat státusza megváltozott ('.$layout->language($layout->tasks()->getTask()->caption()).' -> '.$layout->language($newStatus).')!', 'tasks/task/'.$taskId);
 					if($assignedUser !== null && $assignedUser !== $layout->tasks()->getTask()->creator()->id()){
-						Notifications::notify($layout->user(), $assignedUser, 'Feladat státusz változás', 'Egy feladat - amin éppen dolgozol - státusza megváltozott ('.$layout->language($layout->tasks()->getTask()->name()).' -> '.$layout->language($newStatus).')!', 'tasks/task/'.$taskId);
+						Notifications::notify($layout->user(), $assignedUser, 'Feladat státusz változás', 'Egy feladat - amin éppen dolgozol - státusza megváltozott ('.$layout->language($layout->tasks()->getTask()->caption()).' -> '.$layout->language($newStatus).')!', 'tasks/task/'.$taskId);
 					}
 				}
 				//alert for assignment
