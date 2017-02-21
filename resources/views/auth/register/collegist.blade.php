@@ -79,7 +79,7 @@
                                 @endif
                             </div>
                         </div>
-						
+                        
 						<div class="panel panel-default">
 							<div class="panel-heading">{{ $layout->language('user_data') }}</div>
 							<div class="panel-body">
@@ -145,10 +145,10 @@
 								
 								<div class="form-group{{ $errors->has('phone') ? ' has-error' : '' }}">
 									<label class="col-md-4 control-label">{{ $layout->language('phone_number') }}</label>
-
+		
 									<div class="col-md-6">
 										<input type="text" class="form-control" name="phone" id="phone" value="{{ old('phone') }}">
-
+		
 										@if ($errors->has('phone'))
 											<span class="help-block">
 												<strong>{{ $errors->first('phone') }}</strong>
@@ -157,33 +157,6 @@
 									</div>
 								</div>
 								
-								<div class="form-group{{ $errors->has('year_of_leaving_exam') ? ' has-error' : '' }}">
-									<label class="col-md-4 control-label">{{ $layout->language('year_of_leaving_exam') }}</label>
-
-									<div class="col-md-6">
-										<input type="text" class="form-control" name="year_of_leaving_exam" id="year_of_leaving_exam" value="{{ old('year_of_leaving_exam') }}">
-
-										@if ($errors->has('year_of_leaving_exam'))
-											<span class="help-block">
-												<strong>{{ $errors->first('year_of_leaving_exam') }}</strong>
-											</span>
-										@endif
-									</div>
-								</div>
-								
-								<div class="form-group{{ $errors->has('high_school') ? ' has-error' : '' }}">
-									<label class="col-md-4 control-label">{{ $layout->language('high_school') }}</label>
-
-									<div class="col-md-6">
-										<input type="text" class="form-control" name="high_school" id="high_school" value="{{ old('high_school') }}">
-
-										@if ($errors->has('high_school'))
-											<span class="help-block">
-												<strong>{{ $errors->first('high_school') }}</strong>
-											</span>
-										@endif
-									</div>
-								</div>
 							</div>
 						</div>
 
@@ -270,7 +243,36 @@
 						</div>
 						
 						<div class="panel panel-default">
+							<div class="panel-heading">{{ $layout->language('studies_data') }}</div>
 							<div class="panel-body">
+								<div class="form-group{{ $errors->has('year_of_leaving_exam') ? ' has-error' : '' }}">
+									<label class="col-md-4 control-label">{{ $layout->language('year_of_leaving_exam') }}</label>
+
+									<div class="col-md-6">
+										<input type="text" class="form-control" name="year_of_leaving_exam" id="year_of_leaving_exam" value="{{ old('year_of_leaving_exam') }}">
+
+										@if ($errors->has('year_of_leaving_exam'))
+											<span class="help-block">
+												<strong>{{ $errors->first('year_of_leaving_exam') }}</strong>
+											</span>
+										@endif
+									</div>
+								</div>
+								
+								<div class="form-group{{ $errors->has('high_school') ? ' has-error' : '' }}">
+									<label class="col-md-4 control-label">{{ $layout->language('high_school') }}</label>
+
+									<div class="col-md-6">
+										<input type="text" class="form-control" name="high_school" id="high_school" value="{{ old('high_school') }}">
+
+										@if ($errors->has('high_school'))
+											<span class="help-block">
+												<strong>{{ $errors->first('high_school') }}</strong>
+											</span>
+										@endif
+									</div>
+								</div>
+								
 								<div class="form-group{{ $errors->has('neptun') ? ' has-error' : '' }}">
 									<label class="col-md-4 control-label">{{ $layout->language('neptun') }}</label>
 
