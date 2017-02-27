@@ -213,11 +213,15 @@
                         </li>
                     @endif
 					<li>
-						@if($layout->lang() !== 'hu_HU')
-							<a style="padding: 0px 0px;" href="{{ url('lang/set/hu_HU').'?page='.$layout->getRoute() }}"><img style="height:18px;" src="/images/lang_hu.png" alt="Hungarian Flag"></a>
-						@elseif($layout->lang() !== 'en_US')
-							<a style="padding: 0px 0px;" href="{{ url('lang/set/en_US').'?page='.$layout->getRoute() }}"><img style="height:18px;" src="/images/lang_en.png" alt="UK Flag"></a>
-						@endif
+						<li class="dropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                {{ $layout->language('choose_language') }} <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu" role="menu">
+								<li><a href="{{ url('lang/set/hu_HU').'?page='.$layout->getRoute() }}">{{ $layout->language('language_hu_HU') }}</a></li>
+                                <li><a href="{{ url('lang/set/en_US').'?page='.$layout->getRoute() }}">{{ $layout->language('language_en_US') }}</a></li>
+                            </ul>
+                        </li>
 					</li>
 				</ul>
             </div>
