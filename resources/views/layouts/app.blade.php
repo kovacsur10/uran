@@ -138,6 +138,9 @@
 								@if($data->user()->permitted('user_handling'))
 								<li><a href="{{ url('/ecadmin/user/list') }}">{{ $layout->language('TODO') }}</a></li>
 								@endif
+								@if($data->user()->permitted('mailing_lists_handling'))
+								<li><a href="{{ url('/ecadmin/maillist/list') }}">{{ $layout->language('mailing_lists') }}</a></li>
+								@endif
                             </ul>
                         </li>
                     @endif

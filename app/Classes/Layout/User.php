@@ -238,7 +238,7 @@ class User extends Pageable{
 			try{
 				P_User::updateUserLanguage($this->user->id(), $lang);
 			}catch(\Exception $ex){
-				Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Update table 'users' was not successful! ".$ex->getMessage());
+				Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 				throw new DatabaseException("Language update failed!");
 			}
 		}else{
@@ -246,6 +246,87 @@ class User extends Pageable{
 		}
 	}
 	
-// PRIVATE FUNCTIONS
+	/** Function name: getForMembraMailingList
+	 *
+	 * This function returns the user's who should be
+	 * the member of the membraCollegii mailing list.
+	 *
+	 * @param text|null $onTheList - the actual list members
+	 * @return arrayOfUser - the should be members of the mailing list
+	 *
+	 * @throws DatabaseException when the user getting phase fails.
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	public function getForMembraMailingList(){ //TODO: test
+		try{
+			$usersIntern = P_User::getUsersWithStatus('intern');
+			$usersExtern = P_User::getUsersWithStatus('extern');
+			$usersScholarship = P_User::getUsersWithStatus('scholarship');
+			$users = array_merge($usersIntern, $usersExtern, $usersScholarship);
+		}catch(\Exception $ex){
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
+			throw new DatabaseException("Could not get the requested users!");
+		}
+		return $users;
+	}
 	
+	/** Function name: getForAlumniMailingList
+	 *
+	 * This function returns the user's who should be
+	 * the member of the alumni mailing list.
+	 *
+	 * @param text|null $onTheList - the actual list members
+	 * @return arrayOfUser - the should be members of the mailing list
+	 *
+	 * @throws DatabaseException when the user getting phase fails.
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	public function getForAlumniMailingList(){ //TODO: test
+		try{
+			$usersAlumni = P_User::getUsersWithStatus('alumni');
+			$usersExtra = P_User::getExtraAlumniMembers();
+			$users = array_merge($usersAlumni, $usersExtra);
+		}catch(\Exception $ex){
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
+			throw new DatabaseException("Could not get the requested users!");
+		}
+		return $users;
+	}
+	
+	/** Function name: getForRgMailingList
+	 *
+	 * This function returns the user's who should be
+	 * the member of the rendszergazda mailing list.
+	 *
+	 * @param text|null $onTheList - the actual list members
+	 * @return arrayOfUser - the should be members of the mailing list
+	 *
+	 * @throws DatabaseException when the user getting phase fails.
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	public function getForRgMailingList($onTheList){ //TODO: test
+		User::preprocessListMembers($onTheList);
+		try{
+			$users = P_User::getUsersWithStatus('intern');
+		}catch(\Exception $ex){
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
+			throw new DatabaseException("Could not get the requested users!");
+		}
+		return $users;
+	}
+	
+// PRIVATE FUNCTIONS
+	private static function preprocessListMembers($onTheList){ //TODO: comment
+		echo($onTheList);
+		$array = explode(">", $onTheList);
+		print_r($array); die();
+	}
+/*	
+teszt elek <almafa>
+teszt elek 2 <almafa2>
+teszt elek 3 <almafa3>
+*/
 }

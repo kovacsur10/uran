@@ -19,6 +19,9 @@ Route::group(['middleware' => 'web'], function () {
 	Route::get('ecadmin/user/list', 'ECAdmin\UserController@show')->middleware('auth.logged');
 	Route::get('ecadmin/user/show/{userId}', 'ECAdmin\UserController@showUser')->middleware('auth.logged');
 	Route::post('ecadmin/user/show/{userId}', 'ECAdmin\UserController@updateUser')->middleware('auth.logged');
+	Route::get('ecadmin/maillist/list', 'ECAdmin\MailListController@showList')->middleware('auth.logged');
+	Route::post('ecadmin/maillist/show', 'ECAdmin\MailListController@show')->middleware('auth.logged');
+	Route::post('ecadmin/maillist/showdiff', 'ECAdmin\MailListController@showDiff')->middleware('auth.logged');
 	
 	// Admin routes
 	Route::get('admin/permissions', 'Admin\PermissionController@showPermissions')->middleware('auth.logged');

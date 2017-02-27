@@ -273,6 +273,58 @@ class P_User{
 		return $users;
 	}
 	
+	/** Function name: getUsersWithStatus
+	 *
+	 * This function returns those users, who
+	 * have the requested status.
+	 *
+	 * @param text $statusName - status name identifier
+	 * @return array of User
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	static function getUsersWithStatus($statusName){ //TODO: test
+		$getUsers = DB::table('users')
+			->join('registrations', 'user_id', '=', 'users.id')
+			->join('user_status_codes', 'user_status_codes.id', '=', 'users.status')
+			->where('users.registered', '=', true)
+			->where('user_status_codes.status_name', 'LIKE', "%".$statusName."%")
+			->select('users.*', 'registrations.*', 'user_status_codes.status_name as status_name')
+			->distinct()
+			->get();
+		$users = [];
+		foreach($getUsers as $user){
+			if($user->neptun !== null){
+				$faculties = P_User::getUserFaculties($user->id);
+				$workshops = P_User::getUserWorkshops($user->id);
+				$collegistData = new PersonalData($user->neptun, $user->city_of_birth, $user->date_of_birth, $user->name_of_mother, $user->high_school, $user->year_of_leaving_exam, $user->from_year, $faculties, $workshops);
+			}else{
+				$collegistData = null;
+			}
+			$users[] = new User($user->id, $user->name, $user->username, $user->password, $user->email, $user->registration_date, new StatusCode($user->status, $user->status_name), $user->last_online, $user->language, $user->registered, $user->verified, $user->verification_date, $user->code, $user->country, $user->city, $user->shire, $user->address, $user->postalcode, $user->reason, $collegistData, $user->phone);
+		}
+		return $users;
+	}
+	
+	/** Function name: getExtraAlumniMembers
+	 *
+	 * This function return extra alumni mailing list members.
+	 *
+	 * @return array of User
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	static function getExtraAlumniMembers(){ //TODO: test
+		$getUsers = DB::table('alumni_list_extra_members')
+			->get();
+		$users = [];
+		foreach($getUsers as $user){
+			$collegistData = null;
+			$users[] = new User(0, $user->name, "", "", $user->email, "", new StatusCode(0, ""), "", "", false, false, "", "", "", "", "", "", "", "", $collegistData, "");
+		}
+		return $users;
+	}
+	
 	/** Function name: getUserPermissionGroups
 	 *
 	 * This function returns the available groups
