@@ -110,6 +110,7 @@ class Languages{
 			'status_teacher' => 'Tanár',
 			'status_alumni' => 'Alumni tag',
 			'status_visitor' => 'Vendég',
+			'choose_language' => 'Choose language',
 			'default_webpage_language' => 'Alapértelmezett honlap nyelv',
 			'language_hu_HU' => 'Magyar',
 			'language_en_US' => 'Angol',
@@ -673,6 +674,7 @@ class Languages{
 			'status_alumni' => 'Alumni member',
 			'status_visitor' => 'Visitor',
 			'default_webpage_language' => 'Default webpage language',
+			'choose_language' => 'Choose language',
 			'language_hu_HU' => 'Hungarian',
 			'language_en_US' => 'English',
 		//permissions
