@@ -66,6 +66,7 @@ class Languages{
 			'ejc' => 'EJC',
 			'error' => 'Hiba',
 			'error_at_finding_the_user' => 'A felhasználó nem található, vagy nem publikus az oldala!',
+			'error_at_getting_users' => 'Hiba miatt a felhasználókat nem lehet kilistázni!',
 			'find' => 'Keres',
 			'find_user' => 'Felhasználó keresése',
 			'help' => 'Segítség',
@@ -114,6 +115,10 @@ class Languages{
 			'default_webpage_language' => 'Alapértelmezett honlap nyelv',
 			'language_hu_HU' => 'Magyar',
 			'language_en_US' => 'Angol',
+			'mailing_list' => 'Levelezési lista',
+			'mailing_lists' => 'Levelezési listák',
+			'mailing_lists_diff' => 'Levelezési listák diff',
+			'mailing_list_actual_content' => 'Levelezési lista aktuális tagjai',
 		//permissions
 			'assign_permissions' => 'Jogok hozzárendelése',
 			'error_at_setting_the_permissions' => 'Hiba a jogosultságok beállításakor!',
@@ -129,6 +134,7 @@ class Languages{
 			'set_permission_groups' => 'Jogkörök mentése',
 			'error_at_showing_permission_group_modification_page' => 'Hiba a jogkörök módosítása oldal megnyitásakor!',
 			'list_permission_groups' => 'Jogkörök listázása',
+			'mailing_lists_handling' => 'A levelezési listák tagjainka listázása',
 		//modules
 			'error_at_module_activation' => 'Hiba a modul aktiválásakor!',
 			'module' => 'Modul',
@@ -628,6 +634,7 @@ class Languages{
 			'deny_request' => 'Deny request',
 			'ejc' => 'EJC',
 			'error' => 'Error',
+			'error_at_getting_users' => 'Internal server error! Could not get the users!',
 			'error_at_finding_the_user' => 'Could not find the user, or the profile is hidden!',
 			'find' => 'Find',
 			'find_user' => 'Find user',
@@ -677,6 +684,10 @@ class Languages{
 			'choose_language' => 'Choose language',
 			'language_hu_HU' => 'Hungarian',
 			'language_en_US' => 'English',
+			'mailing_list' => 'Mailing list',
+			'mailing_lists' => 'Mailing lists',
+			'mailing_lists_diff' => 'Mailing lists diff',
+			'mailing_list_actual_content' => 'Members of mailing list',
 		//permissions
 			'assign_permissions' => 'Assign permissions',
 			'error_at_setting_the_permissions' => 'Error at setting the permissions!',
@@ -692,6 +703,7 @@ class Languages{
 			'set_permission_groups' => 'Set groups',
 			'error_at_showing_permission_group_modification_page' => 'Error at showing the permissions group modification page!',
 			'list_permission_groups' => 'List permission groups',
+			'mailing_lists_handling' => 'List the should be members of mailing lists',
 		//modules
 			'error_at_module_activation' => 'Error at activating the modul!',
 			'module' => 'Module',
