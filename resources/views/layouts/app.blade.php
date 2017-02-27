@@ -147,58 +147,60 @@
 				<ul class="nav navbar-nav navbar-right">
 					@if (!$data->logged())
                     @else
-						
-						<li class="btn-group dropdown dropdown-notifications sw-open">
-							<button style="margin-top:8px;" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-								@if($data->user()->unreadNotificationCount() > 0)
-									<i data-count="{{ $data->user()->unreadNotificationCount() }}" class="glyphicon glyphicon-envelope notification-icon"></i>
-								@else
-									<i class="glyphicon glyphicon-envelope"></i>
-								@endif
-								<span class="caret"></span>
-							</button>
-
-							<div class="dropdown-container">
-								<div class="dropdown-toolbar">
-									<div class="dropdown-toolbar-actions">
-										<a href="{{ url('/notification/list/0') }}"><i class="glyphicon glyphicon-search"></i> {{ $layout->language('show_all') }}</a>
-									</div>
-									<h3 class="dropdown-toolbar-title">{{ $layout->language('unread_notifications') }} ({{ $data->user()->unreadNotificationCount() }})</h3>
-								</div><!-- /dropdown-toolbar -->
-
-								<ul class="dropdown-menu notifications">
-								
-									@if($data->user()->notifications() === null)
-										<li class="notification">
-											<div class="media">
-												<div class="media-body">
-													<strong class="notification-title">{{ $layout->language('system_no_problem') }}</strong>
-													<p class="notification-desc">{{ $layout->language('no_notification_to_show') }}</p>
-
-													<div class="notification-meta">
-														<small class="timestamp"></small>
-													</div>
-												</div>
-											</div>
-										</li>
+                    	<li class="hidden-sm hidden-md hidden-lg"><a href="{{ url('/notification/list/0') }}">{{ $layout->language('notifications') }}</a></li>
+						<li class="hidden-xs dropdown">
+							<div class="btn-group dropdown-notifications sw-open">
+								<button style="margin-top:8px;" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+									@if($data->user()->unreadNotificationCount() > 0)
+										<i data-count="{{ $data->user()->unreadNotificationCount() }}" class="glyphicon glyphicon-envelope notification-icon"></i>
 									@else
-										@foreach($data->user()->notifications() as $notification)
-										<li style="{{ $notification->isSeen() ? '' : 'background-color:#E0FFFF;' }}" class="notification">
-											<div style="cursor: pointer;" class="media" onclick="window.location='{{ url('notification/show/'.$notification->id()) }}';">
-												<div class="media-body">
-													<strong class="notification-title"><a href="{{ url('/data/'.$notification->username()) }}">{{ $notification->name() }}</a>: {{ $notification->subject() }}</strong>
-													<p class="notification-desc">{{ $notification->message() }}</p>
-
-													<div class="notification-meta">
-														<small class="timestamp">{{ str_replace("-", ". ", str_replace(" ", ". ", $notification->time())) }}</small>
+										<i class="glyphicon glyphicon-envelope"></i>
+									@endif
+									<span class="caret"></span>
+								</button>
+	
+								<div class="dropdown-container">
+									<div class="dropdown-toolbar">
+										<div class="dropdown-toolbar-actions">
+											<a href="{{ url('/notification/list/0') }}"><i class="glyphicon glyphicon-search"></i> {{ $layout->language('show_all') }}</a>
+										</div>
+										<h3 class="dropdown-toolbar-title" data-toggle="dropdown">{{ $layout->language('unread_notifications') }} ({{ $data->user()->unreadNotificationCount() }})</h3>
+									</div><!-- /dropdown-toolbar -->
+	
+									<ul class="dropdown-menu notifications">
+									
+										@if($data->user()->notifications() === null)
+											<li class="notification">
+												<div class="media">
+													<div class="media-body">
+														<strong class="notification-title">{{ $layout->language('system_no_problem') }}</strong>
+														<p class="notification-desc">{{ $layout->language('no_notification_to_show') }}</p>
+	
+														<div class="notification-meta">
+															<small class="timestamp"></small>
+														</div>
 													</div>
 												</div>
-											</div>
-										</li>
-										@endforeach
-									@endif
-								
-								</ul>
+											</li>
+										@else
+											@foreach($data->user()->notifications() as $notification)
+											<li style="{{ $notification->isSeen() ? '' : 'background-color:#E0FFFF;' }}" class="notification">
+												<div style="cursor: pointer;" class="media" onclick="window.location='{{ url('notification/show/'.$notification->id()) }}';">
+													<div class="media-body">
+														<strong class="notification-title"><a href="{{ url('/data/'.$notification->username()) }}">{{ $notification->name() }}</a>: {{ $notification->subject() }}</strong>
+														<p class="notification-desc">{{ $notification->message() }}</p>
+	
+														<div class="notification-meta">
+															<small class="timestamp">{{ str_replace("-", ". ", str_replace(" ", ". ", $notification->time())) }}</small>
+														</div>
+													</div>
+												</div>
+											</li>
+											@endforeach
+										@endif
+									
+									</ul>
+								</div>
 							</div>
 						</li>				
 					
