@@ -119,6 +119,9 @@ class Languages{
 			'mailing_lists' => 'Levelezési listák',
 			'mailing_lists_diff' => 'Levelezési listák diff',
 			'mailing_list_actual_content' => 'Levelezési lista aktuális tagjai',
+			'members' => 'Tagok',
+			'newMembers' => 'Új tagok',
+			'removableMembers' => 'Törlendő tagok',
 		//permissions
 			'assign_permissions' => 'Jogok hozzárendelése',
 			'error_at_setting_the_permissions' => 'Hiba a jogosultságok beállításakor!',
@@ -688,6 +691,9 @@ class Languages{
 			'mailing_lists' => 'Mailing lists',
 			'mailing_lists_diff' => 'Mailing lists diff',
 			'mailing_list_actual_content' => 'Members of mailing list',
+			'members' => 'Members',
+			'newMembers' => 'New members',
+			'removableMembers' => 'Removable members',
 		//permissions
 			'assign_permissions' => 'Assign permissions',
 			'error_at_setting_the_permissions' => 'Error at setting the permissions!',

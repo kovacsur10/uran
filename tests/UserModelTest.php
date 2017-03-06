@@ -296,4 +296,94 @@ class UserModelTest extends TestCase
 		$this->assertEquals('en_US', $user->user()->language());
 	}
 	
+	/** Function name: test_getForMembraMailingList
+	 *
+	 * This function is testing the getForMembraMailingList function of the User model.
+	 *
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	function test_getForMembraMailingList(){
+		$users = User::getForMembraMailingList(null);
+		$this->assertCount(4, $users["alreadyMember"]);
+		$this->assertCount(0, $users["new"]);
+		$this->assertCount(0, $users["remove"]);
+		
+		$users = User::getForMembraMailingList(["almafa"]);
+		$this->assertCount(4, $users["alreadyMember"]);
+		$this->assertCount(0, $users["new"]);
+		$this->assertCount(0, $users["remove"]);
+		
+		$users = User::getForMembraMailingList("ALMAFA");
+		$this->assertCount(4, $users["alreadyMember"]);
+		$this->assertCount(0, $users["new"]);
+		$this->assertCount(0, $users["remove"]);
+		
+		$users = User::getForMembraMailingList("HAL <hal@lo.hu>\nNagy Vendel <vendi95@gmail.com>");
+		$this->assertCount(1, $users["alreadyMember"]);
+		$this->assertCount(3, $users["new"]);
+		$this->assertCount(1, $users["remove"]);
+	}
+	
+	/** Function name: test_getForAlumniMailingList
+	 *
+	 * This function is testing the getForAlumniMailingList function of the User model.
+	 *
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	function test_getForAlumniMailingList(){
+		$users = User::getForAlumniMailingList(null);
+		$this->assertCount(3, $users["alreadyMember"]);
+		$this->assertCount(0, $users["new"]);
+		$this->assertCount(0, $users["remove"]);
+		
+		$users = User::getForAlumniMailingList(["almafa"]);
+		$this->assertCount(3, $users["alreadyMember"]);
+		$this->assertCount(0, $users["new"]);
+		$this->assertCount(0, $users["remove"]);
+		
+		$users = User::getForAlumniMailingList("ALMAFA");
+		$this->assertCount(3, $users["alreadyMember"]);
+		$this->assertCount(0, $users["new"]);
+		$this->assertCount(0, $users["remove"]);
+		
+		$users = User::getForAlumniMailingList("HAL <hal@lo.hu>\nExtra Irén 1 <extra.iran@alma.hu>\nRévfalusi Éva <eva.revfalusi@gmail.com>");
+		$this->assertCount(2, $users["alreadyMember"]);
+		$this->assertCount(1, $users["new"]);
+		$this->assertCount(1, $users["remove"]);
+	}
+	
+	/** Function name: test_getForRgMailingList
+	 *
+	 * This function is testing the getForRgMailingList function of the User model.
+	 *
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	function test_getForRgMailingList(){
+		$users = User::getForRgMailingList(null);
+		$this->assertCount(2, $users["alreadyMember"]);
+		$this->assertCount(0, $users["new"]);
+		$this->assertCount(0, $users["remove"]);
+		
+		$users = User::getForRgMailingList(["almafa"]);
+		$this->assertCount(2, $users["alreadyMember"]);
+		$this->assertCount(0, $users["new"]);
+		$this->assertCount(0, $users["remove"]);
+		
+		$users = User::getForRgMailingList("ALMAFA");
+		$this->assertCount(2, $users["alreadyMember"]);
+		$this->assertCount(0, $users["new"]);
+		$this->assertCount(0, $users["remove"]);
+		
+		$users = User::getForRgMailingList("Nagy Vendel <vendi95@gmail.com>\nHAL <hal@lo.hu>");
+		$this->assertCount(1, $users["alreadyMember"]);
+		$this->assertCount(1, $users["new"]);
+		$this->assertCount(1, $users["remove"]);
+	}
+	
 }

@@ -283,7 +283,7 @@ class P_User{
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	static function getUsersWithStatus($statusName){ //TODO: test
+	static function getUsersWithStatus($statusName){
 		$getUsers = DB::table('users')
 			->join('registrations', 'user_id', '=', 'users.id')
 			->join('user_status_codes', 'user_status_codes.id', '=', 'users.status')
@@ -314,7 +314,7 @@ class P_User{
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	static function getExtraAlumniMembers(){ //TODO: test
+	static function getExtraAlumniMembers(){
 		$getUsers = DB::table('alumni_list_extra_members')
 			->get();
 		$users = [];
