@@ -35,6 +35,8 @@ class User{
 	private $registration_verification_status;
 	private $registration_verification_date;
 	private $registration_code;
+	
+	private $on_alumni_list;
 
 	// PUBLIC FUNCTIONS
 
@@ -60,10 +62,11 @@ class User{
 	 * @param string|null $reason - user's reason of registration
 	 * @param PersonalData|null $personal_data - user's personal data (collegist data)
 	 * @param string $phone_number - user's phone number
+	 * @param bool $unsubscribe_from_alumni - state of subscription of the alumni mailing list
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function __construct(int $id, string $name, string $username, string $password, string $email, string $registration_date, StatusCode $status, string $last_online = null, string $language, bool $registered, bool $registration_verification_status, string $registration_verification_date = null, string $registration_code, string $country, string $city, string $shire, string $address, string $postal_code, string $reason = null, PersonalData $personal_data = null, string $phone_number){
+	public function __construct(int $id, string $name, string $username, string $password, string $email, string $registration_date, StatusCode $status, string $last_online = null, string $language, bool $registered, bool $registration_verification_status, string $registration_verification_date = null, string $registration_code, string $country, string $city, string $shire, string $address, string $postal_code, string $reason = null, PersonalData $personal_data = null, string $phone_number, bool $unsubscribe_from_alumni){
 		$this->id = $id;
 		$this->name = $name;
 		$this->username = $username;
@@ -85,6 +88,7 @@ class User{
 		$this->reason = $reason;
 		$this->personal_data = $personal_data;
 		$this->phone = $phone_number;
+		$this->on_alumni_list = !$unsubscribe_from_alumni;
 	}
 
 	/** Function name: id
@@ -305,6 +309,16 @@ class User{
 	 */
 	public function __toString(){
 		return $this->username;
+	}
+	
+	/** Function name: subscribedToAlumniList
+	 *
+	 * This is the getter for the alumni mailing list subscription state.
+	 *
+	 * @return bool - The subscription state.
+	 */
+	public function subscribedToAlumniList() : bool{
+		return $this->on_alumni_list;
 	}
 
 }

@@ -29,7 +29,7 @@ class UserTest extends TestCase
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	function test_permission(){
-		$user = new User(1, "user", "username", "pazzword", "e@mail", "2016 date", new StatusCode(1, "stat"), "2016-11-11", "hu_HU", true, true, "2010-12-11 23:11:23", "thisistheregcode", "Hungary", "Veszprém1", "Veszprém2", "Budapest út 11-13.", "8200", "reason", null, "0036123456");
+		$user = new User(1, "user", "username", "pazzword", "e@mail", "2016 date", new StatusCode(1, "stat"), "2016-11-11", "hu_HU", true, true, "2010-12-11 23:11:23", "thisistheregcode", "Hungary", "Veszprém1", "Veszprém2", "Budapest út 11-13.", "8200", "reason", null, "0036123456", true);
 		$this->assertEquals(1, $user->id());
 		$this->assertEquals("user", $user->name());
 		$this->assertEquals("username", $user->username());
@@ -51,8 +51,9 @@ class UserTest extends TestCase
 		$this->assertEquals("reason", $user->reason());
 		$this->assertNull($user->collegistData());
 		$this->assertEquals("0036123456", $user->phoneNumber());
+		$this->assertFalse($user->subscribedToAlumniList());
 		
-		$user = new User(1, "user", "username", "pazzword", "e@mail", "2016 date", new StatusCode(1, "stat"), null, "hu_HU", true, true, "2010-12-11 23:11:23", "thisistheregcode", "Hungary", "Veszprém1", "Veszprém2", "Budapest út 11-13.", "8200", null, new PersonalData("123456", "Budapest", "2007-01-01", "anyuka", "HS", "2013", "2015", [new Faculty(1, "asd")], [new Workshop(2, "qwe")]), "0036123456");
+		$user = new User(1, "user", "username", "pazzword", "e@mail", "2016 date", new StatusCode(1, "stat"), null, "hu_HU", true, true, "2010-12-11 23:11:23", "thisistheregcode", "Hungary", "Veszprém1", "Veszprém2", "Budapest út 11-13.", "8200", null, new PersonalData("123456", "Budapest", "2007-01-01", "anyuka", "HS", "2013", "2015", [new Faculty(1, "asd")], [new Workshop(2, "qwe")]), "0036123456", false);
 		$this->assertEquals(1, $user->id());
 		$this->assertEquals("user", $user->name());
 		$this->assertEquals("username", $user->username());
@@ -74,6 +75,7 @@ class UserTest extends TestCase
 		$this->assertNull($user->reason());
 		$this->assertEquals(new PersonalData("123456", "Budapest", "2007-01-01", "anyuka", "HS", "2013", "2015", [new Faculty(1, "asd")], [new Workshop(2, "qwe")]), $user->collegistData());
 		$this->assertEquals("0036123456", $user->phoneNumber());
+		$this->assertTrue($user->subscribedToAlumniList());
 	}
 
 	/** Function name: test_permission_attr
@@ -108,5 +110,6 @@ class UserTest extends TestCase
 		$this->assertClassHasAttribute('phone', User::class);
 		$this->assertClassHasAttribute('reason', User::class);
 		$this->assertClassHasAttribute('personal_data', User::class);
+		$this->assertClassHasAttribute('on_alumni_list', User::class);
 	}
 }

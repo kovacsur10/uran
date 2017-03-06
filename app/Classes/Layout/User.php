@@ -289,7 +289,13 @@ class User extends Pageable{
 	public static function getForAlumniMailingList($onTheList){
 		$parsed = User::preprocessListMembers($onTheList);
 		try{
-			$usersAlumni = P_User::getUsersWithStatus('alumni');
+			$usersAlumniSource = P_User::getUsersWithStatus('alumni');
+			$usersAlumni = [];
+			foreach($usersAlumniSource as $user){
+				if($user->subscribedToAlumniList()){
+					$usersAlumni[] = $user;
+				}
+			}
 			$usersExtra = P_User::getExtraAlumniMembers();
 			$users = array_merge($usersAlumni, $usersExtra);
 		}catch(\Exception $ex){
@@ -384,7 +390,7 @@ class User extends Pageable{
 		}
 		foreach($parsed as $name => $email){
 			if(!User::emailInUsers($email, $users)){
-				$deleteable[] = new UserData(0, $name, "", "", $email, "", new StatusCode(0, ""), "", "", false, false, "", "", "", "", "", "", "", "", null, "");
+				$deleteable[] = new UserData(0, $name, "", "", $email, "", new StatusCode(0, ""), "", "", false, false, "", "", "", "", "", "", "", "", null, "", false);
 			}
 		}
 		return [
