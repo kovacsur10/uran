@@ -11,6 +11,8 @@ use App\Classes\Interfaces\Pageable;
 use App\Classes\Logger;
 use App\Exceptions\ValueMismatchException;
 use App\Exceptions\DatabaseException;
+use App\Classes\Data\User as UserData;
+use App\Classes\Data\StatusCode;
 
 /** Class name: User
  *
@@ -258,7 +260,8 @@ class User extends Pageable{
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function getForMembraMailingList(){ //TODO: test
+	public static function getForMembraMailingList($onTheList){
+		$parsed = User::preprocessListMembers($onTheList);
 		try{
 			$usersIntern = P_User::getUsersWithStatus('intern');
 			$usersExtern = P_User::getUsersWithStatus('extern');
@@ -268,7 +271,7 @@ class User extends Pageable{
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 			throw new DatabaseException("Could not get the requested users!");
 		}
-		return $users;
+		return User::calculateSublists($users, $parsed);
 	}
 	
 	/** Function name: getForAlumniMailingList
@@ -283,7 +286,8 @@ class User extends Pageable{
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function getForAlumniMailingList(){ //TODO: test
+	public static function getForAlumniMailingList($onTheList){
+		$parsed = User::preprocessListMembers($onTheList);
 		try{
 			$usersAlumni = P_User::getUsersWithStatus('alumni');
 			$usersExtra = P_User::getExtraAlumniMembers();
@@ -292,41 +296,121 @@ class User extends Pageable{
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 			throw new DatabaseException("Could not get the requested users!");
 		}
-		return $users;
+		return User::calculateSublists($users, $parsed);
 	}
 	
 	/** Function name: getForRgMailingList
 	 *
 	 * This function returns the user's who should be
 	 * the member of the rendszergazda mailing list.
+	 * 
+	 * The return value is:
+	 * Array(
+	 *   "new" => arrayOfUser,
+	 *   "remove" = arrayOfUser,
+	 *   "alreadyMember" => arrayOfUser
+	 * )
 	 *
 	 * @param text|null $onTheList - the actual list members
-	 * @return arrayOfUser - the should be members of the mailing list
+	 * @return array - the should be members of the mailing list
 	 *
 	 * @throws DatabaseException when the user getting phase fails.
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function getForRgMailingList($onTheList){ //TODO: test
-		User::preprocessListMembers($onTheList);
+	public static function getForRgMailingList($onTheList){
+		$parsed = User::preprocessListMembers($onTheList);
 		try{
 			$users = P_User::getUsersWithStatus('intern');
 		}catch(\Exception $ex){
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 			throw new DatabaseException("Could not get the requested users!");
 		}
-		return $users;
+		return User::calculateSublists($users, $parsed);
 	}
 	
 // PRIVATE FUNCTIONS
-	private static function preprocessListMembers($onTheList){ //TODO: comment
-		echo($onTheList);
-		$array = explode(">", $onTheList);
-		print_r($array); die();
+	/** Function name: preprocessListMembers
+	 *
+	 * This function returns a parsed list, from the
+	 * provided data list.
+	 *
+	 * @param text|null $onTheList - the actual list members
+	 * @return arrayOfUser - the given list, parsed
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	private static function preprocessListMembers($onTheList){
+		if($onTheList === null || is_array($onTheList)){
+			return [];
+		}
+		preg_match_all("/(?:(.*) <(.*@.*)>)/", html_entity_decode($onTheList), $matched);
+		$returnArray = [];
+		if(count($matched[1]) === count($matched[2])){
+			for($i = 0; $i < count($matched[1]); $i++){
+				$returnArray[$matched[1][$i]] = $matched[2][$i];
+			}
+		}
+		return $returnArray;
 	}
-/*	
-teszt elek <almafa>
-teszt elek 2 <almafa2>
-teszt elek 3 <almafa3>
-*/
+	
+	/** Function name: calculateSublists
+	 *
+	 * This function returns the difference of the current
+	 * users and the parsed values.
+	 *
+	 * Array(
+	 *   "new" => arrayOfUser,
+	 *   "remove" = arrayOfUser,
+	 *   "alreadyMember" => arrayOfUser
+	 * )
+	 *
+	 * @param arrayOfUser $users - the actual users, who should be on the list
+	 * @param arrayOfValues $parsed - the parsed user values, they were on the list
+	 * @return array - the sublists (add, remove, stay)
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	private static function calculateSublists($users, $parsed){
+		$alreadyOnTheList = [];
+		$newToTheList = [];
+		$deleteable = [];
+		foreach($users as $user){
+			if($parsed === [] || in_array($user->email(), $parsed)){
+				$alreadyOnTheList[] = $user;
+			}else{
+				$newToTheList[] = $user;
+			}
+		}
+		foreach($parsed as $name => $email){
+			if(!User::emailInUsers($email, $users)){
+				$deleteable[] = new UserData(0, $name, "", "", $email, "", new StatusCode(0, ""), "", "", false, false, "", "", "", "", "", "", "", "", null, "");
+			}
+		}
+		return [
+				"new" => $newToTheList,
+				"remove" => $deleteable,
+				"alreadyMember" => $alreadyOnTheList
+		];
+	}
+	
+	/** Function name: emailInUsers
+	 *
+	 * This function returns whethet a provided email
+	 * address is in an array of users or not.
+	 *
+	 * @param text $email - the searched email address
+	 * @param arrayOfUsers $users - the users haystack
+	 * @return boolean - found or not
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	private static function emailInUsers($email, $users){
+		foreach($users as $user){
+			if($email === $user->email()){
+				return true;
+			}
+		}
+		return false;
+	}
 }

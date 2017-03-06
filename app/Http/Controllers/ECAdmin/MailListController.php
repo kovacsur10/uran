@@ -87,7 +87,6 @@ class MailListController extends Controller{
      * @author Máté Kovács <kovacsur10@gmail.com>
      */
     public function showDiff(Request $request){
-    	echo(htmlentities($request->mailing_lists_textarea));
     	$this->validate($request, [
     			'mailing_lists' => 'required',
     			'mailing_lists_textarea' => 'required'
@@ -95,21 +94,21 @@ class MailListController extends Controller{
     	$layout = new LayoutData();
     	if($layout->user()->permitted('mailing_lists_handling')){
     		try{
+    			$encodedTextareaData = htmlentities($request->mailing_lists_textarea);
     			if($request->mailing_lists === "membraCollegii"){
-    				$members = $layout->user()->getForMembraMailingList($request->mailing_lists_textarea);
+    				$members = $layout->user()->getForMembraMailingList($encodedTextareaData);
     				return view('ecadmin.maillists.show', ["layout" => $layout,
     						"list_name" => "membraCollegii",
     						"members" => $members
     				]);
     			}else if($request->mailing_lists === "alumni"){
-    				$members = $layout->user()->getForAlumniMailingList($request->mailing_lists_textarea);
+    				$members = $layout->user()->getForAlumniMailingList($encodedTextareaData);
     				return view('ecadmin.maillists.show', ["layout" => $layout,
     						"list_name" => "rendszergazda",
     						"members" => $members
     				]);
     			}else if($request->mailing_lists === "rendszergazda"){
-    				echo($request->mailing_lists_textarea);die();
-    				$members = $layout->user()->getForRgMailingList($request->mailing_lists_textarea);
+    				$members = $layout->user()->getForRgMailingList($encodedTextareaData);
     				return view('ecadmin.maillists.show', ["layout" => $layout,
     						"list_name" => "rendszergazda",
     						"members" => $members
