@@ -32,14 +32,14 @@ class PersonalData{
 	 * @param datetime $date_of_birth - the user's birth date
 	 * @param string $name_of_mother - the user's mother's name
 	 * @param string $high_school - the user's name of the high school
-	 * @param string $year_of_leaving_exam - the user's year of the leaving exam
-	 * @param string $admission_year - the user's admission year to the dormitory
+	 * @param int $year_of_leaving_exam - the user's year of the leaving exam
+	 * @param int $admission_year - the user's admission year to the dormitory
 	 * @param arrayOfFaculty $faculties - the user's faculties
 	 * @param arrayOfWorkshop $workshops - the user's workshops
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function __construct(string $neptun, string $city_of_birth, string $date_of_birth, string $name_of_mother, string $high_school, string $year_of_leaving_exam, string $admission_year, $faculties, $workshops){
+	public function __construct(string $neptun, string $city_of_birth, string $date_of_birth, string $name_of_mother, string $high_school, int $year_of_leaving_exam, int $admission_year, $faculties, $workshops){
 		$this->neptun = $neptun;
 		$this->city_of_birth = $city_of_birth;
 		$this->date_of_birth = $date_of_birth;
@@ -105,9 +105,9 @@ class PersonalData{
 	 *
 	 * This is the getter for year_of_leaving_exam.
 	 *
-	 * @return string - The user's date of the leaving exam (only the year).
+	 * @return int - The user's date of the leaving exam (only the year).
 	 */
-	public function leavingExamYear() : string{
+	public function leavingExamYear() : int{
 		return $this->year_of_leaving_exam;
 	}
 	
@@ -115,9 +115,9 @@ class PersonalData{
 	 *
 	 * This is the getter for admission_year.
 	 *
-	 * @return string - The user's date of admission to the dormitory (only the year).
+	 * @return int - The user's date of admission to the dormitory (only the year).
 	 */
-	public function admissionYear() : string{
+	public function admissionYear() : int{
 		return $this->admission_year;
 	}
 	

@@ -27,7 +27,7 @@ class AssignmentTable{
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function __construct(string $id, string $name, bool $selected){
+	public function __construct(int $id, string $name, bool $selected){
 		$this->id = $id;
 		$this->name = $name;
 		$this->active = $selected;

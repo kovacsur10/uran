@@ -13,15 +13,13 @@ namespace App\Classes\Layout;
  * 			* Hungarian
  * 			* American English
  * 
- * Functions that can throw exceptions:
- * 
  * @author Máté Kovács <kovacsur10@gmail.com>
  */
 class Languages{
 	
 	/** Function name: getDefault
 	 *
-	 * This function returnes the default
+	 * This function returns the default
 	 * language set.
 	 * 
 	 * The array has key and value pairs.
@@ -38,7 +36,7 @@ class Languages{
 	
 	/** Function name: hungarian
 	 *
-	 * This function returnes the Hungarian
+	 * This function returns the Hungarian
 	 * language set.
 	 *
 	 * The array has key and value pairs.
@@ -610,7 +608,7 @@ class Languages{
 	
 	/** Function name: english
 	 *
-	 * This function returnes the American English
+	 * This function returns the American English
 	 * language set.
 	 *
 	 * The array has key and value pairs.

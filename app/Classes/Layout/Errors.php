@@ -11,8 +11,6 @@ namespace App\Classes\Layout;
  * Functionality:
  * 		- stores errors and old values
  * 
- * Functions that can throw exceptions:
- * 
  * @author Máté Kovács <kovacsur10@gmail.com>v
  */
 class Errors{
@@ -56,6 +54,7 @@ class Errors{
 	 * message or not.
 	 * 
 	 * @param text $key - error message identifier key
+	 * @return bool - has the key or not
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
@@ -102,6 +101,7 @@ class Errors{
 	 * the requested key has an old value or not.
 	 * 
 	 * @param text $key - old value identifier key
+	 * @return bool - has the key or not
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */

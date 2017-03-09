@@ -18,8 +18,6 @@ use App\Persistence\P_User;
  * 		- admission year support
  * 		- status code support
  * 
- * Functions that can throw exceptions:
- * 
  * @author Máté Kovács <kovacsur10@gmail.com>
  */
 class BaseData{
@@ -41,7 +39,7 @@ class BaseData{
 			$faculties = P_General::getFaculties();
 		}catch(\Exception $ex){
 			$faculties = [];
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'faculties' was not successful! ".$ex->getMessage());
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 		}
 		return $faculties;
 	}
@@ -59,7 +57,7 @@ class BaseData{
 			$workshops = P_General::getWorkshops();
 		}catch(\Exception $ex){
 			$workshops = [];
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'workshops' was not successful! ".$ex->getMessage());
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 		}
 		return $workshops;
 	}
@@ -91,7 +89,7 @@ class BaseData{
 			$admissionYears = P_General::getAdmissionYears();
 		}catch(\Exception $ex){
 			$admissionYears = [];
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'admission_years' was not successful! ".$ex->getMessage());
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 		}
 		return $admissionYears;
 	}
@@ -109,7 +107,7 @@ class BaseData{
 			$statusCodes = P_User::getStatusCodes();
 		}catch(\Exception $ex){
 			$statusCodes = [];
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'user_status_codes' was not successful! ".$ex->getMessage());
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 		}
 		return $statusCodes;
 	}
@@ -127,6 +125,7 @@ class BaseData{
 			$countries = P_General::getCountries();
 		}catch(\Exception $ex){
 			$countries = [];
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 		}
 		return $countries;
 	}

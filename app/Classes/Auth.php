@@ -22,8 +22,6 @@ use Mail;
  * Functionality:
  * 		- transaction handling
  * 
- * Functions that can throw exceptions:
- * 
  * @author Máté Kovács <kovacsur10@gmail.com>
  */
 class Auth{

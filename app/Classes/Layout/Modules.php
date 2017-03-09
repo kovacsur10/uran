@@ -14,8 +14,6 @@ use App\Exceptions\DatabaseException;
  * 		- module activation and deactivation
  * 		- module getter functions
  * 
- * Functions that can throw exceptions:
- * 
  * @author Máté Kovács <kovacsur10@gmail.com>
  */
 class Modules{
@@ -27,7 +25,7 @@ class Modules{
 	 * This function returns the available 
 	 * modules.
 	 * 
-	 * @return array of Module
+	 * @return arrayOfModule
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
@@ -35,7 +33,7 @@ class Modules{
 		try{
 			$modules = P_General::getModules();
 		}catch(Exception $ex){
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'modules' was not successful! ".$ex->getMessage());
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 			$modules = [];
 		}
 		return $modules;
@@ -56,7 +54,7 @@ class Modules{
 			$module = P_General::getModuleById($moduleId);
 		}catch(Exception $ex){
 			$module = null;
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'modules' was not successful! ".$ex->getMessage());
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 		}
 		return $module;
 	}
@@ -78,7 +76,7 @@ class Modules{
 			$ret = P_General::getActiveModuleById($moduleId);
 		}catch(Exception $ex){
 			$ret = null;
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'active_modules' was not successful! ".$ex->getMessage());
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 		}
 		return $ret !== null;
 	}
@@ -103,7 +101,7 @@ class Modules{
 			$ret = P_General::getActiveModuleByName($moduleName);
 		}catch(Exception $ex){
 			$ret = null;
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'active_modules' joined to 'modules' was not successful! ".$ex->getMessage());
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 		}
 		return $ret !== null;
 	}
@@ -113,7 +111,7 @@ class Modules{
 	 * This function returns an array
 	 * of the activated modules.
 	 * 
-	 * @return array of Module
+	 * @return arrayOfModule
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
@@ -122,7 +120,7 @@ class Modules{
 			$ret = P_General::getActiveModules();
 		}catch(Exception $ex){
 			$ret = [];
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'modules' joined to 'active_modules' was not successful! ".$ex->getMessage());
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 		}
 		return $ret;
 	}
@@ -132,7 +130,7 @@ class Modules{
 	 * This function returns an array
 	 * of the deactivated modules.
 	 * 
-	 * @return array of Module
+	 * @return arrayOfModule
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
@@ -141,7 +139,7 @@ class Modules{
 			$modules = P_General::getModulesLeftJoinedToActives();
 		}catch(Exception $ex){
 			$modules = [];
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'modules' joined to 'active_modules' was not successful! ".$ex->getMessage());
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 		}
 		$inactives = [];
 		foreach($modules as $module){
@@ -167,7 +165,7 @@ class Modules{
 		try{
 			P_General::activateModulById($moduleId);
 		}catch(\Exception $ex){
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Insert into table 'active_modules' was not successful! ".$ex->getMessage());
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 			throw new DatabaseException("Modul activation was unsuccessful!");
 		}
 	}
@@ -187,7 +185,7 @@ class Modules{
 		try{
 			P_General::deactivateModuleById($moduleId);
 		}catch(\Exception $ex){
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Delete from table 'active_modules' was not successful! ".$ex->getMessage());
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 			throw new DatabaseException("Modul deactivation was unsuccessful!");
 		}
 	}
