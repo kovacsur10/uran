@@ -13,11 +13,6 @@ use App\Classes\Logger;
  * Functionality:
  * 		- transaction handling
  * 
- * Functions that can throw exceptions:
- * 		- beginTransaction
- * 		- rollback
- * 		- commit
- * 
  * @author Máté Kovács <kovacsur10@gmail.com>
  */
 class Database{

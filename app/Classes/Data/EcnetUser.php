@@ -31,7 +31,7 @@ class EcnetUser{
 	 * @param string $username - user's text identifier
 	 * @param datetime $validTime - datetime, internet is valid until this date
 	 * @param int $maxMacSlotCount - maximum MAC address slot count
-	 * @param array $macSlotCount - MAC address slot count
+	 * @param arrayOfMacAddress $macAddresses - MAC address slot count
 	 * @param int $money - account status
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>

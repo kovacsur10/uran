@@ -21,8 +21,6 @@ use App\Classes\Layout\User;
  * Functionality:
  * 		- stores layout classes
  * 
- * Functions that can throw exceptions:
- * 
  * @author Máté Kovács <kovacsur10@gmail.com>
  */
 class LayoutData{

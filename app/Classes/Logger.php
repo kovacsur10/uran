@@ -15,8 +15,6 @@ use App\Persistence\P_General;
  * 		- error log to file
  * 		- normal log to database
  * 
- * Functions that can throw exceptions:
- * 
  * @author Máté Kovács <kovacsur10@gmail.com>
  */
 class Logger{
@@ -131,7 +129,7 @@ class Logger{
 			$user = Session::has('user') ? Session::get('user')->id() : 0;
 			P_General::writeIntoLog($description, $oldValue, $newValue, $route, $user, Carbon::now(), $severity);
 		}catch(Exception $ex){
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Insert into table 'logs' was not successful! ".$ex->getMessage());
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 		}
 	}
 }

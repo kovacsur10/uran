@@ -53,14 +53,14 @@ class Notifications{
 			try{
 				P_General::insertNewNotification($toId, $from->id(), $subject, $message, Carbon::now()->toDateTimeString(), false, $route);
 			}catch(\Exception $ex){
-				Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Insert into table 'notifications' was not successful! ".$ex->getMessage());
+				Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 			}
 				
 			//maintain
 			try{
 				$count = P_General::getNotificationCountForUser($toId);
 			}catch(\Exception $ex){
-				Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'notifications' was not successful! ".$ex->getMessage());
+				Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 				$count = null;
 			}
 			if($count !== null && $count > $max_count){
@@ -68,13 +68,13 @@ class Notifications{
 					$notifications = P_General::getOldestNonAdminNotificationsForUser($toId, $count - $max_count);
 				}catch(Exception $ex){
 					$notifications = [];
-					Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'notifications' was not successful! ".$ex->getMessage());
+					Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 				}
 				foreach($notifications as $notify){
 					try{
 						P_General::deleteNotification($notify->id());
 					}catch(Exception $ex){
-						Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Delete from table 'notifications' was not successful! ".$ex->getMessage());
+						Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 					}
 				}
 			}
@@ -107,13 +107,13 @@ class Notifications{
 				$admins = Permissions::getUsersWithPermission($adminPermission);
 			}catch(Exception $ex){
 				$admins = [];
-				Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'notifications' joined to 'user_permissions' and 'permissions' was not successful! ".$ex->getMessage());
+				Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 			}
 			foreach($admins as $admin){
 				try{
 					P_General::insertNewNotification($admin->id(), $from->id(), $subject, $message, Carbon::now()->toDateTimeString(), true, $route);
 				}catch(Exception $ex){
-					Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Insert into table 'notifications' was not successful! ".$ex->getMessage());
+					Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 				}
 			}
 		}
@@ -160,7 +160,7 @@ class Notifications{
 			$ret = P_General::getNotificationsForUser($userId);
 		}catch(Exception $ex){
 			$ret = [];
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'notifications' joined to 'users' was not successful! ".$ex->getMessage());
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 		}
 		return $ret;
 	}
@@ -183,7 +183,7 @@ class Notifications{
 			$count = P_General::getUnseenNotificationCountForUser($userId);
 		}catch(Exception $ex){
 			$count = 0;
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'notifications' was not successful! ".$ex->getMessage());
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 		}
 		return $count;
 	}
@@ -195,7 +195,7 @@ class Notifications{
 	 * 
 	 * @param int $notificationId - identifier of a notification
 	 * @param int $userId - requested user
-	 * @return int - count of unseen notifications
+	 * @return Notification|null - the requested notification
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
@@ -204,7 +204,7 @@ class Notifications{
 			$notification = P_General::getNotification($notificationId, $userId);
 		}catch(Exception $ex){
 			$notification = null;
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'notifications' was not successful! ".$ex->getMessage());
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 		}
 		return $notification;
 	}
@@ -228,7 +228,7 @@ class Notifications{
 		try{
 			P_General::setNotificationAsSeen($notificationId);
 		}catch(Exception $ex){
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Update table 'notifications' was not successful! ".$ex->getMessage());
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 			throw new DatabaseException("Could not set the notification as seen!");
 		}
 	}

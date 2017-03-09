@@ -23,9 +23,6 @@ use App\Classes\Data\Permission;
  * Functionality:
  * 		- registration for guests and collegists
  * 		- registartion accept/reject
- *
- * Functions that can throw exceptions:
- * 		addCode
  * 
  * @author Máté Kovács <kovacsur10@gmail.com>
  */
@@ -65,7 +62,7 @@ class Registrations{
 	 * registered, but not accepted
 	 * or rejected users.
 	 * 
-	 * @return array of User
+	 * @return arrayOfUser
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
@@ -74,7 +71,7 @@ class Registrations{
 			$users = P_User::getRegistrationUsers();
 		}catch(\Exception $ex){
 			$users = [];
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'users' was not successful! ".$ex->getMessage());
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 		}
 		return $users;
 	}
@@ -94,7 +91,7 @@ class Registrations{
 			$user = P_User::getRegistrationUserById($userId);
 		}catch(\Exception $ex){
 			$user = null;
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'users', joined to 'registrations' was not successful! ".$ex->getMessage());
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 		}
 		$this->registrationUser = $user;
 	}
@@ -119,7 +116,7 @@ class Registrations{
 		try{
 			P_User::verifyRegistrationUser($code, Carbon::now()->toDateTimeString());
 		}catch(\Exception $ex){
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Update table 'registrations' was not successful! ".$ex->getMessage());
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 			throw new DatabaseException("Verifying the registration code was unsuccessful!");
 		}
 	}
@@ -143,7 +140,7 @@ class Registrations{
 		try{
 			P_User::removeRegistrationUser($userId);
 		}catch(\Exception $ex){
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Delete from table 'users' was not successful! ".$ex->getMessage());
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 			throw new DatabaseException("User registration rejection failed!");
 		}
 	}
@@ -151,11 +148,6 @@ class Registrations{
 	/** Function name: acceptGuest
 	 * 
 	 * This function accepts a guest user registration.
-	 * 
-	 * Error codes:
-	 * 		0 - success
-	 * 		1 - user status code exception
-	 * 		2 - user registration update exception
 	 * 
 	 * @param int $userId
 	 * @param text $country
@@ -182,7 +174,7 @@ class Registrations{
 		try{
 			P_User::promoteRegistrationUserToUser($userId, $country, $shire, $postalCode, $address, $city, $phone, $reason, null, null, null, null, null, null, null, null, null, $status->id());
 		}catch(\Exception $ex){
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'user_status_codes' was not successful! ".$ex->getMessage());
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 			throw new DatabaseException("Guest registration acceptation failed!");
 		}
 	}
@@ -220,7 +212,7 @@ class Registrations{
 		try{
 			P_User::promoteRegistrationUserToUser($userId, $country, $shire, $postalCode, $address, $city, $phone, 'Uran: Collegist registration', $cityOfBirth, $dateOfBirth, $nameOfMother, $yearOfLeavingExam, $highSchool, $neptunCode, $applicationYear, $faculties, $workshops, 0);
 		}catch(\Exception $ex){
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Update table 'users' was not successful! ".$ex->getMessage());
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 			throw new DatabaseException("Collegist registration acceptation failed!");
 		}
 	}
@@ -339,6 +331,19 @@ class Registrations{
 	}
 	
 // PRIVATE FUNCTIONS
+	/** Function name: addUserDefaultPermissionsGroups
+	 *
+	 * This function accepts a collegist or a guest user registration.
+	 *
+	 * @param string $userType - user type ("collegist" or "guest")
+	 * @param int $userId - user's identifier
+	 *
+	 * @throws ValueMismatchException
+	 * @throws DatabaseException
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	
 	private static function addUserDefaultPermissionsGroups($userType, $userId){
 		if($userType === 'collegist'){
 			Permissions::saveUserPermissionGroups($userId, [2]);
