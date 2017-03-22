@@ -242,26 +242,22 @@ class EcnetData extends User{
 		$deletableAddresses = [];
 		//calculate existing and new addresses
 		foreach($addresses as $address){
-			if($address !== ''){
+			if($address !== ""){
 				if(!$this->macAddressExists($address)){
-					array_push($newAddresses, $address);
+					$newAddresses[] = $address;
 				}
 			}
 		}
 		//calculate deletable addresses
-		foreach($this->macAddresses() as $address){
-			if(($key = array_search($address->mac_address, $addresses)) === false){
-				array_push($deletableAddresses, $address->mac_address);
+		foreach($this->ecnetUser->macAddresses() as $mac){
+			if(($key = array_search($mac->address(), $addresses)) === false){
+				$deletableAddresses[] = $mac->address();
 			}
 		}
 		//commit the changes
 		try{
 			$userId = $this->user()->id();
 			Database::transaction(function() use($deletableAddresses, $newAddresses, $userId){
-				/*print_r($deletableAddresses);
-				print_r($newAddresses);
-				print_r($userId);
-				die();*/
 				foreach($deletableAddresses as $address){
 					EcnetData::deleteMacAddress($address);
 				}
@@ -395,7 +391,7 @@ class EcnetData extends User{
 		}
 		$macAddress = strtoupper(str_replace("-", ":", $macAddress));
 		if(preg_match("/(?:[A-F0-9]{2}:){5}[A-F0-9]{2}/", $macAddress, $output_array) !== 1){
-			throw new ValueMismatchException();
+			throw new ValueMismatchException("Malformed MAC address!");
 		}
 		try{
 			P_Ecnet::addMacAddress($macAddress, $userId);

@@ -131,25 +131,17 @@ class AccessController extends Controller{
 		$layout->setUser(new EcnetData(Session::get('user')->id()));
 		$addresses = [];
 
-		foreach($layout->user()->macAddresses() as $address){
-			if($request->input('mac_address_'.$address->id) !== null){
+		for($i = 0; $i < $layout->user()->ecnetUser()->maximumMacSlots(); $i++){
+			if($request->input('mac_address_'.$i) !== null){
 				$this->validate($request, [
-					'mac_address_'.$address->id => ['regex:/^(?:(?:[0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2})|(?:(?:[0-9A-Fa-f]{2}-){5}[0-9A-Fa-f]{2})|(?:)$/'],
+					'mac_address_'.$i => ['regex:/^(?:(?:[0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2})|(?:(?:[0-9A-Fa-f]{2}-){5}[0-9A-Fa-f]{2})$/'],
 				]);
-				array_push($addresses, $request->input('mac_address_'.$address->id));
-			}
-		}
-		for($i = 0; $i < $layout->user()->ecnetUser()->maximumMacSlots() - count($layout->user()->macAddresses()); $i++){
-			if($request->input('new_mac_address_'.$i) !== null){
-				$this->validate($request, [
-					'new_mac_address_'.$i => ['regex:/^(?:(?:[0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2})|(?:(?:[0-9A-Fa-f]{2}-){5}[0-9A-Fa-f]{2})$/'],
-				]);
-				array_push($addresses, $request->input('new_mac_address_'.$i));
+				$addresses[] = $request->input('mac_address_'.$i);
 			}
 		}
 		try{
 			$layout->user()->manageMacAddresses($addresses);
-			Logger::log('MAC addresses was changed for user!', null, null, 'ecnet/access');
+			Logger::log('MAC addresses was changed for user!', null, null, 'ecnet/setmacs');
 			return view('success.success', ["layout" => $layout,
 					"message" => $layout->language('success_at_updating_mac_addresses'),
 					"url" => '/ecnet/access']);
