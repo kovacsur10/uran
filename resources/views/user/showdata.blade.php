@@ -37,7 +37,7 @@
 							<div class="form-group">
 								<label class="col-sm-4 control-label">{{ $layout->language('address') }}</label>
 							    <div class="col-sm-8">
-							    	<div class="form-control">{{ $layout->language($layout->user()->user()->country()) }}, {{ $layout->user()->user()->shire() }} megye, {{ $layout->user()->user()->postalCode() }} {{ $layout->user()->user()->city() }}, {{ $layout->user()->user()->address() }}</div>
+							    	<textarea class="form-control" rows="2" disabled>{{ $layout->language($layout->user()->user()->country()) }}, {{ $layout->user()->user()->shire() }} megye, {{ $layout->user()->user()->postalCode() }} {{ $layout->user()->user()->city() }}, {{ $layout->user()->user()->address() }}</textarea>
 							    </div>
 							</div>
 							<div class="form-group">

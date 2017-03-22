@@ -140,32 +140,34 @@
 							<form class="form-horizontal" role="form" method="POST" action="{{ url('/ecnet/setmacs') }}">
 								{!! csrf_field() !!}
 								
+								<?php $i = 0; ?>
 								@foreach($layout->user()->ecnetUser()->macAddresses() as $address)
-								<div class="form-group{{ $errors->has('mac_address_'.$address->id()) ? ' has-error' : '' }}">
+								<div class="form-group{{ $errors->has('mac_address_'.$i) ? ' has-error' : '' }}">
 									<label class="col-md-4 control-label">{{ $layout->language('mac_address') }}</label>
 
 									<div class="col-md-6">
-										<input type="text" class="form-control mac-address-check" name="mac_address_{{ $address->id() }}" value="{{ old('mac_address_'.$address->id()) !== null ? old('mac_address_'.$address->id()) : $address->address() }}">
+										<input type="text" class="form-control mac-address-check" name="mac_address_{{ $i }}" value="{{ old('mac_address_'.$i) !== null ? old('mac_address_'.$i) : $address->address() }}">
 
-										@if ($errors->has('mac_address_'.$address->id()))
+										@if ($errors->has('mac_address_'.$i))
 											<span class="help-block">
-												<strong>{{ $errors->first('mac_address_'.$address->id()) }}</strong>
+												<strong>{{ $errors->first('mac_address_'.$i) }}</strong>
 											</span>
 										@endif
 									</div>
 								</div>
+								<?php $i++; ?>
 								@endforeach
 								
-								@for($i = 0; $i < $layout->user()->ecnetUser()->maximumMacSlots() - count($layout->user()->ecnetUser()->macAddresses()); $i++)
-								<div class="form-group{{ $errors->has('new_mac_address_'.$i) ? ' has-error' : '' }}">
+								@for(; $i < $layout->user()->ecnetUser()->maximumMacSlots(); $i++)
+								<div class="form-group{{ $errors->has('mac_address_'.$i) ? ' has-error' : '' }}">
 									<label class="col-md-4 control-label">{{ $layout->language('mac_address') }}</label>
 
 									<div class="col-md-6">
-										<input type="text" class="form-control mac-address-check" name="new_mac_address_{{ $i }}" value="{{ old('new_mac_address_'.$i) }}">
+										<input type="text" class="form-control mac-address-check" name="mac_address_{{ $i }}" value="{{ old('mac_address_'.$i) }}">
 
-										@if ($errors->has('new_mac_address_'.$i))
+										@if ($errors->has('mac_address_'.$i))
 											<span class="help-block">
-												<strong>{{ $errors->first('new_mac_address_'.$i) }}</strong>
+												<strong>{{ $errors->first('mac_address_'.$i) }}</strong>
 											</span>
 										@endif
 									</div>
