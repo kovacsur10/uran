@@ -100,7 +100,7 @@
 										<div class="col-md-6">
 											<select class="form-control alert-info"  name="country"  id="country_select" required="true">
 											@foreach($layout->base()->countries() as $country)
-												<option {{ $userData->country() == $country->id() ? "selected" : "" }} value="{{ $country->id() }}">{{ $country->name() }}</option>
+												<option {{ $userData->country() == $country->id() ? "selected" : "" }} value="{{ $country->id() }}">{{ $layout->language($country->id()) }}</option>
 											@endforeach
 											</select>
 										</div>
