@@ -194,6 +194,8 @@ class Languages{
 			'printing_account' => 'Nyomtatószámla',
 			'registration' => 'Regisztráció',
 			'user_administration' => 'Felhasználók kezelése',
+			'collegist' => 'Collegista',
+			'interns' => 'Bentlakó',
 		//home
 			'logged_in_home_message' => 'TODO',
 			'not_logged_in_home_message' => 'TODO',
@@ -766,6 +768,8 @@ class Languages{
 			'printing_account' => 'Printing account',
 			'registration' => 'Registration',
 			'user_administration' => 'Manage users',
+			'collegist' => 'Collegist',
+			'interns' => 'Intern',
 		//home
 			'logged_in_home_message' => 'TODO',
 			'not_logged_in_home_message' => 'TODO',

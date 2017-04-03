@@ -86,53 +86,38 @@
                             </ul>
                         </li>
 						@endif
-						@if($data->modules()->isActivatedByName('rooms'))
-						<li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                TODO <span class="caret"></span>
-                            </a>
-							<ul class="dropdown-menu" role="menu">
-								@if($data->user()->permitted('rooms_observe_assignment'))
-								<li><a href="{{ url('/rooms/map/2') }}">{{ $layout->language('room_assignment') }}</a></li>
-								@endif
-                            </ul>
-                        </li>
-						@endif
-						@if($data->user()->permitted('permission_admin') || $data->user()->permitted('module_admin'))
-						<li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                {{ $layout->language('admin') }} <span class="caret"></span>
-                            </a>
-							<ul class="dropdown-menu" role="menu">
-								@if($data->user()->permitted('permission_admin'))
-								<li><a href="{{ url('/admin/permissions') }}">{{ $layout->language('permissions_handling') }}</a></li>
-								<li><a href="{{ url('/admin/groups/list') }}">{{ $layout->language('permission_group_handling') }}</a></li>
-								@endif
-								@if($data->user()->permitted('module_admin'))
-								<li><a href="{{ url('/admin/modules') }}">{{ $layout->language('modules_handling') }}</a></li>
-								@endif
-								@if($data->user()->permitted('accept_user_registration'))
-								<li><a href="{{ url('/admin/registration/show') }}">{{ $layout->language('accept_user_registration') }}</a></li>
-								@endif
-                            </ul>
-                        </li>
-						@endif
+						@if($layout->user()->isLivingIn())
+							<li class="dropdown">
+	                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+	                                {{ $layout->language('interns') }} <span class="caret"></span>
+	                            </a>
+								<ul class="dropdown-menu" role="menu">
+									@if($data->modules()->isActivatedByName('rooms'))
+										@if($data->user()->permitted('rooms_observe_assignment'))
+										<li><a href="{{ url('/rooms/map/2') }}">{{ $layout->language('room_assignment') }}</a></li>
+										@endif
+									@endif
+	                            </ul>
+	                        </li>
+	                    @endif
+						@if($layout->user()->isCollegist())
+							<li class="dropdown">
+	                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+								{{ $layout->language('collegist') }} <span class="caret"></span>
+	                            </a>
+								<ul class="dropdown-menu" role="menu">
+									@if($layout->modules()->isActivatedByName('tasks'))
+									<li><a href="{{ url('/tasks/list') }}">{{ $layout->language('task_manager') }}</a></li>
+									@endif
+									@if($layout->modules()->isActivatedByName('ecouncil') && $data->user()->permitted('record_read'))
+									<li><a href="{{ url('/ecouncil/records/list') }}">{{ $layout->language('TODO') }}</a></li>
+									@endif
+	                            </ul>
+	                        </li>
+	                    @endif
 						<li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
 							{{ $layout->language('administration') }} <span class="caret"></span>
-                            </a>
-							<ul class="dropdown-menu" role="menu">
-								@if($layout->modules()->isActivatedByName('tasks'))
-								<li><a href="{{ url('/tasks/list') }}">{{ $layout->language('task_manager') }}</a></li>
-								@endif
-								@if($layout->modules()->isActivatedByName('ecouncil') && $data->user()->permitted('record_read'))
-								<li><a href="{{ url('/ecouncil/records/list') }}">{{ $layout->language('TODO') }}</a></li>
-								@endif
-                            </ul>
-                        </li>
-						<li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-							{{ $layout->language('TODO') }} <span class="caret"></span>
                             </a>
 							<ul class="dropdown-menu" role="menu">
 								@if($data->user()->permitted('user_handling'))
@@ -143,6 +128,25 @@
 								@endif
                             </ul>
                         </li>
+                        @if($data->user()->permitted('permission_admin') || $data->user()->permitted('module_admin'))
+							<li class="dropdown">
+	                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+	                                {{ $layout->language('admin') }} <span class="caret"></span>
+	                            </a>
+								<ul class="dropdown-menu" role="menu">
+									@if($data->user()->permitted('permission_admin'))
+									<li><a href="{{ url('/admin/permissions') }}">{{ $layout->language('permissions_handling') }}</a></li>
+									<li><a href="{{ url('/admin/groups/list') }}">{{ $layout->language('permission_group_handling') }}</a></li>
+									@endif
+									@if($data->user()->permitted('module_admin'))
+									<li><a href="{{ url('/admin/modules') }}">{{ $layout->language('modules_handling') }}</a></li>
+									@endif
+									@if($data->user()->permitted('accept_user_registration'))
+									<li><a href="{{ url('/admin/registration/show') }}">{{ $layout->language('accept_user_registration') }}</a></li>
+									@endif
+	                            </ul>
+	                        </li>
+						@endif
                     @endif
                 </ul>
 				

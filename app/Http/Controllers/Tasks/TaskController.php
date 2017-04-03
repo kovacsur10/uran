@@ -148,7 +148,7 @@ class TaskController extends Controller{
 					}
 				}
 				//alert for assignment
-				if($assignedUser !== null && $assignedUser !== $layout->tasks()->getTask()->assignedTo()->name()){
+				if($assignedUser !== null && $layout->tasks()->getTask()->assignedTo() !== null && $assignedUser !== $layout->tasks()->getTask()->assignedTo()->name()){
 					Notifications::notify($layout->user()->user(), $assignedUser, 'Feladat hozzárendelés', 'Hozzá lettél rendelve egy feladathoz! Kérlek vedd fel a kapcsolatot a feladat elvégzése miatt velem!', 'tasks/task/'.$taskId);
 				}
 				$layout->tasks()->setTask($taskId); //need to refresh the data
