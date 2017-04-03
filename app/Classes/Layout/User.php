@@ -335,6 +335,21 @@ class User extends Pageable{
 		return User::calculateSublists($users, $parsed);
 	}
 	
+	public function isIntern(){
+		$statusName = $this->user->status()->statusName();
+		return ($statusName === "intern" || $statusName == "sixth year intern");
+	}
+	
+	public function isLivingIn(){
+		$statusName = $this->user->status()->statusName();
+		return ($statusName === "intern" || $statusName == "sixth year intern" || $statusName == "visitor");
+	}
+	
+	public function isCollegist(){
+		$statusName = $this->user->status()->statusName();
+		return ($statusName === "intern" || $statusName == "sixth year intern" || $statusName == "extern" || $statusName === "scholarship");
+	}
+	
 // PRIVATE FUNCTIONS
 	/** Function name: preprocessListMembers
 	 *
