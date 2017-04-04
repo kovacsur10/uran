@@ -142,13 +142,13 @@ class TaskController extends Controller{
 				//alert for changing the status
 				$newStatus = $layout->tasks()->getStatusById($request->status)->name();
 				if($newStatus !== $layout->tasks()->getTask()->status()->name()){
-					Notifications::notify($layout->user()->user(), $layout->tasks()->getTask()->creator()->id(), 'Feladat státusz változás', 'Egy általad létrehozott feladat státusza megváltozott ('.$layout->language($layout->tasks()->getTask()->caption()).' -> '.$layout->language($newStatus).')!', 'tasks/task/'.$taskId);
+					Notifications::notify($layout->user()->user(), $layout->tasks()->getTask()->creator()->id(), 'Feladat státusz változás', 'Egy általad létrehozott feladat státusza megváltozott ('.$layout->language($layout->tasks()->getTask()->status()->name()).' -> '.$layout->language($newStatus).')!', 'tasks/task/'.$taskId);
 					if($assignedUser !== null && $assignedUser !== $layout->tasks()->getTask()->creator()->id()){
-						Notifications::notify($layout->user(), $assignedUser, 'Feladat státusz változás', 'Egy feladat - amin éppen dolgozol - státusza megváltozott ('.$layout->language($layout->tasks()->getTask()->caption()).' -> '.$layout->language($newStatus).')!', 'tasks/task/'.$taskId);
+						Notifications::notify($layout->user(), $assignedUser, 'Feladat státusz változás', 'Egy feladat - amin éppen dolgozol - státusza megváltozott ('.$layout->language($layout->tasks()->getTask()->status()->name()).' -> '.$layout->language($newStatus).')!', 'tasks/task/'.$taskId);
 					}
 				}
 				//alert for assignment
-				if($assignedUser !== null && $layout->tasks()->getTask()->assignedTo() !== null && $assignedUser !== $layout->tasks()->getTask()->assignedTo()->name()){
+				if($assignedUser !== null && $layout->tasks()->getTask()->assignedTo() !== null && $assignedUser !== $layout->tasks()->getTask()->assignedTo()->id()){
 					Notifications::notify($layout->user()->user(), $assignedUser, 'Feladat hozzárendelés', 'Hozzá lettél rendelve egy feladathoz! Kérlek vedd fel a kapcsolatot a feladat elvégzése miatt velem!', 'tasks/task/'.$taskId);
 				}
 				$layout->tasks()->setTask($taskId); //need to refresh the data
