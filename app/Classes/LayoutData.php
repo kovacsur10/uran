@@ -248,7 +248,11 @@ class LayoutData{
 	 */
 	public function formatDate($date){
 		if($this->language === 'hu_HU'){
-			return str_replace("-", ". ", str_replace(" ", ". ", $date));
+			if(strstr($date, ". ") !== FALSE){
+				return str_replace("-", ". ", $date);
+			}else{
+				return str_replace("-", ". ", str_replace(" ", ". ", $date));
+			}
 		}else if($this->language === 'en_US'){
 			return str_replace("-", ". ", str_replace(" ", ". ", $date));
 		}else{

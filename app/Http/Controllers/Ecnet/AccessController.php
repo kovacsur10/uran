@@ -9,7 +9,6 @@ use Validator;
 use App\Classes\Notifications;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
