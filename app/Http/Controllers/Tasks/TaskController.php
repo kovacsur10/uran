@@ -142,7 +142,9 @@ class TaskController extends Controller{
 				//alert for changing the status
 				$newStatus = $layout->tasks()->getStatusById($request->status)->name();
 				if($newStatus !== $layout->tasks()->getTask()->status()->name()){
-					Notifications::notify($layout->user()->user(), $layout->tasks()->getTask()->creator()->id(), 'Feladat státusz változás', 'Egy általad létrehozott feladat státusza megváltozott ('.$layout->language($layout->tasks()->getTask()->status()->name()).' -> '.$layout->language($newStatus).')!', 'tasks/task/'.$taskId);
+					if($layout->tasks()->getTask()->creator()->id() !== $layout->user()->user()->id()){
+						Notifications::notify($layout->user()->user(), $layout->tasks()->getTask()->creator()->id(), 'Feladat státusz változás', 'Egy általad létrehozott feladat státusza megváltozott ('.$layout->language($layout->tasks()->getTask()->status()->name()).' -> '.$layout->language($newStatus).')!', 'tasks/task/'.$taskId);
+					}
 					if($assignedUser !== null && $assignedUser !== $layout->tasks()->getTask()->creator()->id()){
 						Notifications::notify($layout->user(), $assignedUser, 'Feladat státusz változás', 'Egy feladat - amin éppen dolgozol - státusza megváltozott ('.$layout->language($layout->tasks()->getTask()->status()->name()).' -> '.$layout->language($newStatus).')!', 'tasks/task/'.$taskId);
 					}
@@ -187,8 +189,10 @@ class TaskController extends Controller{
 				]);
 				$layout->tasks()->addComment($taskId, $layout->user()->user()->id(), $request->commentText);
 				$layout->tasks()->setTask($taskId);
-				Notifications::notify($layout->user()->user(), $layout->tasks()->getTask()->creator()->id(), 'Új komment', 'Egy új kommentet írtak az általad készített feladathoz!', 'tasks/task/'.$taskId);
-				if($layout->tasks()->getTask()->assignedTo() !== null && $layout->tasks()->getTask()->assignedTo()->id() !== $layout->tasks()->getTask()->creator()->id()){ //assigned user exists and it's not the owner
+				if($layout->user()->user()->id() !== $layout->tasks()->getTask()->creator()->id()){
+					Notifications::notify($layout->user()->user(), $layout->tasks()->getTask()->creator()->id(), 'Új komment', 'Egy új kommentet írtak az általad készített feladathoz!', 'tasks/task/'.$taskId);
+				}
+				if($layout->tasks()->getTask()->assignedTo() !== null && $layout->tasks()->getTask()->assignedTo()->id() !== $layout->user()->user()->id()){ //assigned user exists and it's not the owner
 					Notifications::notify($layout->user()->user(), $layout->tasks()->getTask()->assignedTo()->id(), 'Új komment', 'Egy új kommentet írtak egy feladathoz, amin aktuálisan dolgozol!', 'tasks/task/'.$taskId);
 				}
 			}else{
