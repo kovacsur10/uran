@@ -31,7 +31,7 @@
 							<div class="form-group">
 								<label class="col-sm-4 control-label">{{ $layout->language('registration_date') }}</label>
 							    <div class="col-sm-8">
-							    	<div class="form-control">{{ $layout->user()->user()->registrationDate() }}</div>
+							    	<div class="form-control">{{ $layout->formatDate($layout->user()->user()->registrationDate()) }}</div>
 							    </div>
 							</div>
 							<div class="form-group">
@@ -67,7 +67,7 @@
 								<div class="form-group">
 									<label class="col-sm-4 control-label">{{ $layout->language('date_of_birth') }}</label>
 								    <div class="col-sm-8">
-								        <div class="form-control">{{ $layout->user()->user()->collegistData()->dateOfBirth() }}</div>
+								        <div class="form-control">{{ $layout->formatDate($layout->user()->user()->collegistData()->dateOfBirth(), true) }}</div>
 								    </div>
 								</div>
 								<div class="form-group">

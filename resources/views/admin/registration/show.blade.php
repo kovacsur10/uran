@@ -61,19 +61,19 @@
 								<li class="list-group-item">
 									<div class="row">
 										<div class="col-md-6">{{ $layout->language('place_of_birth') }}</div>
-										<div class="col-md-6"><input class="form-control alert-{{ $userData->collegistData() !== null ? 'info' : 'danger' }}" type="text" name="city_of_birth" value="{{ $userData->collegistData() !== null ? $userData->collegistData()->cityOfBirth() : '' }}"></div>
+										<div class="col-md-6"><input class="form-control {{ $userData->collegistData() !== null ? '' : 'alert-danger' }}" type="text" name="city_of_birth" value="{{ $userData->collegistData() !== null ? $userData->collegistData()->cityOfBirth() : '' }}" {{ $userData->collegistData() !== null ? 'readonly' : '' }}></div>
 									</div>
 								</li>
 								<li class="list-group-item">
 									<div class="row">
 										<div class="col-md-6">{{ $layout->language('date_of_birth') }}</div>
-										<div class="col-md-6"><input class="form-control alert-{{ $userData->collegistData() !== null ? 'info' : 'danger' }}" type="text" name="date_of_birth" value="{{ $userData->collegistData() !== null ? $userData->collegistData()->dateOfBirth() : '' }}"></div>
+										<div class="col-md-6"><input class="form-control {{ $userData->collegistData() !== null ? '' : 'alert-danger' }}" type="text" name="date_of_birth" value="{{ $userData->collegistData() !== null ? $userData->collegistData()->dateOfBirth() : '' }}" {{ $userData->collegistData() !== null ? 'readonly' : '' }}></div>
 									</div>
 								</li>
 								<li class="list-group-item">
 									<div class="row">
 										<div class="col-md-6">{{ $layout->language('name_of_mother') }}</div>
-										<div class="col-md-6"><input class="form-control alert-{{ $userData->collegistData() !== null ? 'info' : 'danger' }}" type="text" name="name_of_mother" value="{{ $userData->collegistData() !== null ? $userData->collegistData()->nameOfMother() : '' }}"></div>
+										<div class="col-md-6"><input class="form-control {{ $userData->collegistData() !== null ? '' : 'alert-danger' }}" type="text" name="name_of_mother" value="{{ $userData->collegistData() !== null ? $userData->collegistData()->nameOfMother() : '' }}" {{ $userData->collegistData() !== null ? 'readonly' : '' }}></div>
 									</div>
 								</li>
 								<li class="list-group-item">

@@ -242,22 +242,25 @@ class LayoutData{
 	 * a custom formatted form.
 	 * 
 	 * @param text $date - formattable data
+	 * @param bool $onlyDate - only show date part, ignore time part if exists
 	 * @return text - formatted date
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function formatDate($date){
+	public function formatDate($date, $onlyDate = false){ //TODO: test modification
+		$returnedDateTime = "";
 		if($this->language === 'hu_HU'){
 			if(strstr($date, ". ") !== FALSE){
-				return str_replace("-", ". ", $date);
+				$returnedDateTime = str_replace("-", ". ", $date);
 			}else{
-				return str_replace("-", ". ", str_replace(" ", ". ", $date));
+				$returnedDateTime = str_replace("-", ". ", str_replace(" ", ". ", $date));
 			}
 		}else if($this->language === 'en_US'){
-			return str_replace("-", ". ", str_replace(" ", ". ", $date));
+			$returnedDateTime = str_replace("-", ". ", str_replace(" ", ". ", $date));
 		}else{
-			return str_replace("-", ". ", str_replace(" ", ". ", $date));
+			$returnedDateTime = str_replace("-", ". ", str_replace(" ", ". ", $date));
 		}
+		return $onlyDate ? substr($returnedDateTime, 0, 13) : $returnedDateTime;
 	}
 	
 	/** Function name: setLanguage
