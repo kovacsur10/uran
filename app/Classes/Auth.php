@@ -46,24 +46,8 @@ class Auth{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public static function logout(){
-		if(Session::has('user')){
-			Session::forget('user');
-		}
-		if(Session::has('tasks_status_filter')){
-			Session::forget('tasks_status_filter');
-		}
-		if(Session::has('tasks_caption_filter')){
-			Session::forget('tasks_caption_filter');
-		}
-		if(Session::has('tasks_priority_filter')){
-			Session::forget('tasks_priority_filter');
-		}
-		if(Session::has('tasks_mytasks_filter')){
-			Session::forget('tasks_mytasks_filter');
-		}
-		if(Session::has('tasks_hide_closed_filter')){
-			Session::forget('tasks_hide_closed_filter');
-		}
+		//TODO: save custom user data to database
+		Session::flush();
 	}
 	
 	/** Function name: login
@@ -90,6 +74,7 @@ class Auth{
 			}
 			LayoutData::setLanguage($user->language());
 			Session::put('user', $user);
+			//TODO: load custom user data from database
 		}else{ //password doesn't match
 			throw new ValueMismatchException("Password mismatch!");
 		}
