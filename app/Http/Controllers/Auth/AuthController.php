@@ -35,16 +35,18 @@ class AuthController extends Controller{
      * @author Máté Kovács <kovacsur10@gmail.com>
      */
 	public function login(Request $request){
-		$this->validateLoginData($request);
+		$this->validate($request, [
+				'username' => 'required',
+				'password' => 'required',
+		]);
 		
 		try{
 			Auth::login($request->username, $request->password);
 			return view('home', ["layout" => new LayoutData()]);
 		}catch(\Exception $ex){
 			$layout = new LayoutData();
-			return view('errors.error', ["layout" => $layout,
-					"message" => $layout->language('unsuccessful_login'),
-					"url" => '/login']);
+			$layout->errors()->add('form', $layout->language('unsuccessful_login'));
+			return view('auth.login', ["layout" => $layout]);
 		}
 	}
 	
@@ -60,20 +62,5 @@ class AuthController extends Controller{
 		Auth::logout();
 		return view('auth.login', ["layout" => new LayoutData()]);
 	}
-	
-	/** Function name: validateLoginData
-	 *
-	 * This function validates the login request data.
-	 *
-	 * @param Request $request
-	 *
-	 * @author Máté Kovács <kovacsur10@gmail.com>
-	 */
-    public function validateLoginData(Request $request){
-        $this->validate($request, [
-            'username' => 'required',
-			'password' => 'required',
-        ]);
-    }
 	
 }
