@@ -65,16 +65,17 @@ class UserController extends Controller{
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function showUploadLanguageExam($examid){ //TODO: better response
+	public function showUploadLanguageExam($examid){
 		$layout = new LayoutData();
 		if($layout->user()->user()->hasLanguageExam($examid)){
 			return view('user.languageexams.show', ["layout" => $layout,
 					"exam" => $layout->user()->user()->getLanguageExam($examid)
 			]);
 		}else{
-			return view('errors.error', ["layout" => $layout,
-					"message" => $layout->language('error_at_getting_the_language_exam'),
-					"url" => '/data/languageexam/upload']);
+			$layout->errors()->add('upload', $layout->language('error_at_getting_the_language_exam'));
+			return view('user.languageexams.show', ["layout" => $layout,
+					"exam" => $layout->user()->user()->getLanguageExam($examid)
+			]);
 		}
 	}
 	
@@ -87,7 +88,7 @@ class UserController extends Controller{
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function uploadLanguageExam($examid, Request $request){ //TODO: better response
+	public function uploadLanguageExam($examid, Request $request){
 		$this->validate($request, [
 			'exampicture' => 'required',
 		]);
@@ -99,14 +100,16 @@ class UserController extends Controller{
 				$layout->user()->uploadLanguageExamPicture($examid, $image);
 				return redirect('data/languageexam/upload');
 			}catch(\Exception $ex){
-				return view('errors.error', ["layout" => $layout,
-					"message" => $layout->language('error_at_getting_the_language_exam'),
-					"url" => '/data/languageexam/upload']);
+				$layout->errors()->add('upload', $layout->language('error_at_getting_the_language_exam'));
+				return view('user.languageexams.show', ["layout" => $layout,
+						"exam" => $layout->user()->user()->getLanguageExam($examid)
+				]);
 			}
 		}else{
-			return view('errors.error', ["layout" => $layout,
-				"message" => $layout->language('error_at_getting_the_language_exam'),
-				"url" => '/data/languageexam/upload']);
+			$layout->errors()->add('upload', $layout->language('error_at_getting_the_language_exam'));
+			return view('user.languageexams.show', ["layout" => $layout,
+					"exam" => $layout->user()->user()->getLanguageExam($examid)
+			]);
 		}
 	}
 	

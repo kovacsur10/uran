@@ -189,6 +189,8 @@ class Languages{
 			'not_resolved_yet' => 'Nem teljesített',
 			'upload_new_language_exam' => 'Új nyelvvizsga feltöltése',
 			'error_at_getting_the_language_exam' => 'Sajnos a nyelvvizsga fájl feltöltése sikertelen! Kérjük, figyelj oda, hogy megfelelő kiterjesztése legyen, illetve a méretkorlátozást ne lépjed túl!',
+			'language_exam_must_be_under_2_mbs_description' => 'A nyelvvizsga fájl mérete nem haladhatja meg a 2 MB-ot!',
+			'language_exam_extensions_description' => 'A nyelvvizsga fájl kiterjesztése png, jpeg, jpg, bmp vagy pdf legyen!',
 		//menues
 			'admin' => 'ADMIN',
 			'ecnet' => 'ECnet',
@@ -779,6 +781,8 @@ class Languages{
 			'not_resolved_yet' => 'Not resolved yet',
 			'upload_new_language_exam' => 'Upload new language exam',
 			'error_at_getting_the_language_exam' => 'Could not upload the language exam file! The file should not exceed the maximum file size and it should have the right extension!',
+			'language_exam_must_be_under_2_mbs_description' => 'A language exam document file must be under 2 MBs in size!',
+			'language_exam_extensions_description' => 'A language exam document file must have on of these extensions: png, jpeg, jpg, bmp or pdf.',
 		//menues
 			'admin' => 'ADMIN',
 			'ecnet' => 'ECnet',
