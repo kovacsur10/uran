@@ -321,4 +321,44 @@ class User{
 		return $this->on_alumni_list;
 	}
 
+	/** Function name: hasLanguageExam
+	 *
+	 * This function returns if the user has the
+	 * searced language exam or not.
+	 *
+	 * @param int $examId - a language exam identifier
+	 * @return bool - If the user has the searched language exam.
+	 */
+	public function hasLanguageExam($examId) : bool{ //TODO: test
+		$retVal = false;
+		if($this->personal_data !== null){
+			foreach($this->personal_data->languageExams() as $exam){
+				if($exam->id() === $examId){
+					$retVal = true;
+				}
+			}
+		}
+		return $retVal;
+	}
+	
+	/** Function name: getLanguageExam
+	 *
+	 * This function returns the searched language exam
+	 * if the user has it.
+	 * 
+	 * @param int $examId - a language exam identifier
+	 * @return LanguageExam|null - The searched language exam.
+	 */
+	public function getLanguageExam($examId){ //TODO: test
+		if($this->hasLanguageExam($examId)){
+			foreach($this->personal_data->languageExams() as $exam){
+				if($exam->id() === $examId){
+					return $exam;
+				}
+			}
+		}else{
+			return null;
+		}
+	}
+	
 }

@@ -236,7 +236,8 @@ class P_Room{
 			if($user->neptun !== null){
 				$faculties = P_User::getUserFaculties($user->id);
 				$workshops = P_User::getUserWorkshops($user->id);
-				$collegistData = new PersonalData($user->neptun, $user->city_of_birth, $user->date_of_birth, $user->name_of_mother, $user->high_school, $user->year_of_leaving_exam, $user->from_year, $faculties, $workshops);
+				$languageExams = P_User::getUserLanguageExams($user->id);
+				$collegistData = new PersonalData($user->neptun, $user->city_of_birth, $user->date_of_birth, $user->name_of_mother, $user->high_school, $user->year_of_leaving_exam, $user->from_year, $faculties, $workshops, $languageExams);
 			}else{
 				$collegistData = null;
 			}

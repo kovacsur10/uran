@@ -654,10 +654,8 @@ class PermissionsTest extends TestCase
 		
 		try{
 			Permissions::saveUserPermissionGroups(34, null);
-			$this->fail("An exception was expected!");
-		}catch(ValueMismatchException $ex){
 		}catch(\Exception $ex){
-			$this->fail("Not the expected exception: ".$ex->getMessage());
+			$this->fail("Unexpected exception: ".$ex->getMessage());
 		}
 		
 		try{

@@ -11,6 +11,7 @@ use App\Classes\Data\Faculty;
 use App\Classes\Data\Workshop;
 use App\Classes\Data\PermissionGroup;
 use App\Classes\Database;
+use App\Classes\Data\LanguageExam;
 
 /** Class name: P_User
  *
@@ -119,6 +120,50 @@ class P_User{
 		}
 	}
 	
+	/** Function name: getUserLanguageExams
+	 *
+	 * This function returns the requested user's
+	 * language exams.
+	 *
+	 * @param int $userId - user's identifier
+	 * @return arrayOfLanguageExam
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	static function getUserLanguageExams($userId){ //TODO: test
+		$examsData = DB::table('language_exams')
+			->join('fonal_languages', 'fonal_languages.id', '=', 'language_exams.language')
+			->join('language_exam_levels', 'language_exam_levels.id', '=', 'language_exams.level')
+			->select('language_exams.id as id', 'fonal_languages.language as language', 'language_exams.resolved as resolved', 'language_exam_levels.level as level')
+			->where('language_exams.user_id', '=', $userId)
+			->get();
+		$exams = [];
+		foreach($examsData as $exam){
+			$examFilesData = DB::table('language_exam_files')
+				->where('examid', '=', $exam->id)
+				->pluck('image');
+			$exams[] = new LanguageExam($exam->id, $exam->language, $exam->resolved, $exam->level, $examFilesData);
+		}
+		return $exams;
+	}
+
+	/** Function name: addLanguageExamImage
+	 *
+	 * This function saves a language exam into the database.
+	 *
+	 * @param int $languageExamId - language exam identifier
+	 * @param string $imageLocationPath - path to the image location
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	static function addLanguageExamImage(int $languageExamId, string $imageLocationPath){ //TODO: test
+		DB::table('language_exam_files')
+			->insert([
+					'examid' => $languageExamId,
+					'image' => $imageLocationPath
+			]);
+	}
+	
 	/** Function name: getUsersWithPermission
 	 *
 	 * This function returns those users, who
@@ -145,7 +190,8 @@ class P_User{
 			if($user->neptun !== null){
 				$faculties = P_User::getUserFaculties($user->id);
 				$workshops = P_User::getUserWorkshops($user->id);
-				$collegistData = new PersonalData($user->neptun, $user->city_of_birth, $user->date_of_birth, $user->name_of_mother, $user->high_school, $user->year_of_leaving_exam, $user->from_year, $faculties, $workshops);
+				$exams = P_User::getUserLanguageExams($user->id);
+				$collegistData = new PersonalData($user->neptun, $user->city_of_birth, $user->date_of_birth, $user->name_of_mother, $user->high_school, $user->year_of_leaving_exam, $user->from_year, $faculties, $workshops, $exams);
 			}else{
 				$collegistData = null;
 			}
@@ -168,7 +214,8 @@ class P_User{
 			if($user->neptun !== null){
 				$faculties = P_User::getUserFaculties($user->id);
 				$workshops = P_User::getUserWorkshops($user->id);
-				$collegistData = new PersonalData($user->neptun, $user->city_of_birth, $user->date_of_birth, $user->name_of_mother, $user->high_school, $user->year_of_leaving_exam, $user->from_year, $faculties, $workshops);
+				$exams = P_User::getUserLanguageExams($user->id);
+				$collegistData = new PersonalData($user->neptun, $user->city_of_birth, $user->date_of_birth, $user->name_of_mother, $user->high_school, $user->year_of_leaving_exam, $user->from_year, $faculties, $workshops, $exams);
 			}else{
 				$collegistData = null;
 			}
@@ -264,7 +311,8 @@ class P_User{
 			if($user->neptun !== null){
 				$faculties = P_User::getUserFaculties($user->id);
 				$workshops = P_User::getUserWorkshops($user->id);
-				$collegistData = new PersonalData($user->neptun, $user->city_of_birth, $user->date_of_birth, $user->name_of_mother, $user->high_school, $user->year_of_leaving_exam, $user->from_year, $faculties, $workshops);
+				$exams = P_User::getUserLanguageExams($user->id);
+				$collegistData = new PersonalData($user->neptun, $user->city_of_birth, $user->date_of_birth, $user->name_of_mother, $user->high_school, $user->year_of_leaving_exam, $user->from_year, $faculties, $workshops, $exams);
 			}else{
 				$collegistData = null;
 			}
@@ -297,7 +345,8 @@ class P_User{
 			if($user->neptun !== null){
 				$faculties = P_User::getUserFaculties($user->id);
 				$workshops = P_User::getUserWorkshops($user->id);
-				$collegistData = new PersonalData($user->neptun, $user->city_of_birth, $user->date_of_birth, $user->name_of_mother, $user->high_school, $user->year_of_leaving_exam, $user->from_year, $faculties, $workshops);
+				$exams = P_User::getUserLanguageExams($user->id);
+				$collegistData = new PersonalData($user->neptun, $user->city_of_birth, $user->date_of_birth, $user->name_of_mother, $user->high_school, $user->year_of_leaving_exam, $user->from_year, $faculties, $workshops, $exams);
 			}else{
 				$collegistData = null;
 			}
@@ -460,7 +509,8 @@ class P_User{
 		if(isset($user->neptun) && $user->neptun !== null){
 			$faculties = P_User::getUserFaculties($user->id);
 			$workshops = P_User::getUserWorkshops($user->id);
-			$collegistData = new PersonalData($user->neptun, $user->city_of_birth, $user->date_of_birth, $user->name_of_mother, $user->high_school, $user->year_of_leaving_exam, $user->from_year, $faculties, $workshops);
+			$exams = P_User::getUserLanguageExams($user->id);
+			$collegistData = new PersonalData($user->neptun, $user->city_of_birth, $user->date_of_birth, $user->name_of_mother, $user->high_school, $user->year_of_leaving_exam, $user->from_year, $faculties, $workshops, $exams);
 		}else{
 			$collegistData = null;
 		}
@@ -491,7 +541,8 @@ class P_User{
 		if($user->neptun !== null){
 			$faculties = P_User::getUserFaculties($user->id);
 			$workshops = P_User::getUserWorkshops($user->id);
-			$collegistData = new PersonalData($user->neptun, $user->city_of_birth, $user->date_of_birth, $user->name_of_mother, $user->high_school, $user->year_of_leaving_exam, $user->from_year, $faculties, $workshops);
+			$exams = P_User::getUserLanguageExams($user->id);
+			$collegistData = new PersonalData($user->neptun, $user->city_of_birth, $user->date_of_birth, $user->name_of_mother, $user->high_school, $user->year_of_leaving_exam, $user->from_year, $faculties, $workshops, $exams);
 		}else{
 			$collegistData = null;
 		}
@@ -528,7 +579,8 @@ class P_User{
 			if($user->neptun !== null){
 				$faculties = P_User::getUserFaculties($user->id);
 				$workshops = P_User::getUserWorkshops($user->id);
-				$collegistData = new PersonalData($user->neptun, $user->city_of_birth, $user->date_of_birth, $user->name_of_mother, $user->high_school, $user->year_of_leaving_exam, $user->from_year, $faculties, $workshops);
+				$exams = P_User::getUserLanguageExams($user->id);
+				$collegistData = new PersonalData($user->neptun, $user->city_of_birth, $user->date_of_birth, $user->name_of_mother, $user->high_school, $user->year_of_leaving_exam, $user->from_year, $faculties, $workshops, $exams);
 			}else{
 				$collegistData = null;
 			}
@@ -595,7 +647,8 @@ class P_User{
 		if($user->neptun !== null){
 			$faculties = P_User::getUserFaculties($user->id);
 			$workshops = P_User::getUserWorkshops($user->id);
-			$collegistData = new PersonalData($user->neptun, $user->city_of_birth, $user->date_of_birth, $user->name_of_mother, $user->high_school, $user->year_of_leaving_exam, $user->from_year, $faculties, $workshops);
+			$exams = P_User::getUserLanguageExams($user->id);
+			$collegistData = new PersonalData($user->neptun, $user->city_of_birth, $user->date_of_birth, $user->name_of_mother, $user->high_school, $user->year_of_leaving_exam, $user->from_year, $faculties, $workshops, $exams);
 		}else{
 			$collegistData = null;
 		}
@@ -642,7 +695,8 @@ class P_User{
 			if($user->neptun !== null){
 				$faculties = P_User::getUserFaculties($user->id);
 				$workshops = P_User::getUserWorkshops($user->id);
-				$collegistData = new PersonalData($user->neptun, $user->city_of_birth, $user->date_of_birth, $user->name_of_mother, $user->high_school, $user->year_of_leaving_exam, $user->from_year, $faculties, $workshops);
+				$exams = P_User::getUserLanguageExams($user->id);
+				$collegistData = new PersonalData($user->neptun, $user->city_of_birth, $user->date_of_birth, $user->name_of_mother, $user->high_school, $user->year_of_leaving_exam, $user->from_year, $faculties, $workshops, $exams);
 			}else{
 				$collegistData = null;
 			}

@@ -120,8 +120,21 @@
 							{{ $layout->language('administration') }} <span class="caret"></span>
                             </a>
 							<ul class="dropdown-menu" role="menu">
+								@if($layout->modules()->isActivatedByName('tasks'))
+								<li><a href="{{ url('/tasks/list') }}">{{ $layout->language('task_manager') }}</a></li>
+								@endif
+								@if($layout->modules()->isActivatedByName('ecouncil') && $data->user()->permitted('record_read'))
+								<li><a href="{{ url('/ecouncil/records/list') }}">{{ $layout->language('TODO') }}</a></li>
+								@endif
+                            </ul>
+                        </li>
+						<li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+							{{ $layout->language('ecadmin') }} <span class="caret"></span>
+                            </a>
+							<ul class="dropdown-menu" role="menu">
 								@if($data->user()->permitted('user_handling'))
-								<li><a href="{{ url('/ecadmin/user/list') }}">{{ $layout->language('TODO') }}</a></li>
+								<li><a href="{{ url('/ecadmin/user/list') }}">{{ $layout->language('user_administration') }}</a></li>
 								@endif
 								@if($data->user()->permitted('mailing_lists_handling'))
 								<li><a href="{{ url('/ecadmin/maillist/list') }}">{{ $layout->language('mailing_lists') }}</a></li>
@@ -217,6 +230,7 @@
                             </a>
                             <ul class="dropdown-menu" role="menu">
 								<li><a href="{{ url('/data/show') }}">{{ $layout->language('my_data') }}</a></li>
+								<li><a href="{{ url('/data/languageexam/upload') }}">{{ $layout->language('upload_language_exam') }}</a></li>
                                 <li><a href="{{ url('/logout') }}"><i class="fa fa-btn fa-sign-out"></i>{{ $layout->language('logout') }}</a></li>
                             </ul>
                         </li>

@@ -11,6 +11,7 @@
 |
 */
 
+//TODO: grouping better according to auth status
 Route::group(['middleware' => 'web'], function () {
 	// Language router
 	Route::get('lang/set/{language}', 'Language\LanguageController@set');
@@ -64,6 +65,10 @@ Route::group(['middleware' => 'web'], function () {
 	// User data routes
 	Route::get('data/show', 'User\UserController@showData')->middleware('auth.logged');
 	Route::get('data/{username}', 'User\UserController@showPublicData')->middleware('auth.logged');
+	Route::get('data/languageexam/uploaded/{location}', 'User\UserController@showLanguageExam')->middleware('auth.logged');
+	Route::get('data/languageexam/upload', 'User\UserController@getLanguageExams')->middleware('auth.logged');
+	Route::get('data/languageexam/upload/{examid}', 'User\UserController@showUploadLanguageExam')->middleware('auth.logged');
+	Route::put('data/languageexam/upload/{examid}', 'User\UserController@uploadLanguageExam')->middleware('auth.logged');
 	
 	// ECNET routes
 	Route::get('ecnet/account', 'Ecnet\PrintingController@showAccount')->middleware('auth.logged')->middleware('modules.ecnet');
