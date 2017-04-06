@@ -7,6 +7,15 @@
             <div class="panel panel-default">
                 <div class="panel-heading">{{ $layout->language('printing_account') }}</div>
                 <div class="panel-body">
+                	@if($layout->errors()->has('add_money'))
+                		<div class="alert alert-danger">
+							{{$layout->errors()->get('add_money')}}
+						</div>
+					@elseif($layout->errors()->has('success_add_money'))
+						<div class="alert alert-success">
+							{{$layout->errors()->get('success_add_money')}}
+						</div>
+                	@endif
 					<div class="well well-sm">{{ $layout->language('available_money') }}: {{ $layout->user()->ecnetUser()->money() }} HUF</div>
 					<div class="alert alert-info">
 						<strong>{{ $layout->language('note') }}:</strong> {{ $layout->language('money_upload_note_description') }}

@@ -56,14 +56,12 @@ class SlotController extends Controller{
 			$layout->user()->addMACSlotOrder($layout->user()->user()->id(), $request->input('reason'));
 			Logger::log('New MAC slot order!', null, $request->input('reason'), 'ecnet/order');
 			Notifications::notifyAdmin($layout->user()->user(), 'ecnet_slot_verify', $layout->language('mac_slot_ordering'), $layout->language('mac_slot_was_ordered_description').$request->input('reason'), 'ecnet/order');
-			return view('success.success', ["layout" => $layout,
-					"message" => $layout->language('success_at_sending_mac_slot_order'),
-					"url" => '/ecnet/order']);
+			$layout->errors()->add('success_ordering', $layout->language('success_at_sending_mac_slot_order'));
+			return view('ecnet.slotordering', ["layout" => $layout]);
 		}catch(\Exception $ex){
 			Logger::warning('Cannot order a slot!', null, null, 'ecnet/order');
-			return view('errors.error', ["layout" => $layout,
-										 "message" => $layout->language('error_at_sending_mac_slot_order'),
-										 "url" => '/ecnet/order']);
+			$layout->errors()->add('ordering', $layout->language('error_at_sending_mac_slot_order'));
+			return view('ecnet.slotordering', ["layout" => $layout]);
 		}
 	}
 	
@@ -89,9 +87,8 @@ class SlotController extends Controller{
 				$target = new EcnetData($targetUser->id());
 			}catch(\Exception $ex){
 				Logger::warning('Could not find a MAC slot order with id#'.print_r($request->input('slot'), true).'!', null, null, 'ecnet/order');
-				return view('errors.error', ["layout" => $layout,
-						"message" => $layout->language('error_at_allowing_mac_slot_order'),
-						"url" => '/ecnet/order']);
+				$layout->errors()->add('order_allowing', $layout->language('error_at_allowing_mac_slot_order'));
+				return view('ecnet.slotordering', ["layout" => $layout]);
 			}
 			if($request->input('optradio') === "allow"){
 				try{
@@ -99,9 +96,8 @@ class SlotController extends Controller{
 					Notifications::notify($layout->user()->user(), $target->user()->id(), $layout->language('mac_slot_ordering'), $layout->language('mac_slot_order_was_accepted_description').$macSlotOrder->reason(), 'ecnet/access');
 				}catch(\Exception $ex){
 					Logger::warning('Could not set the MAC slot count!', $target->ecnetUser()->maximumMacSlots(), $target->ecnetUser()->maximumMacSlots()+1, 'ecnet/order');
-					return view('errors.error', ["layout" => $layout,
-												"message" => $layout->language('error_at_allowing_mac_slot_order'),
-												"url" => '/ecnet/order']);
+					$layout->errors()->add('order_allowing', $layout->language('error_at_allowing_mac_slot_order'));
+					return view('ecnet.slotordering', ["layout" => $layout]);
 				}
 			}else{
 				Notifications::notify($layout->user()->user(), $target->user()->id(), $layout->language('mac_slot_ordering'), $layout->language('mac_slot_order_was_denied_description').$macSlotOrder->reason(), 'ecnet/order');
@@ -109,14 +105,12 @@ class SlotController extends Controller{
 			try{
 				$layout->user()->deleteMacSlotOrderById($request->input('slot'));
 				Logger::log('MAC slot order was removed (accepted or denied)!', null, null, 'ecnet/order');
-				return view('success.success', ["layout" => $layout,
-						"message" => $layout->language('success_at_allowing_mac_slot_order'),
-						"url" => '/ecnet/order']);
+				$layout->errors()->add('success_order_allowing', $layout->language('success_at_allowing_mac_slot_order'));
+				return view('ecnet.slotordering', ["layout" => $layout]);
 			}catch(\Exception $ex){
 				Logger::warning('Could not delete the MAC slot order with id #'.print_r($request->input('slot'), true).'!', null, null, 'ecnet/order');
-				return view('errors.error', ["layout" => $layout,
-											"message" => $layout->language('error_at_allowing_mac_slot_order'),
-											"url" => '/ecnet/order']);
+				$layout->errors()->add('order_allowing', $layout->language('error_at_allowing_mac_slot_order'));
+				return view('ecnet.slotordering', ["layout" => $layout]);
 			}
 		}else{
 			return view('errors.authentication', ["layout" => $layout]);
