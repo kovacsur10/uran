@@ -4,6 +4,7 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use App\Classes\Data\PersonalData;
 use App\Classes\Data\Faculty;
 use App\Classes\Data\Workshop;
+use App\Classes\Data\LanguageExam;
 
 /** Class name: PersonalDataTest
  *
@@ -27,7 +28,7 @@ class PersonalDataTest extends TestCase
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	function test_personal_data(){
-		$user = new PersonalData("hq574o", "Budapest", "1992-02-20", "anyuka", "HS", "2012", "2015", [new Faculty(1, "asd")], [new Workshop(2, "qwe")]);
+		$user = new PersonalData("hq574o", "Budapest", "1992-02-20", "anyuka", "HS", "2012", "2015", [new Faculty(1, "asd")], [new Workshop(2, "qwe")], [new LanguageExam(1, 'spanyol'), new LanguageExam(2, 'angol', true, '/afs/elte.hu/itt_van.jpg')]);
 		$this->assertEquals("hq574o", $user->neptun());
 		$this->assertEquals("Budapest", $user->cityOfBirth());
 		$this->assertEquals("1992-02-20", $user->dateOfBirth());
@@ -59,5 +60,6 @@ class PersonalDataTest extends TestCase
 		$this->assertClassHasAttribute('admission_year', PersonalData::class);
 		$this->assertClassHasAttribute('faculties', PersonalData::class);
 		$this->assertClassHasAttribute('workshops', PersonalData::class);
+		$this->assertClassHasAttribute('languageExams', PersonalData::class);
 	}
 }

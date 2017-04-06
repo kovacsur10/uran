@@ -13,6 +13,8 @@ use App\Exceptions\ValueMismatchException;
 use App\Exceptions\DatabaseException;
 use App\Classes\Data\User as UserData;
 use App\Classes\Data\StatusCode;
+use Illuminate\Http\UploadedFile;
+use App\Exceptions\FileException;
 
 /** Class name: User
  *
@@ -335,19 +337,90 @@ class User extends Pageable{
 		return User::calculateSublists($users, $parsed);
 	}
 	
-	public function isIntern(){
+	
+	/** Function name: isIntern
+	 *
+	 * This function returns whether the actual user is
+	 * an intern or not.
+	 *
+	 * @return bool - intern or not
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	public function isIntern(){ //TODO: test
 		$statusName = $this->user->status()->statusName();
 		return ($statusName === "intern" || $statusName == "sixth year intern");
 	}
 	
-	public function isLivingIn(){
+	/** Function name: isLivingIn
+	 *
+	 * This function returns whether the actual user is
+	 * living in the dormitory or not.
+	 *
+	 * @return bool - living in or not
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	public function isLivingIn(){ //TODO: test
 		$statusName = $this->user->status()->statusName();
 		return ($statusName === "intern" || $statusName == "sixth year intern" || $statusName == "visitor");
 	}
 	
-	public function isCollegist(){
+	/** Function name: isCollegist
+	 *
+	 * This function returns whether the actual user is
+	 * a collegist or not.
+	 *
+	 * @return bool - collegist or not
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	public function isCollegist(){ //TODO: test
 		$statusName = $this->user->status()->statusName();
 		return ($statusName === "intern" || $statusName == "sixth year intern" || $statusName == "extern" || $statusName === "scholarship");
+	}
+	
+	/** Function name: uploadLanguageExamPicture
+	 *
+	 * This function uploads a new language exam.
+	 * 
+	 * @param int $examid - language exam identifier
+	 * @param UploadedFile $file - the language exam picture
+	 * 
+	 * @throws FileException if the file upload method fails or the file is too big or the MIME type is wrong.
+	 * @throws ValueMismatchException if the input values are not valid values.
+	 * 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	public function uploadLanguageExamPicture(int $examid, UploadedFile $file){
+		if($file === null || $examid === null){
+			throw new ValueMismatchException("The input values cannot be null!");
+		}
+		if(!$file->isValid()){
+			throw new FileException("An error occured during the upload stage: [".$file->getError()."] ".$file->getErrorMessage());
+		}
+		if($file->getClientSize() > 2097152){
+			throw new FileException("File size is too big!");
+		}
+		$extension = $file->getClientOriginalExtension();
+		$guessedExtension = $file->guessClientExtension();
+		if($extension !== $guessedExtension){
+			Logger::warning("Extension mismatch with guessed one! uploaded: ".$extension." guessed: ".$guessedExtension, "", "", "data/languageexam/upload");
+		}
+		if($extension !== "png" && $extension !== "jpg" && $extension !== "jpeg" && $extension !== "bmp" && $extension !== "pdf"){
+			throw new FileException("Wrong extension type!");
+		}
+		try{
+			$generatedFileName = $this->user->username()."_langexam_".time().".".$extension;
+			$file->move("/var/www/uran/storage/app/languageexams", $generatedFileName);
+			P_User::addLanguageExamImage($examid, $generatedFileName);
+		}catch(\Illuminate\Database\QueryException $ex){
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
+			Logger::error("There was a problem at uploading a language exam file!", "", $generatedFileName, "data/languageexam/upload");
+			throw new FileException("Could not upload the file!");
+		}catch(\Exception $ex){
+			throw new FileException("Could not upload the file!");
+		}
 	}
 	
 // PRIVATE FUNCTIONS

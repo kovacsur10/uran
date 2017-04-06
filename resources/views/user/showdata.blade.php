@@ -44,6 +44,13 @@
 								<label class="col-sm-4 control-label">{{ $layout->language('status') }}</label>
 							    <div class="col-sm-8">
 							    	<div class="form-control">{{ $layout->language("status_".$layout->user()->user()->status()->statusName()) }}</div>
+							    	@if($layout->user()->user()->status()->statusName() === "alumni")
+							    		@if($layout->user()->user()->subscribedToAlumniList())
+							    			<div class="well">{{ $layout->language('subscribed_to_the_alumni_list') }}</div>
+							    		@else
+							    			<div class="well">{{ $layout->language('unsubscribed_from_the_alumni_list') }}</div>
+							    		@endif
+							    	@endif
 							    </div>
 							</div>
 							<div class="form-group">

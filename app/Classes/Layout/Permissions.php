@@ -517,11 +517,11 @@ class Permissions{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public static function saveUserPermissionGroups($userId, $groupIds){
-		if($userId === null){
-			throw new ValueMismatchException("Parameter values cannot be null!");
-		}
-		if($groupIds === null || !is_array($groupIds)){
+		if($groupIds === null){
 			$groupIds = [];
+		}
+		if($userId === null || !is_array($groupIds)){
+			throw new ValueMismatchException("Parameter values cannot be null!");
 		}
 		try{
 			P_User::setUserPermissionGroups($userId, $groupIds);
