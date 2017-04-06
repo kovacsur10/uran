@@ -7,6 +7,11 @@
             <div class="panel panel-default">
                 <div class="panel-heading">{{ $layout->language('login') }}</div>
                 <div class="panel-body">
+                	@if($layout->errors()->has('form'))
+                		<div class="alert alert-danger">
+							{{$layout->errors()->get('form')}}
+						</div>
+                	@endif
                     <form class="form-horizontal" role="form" method="POST" action="{{ url('/login') }}">
                         {!! csrf_field() !!}
 
