@@ -8,6 +8,11 @@
 				<div class="panel-heading">{{ $layout->language('language_exams') }}</div>
 				<div class="panel-body">
 				@if($exam !== null)
+					@if($layout->errors()->has('upload'))
+                		<div class="alert alert-danger">
+							{{$layout->errors()->get('upload')}}
+						</div>
+                	@endif
 					<form class="form-horizontal" role="form" method="POST" action="{{ url('data/languageexam/upload/'.$exam->id()) }}" enctype="multipart/form-data">
 						<input type="hidden" name="_method" value="PUT">
                         {!! csrf_field() !!}
@@ -32,6 +37,12 @@
                             </div>
                         </div>
                     </form>
+                    <div class="alert alert-info">
+						<strong>{{ $layout->language('note') }}:</strong> {{ $layout->language('language_exam_must_be_under_2_mbs_description') }}
+					</div>
+					<div class="alert alert-info">
+						<strong>{{ $layout->language('note') }}:</strong> {{ $layout->language('language_exam_extensions_description') }}
+					</div>
 				@endif
 				</div>
 			</div>

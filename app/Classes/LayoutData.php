@@ -247,7 +247,7 @@ class LayoutData{
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function formatDate($date, $onlyDate = false){ //TODO: test modification
+	public function formatDate($date, $onlyDate = false){ //TODO: test modification if needed
 		$returnedDateTime = "";
 		if($this->language === 'hu_HU'){
 			if(strstr($date, ". ") !== FALSE){
