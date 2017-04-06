@@ -7,6 +7,15 @@
             <div class="panel panel-default">
                 <div class="panel-heading">{{ $layout->language('mac_slot_ordering') }}</div>
                 <div class="panel-body">
+                	@if($layout->errors()->has('ordering'))
+                		<div class="alert alert-danger">
+							{{$layout->errors()->get('ordering')}}
+						</div>
+					@elseif($layout->errors()->has('success_ordering'))
+						<div class="alert alert-success">
+							{{$layout->errors()->get('success_ordering')}}
+						</div>
+                	@endif
 					<form class="form-horizontal" role="form" method="POST" action="{{ url('/ecnet/getslot') }}">
 						{!! csrf_field() !!}
 						
@@ -40,6 +49,15 @@
 					<div class="panel panel-default">
 						<div class="panel-heading">{{ $layout->language('admin_panel') }}</div>
 						<div class="panel-body">
+							@if($layout->errors()->has('order_allowing'))
+		                		<div class="alert alert-danger">
+									{{$layout->errors()->get('order_allowing')}}
+								</div>
+							@elseif($layout->errors()->has('success_order_allowing'))
+								<div class="alert alert-success">
+									{{$layout->errors()->get('success_order_allowing')}}
+								</div>
+		                	@endif
 							<form class="form-horizontal" role="form" method="POST" action="{{ url('/ecnet/allowordenyorder') }}">
 								{!! csrf_field() !!}
 								
