@@ -13,6 +13,9 @@ use App\Classes\Layout\Registrations;
 use App\Classes\Layout\Rooms;
 use App\Classes\Layout\Tasks;
 use App\Classes\Layout\User;
+use App\Classes\Auth;
+use App\Persistence\P_User;
+use App\Classes\Layout\EcnetData;
 
 /** Class name: LayoutData
  *
@@ -48,7 +51,7 @@ class LayoutData{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function __construct(){
-		$this->logged = Session::has('user');
+		$this->logged = Auth::isLoggedIn();
 		$this->user = new User(Session::get('user') === null ? null : Session::get('user')->id());
 		$this->room = new Rooms();
 		$this->modules = new Modules();
@@ -278,6 +281,36 @@ class LayoutData{
 				Session::forget('lang');
 			}
 			Session::put('lang', $language);
+		}
+	}
+	
+	/** Function name: saveSession
+	 *
+	 * This function saves the session data to the database.
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	public static function saveSession(){ //TODO: test
+		$saving = [];
+		$tmp = EcnetData::getSessionData();
+		$saving = array_merge($saving, $tmp);
+		P_User::saveSession(Auth::user()->id(), $saving);
+	}
+	
+	/** Function name: loadSession
+	 *
+	 * This function saves the session data to the database.
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	public static function loadSession(){ //TODO: test
+		try{
+			$sessionData = P_User::loadSession(Auth::user()->id());
+			foreach($sessionData as $key => $value){
+				Session::put($key, $value);
+			}
+		}catch(\Exception $ex){
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Could not load session data. ".$ex->getMessage());
 		}
 	}
 	

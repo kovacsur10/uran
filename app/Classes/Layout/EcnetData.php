@@ -10,6 +10,7 @@ use App\Classes\Logger;
 use App\Exceptions\ValueMismatchException;
 use App\Exceptions\DatabaseException;
 use App\Classes\Database;
+use Illuminate\Support\Facades\Session;
 
 /** Class name: EcnetData
  *
@@ -112,24 +113,57 @@ class EcnetData extends User{
 	
 	/** Function name: filterUsers
 	 *
-	 * This function sets the filter fields
+	 * This function makes the filtering
 	 * of the ECnet admin panel.
-	 * 
-	 * @param text $username - user's username
-	 * @param text $name - user's name
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function filterUsers($username, $name){
-		if($username === ""){
-			$username = null;
+	public function filterUsers(){ //TODO: test modification
+		if(Session::has('ecnet_username_filter') && Session::has('ecnet_name_filter')){
+			$username = Session::get('ecnet_username_filter');
+			$name = Session::get('ecnet_name_filter');
+			if($username === ""){
+				$username = null;
+			}
+			if($name === ""){
+				$name = null;
+			}
+			$this->filters['name'] = $name;
+			$this->filters['username'] = $username;
+			$this->ecnetUsers = $this->getFilteredEcnetUsers($username, $name);
 		}
-		if($name === ""){
-			$name = null;
+	}
+	
+	/** Function name: resetFilterUsers
+	 *
+	 * This function sets the filter fields
+	 * of the ECnet admin panel.
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	public static function setFilterUsers($username, $name){ //TODO: test
+		if($username === null){
+			Session::put('ecnet_username_filter', '');
+		}else{
+			Session::put('ecnet_username_filter', $username);
 		}
-		$this->filters['name'] = $name;
-		$this->filters['username'] = $username;
-		$this->ecnetUsers = $this->getFilteredEcnetUsers($username, $name);
+		if($name === null){
+			Session::put('ecnet_name_filter', '');
+		}else{
+			Session::put('ecnet_name_filter',$name);
+		}
+	}
+	
+	/** Function name: resetFilterUsers
+	 *
+	 * This function resets the filter fields
+	 * of the ECnet admin panel.
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	public static function resetFilterUsers(){ //TODO: test
+		Session::forget('ecnet_username_filter');
+		Session::forget('ecnet_name_filter');
 	}
 	
 	/** Function name: ecnetUsers
@@ -547,6 +581,26 @@ class EcnetData extends User{
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 			throw new DatabaseException("Could not delete the MAC slot order!");
 		}
+	}
+	
+	/** Function name: getSessionData
+	 *
+	 * This function returns an array or values, that
+	 * should be saved as session data for the user.
+	 * 
+	 * @return array of mixed - the returned values
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	public static function getSessionData(){ //TODO: test
+		$sessionData = [];
+		if(Session::has('ecnet_username_filter')){
+			$sessionData['ecnet_username_filter'] = Session::get('ecnet_username_filter');
+		}
+		if(Session::has('ecnet_name_filter')){
+			$sessionData['ecnet_name_filter'] = Session::get('ecnet_name_filter');
+		}
+		return $sessionData;
 	}
 	
 // PRIVATE FUNCTIONS

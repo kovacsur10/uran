@@ -60,7 +60,7 @@ class AuthController extends Controller{
 	 */
 	public function logout(){
 		Auth::logout();
-		return view('auth.login', ["layout" => new LayoutData()]);
+		return redirect('login');
 	}
 	
 }
