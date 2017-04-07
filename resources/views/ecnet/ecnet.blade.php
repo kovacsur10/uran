@@ -25,6 +25,15 @@
 					<div class="panel panel-default">
 						<div class="panel-heading">{{ $layout->language('admin_panel') }} - {{ $layout->language('validation') }}</div>
 						<div class="panel-body">
+							@if($layout->errors()->has('activate'))
+		                		<div class="alert alert-danger">
+									{{$layout->errors()->get('activate')}}
+								</div>
+							@elseif($layout->errors()->has('success_activate'))
+								<div class="alert alert-success">
+									{{$layout->errors()->get('success_activate')}}
+								</div>
+		                	@endif
 							<form class="form-horizontal" role="form" method="POST" action="{{ url('/ecnet/activate') }}">
 								{!! csrf_field() !!}
 								
@@ -90,6 +99,15 @@
 					<div class="panel panel-default">
 						<div class="panel-heading">{{ $layout->language('admin_panel') }} - {{ $layout->language('default_time') }}</div>
 						<div class="panel-body">
+							@if($layout->errors()->has('update_validation_time'))
+		                		<div class="alert alert-danger">
+									{{$layout->errors()->get('update_validation_time')}}
+								</div>
+							@elseif($layout->errors()->has('success_update_validation_time'))
+								<div class="alert alert-success">
+									{{$layout->errors()->get('success_update_validation_time')}}
+								</div>
+		                	@endif
 							<form class="form-horizontal" role="form" method="POST" action="{{ url('/ecnet/setvalidtime') }}">
 								{!! csrf_field() !!}
 								
@@ -137,6 +155,15 @@
 					<div class="panel panel-default">
 						<div class="panel-heading">{{ $layout->language('mac_addresses') }}</div>
 						<div class="panel-body">
+							@if($layout->errors()->has('setmac'))
+		                		<div class="alert alert-danger">
+									{{$layout->errors()->get('setmac')}}
+								</div>
+							@elseif($layout->errors()->has('success_setmac'))
+								<div class="alert alert-success">
+									{{$layout->errors()->get('success_setmac')}}
+								</div>
+		                	@endif
 							<form class="form-horizontal" role="form" method="POST" action="{{ url('/ecnet/setmacs') }}">
 								{!! csrf_field() !!}
 								

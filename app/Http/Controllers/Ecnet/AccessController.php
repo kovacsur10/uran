@@ -28,8 +28,7 @@ class AccessController extends Controller{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function showInternet(){
-		$layout = new LayoutData();
-		$layout->setUser(new EcnetData(Session::get('user')->id()));
+		$layout = $this->getEcnetLayout();
 		$now = Carbon::now();
 		if($layout->user()->ecnetUser() === null){
 			Logger::warning('Ecnet user was not found!', null, null, 'ecnet/access');
@@ -50,7 +49,9 @@ class AccessController extends Controller{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function updateValidationTime(Request $request){
-		$layout = new LayoutData();
+		$layout = $this->getEcnetLayout();
+		$now = Carbon::now();
+		
         $this->validate($request, [
 			'new_valid_date' => 'required',
 		]);
@@ -58,13 +59,18 @@ class AccessController extends Controller{
 			$newTime = $request->new_valid_date.' 05:00:00';
 			try{
 				EcnetData::changeDefaultValidDate($newTime);
-				Logger::log('ECnet default access time was set!', null, $newTime, 'ecnet/access');
-				return view('success.success', ["layout" => $layout,
-						"message" => $layout->language('success_at_setting_the_default_time_to').$newTime,
-						"url" => '/ecnet/access']);
+				Logger::log('ECnet default access time was set!', null, $newTime, 'ecnet/access');	
+				$layout = $this->getEcnetLayout();
+				$layout->errors()->add('success_update_validation_time', $layout->language('success_at_setting_the_default_time_to').$newTime);
+				return view('ecnet.ecnet', ["layout" => $layout,
+						"active" => $now->toDateTimeString() < $layout->user()->ecnetUser()->valid(),
+						"users" => $layout->user()->users()]);
 			}catch(\Exception $ex){
-				Logger::warning('At ECnet validation time setting. An error occured!', null, null, 'ecnet/access');
-				return view('errors.authentication', ["layout" => $layout]);
+				Logger::warning('At ECnet validation time setting. An error occured!', null, null, 'ecnet/access');		
+				$layout->errors()->add('update_validation_time', $layout->language('error_at_setting_the_default_time_to').$newTime);
+				return view('ecnet.ecnet', ["layout" => $layout,
+						"active" => $now->toDateTimeString() < $layout->user()->ecnetUser()->valid(),
+						"users" => $layout->user()->users()]);
 			}
 		}else{
 			Logger::warning('At ECnet validation time setting. PERMISSIONS NEEDED!', null, null, 'ecnet/access');
@@ -81,8 +87,9 @@ class AccessController extends Controller{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function activate(Request $request){
-		$layout = new LayoutData();
-		$layout->setUser(new EcnetData(Session::get('user')->id()));
+		$layout = $this->getEcnetLayout();
+		$now = Carbon::now();
+		
         $this->validate($request, [
 			'account' => 'required',
 		]);
@@ -90,9 +97,10 @@ class AccessController extends Controller{
 			if($request->custom_valid_date === null || $request->custom_valid_date === ''){
 				if($layout->user()->validationTime() === null){
 					Logger::warning('At ECnet user internet activation the default time was not set!', null, null, 'ecnet/access');
-					return view('errors.error', ["layout" => $layout,
-												 "message" => $layout->language('error_no_default_time_set'),
-												 "url" => '/ecnet/access']);
+					$layout->errors()->add('activate', $layout->language('error_no_default_time_set'));
+					return view('ecnet.ecnet', ["layout" => $layout,
+							"active" => $now->toDateTimeString() < $layout->user()->ecnetUser()->valid(),
+							"users" => $layout->user()->users()]);
 				}
 				$newTime = $layout->user()->validationTime();
 			}else{
@@ -101,15 +109,18 @@ class AccessController extends Controller{
 			try{
 				$layout->user()->activateUserNet($request->account, $newTime);
 				Notifications::notify($layout->user()->user(), $request->account, $layout->language('internet_access_was_modified'), $layout->language('internet_access_was_modified_to_description').$layout->formatDate($newTime), 'ecnet/access');
-				Logger::log('Successfully activated user internet access for user #'.print_r($request->account, true).'!', null, $newTime, 'ecnet/access');
-				return view('success.success', ["layout" => $layout,
-						"message" => $layout->language('success_at_setting_users_internet_access_time'),
-						"url" => '/ecnet/access']);
+				Logger::log('Successfully activated user internet access for user #'.print_r($request->account, true).'!', null, $newTime, 'ecnet/access');		
+				$layout = $this->getEcnetLayout();
+				$layout->errors()->add('success_activate', $layout->language('success_at_setting_users_internet_access_time'));
+				return view('ecnet.ecnet', ["layout" => $layout,
+						"active" => $now->toDateTimeString() < $layout->user()->ecnetUser()->valid(),
+						"users" => $layout->user()->users()]);
 			}catch(\Exception $ex){
-				Logger::warning('Could not activate user internet access for user #'.print_r($request->account, true).'!', null, null, 'ecnet/access');
-				return view('errors.error', ["layout" => $layout,
-											 "message" => $layout->language('error_at_setting_users_internet_access_time'),
-											 "url" => '/ecnet/access']);
+				Logger::warning('Could not activate user internet access for user #'.print_r($request->account, true).'!', null, null, 'ecnet/access');				
+				$layout->errors()->add('activate', $layout->language('error_at_setting_users_internet_access_time'));
+				return view('ecnet.ecnet', ["layout" => $layout,
+						"active" => $now->toDateTimeString() < $layout->user()->ecnetUser()->valid(),
+						"users" => $layout->user()->users()]);
 			}
 		}else{
 			Logger::warning('At ECnet activate user internet. PERMISSIONS NEEDED!', null, null, 'ecnet/access');
@@ -126,8 +137,8 @@ class AccessController extends Controller{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function setMACAddresses(Request $request){
-		$layout = new LayoutData();
-		$layout->setUser(new EcnetData(Session::get('user')->id()));
+		$layout = $this->getEcnetLayout();
+		$now = Carbon::now();
 		$addresses = [];
 
 		for($i = 0; $i < $layout->user()->ecnetUser()->maximumMacSlots(); $i++){
@@ -140,17 +151,34 @@ class AccessController extends Controller{
 		}
 		try{
 			$layout->user()->manageMacAddresses($addresses);
-			Logger::log('MAC addresses was changed for user!', null, null, 'ecnet/setmacs');
-			return view('success.success', ["layout" => $layout,
-					"message" => $layout->language('success_at_updating_mac_addresses'),
-					"url" => '/ecnet/access']);
+			Logger::log('MAC addresses was changed for user!', null, null, 'ecnet/setmacs');			
+			$layout = $this->getEcnetLayout();
+			$layout->errors()->add('success_setmac', $layout->language('success_at_updating_mac_addresses'));
+			return view('ecnet.ecnet', ["layout" => $layout,
+					"active" => $now->toDateTimeString() < $layout->user()->ecnetUser()->valid(),
+					"users" => $layout->user()->users()]);
 		}catch(\Exception $ex){
-			Logger::warning('Could not set the MAC addresses for user #'.print_r($layout->user()->user()->id(), true).'!', null, null, 'ecnet/setmacs');
-			return view('errors.error', ["layout" => $layout,
-					"message" => $layout->language('error_at_setting_mac_addresses'),
-					"url" => '/ecnet/access']);
+			Logger::warning('Could not set the MAC addresses for user #'.print_r($layout->user()->user()->id(), true).'!', null, null, 'ecnet/setmacs');			
+			$layout->errors()->add('setmac', $layout->language('error_at_setting_mac_addresses'));
+			return view('ecnet.ecnet', ["layout" => $layout,
+					"active" => $now->toDateTimeString() < $layout->user()->ecnetUser()->valid(),
+					"users" => $layout->user()->users()]);
 		}
 	}
 	
 // PRIVATE FUNCTIONS
+	/** Function name: getEcnetLayout
+	 *
+	 * This function returns a layout data with
+	 * the set ECnet user.
+	 *
+	 * @return LayoutData the layout with ECnet user set
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	private function getEcnetLayout(){
+		$layout = new LayoutData();
+		$layout->setUser(new EcnetData(Session::get('user')->id()));
+		return $layout;
+	}
 }
