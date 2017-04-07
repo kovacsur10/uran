@@ -191,7 +191,7 @@ class P_User{
 			$examFilesData = DB::table('language_exam_files')
 				->where('examid', '=', $exam->id)
 				->pluck('image');
-			$exams[] = new LanguageExam($exam->id, $exam->language, $exam->resolved, $exam->level, $examFilesData);
+			$exams[] = new LanguageExam($exam->id, $exam->language, $exam->level, $exam->resolved, $examFilesData);
 		}
 		return $exams;
 	}
