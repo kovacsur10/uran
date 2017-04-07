@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Facades\Session;
 use App\Classes\Layout\EcnetData;
 use App\Classes\Data\EcnetUser;
 use App\Exceptions\UserNotFoundException;
@@ -651,6 +652,55 @@ class EcnetDataTest extends TestCase
 			$this->fail("Not the expected exception: ".$ex->getMessage());
 		}
 		$this->assertCount(0, EcnetData::getMacSlotOrders());
+	}
+	
+	/** Function name: test_setFilterUsers
+	 *
+	 * This function is testing the setFilterUsers function of the EcnetData model.
+	 *
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	function test_setFilterUsers(){
+		$this->assertFalse(Session::has('ecnet_username_filter'));
+		$this->assertFalse(Session::has('ecnet_name_filter'));
+		EcnetData::setFilterUsers(null, null);
+		$this->assertTrue(Session::has('ecnet_username_filter'));
+		$this->assertTrue(Session::has('ecnet_name_filter'));
+		$this->assertEquals("", Session::get('ecnet_username_filter'));
+		$this->assertEquals("", Session::get('ecnet_name_filter'));
+		
+		Session::flush();
+		
+		$this->assertFalse(Session::has('ecnet_username_filter'));
+		$this->assertFalse(Session::has('ecnet_name_filter'));
+		EcnetData::setFilterUsers("alma", null);
+		$this->assertTrue(Session::has('ecnet_username_filter'));
+		$this->assertTrue(Session::has('ecnet_name_filter'));
+		$this->assertEquals("alma", Session::get('ecnet_username_filter'));
+		$this->assertEquals("", Session::get('ecnet_name_filter'));
+		
+		Session::flush();
+		
+		$this->assertFalse(Session::has('ecnet_username_filter'));
+		$this->assertFalse(Session::has('ecnet_name_filter'));
+		EcnetData::setFilterUsers(null, "hal");
+		$this->assertTrue(Session::has('ecnet_username_filter'));
+		$this->assertTrue(Session::has('ecnet_name_filter'));
+		$this->assertEquals("", Session::get('ecnet_username_filter'));
+		$this->assertEquals("hal", Session::get('ecnet_name_filter'));
+		
+		Session::flush();
+		
+		$this->assertFalse(Session::has('ecnet_username_filter'));
+		$this->assertFalse(Session::has('ecnet_name_filter'));
+		EcnetData::setFilterUsers("alma", "hal");
+		$this->assertTrue(Session::has('ecnet_username_filter'));
+		$this->assertTrue(Session::has('ecnet_name_filter'));
+		$this->assertEquals("alma", Session::get('ecnet_username_filter'));
+		$this->assertEquals("hal", Session::get('ecnet_name_filter'));
+		
 	}
 }
 	

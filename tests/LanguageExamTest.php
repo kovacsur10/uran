@@ -25,32 +25,32 @@ class LanguageExamTest extends TestCase
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	function test_language_exam(){
-		$languageExam = new LanguageExam(1, "spanyol");
+		$languageExam = new LanguageExam(1, "spanyol", "B2");
 		$this->assertEquals(1, $languageExam->id());
 		$this->assertEquals("spanyol", $languageExam->language());
 		$this->assertFalse($languageExam->resolved());
-		$this->assertNull($languageExam->level());
+		$this->assertEquals("B2", $languageExam->level());
 		$this->assertCount(0, $languageExam->pictures());
 		
-		$languageExam = new LanguageExam(200, "spanyol", false, "C2", ["halacska"]);
+		$languageExam = new LanguageExam(200, "spanyol", "C2", false, ["halacska"]);
 		$this->assertEquals(200, $languageExam->id());
 		$this->assertEquals("spanyol", $languageExam->language());
 		$this->assertFalse($languageExam->resolved());
 		$this->assertEquals("C2", $languageExam->level());
 		$this->assertEquals(["halacska"], $languageExam->pictures());
 		
-		$languageExam = new LanguageExam(12, "spanyol", true, "B1", ["almafa/a/kertben", "hal"]);
+		$languageExam = new LanguageExam(12, "spanyol", "B1", true, ["almafa/a/kertben", "hal"]);
 		$this->assertEquals(12, $languageExam->id());
 		$this->assertEquals("spanyol", $languageExam->language());
 		$this->assertTrue($languageExam->resolved());
 		$this->assertEquals("B1", $languageExam->level());
 		$this->assertEquals(["almafa/a/kertben", "hal"], $languageExam->pictures());
 		
-		$languageExam = new LanguageExam("10", "spanyol", true, null, []);
+		$languageExam = new LanguageExam("10", "spanyol", "A1", true, []);
 		$this->assertEquals(10, $languageExam->id());
 		$this->assertEquals("spanyol", $languageExam->language());
 		$this->assertTrue($languageExam->resolved());
-		$this->assertNull($languageExam->level());
+		$this->assertEquals("A1", $languageExam->level());
 		$this->assertCount(0, $languageExam->pictures());
 	}
 

@@ -28,7 +28,7 @@ class PersonalDataTest extends TestCase
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	function test_personal_data(){
-		$user = new PersonalData("hq574o", "Budapest", "1992-02-20", "anyuka", "HS", "2012", "2015", [new Faculty(1, "asd")], [new Workshop(2, "qwe")], [new LanguageExam(1, 'spanyol'), new LanguageExam(2, 'angol', true, '/afs/elte.hu/itt_van.jpg')]);
+		$user = new PersonalData("hq574o", "Budapest", "1992-02-20", "anyuka", "HS", "2012", "2015", [new Faculty(1, "asd")], [new Workshop(2, "qwe")], [new LanguageExam(1, 'spanyol', "B2"), new LanguageExam(2, 'angol', "C1", true, ['/afs/elte.hu/itt_van.jpg'])]);
 		$this->assertEquals("hq574o", $user->neptun());
 		$this->assertEquals("Budapest", $user->cityOfBirth());
 		$this->assertEquals("1992-02-20", $user->dateOfBirth());

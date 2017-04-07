@@ -141,7 +141,7 @@ class EcnetData extends User{
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public static function setFilterUsers($username, $name){ //TODO: test
+	public static function setFilterUsers($username, $name){
 		if($username === null){
 			Session::put('ecnet_username_filter', '');
 		}else{

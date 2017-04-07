@@ -25,13 +25,13 @@ class LanguageExam{
 	 *
 	 * @param string $id - language exam require identifier
 	 * @param string $language - language name
-	 * @param bool $resolved - the user resolved this requirement or not
 	 * @param string $level - level of the language exam
+	 * @param bool $resolved - the user resolved this requirement or not
 	 * @param arrayOfString $picture - the path of the language exam picture
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function __construct(int $id, string $language, bool $resolved = false, string $level = null, $pictures = null){
+	public function __construct(int $id, string $language, string $level, bool $resolved = false, $pictures = null){
 		if($pictures === null){
 			$pictures = [];
 		}
@@ -39,6 +39,7 @@ class LanguageExam{
 		$this->language = $language;
 		$this->resolved = $resolved;
 		$this->pictures = $pictures;
+		$this->level = $level;
 	}
 
 	/** Function name: id

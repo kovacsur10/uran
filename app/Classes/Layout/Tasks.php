@@ -208,7 +208,7 @@ class Tasks extends Pageable{
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function setFilterTasks($status, $caption, $priority, $myTasks, $hide_closed){
+	public function setFilterTasks($status, $caption, $priority, $myTasks, $hide_closed){ //TODO: test
 		if($caption !== null && $caption !== ""){
 			Session::put('tasks_caption_filter', $caption);
 		}
