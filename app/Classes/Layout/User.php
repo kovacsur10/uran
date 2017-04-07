@@ -218,7 +218,7 @@ class User extends Pageable{
 			$user = P_User::getUserByUsername($username);
 		}catch(\Exception $ex){
 			$user = null;
-			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Select from table 'users' was not successful! ".$ex->getMessage());
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 		}
 		if($user === null){
 			throw new UserNotFoundException();
