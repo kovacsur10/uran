@@ -6,6 +6,7 @@ use App\Classes\Data\StatusCode;
 use App\Classes\Data\PersonalData;
 use App\Classes\Data\Faculty;
 use App\Classes\Data\Workshop;
+use App\Classes\Data\LanguageExam;
 
 /** Class name: UserTest
  *
@@ -53,7 +54,14 @@ class UserTest extends TestCase
 		$this->assertEquals("0036123456", $user->phoneNumber());
 		$this->assertFalse($user->subscribedToAlumniList());
 		
-		$user = new User(1, "user", "username", "pazzword", "e@mail", "2016 date", new StatusCode(1, "stat"), null, "hu_HU", true, true, "2010-12-11 23:11:23", "thisistheregcode", "Hungary", "Veszprém1", "Veszprém2", "Budapest út 11-13.", "8200", null, new PersonalData("123456", "Budapest", "2007-01-01", "anyuka", "HS", "2013", "2015", [new Faculty(1, "asd")], [new Workshop(2, "qwe")]), "0036123456", false);
+		$this->assertFalse($user->hasLanguageExam(null));
+		$this->assertFalse($user->hasLanguageExam(2));
+		$this->assertFalse($user->hasLanguageExam("2"));
+		$this->assertNull($user->getLanguageExam(null));
+		$this->assertNull($user->getLanguageExam(2));
+		$this->assertNull($user->getLanguageExam("2"));
+		
+		$user = new User(1, "user", "username", "pazzword", "e@mail", "2016 date", new StatusCode(1, "stat"), null, "hu_HU", true, true, "2010-12-11 23:11:23", "thisistheregcode", "Hungary", "Veszprém1", "Veszprém2", "Budapest út 11-13.", "8200", null, new PersonalData("123456", "Budapest", "2007-01-01", "anyuka", "HS", "2013", "2015", [new Faculty(1, "asd")], [new Workshop(2, "qwe")], [new LanguageExam(0, "angol", "B2"), new LanguageExam(10, "angol", "B2"), new LanguageExam(2, "német", "C1")]), "0036123456", false);
 		$this->assertEquals(1, $user->id());
 		$this->assertEquals("user", $user->name());
 		$this->assertEquals("username", $user->username());
@@ -73,9 +81,21 @@ class UserTest extends TestCase
 		$this->assertEquals("Budapest út 11-13.", $user->address());
 		$this->assertEquals("8200", $user->postalCode());
 		$this->assertNull($user->reason());
-		$this->assertEquals(new PersonalData("123456", "Budapest", "2007-01-01", "anyuka", "HS", "2013", "2015", [new Faculty(1, "asd")], [new Workshop(2, "qwe")]), $user->collegistData());
+		$this->assertEquals(new PersonalData("123456", "Budapest", "2007-01-01", "anyuka", "HS", "2013", "2015", [new Faculty(1, "asd")], [new Workshop(2, "qwe")], [new LanguageExam(0, "angol", "B2"), new LanguageExam(10, "angol", "B2"), new LanguageExam(2, "német", "C1")]), $user->collegistData());
 		$this->assertEquals("0036123456", $user->phoneNumber());
 		$this->assertTrue($user->subscribedToAlumniList());
+		
+		$this->assertFalse($user->hasLanguageExam(null));
+		$this->assertTrue($user->hasLanguageExam(10));
+		$this->assertFalse($user->hasLanguageExam("10"));
+		$this->assertFalse($user->hasLanguageExam(4));
+		$this->assertFalse($user->hasLanguageExam("4"));
+		
+		$this->assertNull($user->getLanguageExam(null));
+		$this->assertEquals(new LanguageExam(10, "angol", "B2"), $user->getLanguageExam(10));
+		$this->assertNull($user->getLanguageExam("10"));
+		$this->assertNull($user->getLanguageExam(4));
+		$this->assertNull($user->getLanguageExam("4"));
 	}
 
 	/** Function name: test_permission_attr

@@ -31,7 +31,7 @@ class P_User{
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	static function saveSession($userId, $dataToSave){ //TODO: test
+	static function saveSession($userId, $dataToSave){
 		if($userId !== null && $dataToSave !== null){
 			Database::transaction(function() use($userId, $dataToSave){
 				DB::table('saved_session_data')
@@ -58,7 +58,7 @@ class P_User{
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	static function loadSession($userId){ //TODO: test
+	static function loadSession($userId){
 		if($userId !== null){
 			$retData = [];
 			$data = DB::table('saved_session_data')
@@ -179,7 +179,7 @@ class P_User{
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	static function getUserLanguageExams($userId){ //TODO: test
+	static function getUserLanguageExams($userId){
 		$examsData = DB::table('language_exams')
 			->join('fonal_languages', 'fonal_languages.id', '=', 'language_exams.language')
 			->join('language_exam_levels', 'language_exam_levels.id', '=', 'language_exams.level')
@@ -205,7 +205,7 @@ class P_User{
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	static function addLanguageExamImage(int $languageExamId, string $imageLocationPath){ //TODO: test
+	static function addLanguageExamImage(int $languageExamId, string $imageLocationPath){
 		DB::table('language_exam_files')
 			->insert([
 					'examid' => $languageExamId,

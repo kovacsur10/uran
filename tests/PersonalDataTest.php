@@ -38,6 +38,7 @@ class PersonalDataTest extends TestCase
 		$this->assertEquals("2015", $user->admissionYear());
 		$this->assertEquals([new Faculty(1, "asd")], $user->faculties());
 		$this->assertEquals([new Workshop(2, "qwe")], $user->workshops());
+		$this->assertEquals([new LanguageExam(1, 'spanyol', "B2"), new LanguageExam(2, 'angol', "C1", true, ['/afs/elte.hu/itt_van.jpg'])], $user->languageExams());
 	}
 
 	/** Function name: test_personal_data_attr

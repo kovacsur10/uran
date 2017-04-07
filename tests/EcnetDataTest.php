@@ -654,6 +654,49 @@ class EcnetDataTest extends TestCase
 		$this->assertCount(0, EcnetData::getMacSlotOrders());
 	}
 	
+	/** Function name: test_filterUsers
+	 *
+	 * This function is testing the filterUsers function of the EcnetData model.
+	 *
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	public function filterUsers(){
+		$user = new EcnetData(0);
+		$this->assertCount(8, $user->ecnetUsers(0,1000));
+		$this->assertNull($user->getNameFilter());
+		$this->assertNull($user->getUsernameFilter());
+		
+		Session::flush();
+		$this->filterUsers();
+		$this->assertCount(8, $user->ecnetUsers(0,1000));
+		$this->assertNull($user->getNameFilter());
+		$this->assertNull($user->getUsernameFilter());
+		
+		Session::flush();
+		Session::put('ecnet_username_filter', 'a');
+		$this->filterUsers();
+		$this->assertCount(8, $user->ecnetUsers(0,1000));
+		$this->assertNull($user->getNameFilter());
+		$this->assertNull($user->getUsernameFilter());
+		
+		Session::flush();
+		Session::put('ecnet_name_filter', 'a');
+		$this->filterUsers();
+		$this->assertCount(8, $user->ecnetUsers(0,1000));
+		$this->assertNull($user->getNameFilter());
+		$this->assertNull($user->getUsernameFilter());
+		
+		Session::flush();
+		Session::put('ecnet_username_filter', 'a');
+		Session::put('ecnet_name_filter', '');
+		$this->filterUsers();
+		$this->assertCount(3, $user->ecnetUsers(0,1000));
+		$this->assertEquals('ecnet_name_filter', $user->getNameFilter());
+		$this->assertEquals('ecnet_name_filter', $user->getUsernameFilter());
+	}
+	
 	/** Function name: test_setFilterUsers
 	 *
 	 * This function is testing the setFilterUsers function of the EcnetData model.
@@ -700,7 +743,97 @@ class EcnetDataTest extends TestCase
 		$this->assertTrue(Session::has('ecnet_name_filter'));
 		$this->assertEquals("alma", Session::get('ecnet_username_filter'));
 		$this->assertEquals("hal", Session::get('ecnet_name_filter'));
+	}
+	
+	/** Function name: test_resetFilterUsers
+	 *
+	 * This function is testing the resetFilterUsers function of the EcnetData model.
+	 *
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	function test_resetFilterUsers(){
+		Session::flush();
 		
+		$this->assertFalse(Session::has('ecnet_username_filter'));
+		$this->assertFalse(Session::has('ecnet_name_filter'));
+		EcnetData::resetFilterUsers();
+		$this->assertFalse(Session::has('ecnet_username_filter'));
+		$this->assertFalse(Session::has('ecnet_name_filter'));
+		
+		Session::flush();
+		Session::put('ecnet_username_filter', 'alma');
+		Session::put('ecnet_name_filter', 'alma2');
+		Session::put('no_key_like_this', 'alma2');
+		
+		$this->assertTrue(Session::has('ecnet_username_filter'));
+		$this->assertTrue(Session::has('ecnet_name_filter'));
+		$this->assertTrue(Session::has('no_key_like_this'));
+		EcnetData::resetFilterUsers();
+		$this->assertFalse(Session::has('ecnet_username_filter'));
+		$this->assertFalse(Session::has('ecnet_name_filter'));
+		$this->assertTrue(Session::has('no_key_like_this'));
+	}
+	
+	/** Function name: test_checkUserCount
+	 *
+	 * This function is testing the checkUserCount function of the EcnetData model.
+	 *
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	function test_checkUserCount(){
+		Session::flush();
+		$this->assertFalse(Session::has('ecnet_admin_paging'));
+		$this->assertEquals(50, EcnetData::checkUserCount(null));
+		
+		Session::flush();
+		Session::put('ecnet_admin_paging', 20);
+		$this->assertTrue(Session::has('ecnet_admin_paging'));
+		$this->assertEquals(20, EcnetData::checkUserCount(null));
+		
+		Session::flush();
+		$this->assertFalse(Session::has('ecnet_admin_paging'));
+		$this->assertEquals(50, EcnetData::checkUserCount(0));
+		
+		Session::flush();
+		$this->assertFalse(Session::has('ecnet_admin_paging'));
+		$this->assertEquals(50, EcnetData::checkUserCount(501));
+		
+		Session::flush();
+		Session::put('ecnet_admin_paging', 20);
+		$this->assertTrue(Session::has('ecnet_admin_paging'));
+		$this->assertEquals(50, EcnetData::checkUserCount(0));
+		
+		Session::flush();
+		$this->assertFalse(Session::has('ecnet_admin_paging'));
+		$this->assertEquals(40, EcnetData::checkUserCount(40));
+		
+		Session::flush();
+		Session::put('ecnet_admin_paging', 20);
+		$this->assertTrue(Session::has('ecnet_admin_paging'));
+		$this->assertEquals(60, EcnetData::checkUserCount(60));
+	}
+	
+	/** Function name: test_getSessionData
+	 *
+	 * This function is testing the getSessionData function of the EcnetData model.
+	 *
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	function test_getSessionData(){
+		Session::flush();
+		$this->assertCount(0, EcnetData::getSessionData());
+		
+		Session::flush();
+		Session::put('ecnet_username_filter', 20);
+		Session::put('ecnet_name_filter', 15);
+		Session::put('no_key_like_this', 40);
+		$this->assertEquals(['ecnet_username_filter' => 20, 'ecnet_name_filter' => 15], EcnetData::getSessionData());
 	}
 }
 	

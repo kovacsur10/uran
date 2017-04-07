@@ -65,6 +65,54 @@ class UserModelTest extends TestCase
 		}
 	}
 	
+	/** Function name: test_isIntern
+	 *
+	 * This function is testing the isIntern function of the User model.
+	 *
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	function test_isIntern(){
+		$user = new User(25);
+		$this->assertTrue($user->isIntern());
+		
+		$user = new User(0);
+		$this->assertFalse($user->isIntern());
+	}
+	
+	/** Function name: test_isLivingIn
+	 *
+	 * This function is testing the isLivingIn function of the User model.
+	 *
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	function test_isLivingIn(){
+		$user = new User(25);
+		$this->assertTrue($user->isLivingIn());
+		
+		$user = new User(0);
+		$this->assertFalse($user->isLivingIn());
+	}
+	
+	/** Function name: test_isCollegist
+	 *
+	 * This function is testing the isCollegist function of the User model.
+	 *
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	function test_isCollegist(){
+		$user = new User(1);
+		$this->assertTrue($user->isCollegist());
+		
+		$user = new User(0);
+		$this->assertFalse($user->isCollegist());
+	}
+	
 	/** Function name: test_notifications
 	 *
 	 * This function is testing the notifications function of the User model.

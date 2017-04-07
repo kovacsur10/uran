@@ -148,7 +148,7 @@ class PersonalData{
 	 *
 	 * This is the getter for languageExams.
 	 *
-	 * @return Workshop - The user's language exam requirements.
+	 * @return LanguageExam - The user's language exam requirements.
 	 */
 	public function languageExams(){
 		return $this->languageExams;

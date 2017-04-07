@@ -118,7 +118,7 @@ class EcnetData extends User{
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function filterUsers(){ //TODO: test modification
+	public function filterUsers(){
 		if(Session::has('ecnet_username_filter') && Session::has('ecnet_name_filter')){
 			$username = Session::get('ecnet_username_filter');
 			$name = Session::get('ecnet_name_filter');
@@ -161,7 +161,7 @@ class EcnetData extends User{
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public static function resetFilterUsers(){ //TODO: test
+	public static function resetFilterUsers(){
 		Session::forget('ecnet_username_filter');
 		Session::forget('ecnet_name_filter');
 	}
@@ -593,7 +593,7 @@ class EcnetData extends User{
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function checkUserCount($count){ //TODO: test
+	public static function checkUserCount($count){
 		if(($count === null && !Session::has('ecnet_admin_paging')) || ($count !== null && ($count < 1 || 500 < $count))){
 			$count = 50;
 		}else if($count === null){
@@ -612,7 +612,7 @@ class EcnetData extends User{
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public static function getSessionData(){ //TODO: test
+	public static function getSessionData(){
 		$sessionData = [];
 		if(Session::has('ecnet_username_filter')){
 			$sessionData['ecnet_username_filter'] = Session::get('ecnet_username_filter');

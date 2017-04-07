@@ -46,9 +46,9 @@ class LanguageExam{
 	 *
 	 * This is the getter for id.
 	 *
-	 * @return string - The identifier of the language exam requirement.
+	 * @return int - The identifier of the language exam requirement.
 	 */
-	public function id() : string{
+	public function id() : int{
 		return $this->id;
 	}
 
