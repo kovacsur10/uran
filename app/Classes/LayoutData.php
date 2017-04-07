@@ -250,7 +250,7 @@ class LayoutData{
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function formatDate($date, $onlyDate = false){ //TODO: test modification if needed
+	public function formatDate($date, $onlyDate = false){
 		$returnedDateTime = "";
 		if($this->language === 'hu_HU'){
 			if(strstr($date, ". ") !== FALSE){
@@ -290,7 +290,11 @@ class LayoutData{
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public static function saveSession(){ //TODO: test
+	public static function saveSession(){
+		if(Auth::user() === null){
+			return;
+		}
+		
 		$saving = [];
 		$tmp = EcnetData::getSessionData();
 		$saving = array_merge($saving, $tmp);
@@ -307,7 +311,10 @@ class LayoutData{
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public static function loadSession(){ //TODO: test
+	public static function loadSession(){
+		if(Auth::user() === null){
+			return;
+		}
 		try{
 			$sessionData = P_User::loadSession(Auth::user()->id());
 			foreach($sessionData as $key => $value){

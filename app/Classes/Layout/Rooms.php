@@ -451,7 +451,7 @@ class Rooms{
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public static function checkLevel($level){ //TODO: test
+	public static function checkLevel($level){
 		if($level === null){
 			if(Session::has('rooms_show_level')){
 				$level = Session::get('rooms_show_level');
@@ -475,7 +475,7 @@ class Rooms{
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public static function getSessionData(){ //TODO: test
+	public static function getSessionData(){
 		$sessionData = [];
 		if(Session::has('rooms_show_level')){
 			$sessionData['rooms_show_level'] = Session::get('rooms_show_level');

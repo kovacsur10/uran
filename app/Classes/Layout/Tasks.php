@@ -156,10 +156,10 @@ class Tasks extends Pageable{
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function filterTasks(){ //TODO: modify test
+	public function filterTasks(){
 		$layout = new LayoutData();
 		
-		if(Session::has('tasks_status_filter') || Session::has('tasks_caption_filter') || Session::has('tasks_priority_filter') || 	Session::has('tasks_hide_closed_filter') || Session::has('tasks_mytasks_filter')){
+		if(Session::has('tasks_status_filter') || Session::has('tasks_caption_filter') || Session::has('tasks_priority_filter') || Session::has('tasks_hide_closed_filter') || Session::has('tasks_mytasks_filter')){
 			$statusId = Session::get('tasks_status_filter');
 			$caption = Session::get('tasks_caption_filter');
 			$priority = Session::get('tasks_priority_filter');
@@ -208,7 +208,7 @@ class Tasks extends Pageable{
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function setFilterTasks($status, $caption, $priority, $myTasks, $hide_closed){ //TODO: test
+	public static function setFilterTasks($status, $caption, $priority, $myTasks, $hide_closed){
 		if($caption !== null && $caption !== ""){
 			Session::put('tasks_caption_filter', $caption);
 		}
@@ -218,15 +218,15 @@ class Tasks extends Pageable{
 		if($priority !== null && $priority !== ""){
 			Session::put('tasks_priority_filter', $priority);
 		}
-		if($myTasks === null){
+		if($myTasks === null || !is_bool($myTasks)){
 			Session::put('tasks_mytasks_filter', false);
 		}else{
-			Session::put('tasks_mytasks_filter', true);
+			Session::put('tasks_mytasks_filter', $myTasks);
 		}
-		if($hide_closed === null){
+		if($hide_closed === null || !is_bool($hide_closed)){
 			Session::put('tasks_hide_closed_filter', false);
 		}else{
-			Session::put('tasks_hide_closed_filter', true);
+			Session::put('tasks_hide_closed_filter', $hide_closed);
 		}
 	}
 	
@@ -239,7 +239,7 @@ class Tasks extends Pageable{
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function resetFilterTasks($hardReset = true){ //TODO: test
+	public function resetFilterTasks($hardReset = true){
 		$this->filters = [
 				'priority'		=> null,
 				'status' 		=> null,
@@ -604,7 +604,7 @@ class Tasks extends Pageable{
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function checkTaskCount($count){ //TODO: test
+	public static function checkTaskCount($count){
 		if(($count === null && !Session::has('tasks_paging')) || ($count !== null && ($count < 1 || 100 < $count || !is_numeric($count)))){
 			$count = 10;
 		}else if($count === null){
@@ -623,7 +623,7 @@ class Tasks extends Pageable{
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public static function getSessionData(){ //TODO: test
+	public static function getSessionData(){
 		$sessionData = [];
 		if(Session::has('tasks_status_filter')){
 			$sessionData['tasks_status_filter'] = Session::get('tasks_status_filter');

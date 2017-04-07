@@ -97,6 +97,7 @@ class TasksTest extends TestCase
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	function test_filterTasks(){
+		Session::flush();
 		$tasks = new Tasks();
 		
 		$this->assertNull($tasks->getFilter('priority'));
@@ -106,7 +107,13 @@ class TasksTest extends TestCase
 		$this->assertFalse($tasks->getFilter('hideClosed'));
 		$this->assertCount(37, $tasks->get());
 		
-		$tasks->filterTasks(null, null, null, null, null);
+		Session::flush();
+		Session::put('tasks_status_filter', null);
+		Session::put('tasks_caption_filter', null);
+		Session::put('tasks_priority_filter', null);
+		Session::put('tasks_hide_closed_filter', null);
+		Session::put('tasks_mytasks_filter', null);
+		$tasks->filterTasks();
 		$this->assertNull($tasks->getFilter('priority'));
 		$this->assertNull($tasks->getFilter('status'));
 		$this->assertEquals('',$tasks->getFilter('caption'));
@@ -115,7 +122,13 @@ class TasksTest extends TestCase
 		$this->assertCount(37, $tasks->get());
 		
 		//priority
-		$tasks->filterTasks(null, '', 3, null, null);
+		Session::flush();
+		Session::put('tasks_status_filter', null);
+		Session::put('tasks_caption_filter', '');
+		Session::put('tasks_priority_filter', 3);
+		Session::put('tasks_hide_closed_filter', null);
+		Session::put('tasks_mytasks_filter', null);
+		$tasks->filterTasks();
 		$this->assertEquals(3, $tasks->getFilter('priority'));
 		$this->assertNull($tasks->getFilter('status'));
 		$this->assertEquals('',$tasks->getFilter('caption'));
@@ -124,7 +137,13 @@ class TasksTest extends TestCase
 		$this->assertCount(10, $tasks->get());
 		
 		//closed
-		$tasks->filterTasks(null, '', null, null, true);
+		Session::flush();
+		Session::put('tasks_status_filter', null);
+		Session::put('tasks_caption_filter', '');
+		Session::put('tasks_priority_filter', null);
+		Session::put('tasks_hide_closed_filter', true);
+		Session::put('tasks_mytasks_filter', null);
+		$tasks->filterTasks();
 		$this->assertNull($tasks->getFilter('priority'));
 		$this->assertNull($tasks->getFilter('status'));
 		$this->assertEquals('',$tasks->getFilter('caption'));
@@ -133,7 +152,13 @@ class TasksTest extends TestCase
 		$this->assertCount(12, $tasks->get());
 		
 		//combined
-		$tasks->filterTasks(null, '', 3, null, true);
+		Session::flush();
+		Session::put('tasks_status_filter', null);
+		Session::put('tasks_caption_filter', '');
+		Session::put('tasks_priority_filter', 3);
+		Session::put('tasks_hide_closed_filter', true);
+		Session::put('tasks_mytasks_filter', null);
+		$tasks->filterTasks();
 		$this->assertEquals(3, $tasks->getFilter('priority'));
 		$this->assertNull($tasks->getFilter('status'));
 		$this->assertEquals('',$tasks->getFilter('caption'));
@@ -142,7 +167,13 @@ class TasksTest extends TestCase
 		$this->assertCount(4, $tasks->get());
 		
 		//status
-		$tasks->filterTasks(1, '', null, null, null);
+		Session::flush();
+		Session::put('tasks_status_filter', 1);
+		Session::put('tasks_caption_filter', '');
+		Session::put('tasks_priority_filter', null);
+		Session::put('tasks_hide_closed_filter', null);
+		Session::put('tasks_mytasks_filter', null);
+		$tasks->filterTasks();
 		$this->assertNull($tasks->getFilter('priority'));
 		$this->assertEquals(1, $tasks->getFilter('status'));
 		$this->assertEquals('',$tasks->getFilter('caption'));
@@ -151,7 +182,13 @@ class TasksTest extends TestCase
 		$this->assertCount(3, $tasks->get());
 		
 		//caption
-		$tasks->filterTasks(null, 'Task', null, null, null);
+		Session::flush();
+		Session::put('tasks_status_filter', null);
+		Session::put('tasks_caption_filter', 'Task');
+		Session::put('tasks_priority_filter', null);
+		Session::put('tasks_hide_closed_filter', null);
+		Session::put('tasks_mytasks_filter', null);
+		$tasks->filterTasks();
 		$this->assertNull($tasks->getFilter('priority'));
 		$this->assertNull($tasks->getFilter('status'));
 		$this->assertEquals('Task',$tasks->getFilter('caption'));
@@ -160,15 +197,209 @@ class TasksTest extends TestCase
 		$this->assertCount(3, $tasks->get());
 		
 		//my task
+		Session::flush();
 		Session::put('user', \App\Classes\Layout\User::getUserData(1));
-		$tasks->filterTasks(null, '', null, true, null);
+		Session::put('tasks_status_filter', null);
+		Session::put('tasks_caption_filter', '');
+		Session::put('tasks_priority_filter', null);
+		Session::put('tasks_hide_closed_filter', null);
+		Session::put('tasks_mytasks_filter', true);
+		$tasks->filterTasks();
 		$this->assertNull($tasks->getFilter('priority'));
 		$this->assertNull($tasks->getFilter('status'));
 		$this->assertEquals('',$tasks->getFilter('caption'));
 		$this->assertTrue($tasks->getFilter('myTasks'));
 		$this->assertFalse($tasks->getFilter('hideClosed'));
 		$this->assertCount(27, $tasks->get());
-		Session::forget('user');
+		Session::flush();
+	}
+	
+	/** Function name: test_setFilterTasks
+	 *
+	 * This function is testing the setFilterTasks function of the Tasks model.
+	 *
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	function test_setFilterTasks(){
+		Session::flush();
+		$this->assertFalse(Session::has('tasks_caption_filter'));
+		$this->assertFalse(Session::has('tasks_status_filter'));
+		$this->assertFalse(Session::has('tasks_priority_filter'));
+		$this->assertFalse(Session::has('tasks_mytasks_filter'));
+		$this->assertFalse(Session::has('tasks_hide_closed_filter'));
+		Tasks::setFilterTasks(null, null, null, null, null);
+		$this->assertFalse(Session::has('tasks_caption_filter'));
+		$this->assertFalse(Session::has('tasks_status_filter'));
+		$this->assertFalse(Session::has('tasks_priority_filter'));
+		$this->assertTrue(Session::has('tasks_mytasks_filter'));
+		$this->assertTrue(Session::has('tasks_hide_closed_filter'));
+		$this->assertFalse(Session::get('tasks_mytasks_filter'));
+		$this->assertFalse(Session::get('tasks_hide_closed_filter'));
+		
+		Session::flush();
+		
+		$this->assertFalse(Session::has('tasks_caption_filter'));
+		$this->assertFalse(Session::has('tasks_status_filter'));
+		$this->assertFalse(Session::has('tasks_priority_filter'));
+		$this->assertFalse(Session::has('tasks_mytasks_filter'));
+		$this->assertFalse(Session::has('tasks_hide_closed_filter'));
+		Tasks::setFilterTasks("", "", "", "", "");
+		$this->assertFalse(Session::has('tasks_caption_filter'));
+		$this->assertFalse(Session::has('tasks_status_filter'));
+		$this->assertFalse(Session::has('tasks_priority_filter'));
+		$this->assertTrue(Session::has('tasks_mytasks_filter'));
+		$this->assertTrue(Session::has('tasks_hide_closed_filter'));
+		$this->assertFalse(Session::get('tasks_mytasks_filter'));
+		$this->assertFalse(Session::get('tasks_hide_closed_filter'));
+		
+		Session::flush();
+		
+		$this->assertFalse(Session::has('tasks_caption_filter'));
+		$this->assertFalse(Session::has('tasks_status_filter'));
+		$this->assertFalse(Session::has('tasks_priority_filter'));
+		$this->assertFalse(Session::has('tasks_mytasks_filter'));
+		$this->assertFalse(Session::has('tasks_hide_closed_filter'));
+		Tasks::setFilterTasks("1", "alma", "4", false, true);
+		$this->assertTrue(Session::has('tasks_caption_filter'));
+		$this->assertTrue(Session::has('tasks_status_filter'));
+		$this->assertTrue(Session::has('tasks_priority_filter'));
+		$this->assertTrue(Session::has('tasks_mytasks_filter'));
+		$this->assertTrue(Session::has('tasks_hide_closed_filter'));
+		$this->assertEquals("1", Session::get('tasks_status_filter'));
+		$this->assertEquals("alma", Session::get('tasks_caption_filter'));
+		$this->assertEquals("4", Session::get('tasks_priority_filter'));
+		$this->assertFalse(Session::get('tasks_mytasks_filter'));
+		$this->assertTrue(Session::get('tasks_hide_closed_filter'));
+		
+		Session::flush();		
+	}
+	
+	/** Function name: test_resetFilterTasks
+	 *
+	 * This function is testing the resetFilterTasks function of the Tasks model.
+	 *
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	function test_resetFilterTasks(){
+		Session::flush();
+		$task = new Tasks();
+		$this->assertCount(37, $task->tasksToPages());
+		
+		$this->assertFalse(Session::has('tasks_status_filter'));
+		$this->assertFalse(Session::has('tasks_caption_filter'));
+		$this->assertFalse(Session::has('tasks_priority_filter'));
+		$this->assertFalse(Session::has('tasks_mytasks_filter'));
+		$this->assertFalse(Session::has('tasks_hide_closed_filter'));
+		$this->assertNull($task->getFilter('priority'));
+		$this->assertNull($task->getFilter('status'));
+		$this->assertEquals('', $task->getFilter('caption'));
+		$this->assertFalse($task->getFilter('myTasks'));
+		$this->assertFalse($task->getFilter('hideClosed'));
+		$task->resetFilterTasks(false);
+		$this->assertFalse(Session::has('tasks_status_filter'));
+		$this->assertFalse(Session::has('tasks_caption_filter'));
+		$this->assertFalse(Session::has('tasks_priority_filter'));
+		$this->assertFalse(Session::has('tasks_mytasks_filter'));
+		$this->assertFalse(Session::has('tasks_hide_closed_filter'));
+		$this->assertNull($task->getFilter('priority'));
+		$this->assertNull($task->getFilter('status'));
+		$this->assertEquals('', $task->getFilter('caption'));
+		$this->assertFalse($task->getFilter('myTasks'));
+		$this->assertFalse($task->getFilter('hideClosed'));
+		$this->assertCount(37, $task->tasksToPages());
+		
+		Session::flush();
+		$task = new Tasks();
+		$this->assertCount(37, $task->tasksToPages());
+		$this->assertFalse(Session::has('tasks_status_filter'));
+		$this->assertFalse(Session::has('tasks_caption_filter'));
+		$this->assertFalse(Session::has('tasks_priority_filter'));
+		$this->assertFalse(Session::has('tasks_mytasks_filter'));
+		$this->assertFalse(Session::has('tasks_hide_closed_filter'));
+		$this->assertNull($task->getFilter('priority'));
+		$this->assertNull($task->getFilter('status'));
+		$this->assertEquals('', $task->getFilter('caption'));
+		$this->assertFalse($task->getFilter('myTasks'));
+		$this->assertFalse($task->getFilter('hideClosed'));
+		$task->resetFilterTasks(true);
+		$this->assertFalse(Session::has('tasks_status_filter'));
+		$this->assertFalse(Session::has('tasks_caption_filter'));
+		$this->assertFalse(Session::has('tasks_priority_filter'));
+		$this->assertFalse(Session::has('tasks_mytasks_filter'));
+		$this->assertFalse(Session::has('tasks_hide_closed_filter'));
+		$this->assertNull($task->getFilter('priority'));
+		$this->assertNull($task->getFilter('status'));
+		$this->assertEquals('', $task->getFilter('caption'));
+		$this->assertFalse($task->getFilter('myTasks'));
+		$this->assertFalse($task->getFilter('hideClosed'));
+		$this->assertCount(37, $task->tasksToPages());
+		
+		Session::flush();
+		$task = new Tasks();
+		$this->assertCount(37, $task->tasksToPages());
+		Tasks::setFilterTasks("1", "alma", "4", false, true);
+		$task->filterTasks();
+		Session::flush();
+		Session::put('tasks_status_filter', 'alma');
+		Session::put('tasks_hide_closed_filter', true);
+		$this->assertTrue(Session::has('tasks_status_filter'));
+		$this->assertFalse(Session::has('tasks_caption_filter'));
+		$this->assertFalse(Session::has('tasks_priority_filter'));
+		$this->assertFalse(Session::has('tasks_mytasks_filter'));
+		$this->assertTrue(Session::has('tasks_hide_closed_filter'));
+		$this->assertEquals("4", $task->getFilter('priority'));
+		$this->assertEquals("1", $task->getFilter('status'));
+		$this->assertEquals('alma', $task->getFilter('caption'));
+		$this->assertFalse($task->getFilter('myTasks'));
+		$this->assertTrue($task->getFilter('hideClosed'));
+		$task->resetFilterTasks(false);
+		$this->assertTrue(Session::has('tasks_status_filter'));
+		$this->assertFalse(Session::has('tasks_caption_filter'));
+		$this->assertFalse(Session::has('tasks_priority_filter'));
+		$this->assertFalse(Session::has('tasks_mytasks_filter'));
+		$this->assertTrue(Session::has('tasks_hide_closed_filter'));
+		$this->assertNull($task->getFilter('priority'));
+		$this->assertNull($task->getFilter('status'));
+		$this->assertEquals('', $task->getFilter('caption'));
+		$this->assertFalse($task->getFilter('myTasks'));
+		$this->assertFalse($task->getFilter('hideClosed'));
+		$this->assertCount(37, $task->tasksToPages());
+		
+		Session::flush();
+		$task = new Tasks();
+		$this->assertCount(37, $task->tasksToPages());
+		Tasks::setFilterTasks("1", "alma", "4", false, true);
+		$task->filterTasks();
+		Session::flush();
+		Session::put('tasks_status_filter', 'alma');
+		Session::put('tasks_mytasks_filter', true);
+		$this->assertTrue(Session::has('tasks_status_filter'));
+		$this->assertFalse(Session::has('tasks_caption_filter'));
+		$this->assertFalse(Session::has('tasks_priority_filter'));
+		$this->assertTrue(Session::has('tasks_mytasks_filter'));
+		$this->assertFalse(Session::has('tasks_hide_closed_filter'));
+		$this->assertEquals("4", $task->getFilter('priority'));
+		$this->assertEquals("1", $task->getFilter('status'));
+		$this->assertEquals('alma', $task->getFilter('caption'));
+		$this->assertFalse($task->getFilter('myTasks'));
+		$this->assertTrue($task->getFilter('hideClosed'));
+		$task->resetFilterTasks(true);
+		$this->assertFalse(Session::has('tasks_status_filter'));
+		$this->assertFalse(Session::has('tasks_caption_filter'));
+		$this->assertFalse(Session::has('tasks_priority_filter'));
+		$this->assertFalse(Session::has('tasks_mytasks_filter'));
+		$this->assertFalse(Session::has('tasks_hide_closed_filter'));
+		$this->assertNull($task->getFilter('priority'));
+		$this->assertNull($task->getFilter('status'));
+		$this->assertEquals('', $task->getFilter('caption'));
+		$this->assertFalse($task->getFilter('myTasks'));
+		$this->assertFalse($task->getFilter('hideClosed'));
+		$this->assertCount(37, $task->tasksToPages());
+		Session::flush();
 	}
 	
 	/** Function name: test_tasksToPages
@@ -685,5 +916,65 @@ class TasksTest extends TestCase
 		}
 		$tasks->setTask(10);
 		$this->assertCount(1, $tasks->getComments());
+	}
+	
+	/** Function name: test_getSessionData
+	 *
+	 * This function is testing the getSessionData function of the Tasks model.
+	 *
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	function test_getSessionData(){
+		Session::flush();
+		$this->assertCount(0, Tasks::getSessionData());
+		
+		Session::flush();
+		Session::put('tasks_status_filter', 20);
+		Session::put('tasks_paging', 15);
+		Session::put('no_key_like_this', 40);
+		$this->assertEquals(['tasks_status_filter' => 20, 'tasks_paging' => 15], Tasks::getSessionData());
+	}
+	
+	/** Function name: test_checkTaskCount
+	 *
+	 * This function is testing the checkTaskCount function of the Tasks model.
+	 *
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	function test_checkTaskCount(){
+		Session::flush();
+		$this->assertFalse(Session::has('tasks_paging'));
+		$this->assertEquals(10, Tasks::checkTaskCount(null));
+		
+		Session::flush();
+		Session::put('tasks_paging', 20);
+		$this->assertTrue(Session::has('tasks_paging'));
+		$this->assertEquals(20, Tasks::checkTaskCount(null));
+		
+		Session::flush();
+		$this->assertFalse(Session::has('tasks_paging'));
+		$this->assertEquals(10, Tasks::checkTaskCount(0));
+		
+		Session::flush();
+		$this->assertFalse(Session::has('tasks_paging'));
+		$this->assertEquals(10, Tasks::checkTaskCount(101));
+		
+		Session::flush();
+		Session::put('tasks_paging', 20);
+		$this->assertTrue(Session::has('tasks_paging'));
+		$this->assertEquals(10, Tasks::checkTaskCount(0));
+		
+		Session::flush();
+		$this->assertFalse(Session::has('tasks_paging'));
+		$this->assertEquals(40, Tasks::checkTaskCount(40));
+		
+		Session::flush();
+		Session::put('tasks_paging', 20);
+		$this->assertTrue(Session::has('tasks_paging'));
+		$this->assertEquals(60, Tasks::checkTaskCount(60));
 	}
 }

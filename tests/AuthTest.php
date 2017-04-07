@@ -2,12 +2,14 @@
 
 //use Illuminate\Foundation\Testing\WithoutMiddleware;
 //use Illuminate\Foundation\Testing\DatabaseMigrations;
+use App\Classes\Data\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use App\Classes\Auth;
 use Illuminate\Support\Facades\Session;
 use App\Exceptions\ValueMismatchException;
 use App\Exceptions\UserNotFoundException;
 use Carbon\Carbon;
+use App\Classes\Data\StatusCode;
 
 /** Class name: AuthTest
  *
@@ -20,6 +22,60 @@ class AuthTest extends TestCase
 {
 	use DatabaseTransactions;
 	
+	/** Function name: test_isLoggedIn
+	 *
+	 * This function is testing the isLoggedIn function of the Auth model.
+	 * 
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	public function test_isLoggedIn(){
+		Session::flush();
+		$this->assertFalse(Session::has('user'));
+		$this->assertFalse(Auth::isLoggedIn());
+		$this->assertFalse(Session::has('user'));
+		
+		Session::flush();
+		Session::put('user', null);
+		$this->assertFalse(Session::has('user'));
+		$this->assertFalse(Auth::isLoggedIn());
+		$this->assertFalse(Session::has('user'));
+		
+		Session::flush();
+		Session::put('user', 'dummy');
+		$this->assertTrue(Session::has('user'));
+		$this->assertTrue(Auth::isLoggedIn());
+		$this->assertTrue(Session::has('user'));
+	}
+	
+	/** Function name: test_user
+	 *
+	 * This function is testing the user function of the Auth model.
+	 *
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	public function test_user(){
+		Session::flush();
+		$this->assertFalse(Session::has('user'));
+		$this->assertNull(Auth::user());
+		$this->assertFalse(Session::has('user'));
+		
+		Session::flush();
+		Session::put('user', null);
+		$this->assertFalse(Session::has('user'));
+		$this->assertNull(Auth::user());
+		$this->assertFalse(Session::has('user'));
+		
+		Session::flush();
+		Session::put('user', 'dummy');
+		$this->assertTrue(Session::has('user'));
+		$this->assertEquals('dummy', Auth::user());
+		$this->assertTrue(Session::has('user'));
+	}
+	
 	/** Function name: test_logout
 	 * 
 	 * This function is testing the logout function of the Auth model.
@@ -31,16 +87,33 @@ class AuthTest extends TestCase
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function test_logout(){
-		Session::put('user', 'almafa');
+		$user = new User(41, "", "", "", "", "", new StatusCode(1, ""), "", true, true, "", "", "", "", "", "", "", "", null, null, "", true);
+		Session::put('user', $user);
+		Session::put('lang', 'hu_HU');
 		$this->assertTrue(Session::has('user'), "Session variable 'user' is not set!");
+		$this->assertTrue(Session::has('lang'));
 		Auth::logout();
 		$this->assertFalse(Session::has('user'), "Session variable 'user' is set!");
+		$this->assertTrue(Session::has('lang'));
 		Auth::logout();
 		$this->assertFalse(Session::has('user'), "Session variable 'user' is set!");
+		$this->assertTrue(Session::has('lang'));
 		
 		//null value test
 		Session::put('user', null);
 		$this->assertFalse(Session::has('user'), "Session variable 'user' is not set!");
+		$this->assertTrue(Session::has('lang'));
+		Auth::logout();
+		$this->assertFalse(Session::has('user'), "Session variable 'user' is not set!");
+		$this->assertTrue(Session::has('lang'));
+		
+		Session::flush();
+		Session::put('user', $user);
+		$this->assertTrue(Session::has('user'), "Session variable 'user' is not set!");
+		$this->assertFalse(Session::has('lang'));
+		Auth::logout();
+		$this->assertFalse(Session::has('user'), "Session variable 'user' is not set!");
+		$this->assertTrue(Session::has('lang'));
 	}
 	
 	/** Function name: test_login_success
@@ -54,13 +127,16 @@ class AuthTest extends TestCase
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function test_login_success(){
+		Session::flush();
 		$this->assertFalse(Session::has('user'), "Session variable 'user' is set!");
+		$this->assertCount(0, Session::all());
 		try{
 			Auth::login('forUnitTest','forUnittest');
 		}catch(\Exception $ex){
 			$this->fail("Login exception: ".$ex->getMessage());
 		}
 		$this->assertTrue(Session::has('user'), "Session variable 'user' is not set!");
+		$this->assertCount(4, Session::all());
 		
 		//cleanup
 		Session::forget('user');

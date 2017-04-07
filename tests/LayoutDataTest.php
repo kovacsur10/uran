@@ -12,6 +12,8 @@ use App\Classes\Layout\Registrations;
 use App\Classes\Layout\Tasks;
 use App\Classes\Layout\Modules;
 use App\Classes\Layout\EcnetData;
+use App\Classes\Data\StatusCode;
+use App\Classes\Database;
 
 /** Class name: LayoutDataTest
  *
@@ -137,6 +139,7 @@ class LayoutDataTest extends TestCase
 		$this->assertEquals('', $layout->formatDate(''));
 		$this->assertEquals('alma', $layout->formatDate('alma'));
 		$this->assertEquals(null, $layout->formatDate(null));
+		$this->assertEquals('2016. 12. 05. 06:42:52', $layout->formatDate('2016-12-05. 06:42:52'));
 	}
 	
 	/** Function name: test_setLanguage
@@ -179,6 +182,76 @@ class LayoutDataTest extends TestCase
 		Session::put('lang', 'en_US');
 		$this->assertEquals('en_US', Session::get('lang'));
 		$this->assertEquals(LayoutData::lang(), 'en_US');
+	}
+	
+	/** Function name: test_saveSession
+	 *
+	 * This function is testing the saveSession function of the LayoutData model.
+	 *
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	public function test_saveSession(){
+		//user fake "login"
+		$user = new User(34, "", "", "", "", "", new StatusCode(1, ""), "", true, true, "", "", "", "", "", "", "", "", null, null, "", true);
+		Session::put('user', $user);
+		//test session data to save
+		Session::flush();
+		Session::put('user', $user);
+		
+		Database::transaction(function(){
+			LayoutData::loadSession(); //ensure that it's empty
+			$this->assertCount(1, Session::all());
+			LayoutData::saveSession();
+			$this->assertCount(1, Session::all());
+			LayoutData::loadSession(); //ensure that it was okay
+			$this->assertCount(1, Session::all());
+		});
+			
+		Session::flush();
+		Session::put('user', $user);
+		Session::put('tasks_caption_filter', 'asd');
+		Session::put('sajt', 'asd');
+		Session::put('ecnet_username_filter', 'omg');
+		Database::transaction(function() use($user){
+			$this->assertCount(4, Session::all());
+			LayoutData::loadSession(); //ensure that it's empty
+			$this->assertCount(4, Session::all());
+			LayoutData::saveSession();
+			$this->assertCount(4, Session::all());
+			Session::flush();
+			Session::put('user', $user);
+			$this->assertCount(1, Session::all());
+			LayoutData::loadSession(); //ensure that it was okay
+			$this->assertCount(3, Session::all());
+		});
+	}
+	
+	/** Function name: test_loadSession
+	 *
+	 * This function is testing the loadSession function of the LayoutData model.
+	 *
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	public function test_loadSession(){
+		Session::flush();
+		//user fake "login"
+		Session::put('user', new User(41, "", "", "", "", "", new StatusCode(1, ""), "", true, true, "", "", "", "", "", "", "", "", null, null, "", true));
+		
+		$this->assertCount(1, Session::all());
+		LayoutData::loadSession();
+		$this->assertCount(3, Session::all());
+		
+		Session::flush();
+		//user fake "login"
+		Session::put('user', new User(20, "", "", "", "", "", new StatusCode(1, ""), "", true, true, "", "", "", "", "", "", "", "", null, null, "", true));
+		
+		$this->assertCount(1, Session::all());
+		LayoutData::loadSession();
+		$this->assertCount(1, Session::all());
 	}
 	
 }

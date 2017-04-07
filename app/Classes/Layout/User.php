@@ -347,7 +347,7 @@ class User extends Pageable{
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function isIntern(){ //TODO: test
+	public function isIntern(){
 		$statusName = $this->user->status()->statusName();
 		return ($statusName === "intern" || $statusName == "sixth year intern");
 	}
@@ -361,7 +361,7 @@ class User extends Pageable{
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function isLivingIn(){ //TODO: test
+	public function isLivingIn(){
 		$statusName = $this->user->status()->statusName();
 		return ($statusName === "intern" || $statusName == "sixth year intern" || $statusName == "visitor");
 	}
@@ -375,7 +375,7 @@ class User extends Pageable{
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function isCollegist(){ //TODO: test
+	public function isCollegist(){
 		$statusName = $this->user->status()->statusName();
 		return ($statusName === "intern" || $statusName == "sixth year intern" || $statusName == "extern" || $statusName === "scholarship");
 	}

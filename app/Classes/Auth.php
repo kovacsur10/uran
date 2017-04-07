@@ -35,7 +35,7 @@ class Auth{
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public static function isLoggedIn(){ //test
+	public static function isLoggedIn(){
 		return Session::has('user');
 	}
 	
@@ -47,7 +47,7 @@ class Auth{
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public static function user(){ //test
+	public static function user(){
 		if(Auth::isLoggedIn()){
 			return Session::get('user');
 		}else{
@@ -61,7 +61,7 @@ class Auth{
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public static function logout(){ //modify test
+	public static function logout(){
 		LayoutData::saveSession();
 		$lang = LayoutData::lang();
 		Session::flush();
@@ -81,7 +81,7 @@ class Auth{
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public static function login($username, $password){ //modify test
+	public static function login($username, $password){
 		$user = MU::getUserDataByUsername(strtolower($username));
 		if(password_verify($password, $user->password())){
 			try{

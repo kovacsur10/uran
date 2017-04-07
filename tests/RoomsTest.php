@@ -8,6 +8,7 @@ use App\Exceptions\DatabaseException;
 use App\Persistence\P_General;
 use App\Exceptions\UserNotFoundException;
 use App\Classes\Data\AssignmentTable;
+use Illuminate\Support\Facades\Session;
 
 /** Class name: RoomsTest
  *
@@ -624,5 +625,91 @@ class RoomsTest extends TestCase
 		}catch(\Exception $ex){
 			$this->fail("Not the expected exception: ".$ex->getMessage());
 		}
+	}
+	
+	/** Function name: test_checkLevel
+	 *
+	 * This function is testing the checkLevel function of the Rooms model.
+	 *
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	function test_checkLevel(){
+		$this->assertFalse(Session::has('rooms_show_level'));
+		$this->assertEquals(2, Rooms::checkLevel(null));
+		$this->assertTrue(Session::has('rooms_show_level'));
+		$this->assertEquals(2, Session::get('rooms_show_level'));
+		
+		Session::flush();
+		Session::put('rooms_show_level', 0);
+		
+		$this->assertTrue(Session::has('rooms_show_level'));
+		$this->assertEquals(0, Session::get('rooms_show_level'));
+		$this->assertEquals(0, Rooms::checkLevel(null));
+		$this->assertTrue(Session::has('rooms_show_level'));
+		$this->assertEquals(0, Session::get('rooms_show_level'));
+		
+		Session::flush();
+		Session::put('rooms_show_level', 6);
+		
+		$this->assertTrue(Session::has('rooms_show_level'));
+		$this->assertEquals(6, Session::get('rooms_show_level'));
+		$this->assertEquals(2, Rooms::checkLevel(null));
+		$this->assertTrue(Session::has('rooms_show_level'));
+		$this->assertEquals(2, Session::get('rooms_show_level'));
+		
+		Session::flush();
+		
+		$this->assertFalse(Session::has('rooms_show_level'));
+		$this->assertEquals(2, Rooms::checkLevel(6));
+		$this->assertTrue(Session::has('rooms_show_level'));
+		$this->assertEquals(2, Session::get('rooms_show_level'));
+		
+		Session::flush();
+		
+		$this->assertFalse(Session::has('rooms_show_level'));
+		$this->assertEquals(1, Rooms::checkLevel(1));
+		$this->assertTrue(Session::has('rooms_show_level'));
+		$this->assertEquals(1, Session::get('rooms_show_level'));
+		
+		Session::flush();
+		Session::put('rooms_show_level', 1);
+		
+		$this->assertTrue(Session::has('rooms_show_level'));
+		$this->assertEquals(1, Session::get('rooms_show_level'));
+		$this->assertEquals(-2, Rooms::checkLevel(-2));
+		$this->assertTrue(Session::has('rooms_show_level'));
+		$this->assertEquals(-2, Session::get('rooms_show_level'));
+	}
+	
+	/** Function name: test_getSessionData
+	 *
+	 * This function is testing the getSessionData function of the Rooms model.
+	 *
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	function test_getSessionData(){
+		$this->assertFalse(Session::has('rooms_show_level'));
+		$this->assertCount(0, Rooms::getSessionData());
+		$this->assertFalse(Session::has('rooms_show_level'));
+		
+		Session::flush();
+		Session::put('rooms_show_level', 3);
+		
+		$this->assertTrue(Session::has('rooms_show_level'));
+		$this->assertEquals(["rooms_show_level" => 3], Rooms::getSessionData());
+		$this->assertTrue(Session::has('rooms_show_level'));
+		
+		Session::flush();
+		Session::put('no_key_like_this', 3);
+		
+		$this->assertTrue(Session::has('no_key_like_this'));
+		$this->assertFalse(Session::has('rooms_show_level'));
+		$this->assertCount(0, Rooms::getSessionData());
+		$this->assertTrue(Session::has('no_key_like_this'));
+		$this->assertFalse(Session::has('rooms_show_level'));
 	}
 }
