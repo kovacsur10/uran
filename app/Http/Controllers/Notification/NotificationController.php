@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Notification;
 
+use App\Classes\Auth;
 use App\Classes\LayoutData;
 use App\Classes\Notifications;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Session;
 
 /** Class name: NotificationController
  *
@@ -37,7 +37,7 @@ class NotificationController extends Controller{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function showNotification($notificationId){
-		$notification = Notifications::get($notificationId, Session::get('user')->id());
+		$notification = Notifications::get($notificationId, Auth::user()->id());
 		if($notification === null){
 			$layout = new LayoutData();
 			return view('errors.error', ["layout" => $layout,

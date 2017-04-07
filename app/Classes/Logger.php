@@ -126,7 +126,8 @@ class Logger{
 	 */
 	private static function write($description, $oldValue, $newValue, $route, $severity){
 		try{
-			$user = Session::has('user') ? Session::get('user')->id() : 0;
+			$user = Auth::user();
+			$user = $user !== null ? $user->id() : 0;
 			P_General::writeIntoLog($description, $oldValue, $newValue, $route, $user, Carbon::now(), $severity);
 		}catch(Exception $ex){
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());

@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers\Ecnet;
 
-use App\Classes\LayoutData;
+use App\Classes\Auth;
 use App\Classes\Logger;
-use App\Classes\Layout\EcnetData;
 use App\Classes\Notifications;
 use Validator;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
 
 /** Class name: PrintingController
@@ -27,10 +25,9 @@ class PrintingController extends Controller{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
     public function showAccount(){
-		$layout = new LayoutData();
-		$layout->setUser(new EcnetData(Session::get('user')->id()));
+    	$layout = SharedController::getEcnetLayout();
 		if($layout->user()->ecnetUser() === null){
-			Logger::error('Ecnet user was not found #'.print_r(Session::get('user')->id(), true).'!', null, null, 'ecnet/account');
+			Logger::error('Ecnet user was not found #'.print_r(Auth::user()->id(), true).'!', null, null, 'ecnet/account');
 			return view('errors.usernotfound', ["layout" => $layout]);
 		}else{
 			return view('ecnet.account', ["layout" => $layout,
@@ -45,8 +42,7 @@ class PrintingController extends Controller{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function addMoney(Request $request){
-		$layout = new LayoutData();
-		$layout->setUser(new EcnetData(Session::get('user')->id()));
+		$layout = SharedController::getEcnetLayout();
         $this->validate($request, [
 			'money' => 'required',
 			'reset' => 'required',

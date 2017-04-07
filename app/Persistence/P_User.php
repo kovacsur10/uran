@@ -22,6 +22,55 @@ use App\Classes\Data\LanguageExam;
  */
 class P_User{
 	
+	/** Function name: saveSession
+	 *
+	 * This function saves the session data for the user.
+	 *
+	 * @param int $userId - user's identifier
+	 * @param arrayofMixed $dataToSave - the saveable data
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	static function saveSession($userId, $dataToSave){ //TODO: test
+		if($userId !== null && $dataToSave !== null){
+			Database::transaction(function() use($userId, $dataToSave){
+				DB::table('saved_session_data')
+					->where('userid', '=', $userId)
+					->delete();
+				foreach($dataToSave as $key => $value){
+					DB::table('saved_session_data')
+						->insert([
+							'userid' => $userId,
+							'key' => $key,
+							'value' => $value
+						]);
+				}
+			});
+		}
+	}
+	
+	/** Function name: loadSession
+	 *
+	 * This function loads the saved session data for the user.
+	 *
+	 * @param int $userId - user's identifier
+	 * @return array of mixed - the loadable session data
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	static function loadSession($userId){ //TODO: test
+		if($userId !== null){
+			$retData = [];
+			$data = DB::table('saved_session_data')
+				->where('userid', '=', $userId)
+				->get();
+			foreach($data as $row){
+				$retData[$row->key] = $row->value;
+			}
+			return $retData;
+		}
+	}
+	
 	/** Function name: getUserWorkshops
 	 *
 	 * This function returns the requested user's

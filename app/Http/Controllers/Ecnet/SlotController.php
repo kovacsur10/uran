@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers\Ecnet;
 
-use App\Classes\LayoutData;
 use App\Classes\Layout\EcnetData;
 use App\Classes\Logger;
 use App\Classes\Notifications;
 use Validator;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
 
 /** Class name: SlotController
@@ -27,8 +25,7 @@ class SlotController extends Controller{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function showMACOrderForm(){
-		$layout = new LayoutData();
-		$layout->setUser(new EcnetData(Session::get('user')->id()));
+		$layout = SharedController::getEcnetLayout();
 		
 		if($layout->user()->ecnetUser() === null){
 			Logger::warning('Ecnet user was not found!', null, null, 'ecnet/order');
@@ -47,8 +44,7 @@ class SlotController extends Controller{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function getSlot(Request $request){
-		$layout = new LayoutData();
-		$layout->setUser(new EcnetData(Session::get('user')->id()));
+		$layout = SharedController::getEcnetLayout();
         $this->validate($request, [
 			'reason' => 'required',
 		]);
@@ -74,8 +70,7 @@ class SlotController extends Controller{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function allowOrDenyOrder(Request $request){
-		$layout = new LayoutData();
-		$layout->setUser(new EcnetData(Session::get('user')->id()));
+		$layout = SharedController::getEcnetLayout();
         $this->validate($request, [
 			'optradio' => 'required',
 			'slot' => 'required',

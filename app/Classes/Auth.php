@@ -35,8 +35,24 @@ class Auth{
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public static function isLoggedIn(){
+	public static function isLoggedIn(){ //test
 		return Session::has('user');
+	}
+	
+	/** Function name: user
+	 *
+	 * This function returns the logged user.
+	 *
+	 * @return User|null - the logged user
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	public static function user(){ //test
+		if(Auth::isLoggedIn()){
+			return Session::get('user');
+		}else{
+			return null;
+		}
 	}
 	
 	/** Function name: logout
@@ -45,9 +61,11 @@ class Auth{
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public static function logout(){
-		//TODO: save custom user data to database
+	public static function logout(){ //modify test
+		LayoutData::saveSession();
+		$lang = LayoutData::lang();
 		Session::flush();
+		Session::put('lang', $lang);
 	}
 	
 	/** Function name: login
@@ -63,7 +81,7 @@ class Auth{
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public static function login($username, $password){
+	public static function login($username, $password){ //modify test
 		$user = MU::getUserDataByUsername(strtolower($username));
 		if(password_verify($password, $user->password())){
 			try{
@@ -72,10 +90,10 @@ class Auth{
 				Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 				throw new DatabaseException("User login time could not be updated!");
 			}
-			LayoutData::setLanguage($user->language());
 			Session::put('user', $user);
-			//TODO: load custom user data from database
-		}else{ //password doesn't match
+			LayoutData::setLanguage($user->language());
+			LayoutData::loadSession();
+		}else{ //password doesn't match			
 			throw new ValueMismatchException("Password mismatch!");
 		}
 	}
