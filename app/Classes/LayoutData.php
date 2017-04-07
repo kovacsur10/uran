@@ -294,6 +294,10 @@ class LayoutData{
 		$saving = [];
 		$tmp = EcnetData::getSessionData();
 		$saving = array_merge($saving, $tmp);
+		$tmp = Rooms::getSessionData();
+		$saving = array_merge($saving, $tmp);
+		$tmp = Tasks::getSessionData();
+		$saving = array_merge($saving, $tmp);
 		P_User::saveSession(Auth::user()->id(), $saving);
 	}
 	

@@ -17,25 +17,32 @@ use App\Exceptions\DatabaseException;
  * @author Máté Kovács <kovacsur10@gmail.com>
  */
 class RoomsController extends Controller{
+		
+	/** Function name: showDefaultMap
+	 *
+	 * This function shows the default map.
+	 *
+	 * @param int $level - current level to show
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	public function showDefaultMap(){
+		return $this->showMap(null);
+	}
 	
 	/** Function name: showMap
 	 *
-	 * This function shows the user data page.
+	 * This function shows the requested map.
 	 * 
 	 * @param int $level - current level to show
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-    public function showMap($level = 2){
+    public function showMap($level = null){
 		$layout = new LayoutData();
-		if($level == -2 || $level == -1 || $level == -1 || $level == 0 || $level == 1 || $level == 2 || $level == 3 || $level == 4 || $level == 5){
-			return view('rooms.mapped', ["layout" => $layout,
-										 "level" => $level]);
-		}else{
-			return view('errors.error', ["layout" => $layout,
-										 "message" => $layout->language('error_floor_not_found'),
-										 "url" => '/rooms/map/'.$level]);
-		}
+		$level = $layout->room()->checkLevel($level);
+		return view('rooms.mapped', ["layout" => $layout,
+			"level" => $level]);
 	}
 	
 	/** Function name: listRoomMembers

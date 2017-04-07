@@ -6,10 +6,8 @@ use App\Classes\LayoutData;
 use App\Classes\Notifications;
 use Validator;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
-use App\Exceptions\ValueMismatchException;
 
 /** Class name: TaskController
  *
@@ -30,22 +28,14 @@ class TaskController extends Controller{
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-    public function show($count = 10, $first = 0){
+    public function show($count = null, $first = 0){
+    	$layout = new LayoutData();
 		if($first < 0 || !is_numeric($first)){
 			$first = 0;
 		}
-		if($count < 0 || !is_numeric($count)){
-			$count = 10;
-		}
+		$count = $layout->tasks()->checkTaskCount($count);
 		$first -= ($first % $count);
-		$layout = new LayoutData();
-		if(Session::has('tasks_status_filter') || Session::has('tasks_caption_filter') || Session::has('tasks_priority_filter') || 	Session::has('tasks_hide_closed_filter') || Session::has('tasks_mytasks_filter')){
-			$layout->tasks()->filterTasks(Session::get('tasks_status_filter'), 
-										  Session::get('tasks_caption_filter'), 
-										  Session::get('tasks_priority_filter'), 
-										  Session::get('tasks_mytasks_filter'),  
-										  Session::get('tasks_hide_closed_filter'));
-		}
+		$layout->tasks()->filterTasks();
 		return view('tasks.tasks', ["layout" => $layout,
 									"tasksToShow" => $count,
 									"firstTask" => $first]);
@@ -319,31 +309,8 @@ class TaskController extends Controller{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function filterTasks(Request $request){
-		if($request->input('status') === null){
-			Session::put('tasks_status_filter', null);
-		}else{
-			Session::put('tasks_status_filter', $request->input('status'));
-		}
-		if($request->input('caption') === null){
-			Session::put('tasks_caption_filter', null);
-		}else{
-			Session::put('tasks_caption_filter', $request->input('caption'));
-		}
-		if($request->input('priority') === null){
-			Session::put('tasks_priority_filter', null);
-		}else{
-			Session::put('tasks_priority_filter', $request->input('priority'));
-		}
-		if($request->input('myTasks') === null){
-			Session::put('tasks_mytasks_filter', false);
-		}else{
-			Session::put('tasks_mytasks_filter', true);
-		}
-		if($request->input('hide_closed') === null){
-			Session::put('tasks_hide_closed_filter', false);
-		}else{
-			Session::put('tasks_hide_closed_filter', true);
-		}
+		$layout = new LayoutData();
+		$layout->tasks()->setFilterTasks($request->input('status', null), $request->input('caption'), $request->input('priority', null), $request->input('myTasks'), $request->input('hide_closed'));
 		return redirect('tasks/list');
 	}
 	
@@ -354,9 +321,8 @@ class TaskController extends Controller{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function resetFilterTasks(){
-		Session::forget('tasks_status_filter');
-		Session::forget('tasks_caption_filter');
-		Session::forget('tasks_priority_filter');
+		$layout = new LayoutData();
+		$layout->tasks()->resetFilterTasks();
 		return redirect('tasks/list');
 	}
 	

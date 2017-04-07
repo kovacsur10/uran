@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Ecnet;
 use App\Classes\Auth;
 use App\Classes\Logger;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
 use App\Classes\Layout\EcnetData;
 
@@ -25,8 +24,9 @@ class AdminController extends Controller{
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function showUsers($count = 50, $first = 0){
+	public function showUsers($count = null, $first = 0){
 		$layout = SharedController::getEcnetLayout();
+		$count = $layout->user()->checkUserCount($count);
 		$layout->user()->filterUsers();
 		return view('ecnet.showusers', ["layout" => $layout,
 										"usersToShow" => $count,

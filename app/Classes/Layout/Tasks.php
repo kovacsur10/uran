@@ -10,6 +10,7 @@ use App\Classes\Interfaces\Pageable;
 use App\Exceptions\ValueMismatchException;
 use App\Exceptions\DatabaseException;
 use App\Classes\Database;
+use Illuminate\Support\Facades\Session;
 
 /** Class name: Tasks
  *
@@ -47,14 +48,7 @@ class Tasks extends Pageable{
      * @author Máté Kovács <kovacsur10@gmail.com>
      */
 	public function __construct(){
-		$this->filters = [
-				'priority'		=> null,
-				'status' 		=> null,
-				'caption'		=> '',
-				'myTasks'		=> false,
-				'hideClosed'	=> false,
-		];
-		$this->getTasks();
+		$this->resetFilterTasks(false);
 		$this->priorities = $this->getPriorities();
 		$this->types = $this->getTaskTypes();
 		$this->task = null;
@@ -160,42 +154,107 @@ class Tasks extends Pageable{
 	 * on the given values. The tasks array is
 	 * updated with the filtered array data.
 	 * 
-	 * @param int|null $status - status indentifier filter
-	 * @param text $caption - caption filter
-	 * @param int|null $priority - priority identifier filter
-	 * @param bool $myTasks - only user's tasks filter
-	 * @param bool $hideClosed - closed tasks filter 
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	public function filterTasks(){ //TODO: modify test
+		$layout = new LayoutData();
+		
+		if(Session::has('tasks_status_filter') || Session::has('tasks_caption_filter') || Session::has('tasks_priority_filter') || 	Session::has('tasks_hide_closed_filter') || Session::has('tasks_mytasks_filter')){
+			$statusId = Session::get('tasks_status_filter');
+			$caption = Session::get('tasks_caption_filter');
+			$priority = Session::get('tasks_priority_filter');
+			$myTasks = Session::get('tasks_mytasks_filter');
+			$hideClosed = Session::get('tasks_hide_closed_filter');
+			
+			if($statusId === null || $statusId === ''){
+				$this->filters['status'] = null;
+			}else{
+				$this->filters['status'] = $statusId;
+			}
+			if($caption !== null){
+				$this->filters['caption'] = $caption;
+			}else{
+				$this->filters['caption'] = '';
+			}
+			if($priority === null || $priority === ''){
+				$this->filters['priority'] = null;
+			}else{
+				$this->filters['priority'] = $priority;
+			}
+			if($myTasks !== null){
+				$this->filters['myTasks'] = $myTasks === true;
+			}else{
+				$this->filters['myTasks'] = false;
+			}
+			if($hideClosed !== null){
+				$this->filters['hideClosed'] = $hideClosed === true;
+			}else{
+				$this->filters['hideClosed'] = false;
+			}
+			$this->getTasks($layout->user()->user() === null ? 0 : $layout->user()->user()->id());
+		}
+	}
+	
+	/** Function name: setFilterTasks
+	 *
+	 * This function sets the filters based
+	 * on the given values.
+	 *
+	 * @param int $status
+	 * @param text $caption
+	 * @param int $priority
+	 * @param bool $myTasks
+	 * @param bool $hide_closed
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function filterTasks($statusId, $caption, $priority, $myTasks, $hideClosed){
-		$layout = new LayoutData();
-		if($statusId === null || $statusId === ''){
-			$this->filters['status'] = null;
-		}else{
-			$this->filters['status'] = $statusId;
+	public function setFilterTasks($status, $caption, $priority, $myTasks, $hide_closed){
+		if($caption !== null && $caption !== ""){
+			Session::put('tasks_caption_filter', $caption);
 		}
-		if($caption !== null){
-			$this->filters['caption'] = $caption;
-		}else{
-			$this->filters['caption'] = '';
+		if($status !== null && $status !== ""){
+			Session::put('tasks_status_filter', $status);
 		}
-		if($priority === null || $priority === ''){
-			$this->filters['priority'] = null;
-		}else{
-			$this->filters['priority'] = $priority;
+		if($priority !== null && $priority !== ""){
+			Session::put('tasks_priority_filter', $priority);
 		}
-		if($myTasks !== null){
-			$this->filters['myTasks'] = $myTasks === true;
+		if($myTasks === null){
+			Session::put('tasks_mytasks_filter', false);
 		}else{
-			$this->filters['myTasks'] = false;
+			Session::put('tasks_mytasks_filter', true);
 		}
-		if($hideClosed !== null){
-			$this->filters['hideClosed'] = $hideClosed === true;
+		if($hide_closed === null){
+			Session::put('tasks_hide_closed_filter', false);
 		}else{
-			$this->filters['hideClosed'] = false;
+			Session::put('tasks_hide_closed_filter', true);
 		}
-		$this->getTasks($layout->user()->user() === null ? 0 : $layout->user()->user()->id());
+	}
+	
+	/** Function name: resetFilterTasks
+	 *
+	 * This function resets the filters. The tasks array is
+	 * updated with the filtered array data.
+	 * 
+	 * @param bool $hardReset - reset the session data as well
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	public function resetFilterTasks($hardReset = true){ //TODO: test
+		$this->filters = [
+				'priority'		=> null,
+				'status' 		=> null,
+				'caption'		=> '',
+				'myTasks'		=> false,
+				'hideClosed'	=> false,
+		];
+		if($hardReset){
+			Session::forget('tasks_status_filter');
+			Session::forget('tasks_caption_filter');
+			Session::forget('tasks_priority_filter');
+			Session::forget('tasks_mytasks_filter');
+			Session::forget('tasks_hide_closed_filter');
+		}
+		$this->getTasks();
 	}
 	
 	/** Function name: tasksToPages
@@ -533,6 +592,58 @@ class Tasks extends Pageable{
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Update table 'tasks_comments' was not successful! ".$ex->getMessage());
 			throw new DatabaseException("Removing the comment was unsuccessful!");
 		}
+	}
+	
+	/** Function name: checkTaskCount
+	 *
+	 * This function checks the showable task count and
+	 * saves session data.
+	 *
+	 * @param int $count - task count to show
+	 * @return int - corrected task count to shw
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	public function checkTaskCount($count){ //TODO: test
+		if(($count === null && !Session::has('tasks_paging')) || ($count !== null && ($count < 1 || 100 < $count || !is_numeric($count)))){
+			$count = 10;
+		}else if($count === null){
+			$count = Session::get('tasks_paging');
+		}
+		Session::put('tasks_paging', $count);
+		return $count;
+	}
+	
+	/** Function name: getSessionData
+	 *
+	 * This function returns an array or values, that
+	 * should be saved as session data for the task.
+	 *
+	 * @return array of mixed - the returned values
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	public static function getSessionData(){ //TODO: test
+		$sessionData = [];
+		if(Session::has('tasks_status_filter')){
+			$sessionData['tasks_status_filter'] = Session::get('tasks_status_filter');
+		}
+		if(Session::has('tasks_caption_filter')){
+			$sessionData['tasks_caption_filter'] = Session::get('tasks_caption_filter');
+		}
+		if(Session::has('tasks_priority_filter')){
+			$sessionData['tasks_priority_filter'] = Session::get('tasks_priority_filter');
+		}
+		if(Session::has('tasks_mytasks_filter')){
+			$sessionData['tasks_mytasks_filter'] = Session::get('tasks_mytasks_filter');
+		}
+		if(Session::has('tasks_hide_closed_filter')){
+			$sessionData['tasks_hide_closed_filter'] = Session::get('tasks_hide_closed_filter');
+		}
+		if(Session::has('tasks_paging')){
+			$sessionData['tasks_paging'] = Session::get('tasks_paging');
+		}
+		return $sessionData;
 	}
 	
 //PRIVATE FUNCTIONS

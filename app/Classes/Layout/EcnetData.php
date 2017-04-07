@@ -583,6 +583,26 @@ class EcnetData extends User{
 		}
 	}
 	
+	/** Function name: checkUserCount
+	 *
+	 * This function checks the showable user count and
+	 * saves session data.
+	 * 
+	 * @param int $count - user count to show
+	 * @return int - corrected user count to shw
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	public function checkUserCount($count){ //TODO: test
+		if(($count === null && !Session::has('ecnet_admin_paging')) || ($count !== null && ($count < 1 || 500 < $count))){
+			$count = 50;
+		}else if($count === null){
+			$count = Session::get('ecnet_admin_paging');
+		}
+		Session::put('ecnet_admin_paging', $count);
+		return $count;
+	}
+	
 	/** Function name: getSessionData
 	 *
 	 * This function returns an array or values, that
@@ -599,6 +619,9 @@ class EcnetData extends User{
 		}
 		if(Session::has('ecnet_name_filter')){
 			$sessionData['ecnet_name_filter'] = Session::get('ecnet_name_filter');
+		}
+		if(Session::has('ecnet_admin_paging')){
+			$sessionData['ecnet_admin_paging'] = Session::get('ecnet_admin_paging');
 		}
 		return $sessionData;
 	}
