@@ -9,6 +9,7 @@ use App\Persistence\P_Room;
 use App\Exceptions\DatabaseException;
 use App\Exceptions\RoomNotFoundException;
 use App\Exceptions\UserNotFoundException;
+use Illuminate\Support\Facades\Session;
 
 /** Class name: Rooms
  *
@@ -439,6 +440,47 @@ class Rooms{
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 		}
 		return $ret;
+	}
+	
+	/** Function name: checkLevel
+	 *
+	 * This function returns the level, which should be shown.
+	 *
+	 * @param int $level - input level
+	 * @return int - the level to show
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	public static function checkLevel($level){ //TODO: test
+		if($level === null){
+			if(Session::has('rooms_show_level')){
+				$level = Session::get('rooms_show_level');
+			}else{
+				$level = 2;
+			}
+		}
+		if(!($level == -2 || $level == -1 || $level == -1 || $level == 0 || $level == 1 || $level == 2 || $level == 3 || $level == 4 || $level == 5)){
+			$level = 2;
+		}
+		Session::put('rooms_show_level', $level);
+		return $level;
+	}
+	
+	/** Function name: getSessionData
+	 *
+	 * This function returns an array or values, that
+	 * should be saved as session data for the rooms.
+	 *
+	 * @return array of mixed - the returned values
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	public static function getSessionData(){ //TODO: test
+		$sessionData = [];
+		if(Session::has('rooms_show_level')){
+			$sessionData['rooms_show_level'] = Session::get('rooms_show_level');
+		}
+		return $sessionData;
 	}
 	
 // PRIVATE FUNCTIONS

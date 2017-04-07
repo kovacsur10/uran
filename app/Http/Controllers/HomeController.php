@@ -3,9 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Classes\LayoutData;
-use App\Http\Requests;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
 use App\Classes\Auth;
 use App\Http\Controllers\Auth\AuthController;
 
@@ -40,6 +37,7 @@ class HomeController extends Controller
      */
     public function index(){
     	if(Auth::isLoggedIn()){
+    		LayoutData::saveSession();
     		return view('home', ["layout" => new LayoutData()]);
     	}else{
     		return AuthController::showLoginForm();

@@ -91,6 +91,7 @@ Route::group(['middleware' => 'web'], function () {
 	Route::post('ecnet/users', 'Ecnet\AdminController@filterUsers')->middleware('auth.logged')->middleware('modules.ecnet');
 	
 	// Rooms routes
+	Route::get('rooms/map', 'Rooms\RoomsController@showDefaultMap')->middleware('auth.logged')->middleware('modules.rooms');
 	Route::get('rooms/map/{level}', 'Rooms\RoomsController@showMap')->middleware('auth.logged')->middleware('modules.rooms');
 	Route::get('rooms/room/{id}', 'Rooms\RoomsController@listRoomMembers')->middleware('auth.logged')->middleware('modules.rooms');
 	Route::get('rooms/download', 'Rooms\RoomsController@downloadList')->middleware('auth.logged')->middleware('modules.rooms');

@@ -94,7 +94,7 @@
 								<ul class="dropdown-menu" role="menu">
 									@if($data->modules()->isActivatedByName('rooms'))
 										@if($data->user()->permitted('rooms_observe_assignment'))
-										<li><a href="{{ url('/rooms/map/2') }}">{{ $layout->language('room_assignment') }}</a></li>
+										<li><a href="{{ url('/rooms/map') }}">{{ $layout->language('room_assignment') }}</a></li>
 										@endif
 									@endif
 	                            </ul>
@@ -115,19 +115,6 @@
 	                            </ul>
 	                        </li>
 	                    @endif
-						<li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-							{{ $layout->language('administration') }} <span class="caret"></span>
-                            </a>
-							<ul class="dropdown-menu" role="menu">
-								@if($layout->modules()->isActivatedByName('tasks'))
-								<li><a href="{{ url('/tasks/list') }}">{{ $layout->language('task_manager') }}</a></li>
-								@endif
-								@if($layout->modules()->isActivatedByName('ecouncil') && $data->user()->permitted('record_read'))
-								<li><a href="{{ url('/ecouncil/records/list') }}">{{ $layout->language('TODO') }}</a></li>
-								@endif
-                            </ul>
-                        </li>
 						<li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
 							{{ $layout->language('ecadmin') }} <span class="caret"></span>
