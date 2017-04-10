@@ -209,7 +209,7 @@ class Tasks extends Pageable{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public static function setFilterTasks($status, $caption, $priority, $myTasks, $hide_closed){
-		if($caption !== null && $caption !== ""){
+		if($caption !== null){
 			Session::put('tasks_caption_filter', $caption);
 		}
 		if($status !== null && $status !== ""){
@@ -218,15 +218,15 @@ class Tasks extends Pageable{
 		if($priority !== null && $priority !== ""){
 			Session::put('tasks_priority_filter', $priority);
 		}
-		if($myTasks === null || !is_bool($myTasks)){
+		if($myTasks === null || $myTasks === false){
 			Session::put('tasks_mytasks_filter', false);
 		}else{
-			Session::put('tasks_mytasks_filter', $myTasks);
+			Session::put('tasks_mytasks_filter', true);
 		}
-		if($hide_closed === null || !is_bool($hide_closed)){
+		if($hide_closed === null || $hide_closed === false){
 			Session::put('tasks_hide_closed_filter', false);
 		}else{
-			Session::put('tasks_hide_closed_filter', $hide_closed);
+			Session::put('tasks_hide_closed_filter', true);
 		}
 	}
 	

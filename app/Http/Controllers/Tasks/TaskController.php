@@ -310,7 +310,8 @@ class TaskController extends Controller{
 	 */
 	public function filterTasks(Request $request){
 		$layout = new LayoutData();
-		$layout->tasks()->setFilterTasks($request->input('status', null), $request->input('caption'), $request->input('priority', null), $request->input('myTasks'), $request->input('hide_closed'));
+		$layout->tasks()->resetFilterTasks();
+		$layout->tasks()->setFilterTasks($request->input('status', ""), $request->input('caption', ""), $request->input('priority', ""), $request->input('myTasks', false), $request->input('hide_closed', false));
 		return redirect('tasks/list');
 	}
 	

@@ -318,7 +318,14 @@ class LayoutData{
 		try{
 			$sessionData = P_User::loadSession(Auth::user()->id());
 			foreach($sessionData as $key => $value){
-				Session::put($key, $value);
+				switch($key){
+					case 'tasks_mytasks_filter':
+						break;
+					case 'tasks_hide_closed_filter':
+						break;
+					default:
+						Session::put($key, $value);
+				}
 			}
 		}catch(\Exception $ex){
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Could not load session data. ".$ex->getMessage());
