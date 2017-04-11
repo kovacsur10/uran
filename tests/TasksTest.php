@@ -246,11 +246,12 @@ class TasksTest extends TestCase
 		$this->assertFalse(Session::has('tasks_mytasks_filter'));
 		$this->assertFalse(Session::has('tasks_hide_closed_filter'));
 		Tasks::setFilterTasks("", "", "", "", "");
-		$this->assertFalse(Session::has('tasks_caption_filter'));
+		$this->assertTrue(Session::has('tasks_caption_filter'));
 		$this->assertFalse(Session::has('tasks_status_filter'));
 		$this->assertFalse(Session::has('tasks_priority_filter'));
 		$this->assertTrue(Session::has('tasks_mytasks_filter'));
 		$this->assertTrue(Session::has('tasks_hide_closed_filter'));
+		$this->assertEquals("", Session::get('tasks_caption_filter'));
 		$this->assertFalse(Session::get('tasks_mytasks_filter'));
 		$this->assertFalse(Session::get('tasks_hide_closed_filter'));
 		

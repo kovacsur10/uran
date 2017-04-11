@@ -218,12 +218,12 @@ class Tasks extends Pageable{
 		if($priority !== null && $priority !== ""){
 			Session::put('tasks_priority_filter', $priority);
 		}
-		if($myTasks === null || $myTasks === false){
+		if($myTasks === null || $myTasks !== true){
 			Session::put('tasks_mytasks_filter', false);
 		}else{
 			Session::put('tasks_mytasks_filter', true);
 		}
-		if($hide_closed === null || $hide_closed === false){
+		if($hide_closed === null || $hide_closed !== true){
 			Session::put('tasks_hide_closed_filter', false);
 		}else{
 			Session::put('tasks_hide_closed_filter', true);
