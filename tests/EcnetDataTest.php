@@ -8,6 +8,7 @@ use App\Exceptions\UserNotFoundException;
 use App\Exceptions\DatabaseException;
 use App\Exceptions\ValueMismatchException;
 use App\Classes\Data\MacSlotOrder;
+use App\Persistence\P_Ecnet;
 
 /** Class name: EcnetDataTest
  *
@@ -834,6 +835,99 @@ class EcnetDataTest extends TestCase
 		Session::put('ecnet_name_filter', 15);
 		Session::put('no_key_like_this', 40);
 		$this->assertEquals(['ecnet_username_filter' => 20, 'ecnet_name_filter' => 15], EcnetData::getSessionData());
+	}
+	
+	/** Function name: test_manageMacAddresses
+	 *
+	 * This function is testing the manageMacAddresses function of the EcnetData model.
+	 *
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	function test_manageMacAddresses(){
+		$ecnet = new EcnetData(1);
+		//bad arguments
+		try{
+			$ecnet->manageMacAddresses(null);
+			$this->fail("An exception was expected!");
+		}catch(ValueMismatchException $ex){
+		}catch(\Exception $ex){
+			$this->fail("Not the expected exception: ".$ex->getMessage());
+		}
+		try{
+			$ecnet->manageMacAddresses(8);
+			$this->fail("An exception was expected!");
+		}catch(ValueMismatchException $ex){
+		}catch(\Exception $ex){
+			$this->fail("Not the expected exception: ".$ex->getMessage());
+		}
+		
+		$ecnet = new EcnetData(1);
+		try{
+			$ecnet->manageMacAddresses(["F4:33:CC:FF:53:61"]);
+			$user = P_Ecnet::getUser(1);
+			$addr = $user->macAddresses();
+			$this->assertCount(1, $addr);
+			$this->assertEquals("F4:33:CC:FF:53:61", $addr[0]->address());
+		}catch(\Exception $ex){
+			$this->fail("Unexpected exception: ".$ex->getMessage());
+		}
+		
+		$ecnet = new EcnetData(1);
+		try{
+			$ecnet->manageMacAddresses([]);
+			$user = P_Ecnet::getUser(1);
+			$this->assertCount(0, $user->macAddresses());
+		}catch(\Exception $ex){
+			$this->fail("Unexpected exception: ".$ex->getMessage());
+		}
+		
+		$ecnet = new EcnetData(1);
+		try{
+			$ecnet->manageMacAddresses(["F4:33:CC:FF:53:61"]);
+			$user = P_Ecnet::getUser(1);
+			$addr = $user->macAddresses();
+			$this->assertCount(1, $addr);
+			$this->assertEquals("F4:33:CC:FF:53:61", $addr[0]->address());
+		}catch(\Exception $ex){
+			$this->fail("Unexpected exception: ".$ex->getMessage());
+		}
+		
+		$ecnet = new EcnetData(1);
+		try{
+			$ecnet->manageMacAddresses(["F4:33:CC:FF:53:63", "F4:33:CC:FF:53:61"]);
+			$user = P_Ecnet::getUser(1);
+			$addr = $user->macAddresses();
+			$this->assertCount(2, $addr);
+			foreach($addr as $mac){
+				$this->assertTrue("F4:33:CC:FF:53:61" === $mac->address() || "F4:33:CC:FF:53:63" === $mac->address());
+			}
+		}catch(\Exception $ex){
+			$this->fail("Unexpected exception: ".$ex->getMessage());
+		}
+		
+		$ecnet = new EcnetData(1);
+		try{
+			$ecnet->manageMacAddresses(["F4:33:CC:FF:53:63", "F4:33:CC:FF:53:69"]);
+			$user = P_Ecnet::getUser(1);
+			$addr = $user->macAddresses();
+			$this->assertCount(2, $addr);
+			foreach($addr as $mac){
+				$this->assertTrue("F4:33:CC:FF:53:69" === $mac->address() || "F4:33:CC:FF:53:63" === $mac->address());
+			}
+		}catch(\Exception $ex){
+			$this->fail("Unexpected exception: ".$ex->getMessage());
+		}
+		
+		$ecnet = new EcnetData(1);
+		try{
+			$ecnet->manageMacAddresses([]);
+			$user = P_Ecnet::getUser(1);
+			$this->assertCount(0, $user->macAddresses());
+		}catch(\Exception $ex){
+			$this->fail("Unexpected exception: ".$ex->getMessage());
+		}
 	}
 }
 	

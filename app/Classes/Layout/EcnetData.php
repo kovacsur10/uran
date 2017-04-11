@@ -267,11 +267,15 @@ class EcnetData extends User{
 	 * @param array $addresses - MAC addresses that the user should have
 	 *
 	 * @throws DatabaseException if an error occures.
+	 * @throws ValueMismatchException if the parameter value is unusable.
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	//ACCESS CONTROLLER
 	public function manageMacAddresses($addresses){
+		if($addresses === null || !is_array($addresses)){
+			throw new ValueMismatchException("Parameter should be an array.");
+		}
 		$newAddresses = [];
 		$deletableAddresses = [];
 		//calculate existing and new addresses
@@ -355,8 +359,7 @@ class EcnetData extends User{
 	
 	/** Function name: macAddressExists
 	 *
-	 * This function returns whether the
-	 * requested MAC address exists in
+	 * This function returns whether the requested MAC address exists in
 	 * the database or not.
 	 * 
 	 * @param text $macAddress - mac address
