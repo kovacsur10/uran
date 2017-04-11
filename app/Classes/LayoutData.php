@@ -320,12 +320,21 @@ class LayoutData{
 			foreach($sessionData as $key => $value){
 				switch($key){
 					case 'tasks_mytasks_filter':
+						if($value === "1" || $value === "true" || $value === 1 || $value === true){
+							$value = true;
+						}else{
+							$value = false;
+						}
 						break;
 					case 'tasks_hide_closed_filter':
+						if($value === "1" || $value === "true" || $value === 1 || $value === true){
+							$value = true;
+						}else{
+							$value = false;
+						}
 						break;
-					default:
-						Session::put($key, $value);
 				}
+				Session::put($key, $value);
 			}
 		}catch(\Exception $ex){
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Could not load session data. ".$ex->getMessage());
