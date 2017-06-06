@@ -258,6 +258,33 @@ class EcnetData extends User{
 		}
 	}
 	
+	/** Function name: addFreePagesForUser
+	 *
+	 * This function adds the requested amount of free
+	 * printing pages to the requested user's account.
+	 *
+	 * @param int $userId - user's identifier
+	 * @param int $pages - page
+	 * @param datetime $valid_date - user can use the pages until this date
+	 *
+	 * @throws DatabaseException if an error occures
+	 * @throws ValueMismatchException if a parameter value is null.
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	public static function addFreePagesForUser($userId, $pages, $valid_date){ //TODO: test it
+		if($userId === null || $money === null || $valid_date){
+			throw new ValueMismatchException("Parameter values cannot be null!");
+		}
+		try{
+			$valid_date = $valid_date.' 00:00:00';
+			P_Ecnet::addFreePagesToUser($userId, $pages, $valid_date);
+		}catch(\Excetion $ex){
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
+			throw new DatabaseException("Could not set the free printing account.");
+		}
+	}
+	
 	/** Function name: manageMacAddresses
 	 *
 	 * This function sets the MAC addresses for

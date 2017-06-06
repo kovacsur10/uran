@@ -53,6 +53,7 @@ Route::group(['middleware' => 'web', 'middleware' => 'auth.logged'], function ()
 	// ECNET routes
 	Route::get('ecnet/account', 'Ecnet\PrintingController@showAccount')->middleware('modules.ecnet');
 	Route::post('ecnet/addmoney', 'Ecnet\PrintingController@addMoney')->middleware('modules.ecnet');
+	Route::post('ecnet/addfreepages', 'Ecnet\PrintingController@addFreePages')->middleware('modules.ecnet');
 	
 	Route::get('ecnet/access', 'Ecnet\AccessController@showInternet')->middleware('modules.ecnet');
 	Route::post('ecnet/setvalidtime', 'Ecnet\AccessController@updateValidationTime')->middleware('modules.ecnet');

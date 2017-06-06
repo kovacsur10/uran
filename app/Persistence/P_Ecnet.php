@@ -6,6 +6,8 @@ use DB;
 use App\Classes\Data\EcnetUser;
 use App\Classes\Data\MacSlotOrder;
 use App\Classes\Data\MacAddress;
+use App\Classes\Data\FreePage;
+use Carbon\Carbon;
 
 /** Class name: P_Ecnet
  *
@@ -53,7 +55,8 @@ class P_Ecnet{
 			return null;
 		}else{
 			$macs = P_Ecnet::getMacAddressesForUser($userId);
-			return new EcnetUser($rawUser->id, $rawUser->name, $rawUser->username, $rawUser->valid_time, $rawUser->mac_slots, $macs, $rawUser->money);
+			$freePages = P_Ecnet::getFreePagesForUser($userId);
+			return new EcnetUser($rawUser->id, $rawUser->name, $rawUser->username, $rawUser->valid_time, $rawUser->mac_slots, $macs, $rawUser->money, $freePages);
 		}
 	}
 	
@@ -86,7 +89,8 @@ class P_Ecnet{
 		$users = [];
 		foreach($rawUsers as $user){
 			$macs = P_Ecnet::getMacAddressesForUser($user->id);
-			array_push($users, new EcnetUser($user->id, $user->name, $user->username, $user->valid_time, $user->mac_slots, $macs, $user->money));
+			$freePages = P_Ecnet::getFreePagesForUser($user->id);
+			array_push($users, new EcnetUser($user->id, $user->name, $user->username, $user->valid_time, $user->mac_slots, $macs, $user->money, $freePages));
 		}
 		return $users;
 	}
@@ -309,5 +313,64 @@ class P_Ecnet{
 			->update([
 				'valid_date' => $newTime
 			]);
+	}
+	
+	/** Function name: getFreePagesForUser
+	 *
+	 * This function returns the free pages to print
+	 * for the requested user.
+	 *
+	 * @param int $userId - user's identifier
+	 * @return array of FreePage
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	static function getFreePagesForUser($userId){
+		$today = Carbon::now()->toDateString();
+		$rawFreePages = DB::table('ecnet_free_pages')
+			->where('user_id', '=', $userId)
+			->where('valid_until', '>=', $today.' 00:00:00')
+			->where('pages_left', '>', 0)
+			->get()
+			->toArray();
+		$freePages = [];
+		foreach($rawFreePages as $freePage){
+			$freePages[] = new FreePage($freePage->pages_left, $freePage->valid_until);
+		}
+		return $freePages;
+	}
+	
+	/** Function name: addFreePagesToUser
+	 *
+	 * This function updates an ECnet user.
+	 *
+	 * @param int $userId - user's identifier
+	 * @param datetime $validTime - internet access time
+	 * @param int $macSlotCount - count of MAC slots
+	 * @param int $money - ECnet money
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	static function addFreePagesToUser($userId, $pages, $valid_date){
+		$already = DB::table('ecnet_free_pages')
+			->where('user_id', '=', $userId)
+			->where('valid_until', '>=', $valid_date)
+			->get()
+			->toArray();
+		if($already !== []){
+			DB::table('ecnet_free_pages')
+				->where('user_id', '=', $userId)
+				->where('valid_until', '>=', $valid_date)
+				->update([
+					'pages_left' => ($pages+$already[0]->pages_left)
+				]);
+		}else{
+			DB::table('ecnet_free_pages')
+				->insert([
+					'user_id' => $userId,
+					'pages_left' => $pages,
+					'valid_until' => $valid_date
+				]);
+		}
 	}
 }

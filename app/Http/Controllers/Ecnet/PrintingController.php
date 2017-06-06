@@ -84,6 +84,50 @@ class PrintingController extends Controller{
 			return view('errors.authentication', ["layout" => $layout]);
 		}
     }
+    
+    /** Function name: addFreePages
+     *
+     * This function modifies a user's printing account.
+     *
+     * @author Máté Kovács <kovacsur10@gmail.com>
+     */
+    public function addFreePages(Request $request){
+    	$layout = SharedController::getEcnetLayout();
+    	$this->validate($request, [
+    			'pages' => 'required',
+    			'valid_date' => 'required',
+    			'account' => 'required',
+    	]);
+    	if($layout->user()->permitted('ecnet_set_print_account')){
+    		try{
+    			$freePages = $layout->user()->getEcnetUserData($request->account)->freePages();
+    		}catch(\Exception $ex){
+    			$freePages = null;
+    		}
+    		if($freePages=== null){
+    			Logger::warning('At ecnet free pages modification for user #'.$request->account.'. No free pages for that user. Maybe that user does not exist!', $request->pages, $request->valid_date, 'ecnet/account');
+    			$layout->errors()->add('add_freepages', $layout->language('error_at_freepages_adding'));
+    			return view('ecnet.account', ["layout" => $layout,
+    					"users" => $layout->user()->users()]);
+    		}
+    		try{
+    			$layout->user()->addFreePagesForUser($request->account, $request->pages, $request->valid_date);
+    			Logger::log('Ecnet free printing pages was modified for user #'.$request->account.'.', $request->pages, $request->valid_date, 'ecnet/account');
+    			Notifications::notify($layout->user()->user(), $request->account, $layout->language('freeprinting_balance_was_modified'), $layout->language('freeprinting_balance_was_modified_description').'!', 'ecnet/account');
+    			$layout->errors()->add('success_add_freepages', $layout->language('success_add_freepages'));
+    			return view('ecnet.account', ["layout" => $layout,
+    					"users" => $layout->user()->users()]);
+    		}catch(\Exception $ex){
+    			Logger::warning('At ecnet free pages modification for user #'.$request->account.'. Database error occured!', $request->pages, $request->valid_date, 'ecnet/account');
+    			$layout->errors()->add('add_freepages', $layout->language('error_at_freepages_adding'));
+    			return view('ecnet.account', ["layout" => $layout,
+    					"users" => $layout->user()->users()]);
+    		}
+    	}else{
+    		Logger::warning('At ecnet free pages modification for user #'.$request->account.'. PERMISSIONS NEEDED!', null, null, 'ecnet/account');
+    		return view('errors.authentication', ["layout" => $layout]);
+    	}
+    }
 	
 // PRIVATE FUNCTIONS
 }

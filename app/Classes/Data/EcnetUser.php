@@ -16,6 +16,7 @@ class EcnetUser{
 	private $maxMacSlotCount;
 	private $macAddresses;
 	private $money;
+	private $freePages;
 
 	private $name;
 	private $username;
@@ -33,10 +34,11 @@ class EcnetUser{
 	 * @param int $maxMacSlotCount - maximum MAC address slot count
 	 * @param arrayOfMacAddress $macAddresses - MAC address slot count
 	 * @param int $money - account status
+	 * @param arrayOfFreePage $freePages - pages the user can print for free
 	 *
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
-	public function __construct(int $id, string $name, string $username, string $validTime, int $maxMacSlotCount, $macAddresses, int $money){
+	public function __construct(int $id, string $name, string $username, string $validTime, int $maxMacSlotCount, $macAddresses, int $money, $freePages){
 		$this->id = $id;
 		$this->name = $name;
 		$this->username = $username;
@@ -44,6 +46,7 @@ class EcnetUser{
 		$this->maxMacSlotCount = $maxMacSlotCount;
 		$this->macAddresses = $macAddresses;
 		$this->money = $money;
+		$this->freePages = $freePages;
 	}
 
 	/** Function name: id
@@ -115,5 +118,14 @@ class EcnetUser{
 	public function macAddresses(){
 		return $this->macAddresses;
 	}
-
+	
+	/** Function name: freePages
+	 * 
+	 * This is the getter for freePages.
+	 * 
+	 * @return arrayOfFreePage - Free pages the user can use.
+	 */
+	public function freePages(){
+		return $this->freePages;
+	}
 }

@@ -25,7 +25,7 @@ class EcnetUserTest extends TestCase
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	function test_permission(){
-		$user = new EcnetUser(1, "user", "username", '1994-05-27 05:00:00', 2, ["egy", "ketto"], 500);
+		$user = new EcnetUser(1, "user", "username", '1994-05-27 05:00:00', 2, ["egy", "ketto"], 500, []);
 		$this->assertEquals(1, $user->id());
 		$this->assertEquals("user", $user->name());
 		$this->assertEquals("username", $user->username());
@@ -33,6 +33,7 @@ class EcnetUserTest extends TestCase
 		$this->assertEquals(2, $user->maximumMacSlots());
 		$this->assertCount(2, $user->macAddresses());
 		$this->assertEquals(500, $user->money());
+		$this->assertCount(0, $user->freePages());
 	}
 
 	/** Function name: test_permission_attr
@@ -53,5 +54,6 @@ class EcnetUserTest extends TestCase
 		$this->assertClassHasAttribute('maxMacSlotCount', EcnetUser::class);
 		$this->assertClassHasAttribute('macAddresses', EcnetUser::class);
 		$this->assertClassHasAttribute('money', EcnetUser::class);
+		$this->assertClassHasAttribute('freePages', EcnetUser::class);
 	}
 }

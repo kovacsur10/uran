@@ -123,6 +123,7 @@ class EcnetDataTest extends TestCase
 		try{
 			$user = EcnetData::getEcnetUserData(1);
 			$this->assertInstanceOf(EcnetUser::class, $user);
+			$this->assertCount(2, $user->freePages());
 		}catch(\Exception $ex){
 			$this->fail("Unexpected exception: ".$ex->getMessage());
 		}
