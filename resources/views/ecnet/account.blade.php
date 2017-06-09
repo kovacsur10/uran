@@ -34,6 +34,7 @@
 	                	<div class="panel-body">
 							@if($layout->user()->ecnetUser()->freePages() !== [])
 								<ul class="list-group">
+								<li class="list-group-item active">{{ $layout->language('best_before_date') }} <span class="badge">{{ $layout->language('page_count') }}</span></li>
 								@foreach($layout->user()->ecnetUser()->freePages() as $freePage)
 									<li class="list-group-item">{{ $layout->formatDate($freePage->until()) }} <span class="badge">{{ $freePage->count() }}</span></li>
 								@endforeach

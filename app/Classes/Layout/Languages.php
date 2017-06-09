@@ -272,6 +272,8 @@ class Languages{
 			'no_free_pages_left' => 'Nem rendelkezel ingyenes nyomtatási lehetőséggel!',
 			'error_at_freepages_adding' => 'Hiba az ingyenes nyomtatási oldalak hozzáadásánál!',
 			'success_add_freepages' => 'Sikeres az új ingyenes nyomatatási oldalak hozzáadása!',
+			'best_before_date' => 'Felhasználási dátum',
+			'page_count' => 'Oldalszám',	
 		//login
 			'forget_password' => 'Elfelejtetted a jelszavad?',
 			'log_in' => 'Belépek',
@@ -874,6 +876,8 @@ class Languages{
 			'no_free_pages_left' => 'You have no free printing pages left!',
 			'error_at_freepages_adding' => 'Error at adding new free printing pages!',
 			'success_add_freepages' => 'Success at adding free printing pages to user!',
+			'best_before_date' => 'Expiration date',
+			'page_count' => 'Page count',
 		//login
 			'forget_password' => 'Forgot your password?',
 			'log_in' => 'Log in',

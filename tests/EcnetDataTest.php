@@ -180,6 +180,65 @@ class EcnetDataTest extends TestCase
 		$this->assertEquals(120, $ecnetUser->ecnetUser()->money());
 	}
 	
+	/** Function name: test_addFreePagesForUser
+	 *
+	 * This function is testing the addFreePagesForUser function of the EcnetData model.
+	 *
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	function test_addFreePagesForUser(){
+		try{
+			EcnetData::addFreePagesForUser(null, null, null);
+			$this->fail("An exception was expected!");
+		}catch(ValueMismatchException $ex){
+		}catch(\Exception $ex){
+			$this->fail("Not the expected exception: ".$ex->getMessage());
+		}
+		
+		try{
+			EcnetData::setMoneyForUser(null, 200, "");
+			$this->fail("An exception was expected!");
+		}catch(ValueMismatchException $ex){
+		}catch(\Exception $ex){
+			$this->fail("Not the expected exception: ".$ex->getMessage());
+		}
+		
+		try{
+			EcnetData::setMoneyForUser(1, null, "");
+			$this->fail("An exception was expected!");
+		}catch(ValueMismatchException $ex){
+		}catch(\Exception $ex){
+			$this->fail("Not the expected exception: ".$ex->getMessage());
+		}
+		
+		try{
+			EcnetData::setMoneyForUser(1, 200, null);
+			$this->fail("An exception was expected!");
+		}catch(ValueMismatchException $ex){
+		}catch(\Exception $ex){
+			$this->fail("Not the expected exception: ".$ex->getMessage());
+		}
+		//TODO: from here
+		$ecnetUser = new EcnetData(1);
+		$this->assertEquals(0, $ecnetUser->ecnetUser()->money());
+		try{
+			EcnetData::setMoneyForUser(1, 120, null);
+		}catch(\Exception $ex){
+			$this->fail("Unexpected exception: ".$ex->getMessage());
+		}
+		$ecnetUser = new EcnetData(1);
+		$this->assertEquals(120, $ecnetUser->ecnetUser()->money());
+		try{
+			EcnetData::setMoneyForUser(0, 200);
+		}catch(\Exception $ex){
+			$this->fail("Unexpected exception: ".$ex->getMessage());
+		}
+		$ecnetUser = new EcnetData(1);
+		$this->assertEquals(120, $ecnetUser->ecnetUser()->money());
+	}
+	
 	/** Function name: test_changeDefaultValidDate_null
 	 *
 	 * This function is testing the changeDefaultValidDate function of the EcnetData model.
