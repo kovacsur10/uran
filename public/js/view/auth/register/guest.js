@@ -20,7 +20,7 @@ guestValidator.add([
 {
 	selector: '#password',
 	validate: ['presence', 'between-length:8:64', 'same-as:#password_again'],
-	errorMessage: [language.presenceError, language.betweenLength8_64Error, language.regexpError, language.unmatchError]
+	errorMessage: [language.presenceError, language.betweenLength8_64Error, language.unmatchError]
 },
 {
 	selector: '#password_again',
