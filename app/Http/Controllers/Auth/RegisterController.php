@@ -61,7 +61,7 @@ class RegisterController extends Controller{
         $this->validate($request, [
             'username' => 'required|min:6|max:32|unique:users|regex:/(^[A-Za-z0-9_\-]+$)/',
             'email' => 'required|email|max:255|unique:users',
-            'password' => 'required|min:8|max:64|confirmed||regex:/(^[A-Za-z0-9\-_\/\.\?\:]+$)/',
+            'password' => 'required|min:8|max:64|confirmed',
             'name' => 'required',
 			'country' => 'required',
 			'shire' => 'required',
@@ -102,7 +102,7 @@ class RegisterController extends Controller{
         $this->validate($request, [
             'username' => 'required|min:6|max:32|unique:users|regex:/(^[A-Za-z0-9_\-]+$)/',
             'email' => 'required|email|max:255|unique:users|unique:users',
-            'password' => 'required|min:8|max:64|confirmed||regex:/(^[A-Za-z0-9\-_\/\.\?\:]+$)/',
+            'password' => 'required|min:8|max:64|confirmed',
             'name' => 'required',
 			'country' => 'required',
 			'shire' => 'required',
