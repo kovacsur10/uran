@@ -119,7 +119,7 @@ class RegisterController extends Controller{
 			'workshops' => 'required',
 			'accept' => 'required',
 		]);
-		$this->validate($request, array('year_of_leaving_exam' => array('required', 'regex:/(^(?:19[6-9][0-9])|(?:200[0-9])|(?:201[0-6])$)/')));
+		$this->validate($request, array('year_of_leaving_exam' => array('required', 'regex:/(^(?:19[6-9][0-9])|(?:200[0-9])|(?:201[0-7])$)/')));
 		$this->validate($request, array('date_of_birth' => array('required', 'regex:/(^(?:19[0-9]{2}|2[0-9]{3})\.(?:1[012]|0[1-9])\.(?:0[1-9]|[12][0-9]|3[01])\.?$)/')));
 		
 		//registration part

@@ -54,7 +54,7 @@ collegistValidator.add([
 },
 {
 	selector: '#year_of_leaving_exam',
-	validate: ['presence', 'regex:(^(?:19[6-9][0-9])|(?:200[0-9])|(?:201[0-6])$)'],
+	validate: ['presence', 'regex:(^(?:19[6-9][0-9])|(?:200[0-9])|(?:201[0-7])$)'],
 	errorMessage: [language.presenceError, language.regexpError]
 },
 {
