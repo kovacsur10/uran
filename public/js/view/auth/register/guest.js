@@ -19,7 +19,7 @@ guestValidator.add([
 },
 {
 	selector: '#password',
-	validate: ['presence', 'between-length:8:64', 'regex:(^[A-Za-z0-9\-_\/\.\?\:]+$)', 'same-as:#password_again'],
+	validate: ['presence', 'between-length:8:64', 'same-as:#password_again'],
 	errorMessage: [language.presenceError, language.betweenLength8_64Error, language.regexpError, language.unmatchError]
 },
 {
