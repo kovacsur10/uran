@@ -104,7 +104,7 @@
 								@if($layout->user()->hasMACSlotOrder($ecnetUser->id()))
 									- <i style="color:gold;" class="fa fa-btn fa-flash"></i><a href="{{ url('ecnet/order') }}">{{ $layout->language('mac_slot_order') }}</a> <i style="color:gold;" class="fa fa-btn fa-flash"></i>
 								@endif
-								@if(count($ecnetUser->macAddresses()) < $ecnetUser->maximumMacSlots())
+								@if(($ecnetUser->valid() > Carbon\Carbon::now()->toDateTimeString()) && (count($ecnetUser->macAddresses()) < $ecnetUser->maximumMacSlots()))
 									- <span style="color:red;">{{ $layout->language('low_mac_slot_usage') }} (diff: {{ $ecnetUser->maximumMacSlots() - count($ecnetUser->macAddresses()) }})</span>
 								@endif
 								@if($ecnetUser->maximumMacSlots() != 0)						
