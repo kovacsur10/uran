@@ -80,6 +80,7 @@ class P_Ecnet{
 			->when($username !== null, function($query) use($username){
 				return $query->where('users.username', 'LIKE', '%'.$username.'%');
 			})
+			->where('users.registered', '=', 1)
 			->select('users.id as id', 'users.username as username', 'users.name as name', 'ecnet_user_data.money as money', 'ecnet_user_data.valid_time as valid_time', 'ecnet_user_data.mac_slots as mac_slots')
 			->get()
 			->toArray();
