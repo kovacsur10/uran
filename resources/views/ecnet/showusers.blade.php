@@ -72,11 +72,11 @@
 						</div>
 					
 						<ul class="list-inline">
-							<li><a href="{{ url('ecnet/users/10/'.$firstUser) }}" class="btn btn-primary" role="button">10</a></li>
-							<li><a href="{{ url('ecnet/users/20/'.$firstUser) }}" class="btn btn-primary" role="button">20</a></li>
-							<li><a href="{{ url('ecnet/users/50/'.$firstUser) }}" class="btn btn-primary" role="button">50</a></li>
-							<li><a href="{{ url('ecnet/users/100/'.$firstUser) }}" class="btn btn-primary" role="button">100</a></li>
-							<li><a href="{{ url('ecnet/users/500/'.$firstUser) }}" class="btn btn-primary" role="button">500</a></li>
+							<li><a href="{{ url('ecnet/users/10/0') }}" class="btn btn-primary" role="button">10</a></li>
+							<li><a href="{{ url('ecnet/users/20/0') }}" class="btn btn-primary" role="button">20</a></li>
+							<li><a href="{{ url('ecnet/users/50/0') }}" class="btn btn-primary" role="button">50</a></li>
+							<li><a href="{{ url('ecnet/users/100/0') }}" class="btn btn-primary" role="button">100</a></li>
+							<li><a href="{{ url('ecnet/users/500/0') }}" class="btn btn-primary" role="button">500</a></li>
 						</ul>
 					
 						<nav>
@@ -139,11 +139,11 @@
 						</nav>
 						
 						<ul class="list-inline">
-							<li><a href="{{ url('ecnet/users/10/'.$firstUser) }}" class="btn btn-primary" role="button">10</a></li>
-							<li><a href="{{ url('ecnet/users/20/'.$firstUser) }}" class="btn btn-primary" role="button">20</a></li>
-							<li><a href="{{ url('ecnet/users/50/'.$firstUser) }}" class="btn btn-primary" role="button">50</a></li>
-							<li><a href="{{ url('ecnet/users/100/'.$firstUser) }}" class="btn btn-primary" role="button">100</a></li>
-							<li><a href="{{ url('ecnet/users/500/'.$firstUser) }}" class="btn btn-primary" role="button">500</a></li>
+							<li><a href="{{ url('ecnet/users/10/0' }}" class="btn btn-primary" role="button">10</a></li>
+							<li><a href="{{ url('ecnet/users/20/0') }}" class="btn btn-primary" role="button">20</a></li>
+							<li><a href="{{ url('ecnet/users/50/0') }}" class="btn btn-primary" role="button">50</a></li>
+							<li><a href="{{ url('ecnet/users/100/0') }}" class="btn btn-primary" role="button">100</a></li>
+							<li><a href="{{ url('ecnet/users/500/0') }}" class="btn btn-primary" role="button">500</a></li>
 						</ul>
 						
 					@endif
