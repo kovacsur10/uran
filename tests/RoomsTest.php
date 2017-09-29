@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Session;
  *
  * @author Máté Kovács <kovacsur10@gmail.com>
  */
-class RoomsTest extends TestCase
+class RoomsTest extends BrowserKitTestCase
 {
 	use DatabaseTransactions;
 

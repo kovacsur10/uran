@@ -10,7 +10,7 @@ use App\Classes\Data\StatusCode;
  *
  * @author Máté Kovács <kovacsur10@gmail.com>
  */
-class StatusCodeTest extends TestCase
+class StatusCodeTest extends BrowserKitTestCase
 {
 	use DatabaseTransactions;
 

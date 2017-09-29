@@ -10,7 +10,7 @@ use App\Classes\Data\PermissionGroup;
  *
  * @author Máté Kovács <kovacsur10@gmail.com>
  */
-class PermissionGroupTest extends TestCase
+class PermissionGroupTest extends BrowserKitTestCase
 {
 	use DatabaseTransactions;
 

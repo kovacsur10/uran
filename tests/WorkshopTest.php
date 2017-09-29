@@ -10,7 +10,7 @@ use App\Classes\Data\Workshop;
  *
  * @author Máté Kovács <kovacsur10@gmail.com>
  */
-class WorkshopTest extends TestCase
+class WorkshopTest extends BrowserKitTestCase
 {
 	use DatabaseTransactions;
 

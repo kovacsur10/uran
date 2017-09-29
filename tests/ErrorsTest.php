@@ -10,7 +10,7 @@ use App\Classes\Layout\Errors;
  *
  * @author Máté Kovács <kovacsur10@gmail.com>
  */
-class ErrorsTest extends TestCase
+class ErrorsTest extends BrowserKitTestCase
 {
 	use DatabaseTransactions;
 

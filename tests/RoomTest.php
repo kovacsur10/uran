@@ -10,7 +10,7 @@ use App\Classes\Data\Room;
  *
  * @author Máté Kovács <kovacsur10@gmail.com>
  */
-class RoomTest extends TestCase
+class RoomTest extends BrowserKitTestCase
 {
 	use DatabaseTransactions;
 

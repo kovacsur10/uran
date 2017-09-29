@@ -10,7 +10,7 @@ use App\Classes\Data\LanguageExam;
  *
  * @author Máté Kovács <kovacsur10@gmail.com>
  */
-class LanguageExamTest extends TestCase
+class LanguageExamTest extends BrowserKitTestCase
 {
 	use DatabaseTransactions;
 

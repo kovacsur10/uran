@@ -12,7 +12,7 @@ use App\Exceptions\DatabaseException;
  *
  * @author Máté Kovács <kovacsur10@gmail.com>
  */
-class ModulesTest extends TestCase
+class ModulesTest extends BrowserKitTestCase
 {
 	use DatabaseTransactions;
 

@@ -17,7 +17,7 @@ use App\Persistence\P_Ecnet;
  *
  * @author Máté Kovács <kovacsur10@gmail.com>
  */
-class EcnetDataTest extends TestCase
+class EcnetDataTest extends BrowserKitTestCase
 {
 	use DatabaseTransactions;
 

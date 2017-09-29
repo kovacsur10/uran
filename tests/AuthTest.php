@@ -18,7 +18,7 @@ use App\Classes\Data\StatusCode;
  *
  * @author Máté Kovács <kovacsur10@gmail.com>
  */
-class AuthTest extends TestCase
+class AuthTest extends BrowserKitTestCase
 {
 	use DatabaseTransactions;
 	

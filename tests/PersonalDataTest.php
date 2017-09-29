@@ -13,7 +13,7 @@ use App\Classes\Data\LanguageExam;
  *
  * @author Máté Kovács <kovacsur10@gmail.com>
  */
-class PersonalDataTest extends TestCase
+class PersonalDataTest extends BrowserKitTestCase
 {
 	use DatabaseTransactions;
 

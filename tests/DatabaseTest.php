@@ -10,7 +10,7 @@ use App\Classes\Database;
  * 
  * @author Máté Kovács <kovacsur10@gmail.com>
  */
-class DatabaseTest extends TestCase
+class DatabaseTest extends BrowserKitTestCase
 {
 	use DatabaseTransactions;
 

@@ -22,7 +22,7 @@ use App\Classes\Database;
  *
  * @author Máté Kovács <kovacsur10@gmail.com>
  */
-class LayoutDataTest extends TestCase
+class LayoutDataTest extends BrowserKitTestCase
 {
 	use DatabaseTransactions;
 

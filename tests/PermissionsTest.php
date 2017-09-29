@@ -15,7 +15,7 @@ use App\Classes\Data\PermissionGroup;
  *
  * @author Máté Kovács <kovacsur10@gmail.com>
  */
-class PermissionsTest extends TestCase
+class PermissionsTest extends BrowserKitTestCase
 {
 	use DatabaseTransactions;
 

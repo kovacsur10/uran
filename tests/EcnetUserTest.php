@@ -10,7 +10,7 @@ use App\Classes\Data\EcnetUser;
  *
  * @author Máté Kovács <kovacsur10@gmail.com>
  */
-class EcnetUserTest extends TestCase
+class EcnetUserTest extends BrowserKitTestCase
 {
 	use DatabaseTransactions;
 

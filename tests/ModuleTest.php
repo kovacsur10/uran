@@ -10,7 +10,7 @@ use App\Classes\Data\Module;
  *
  * @author Máté Kovács <kovacsur10@gmail.com>
  */
-class ModuleTest extends TestCase
+class ModuleTest extends BrowserKitTestCase
 {
 	use DatabaseTransactions;
 

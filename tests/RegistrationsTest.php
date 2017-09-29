@@ -15,7 +15,7 @@ use App\Classes\Layout\Permissions;
  *
  * @author Máté Kovács <kovacsur10@gmail.com>
  */
-class RegistrationsTest extends TestCase
+class RegistrationsTest extends BrowserKitTestCase
 {
 	use DatabaseTransactions;
 

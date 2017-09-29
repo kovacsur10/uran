@@ -19,7 +19,7 @@ use App\Classes\Data\Notification;
  *
  * @author Máté Kovács <kovacsur10@gmail.com>
  */
-class NotificationsTest extends TestCase
+class NotificationsTest extends BrowserKitTestCase
 {
 	use DatabaseTransactions;
 

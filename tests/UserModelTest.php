@@ -12,7 +12,7 @@ use App\Exceptions\ValueMismatchException;
  *
  * @author Máté Kovács <kovacsur10@gmail.com>
  */
-class UserModelTest extends TestCase
+class UserModelTest extends BrowserKitTestCase
 {
 	use DatabaseTransactions;
 

@@ -18,7 +18,7 @@ use App\Classes\Data\Task;
  *
  * @author Máté Kovács <kovacsur10@gmail.com>
  */
-class TasksTest extends TestCase
+class TasksTest extends BrowserKitTestCase
 {
 	use DatabaseTransactions;
 
