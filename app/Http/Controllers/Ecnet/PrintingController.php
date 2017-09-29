@@ -31,7 +31,7 @@ class PrintingController extends Controller{
 			return view('errors.usernotfound', ["layout" => $layout]);
 		}else{
 			return view('ecnet.account', ["layout" => $layout,
-										  "users" => $layout->user()->users()]);
+										  "users" => $layout->user()->users(0, -1)]);
 		}
 	}
 	
@@ -58,7 +58,7 @@ class PrintingController extends Controller{
 				Logger::warning('At ecnet money modification for user #'.$request->account.'. No money for that user. Maybe that user does not exist!', $oldmoney, $money, 'ecnet/account');
 				$layout->errors()->add('add_money', $layout->language('error_at_money_adding'));
 				return view('ecnet.account', ["layout" => $layout,
-						"users" => $layout->user()->users()]);
+						"users" => $layout->user()->users(0, -1)]);
 			}
 			$oldmoney = $money;
 			if($request->money === "0"){
@@ -72,18 +72,18 @@ class PrintingController extends Controller{
 				Notifications::notify($layout->user()->user(), $request->account, $layout->language('balance_was_modified'), $layout->language('balance_was_modified_description').' '.$oldmoney.' '.$layout->language('from_forint').' '.$money.' '.$layout->language('to_forint').'!', 'ecnet/account');
 				$layout->errors()->add('success_add_money', $layout->language('success_set_money'));
 				return view('ecnet.account', ["layout" => $layout,
-						"users" => $layout->user()->users()]);
+						"users" => $layout->user()->users(0, -1)]);
 			}catch(\Exception $ex){
 				Logger::warning('At ecnet money modification for user #'.$request->account.'. Database error occured!', $oldmoney, $money, 'ecnet/account');
 				$layout->errors()->add('add_money', $layout->language('error_at_money_adding'));
 				return view('ecnet.account', ["layout" => $layout,
-						"users" => $layout->user()->users()]);
+						"users" => $layout->user()->users(0, -1)]);
 			}
 		}else{
 			Logger::warning('At ecnet money modification for user #'.$request->account.'. PERMISSIONS NEEDED!', null, null, 'ecnet/account');
 			return view('errors.authentication', ["layout" => $layout]);
 		}
     }
-	
+
 // PRIVATE FUNCTIONS
 }
