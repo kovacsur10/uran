@@ -15,7 +15,7 @@ use App\Classes\Layout\Permissions;
  *
  * @author Máté Kovács <kovacsur10@gmail.com>
  */
-class RegistrationsTest extends BrowserKitTestCase
+class RegistrationsTest extends TestCase
 {
 	use DatabaseTransactions;
 
@@ -132,6 +132,7 @@ class RegistrationsTest extends BrowserKitTestCase
 		}catch(\Exception $ex){
 			$this->fail("Not the expected exception: ".$ex->getMessage());
 		}
+		$this->assertTrue(true); //No exceptions, so pass it. - from PHPUnit 6, no assertion is reported as a risk
 	}
 	
 	/** Function name: test_reject_success
@@ -218,6 +219,7 @@ class RegistrationsTest extends BrowserKitTestCase
 		}catch(\Exception $ex){
 			$this->fail("Not the expected exception: ".$ex->getMessage());
 		}
+		$this->assertTrue(true); //No exceptions, so pass it. - from PHPUnit 6, no assertion is reported as a risk
 	}
 	
 	/** Function name: test_acceptGuest_success
@@ -294,6 +296,7 @@ class RegistrationsTest extends BrowserKitTestCase
 		}catch(\Exception $ex){
 			$this->fail(" Not the expected exception: ".$ex->getMessage());
 		}
+		$this->assertTrue(true); //No exceptions, so pass it. - from PHPUnit 6, no assertion is reported as a risk
 	}
 	
 	/** Function name: test_acceptCollegist_success
@@ -370,6 +373,7 @@ class RegistrationsTest extends BrowserKitTestCase
 		}catch(\Exception $ex){
 			$this->fail("Not the expected exception: ".$ex->getMessage());
 		}
+		$this->assertTrue(true); //No exceptions, so pass it. - from PHPUnit 6, no assertion is reported as a risk
 	}
 	
 	/** Function name: test_register_success_collegist
@@ -580,5 +584,6 @@ class RegistrationsTest extends BrowserKitTestCase
 		}catch(\Exception $ex){
 			$this->fail("Not the expected exception: ".$ex->getMessage());
 		}
+		$this->assertTrue(true); //No exceptions, so pass it. - from PHPUnit 6, no assertion is reported as a risk
 	}
 }

@@ -10,7 +10,7 @@ use App\Classes\Data\TaskComment;
  *
  * @author Máté Kovács <kovacsur10@gmail.com>
  */
-class TaskCommentTest extends BrowserKitTestCase
+class TaskCommentTest extends TestCase
 {
 	use DatabaseTransactions;
 

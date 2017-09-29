@@ -10,7 +10,7 @@ use App\Classes\Data\MacSlotOrder;
  *
  * @author Máté Kovács <kovacsur10@gmail.com>
  */
-class MacSlotOrderTest extends BrowserKitTestCase
+class MacSlotOrderTest extends TestCase
 {
 	use DatabaseTransactions;
 

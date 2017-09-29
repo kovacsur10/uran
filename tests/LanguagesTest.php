@@ -10,7 +10,7 @@ use App\Classes\Layout\Languages;
  *
  * @author Máté Kovács <kovacsur10@gmail.com>
  */
-class LanguagesTest extends BrowserKitTestCase
+class LanguagesTest extends TestCase
 {
 	use DatabaseTransactions;
 

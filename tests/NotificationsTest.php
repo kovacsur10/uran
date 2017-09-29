@@ -19,7 +19,7 @@ use App\Classes\Data\Notification;
  *
  * @author Máté Kovács <kovacsur10@gmail.com>
  */
-class NotificationsTest extends BrowserKitTestCase
+class NotificationsTest extends TestCase
 {
 	use DatabaseTransactions;
 
@@ -59,6 +59,7 @@ class NotificationsTest extends BrowserKitTestCase
 		}catch(\Exception $ex){
 			$this->fail("Not the expected exception: ".$ex->getMessage());
 		}
+		$this->assertTrue(true); //No exceptions, so pass it. - from PHPUnit 6, no assertion is reported as a risk
 	}
 	
 	/** Function name: test_getNotifications_null
@@ -77,6 +78,7 @@ class NotificationsTest extends BrowserKitTestCase
 		}catch(\Exception $ex){
 			$this->fail("Not the expected exception: ".$ex->getMessage());
 		}
+		$this->assertTrue(true); //No exceptions, so pass it. - from PHPUnit 6, no assertion is reported as a risk
 	}
 	
 	/** Function name: test_get_success
@@ -142,6 +144,7 @@ class NotificationsTest extends BrowserKitTestCase
 		}catch(\Exception $ex){
 			$this->fail("Not the expected exception: ".$ex->getMessage());
 		}
+		$this->assertTrue(true); //No exceptions, so pass it. - from PHPUnit 6, no assertion is reported as a risk
 	}
 	
 	/** Function name: test_getUnreadNotificationCount_null
@@ -160,6 +163,7 @@ class NotificationsTest extends BrowserKitTestCase
 		}catch(\Exception $ex){
 			$this->fail("Not the expected exception: ".$ex->getMessage());
 		}
+		$this->assertTrue(true); //No exceptions, so pass it. - from PHPUnit 6, no assertion is reported as a risk
 	}
 	
 	/** Function name: test_setRead
@@ -198,6 +202,7 @@ class NotificationsTest extends BrowserKitTestCase
 		}catch(\Exception $ex){
 			$this->fail("Unexpected exception! ".$ex->getMessage());
 		}
+		$this->assertTrue(true); //No exceptions, so pass it. - from PHPUnit 6, no assertion is reported as a risk
 	}
 	
 	/** Function name: test_setRead_null
@@ -216,6 +221,7 @@ class NotificationsTest extends BrowserKitTestCase
 		}catch(\Exception $ex){
 			$this->fail("Unexpected exception! ".$ex->getMessage());
 		}
+		$this->assertTrue(true); //No exceptions, so pass it. - from PHPUnit 6, no assertion is reported as a risk
 	}
 	
 	/** Function name: test_notify_success

@@ -10,7 +10,7 @@ use App\Classes\Database;
  * 
  * @author Máté Kovács <kovacsur10@gmail.com>
  */
-class DatabaseTest extends BrowserKitTestCase
+class DatabaseTest extends TestCase
 {
 	use DatabaseTransactions;
 
@@ -38,6 +38,7 @@ class DatabaseTest extends BrowserKitTestCase
 		}catch(\Exception $ex){
 			$this->fail("Unexpected exception: ".$ex->getMessage());
 		}
+		$this->assertTrue(true); //No exceptions, so pass it. - from PHPUnit 6, no assertion is reported as a risk
 	}
 	
 	/** Function name: test_transaction_fail
@@ -58,6 +59,7 @@ class DatabaseTest extends BrowserKitTestCase
 			$this->fail("This should throw an exception!");
 		}catch(\Exception $ex){
 		}
+		$this->assertTrue(true); //No exceptions, so pass it. - from PHPUnit 6, no assertion is reported as a risk
 	}
 	
 	/** Function name: test_transaction_null
@@ -74,6 +76,7 @@ class DatabaseTest extends BrowserKitTestCase
 		}catch(\Exception $ex){
 			$this->fail("Unexpected exception: ".$ex->getMessage());
 		}
+		$this->assertTrue(true); //No exceptions, so pass it. - from PHPUnit 6, no assertion is reported as a risk
 	}
 
 }

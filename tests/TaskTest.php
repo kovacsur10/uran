@@ -15,7 +15,7 @@ use App\Classes\Data\StatusCode;
  *
  * @author Máté Kovács <kovacsur10@gmail.com>
  */
-class TaskTest extends BrowserKitTestCase
+class TaskTest extends TestCase
 {
 	use DatabaseTransactions;
 

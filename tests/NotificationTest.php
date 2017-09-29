@@ -10,7 +10,7 @@ use App\Classes\Data\Notification;
  *
  * @author Máté Kovács <kovacsur10@gmail.com>
  */
-class NotificationTest extends BrowserKitTestCase
+class NotificationTest extends TestCase
 {
 	use DatabaseTransactions;
 
@@ -68,5 +68,6 @@ class NotificationTest extends BrowserKitTestCase
 		$this->assertClassHasAttribute('message', Notification::class);
 		$this->assertClassHasAttribute('route', Notification::class);
 		$this->assertClassHasAttribute('time', Notification::class);
+		$this->assertTrue(true); //All attributes are okay... from PHPUnit 6, no assertion is reported as a risk
 	}
 }

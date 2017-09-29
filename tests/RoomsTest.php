@@ -17,7 +17,7 @@ use Illuminate\Contracts\Session\Session;
  *
  * @author Máté Kovács <kovacsur10@gmail.com>
  */
-class RoomsTest extends BrowserKitTestCase
+class RoomsTest extends TestCase
 {
 	use DatabaseTransactions;
 
@@ -199,6 +199,7 @@ class RoomsTest extends BrowserKitTestCase
 		}catch(\Exception $ex){
 			$this->fail("Not the expected exception: ".$ex->getMessage());
 		}
+		$this->assertTrue(true); //No exceptions, so pass it. - from PHPUnit 6, no assertion is reported as a risk
 	}
 	
 	/** Function name: test_emptyRoom_null
@@ -218,6 +219,7 @@ class RoomsTest extends BrowserKitTestCase
 		}catch(\Exception $ex){
 			$this->fail("Not the expected exception: ".$ex->getMessage());
 		}
+		$this->assertTrue(true); //No exceptions, so pass it. - from PHPUnit 6, no assertion is reported as a risk
 	}
 	
 	/** Function name: test_setUserToRoom_success
@@ -339,6 +341,7 @@ class RoomsTest extends BrowserKitTestCase
 		}catch(\Exception $ex){
 			$this->fail("Not the expected exception: ".$ex->getMessage());
 		}
+		$this->assertTrue(true); //No exceptions, so pass it. - from PHPUnit 6, no assertion is reported as a risk
 	}
 	
 	/** Function name: test_getGuard

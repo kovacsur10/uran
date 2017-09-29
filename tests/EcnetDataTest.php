@@ -17,7 +17,7 @@ use App\Persistence\P_Ecnet;
  *
  * @author Máté Kovács <kovacsur10@gmail.com>
  */
-class EcnetDataTest extends BrowserKitTestCase
+class EcnetDataTest extends TestCase
 {
 	use DatabaseTransactions;
 
@@ -93,6 +93,7 @@ class EcnetDataTest extends BrowserKitTestCase
 			$this->fail("An exception was expected!");
 		}catch(\Exception $ex){
 		}
+		$this->assertTrue(true); //No exceptions, so pass it. - from PHPUnit 6, no assertion is reported as a risk
 	}
 	
 	/** Function name: test_getEcnetUserData
@@ -127,6 +128,7 @@ class EcnetDataTest extends BrowserKitTestCase
 		}catch(\Exception $ex){
 			$this->fail("Unexpected exception: ".$ex->getMessage());
 		}
+		$this->assertTrue(true); //No exceptions, so pass it. - from PHPUnit 6, no assertion is reported as a risk
 	}
 
 	/** Function name: test_setMoneyForUser
@@ -255,6 +257,7 @@ class EcnetDataTest extends BrowserKitTestCase
 		}catch(\Exception $ex){
 			$this->fail("Not the expected exception: ".$ex->getMessage());
 		}
+		$this->assertTrue(true); //No exceptions, so pass it. - from PHPUnit 6, no assertion is reported as a risk
 	}
 	
 	/** Function name: test_changeDefaultValidDate_fail_1
@@ -273,6 +276,7 @@ class EcnetDataTest extends BrowserKitTestCase
 		}catch(\Exception $ex){
 			$this->fail("Not the expected exception: ".$ex->getMessage());
 		}
+		$this->assertTrue(true); //No exceptions, so pass it. - from PHPUnit 6, no assertion is reported as a risk
 	}
 	
 	/** Function name: test_changeDefaultValidDate_fail_2
@@ -291,6 +295,7 @@ class EcnetDataTest extends BrowserKitTestCase
 		}catch(\Exception $ex){
 			$this->fail("Not the expected exception: ".$ex->getMessage());
 		}
+		$this->assertTrue(true); //No exceptions, so pass it. - from PHPUnit 6, no assertion is reported as a risk
 	}
 	
 	/** Function name: test_changeDefaultValidDate_success
@@ -392,6 +397,7 @@ class EcnetDataTest extends BrowserKitTestCase
 		}catch(\Exception $ex){
 			$this->fail("Not the expected exception: ".$ex->getMessage());
 		}
+		$this->assertTrue(true); //No exceptions, so pass it. - from PHPUnit 6, no assertion is reported as a risk
 	}
 	
 	/** Function name: test_deleteMacAddress
@@ -482,6 +488,7 @@ class EcnetDataTest extends BrowserKitTestCase
 		}catch(\Exception $ex){
 			$this->fail("Not the expected exception: ".$ex->getMessage());
 		}
+		$this->assertTrue(true); //No exceptions, so pass it. - from PHPUnit 6, no assertion is reported as a risk
 	}
 	
 	/** Function name: test_insertMacAddress_success
@@ -504,6 +511,7 @@ class EcnetDataTest extends BrowserKitTestCase
 		}catch(\Exception $ex){
 			$this->fail("Unexpected exception: ".$ex->getMessage());
 		}
+		$this->assertTrue(true); //No exceptions, so pass it. - from PHPUnit 6, no assertion is reported as a risk
 	}
 	
 	/** Function name: test_hasMACSlotOrder
@@ -553,6 +561,7 @@ class EcnetDataTest extends BrowserKitTestCase
 		}catch(\Exception $ex){
 			$this->fail("Not the expected exception: ".$ex->getMessage());
 		}
+		$this->assertTrue(true); //No exceptions, so pass it. - from PHPUnit 6, no assertion is reported as a risk
 	}
 	
 	/** Function name: test_addMACSlotOrder
@@ -577,6 +586,7 @@ class EcnetDataTest extends BrowserKitTestCase
 		}catch(\Exception $ex){
 			$this->fail("Unexpected exception: ".$ex->getMessage());
 		}
+		$this->assertTrue(true); //No exceptions, so pass it. - from PHPUnit 6, no assertion is reported as a risk
 	}
 	
 	/** Function name: test_getMacSlotOrders

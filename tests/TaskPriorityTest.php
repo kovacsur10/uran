@@ -10,7 +10,7 @@ use App\Classes\Data\TaskPriority;
  *
  * @author Máté Kovács <kovacsur10@gmail.com>
  */
-class TaskPriorityTest extends BrowserKitTestCase
+class TaskPriorityTest extends TestCase
 {
 	use DatabaseTransactions;
 

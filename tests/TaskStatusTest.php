@@ -10,7 +10,7 @@ use App\Classes\Data\TaskStatus;
  *
  * @author Máté Kovács <kovacsur10@gmail.com>
  */
-class TaskStatusTest extends BrowserKitTestCase
+class TaskStatusTest extends TestCase
 {
 	use DatabaseTransactions;
 

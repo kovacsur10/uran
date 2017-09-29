@@ -12,7 +12,7 @@ use App\Exceptions\DatabaseException;
  *
  * @author Máté Kovács <kovacsur10@gmail.com>
  */
-class ModulesTest extends BrowserKitTestCase
+class ModulesTest extends TestCase
 {
 	use DatabaseTransactions;
 
@@ -153,6 +153,7 @@ class ModulesTest extends BrowserKitTestCase
 		}catch(\Exception $ex){
 			$this->fail("Not the expected database exception! ".$ex->getMessage());
 		}
+		$this->assertTrue(true); //No exceptions, so pass it. - from PHPUnit 6, no assertion is reported as a risk
 	}
 	
 	/** Function name: test_activate_null
@@ -170,6 +171,7 @@ class ModulesTest extends BrowserKitTestCase
 		}catch(\Exception $ex){
 			$this->fail("Not the expected database exception! ".$ex->getMessage());
 		}
+		$this->assertTrue(true); //No exceptions, so pass it. - from PHPUnit 6, no assertion is reported as a risk
 	}
 	
 	/** Function name: test_deactivate_success

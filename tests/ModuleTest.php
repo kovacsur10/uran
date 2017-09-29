@@ -10,7 +10,7 @@ use App\Classes\Data\Module;
  *
  * @author Máté Kovács <kovacsur10@gmail.com>
  */
-class ModuleTest extends BrowserKitTestCase
+class ModuleTest extends TestCase
 {
 	use DatabaseTransactions;
 
@@ -65,5 +65,6 @@ class ModuleTest extends BrowserKitTestCase
 		$this->assertClassHasAttribute('id', Module::class);
 		$this->assertClassHasAttribute('name', Module::class);
 		$this->assertClassHasAttribute('active', Module::class);
+		$this->assertTrue(true); //All attributes are okay... from PHPUnit 6, no assertion is reported as a risk
 	}
 }

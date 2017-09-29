@@ -15,7 +15,7 @@ use App\Classes\Data\PermissionGroup;
  *
  * @author Máté Kovács <kovacsur10@gmail.com>
  */
-class PermissionsTest extends BrowserKitTestCase
+class PermissionsTest extends TestCase
 {
 	use DatabaseTransactions;
 
@@ -309,6 +309,7 @@ class PermissionsTest extends BrowserKitTestCase
 		}catch(\Exception $ex){
 			$this->fail("Not the expected exception: ".$ex->getMessage());
 		}
+		$this->assertTrue(true); //No exceptions, so pass it. - from PHPUnit 6, no assertion is reported as a risk
 	}
 	
 	/** Function name: test_removeAll_exceptions
@@ -327,6 +328,7 @@ class PermissionsTest extends BrowserKitTestCase
 		}catch(\Exception $ex){
 			$this->fail("Unexpected exception: ".$ex->getMessage());
 		}
+		$this->assertTrue(true); //No exceptions, so pass it. - from PHPUnit 6, no assertion is reported as a risk
 	}
 	
 	/** Function name: test_setPermissionForUser_success
@@ -373,6 +375,7 @@ class PermissionsTest extends BrowserKitTestCase
 		}catch(\Exception $ex){
 			$this->fail("Unexpected exception: ".$ex->getMessage());
 		}
+		$this->assertTrue(true); //No exceptions, so pass it. - from PHPUnit 6, no assertion is reported as a risk
 	}
 	
 	/** Function name: test_setPermissionForUser_null
@@ -407,6 +410,7 @@ class PermissionsTest extends BrowserKitTestCase
 		}catch(\Exception $ex){
 			$this->fail("Not the expected exception: ".$ex->getMessage());
 		}
+		$this->assertTrue(true); //No exceptions, so pass it. - from PHPUnit 6, no assertion is reported as a risk
 	}
 	
 	/** Function name: test_getPermissionGroups

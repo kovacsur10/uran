@@ -10,7 +10,7 @@ use App\Classes\Data\FreePage;
  *
  * @author Máté Kovács <kovacsur10@gmail.com>
  */
-class FreePageTest extends BrowserKitTestCase
+class FreePageTest extends TestCase
 {
 	use DatabaseTransactions;
 

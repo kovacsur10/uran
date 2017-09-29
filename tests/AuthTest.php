@@ -18,7 +18,7 @@ use App\Classes\Data\StatusCode;
  *
  * @author Máté Kovács <kovacsur10@gmail.com>
  */
-class AuthTest extends BrowserKitTestCase
+class AuthTest extends TestCase
 {
 	use DatabaseTransactions;
 	
@@ -215,6 +215,7 @@ class AuthTest extends BrowserKitTestCase
 		}catch(\Exception $ex){
 			$this->fail("Password was not updated, login exception: ".$ex->getMessage());
 		}
+		$this->assertTrue(true); //No exceptions, so pass it. - from PHPUnit 6, no assertion is reported as a risk
 	}
 	
 	/** Function name: test_updatePassword_fail
@@ -244,6 +245,7 @@ class AuthTest extends BrowserKitTestCase
 		}catch(\Exception $ex){
 			$this->fail("Not the expected exception: ".$ex->getMessage());
 		}
+		$this->assertTrue(true); //No exceptions, so pass it. - from PHPUnit 6, no assertion is reported as a risk
 	}
 	
 	/** Function name: test_updatePassword_null
@@ -262,6 +264,7 @@ class AuthTest extends BrowserKitTestCase
 		}catch(\Exception $ex){
 			$this->fail("Not the expected exception: ".$ex->getMessage());
 		}
+		$this->assertTrue(true); //No exceptions, so pass it. - from PHPUnit 6, no assertion is reported as a risk
 	}
 	
 	/** Function name: test_updatePassword_empty
@@ -284,6 +287,7 @@ class AuthTest extends BrowserKitTestCase
 		}catch(\Exception $ex){
 			$this->fail("Password was not updated, login exception: ".$ex->getMessage());
 		}
+		$this->assertTrue(true); //No exceptions, so pass it. - from PHPUnit 6, no assertion is reported as a risk
 	}
 	
 	/** Function name: test_resetPassword
@@ -316,6 +320,7 @@ class AuthTest extends BrowserKitTestCase
 		}catch(\Exception $ex){
 			$this->fail("Unexpected exception: ".$ex->getMessage());
 		}
+		$this->assertTrue(true); //No exceptions, so pass it. - from PHPUnit 6, no assertion is reported as a risk
 	}
 	
 	/** Function name: test_endPasswordReset
@@ -373,5 +378,6 @@ class AuthTest extends BrowserKitTestCase
 		}catch(\Exception $ex){
 			$this->fail("Unexpected exception: ".$ex->getMessage());
 		}
+		$this->assertTrue(true); //No exceptions, so pass it. - from PHPUnit 6, no assertion is reported as a risk
 	}
 }

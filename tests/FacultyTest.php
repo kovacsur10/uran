@@ -10,7 +10,7 @@ use App\Classes\Data\Faculty;
  *
  * @author Máté Kovács <kovacsur10@gmail.com>
  */
-class FacultyTest extends BrowserKitTestCase
+class FacultyTest extends TestCase
 {
 	use DatabaseTransactions;
 

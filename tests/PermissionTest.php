@@ -10,7 +10,7 @@ use App\Classes\Data\Permission;
  *
  * @author Máté Kovács <kovacsur10@gmail.com>
  */
-class PermissionTest extends BrowserKitTestCase
+class PermissionTest extends TestCase
 {
 	use DatabaseTransactions;
 

@@ -10,7 +10,7 @@ use App\Classes\Data\AssignmentTable;
  *
  * @author Máté Kovács <kovacsur10@gmail.com>
  */
-class AssignmentTableTest extends BrowserKitTestCase
+class AssignmentTableTest extends TestCase
 {
 	use DatabaseTransactions;
 

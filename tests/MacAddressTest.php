@@ -10,7 +10,7 @@ use App\Classes\Data\MacAddress;
  *
  * @author Máté Kovács <kovacsur10@gmail.com>
  */
-class MacAddressTest extends BrowserKitTestCase
+class MacAddressTest extends TestCase
 {
 	use DatabaseTransactions;
 

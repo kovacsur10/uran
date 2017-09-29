@@ -14,7 +14,7 @@ use App\Classes\Data\Country;
  *
  * @author Máté Kovács <kovacsur10@gmail.com>
  */
-class BaseDataTest extends BrowserKitTestCase
+class BaseDataTest extends TestCase
 {
 	use DatabaseTransactions;
 

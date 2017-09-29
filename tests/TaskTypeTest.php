@@ -10,7 +10,7 @@ use App\Classes\Data\TaskType;
  *
  * @author Máté Kovács <kovacsur10@gmail.com>
  */
-class TaskTypeTest extends BrowserKitTestCase
+class TaskTypeTest extends TestCase
 {
 	use DatabaseTransactions;
 

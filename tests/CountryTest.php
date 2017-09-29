@@ -10,7 +10,7 @@ use App\Classes\Data\Country;
  *
  * @author Máté Kovács <kovacsur10@gmail.com>
  */
-class CountryTest extends BrowserKitTestCase
+class CountryTest extends TestCase
 {
 	use DatabaseTransactions;
 
