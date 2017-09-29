@@ -356,7 +356,7 @@ class LayoutData{
 		$route = Route::getCurrentRoute();
 		if($route !== null){
 			$params = Route::getCurrentRoute()->parameters();
-			$route = Route::getCurrentRoute()->getPath();
+			$route = Route::getCurrentRoute()->getPath(); //TODO: CHECK THIS, MAYBE NOT COMPATIBLE WITH 5.4, if not, use uri()
 			foreach($params as $key => $value){
 				$route = str_replace('{'.$key.'}', $value, $route);
 			}
