@@ -3,7 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use Illuminate\Support\Facades\Session;
+use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
 
 class AuthenticatedMiddleware{
@@ -16,7 +16,7 @@ class AuthenticatedMiddleware{
      * @return mixed
      */
     public function handle(Request $request, Closure $next){
-        if(!Session::has('user')){
+        if(!session()->has('user')){
             return redirect('/');
         }
         return $next($request);

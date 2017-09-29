@@ -7,7 +7,7 @@ use App\Classes\LayoutData;
 use App\Classes\Layout\User;
 use Validator;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Session;
+use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 

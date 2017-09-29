@@ -9,7 +9,7 @@ use App\Persistence\P_Room;
 use App\Exceptions\DatabaseException;
 use App\Exceptions\RoomNotFoundException;
 use App\Exceptions\UserNotFoundException;
-use Illuminate\Support\Facades\Session;
+use Illuminate\Contracts\Session\Session;
 
 /** Class name: Rooms
  *
@@ -453,8 +453,8 @@ class Rooms{
 	 */
 	public static function checkLevel($level){
 		if($level === null){
-			if(Session::has('rooms_show_level')){
-				$level = Session::get('rooms_show_level');
+			if(session()->has('rooms_show_level')){
+				$level = session()->get('rooms_show_level');
 			}else{
 				$level = 2;
 			}
@@ -462,7 +462,7 @@ class Rooms{
 		if(!($level == -2 || $level == -1 || $level == -1 || $level == 0 || $level == 1 || $level == 2 || $level == 3 || $level == 4 || $level == 5)){
 			$level = 2;
 		}
-		Session::put('rooms_show_level', $level);
+		session()->put('rooms_show_level', $level);
 		return $level;
 	}
 	
@@ -477,8 +477,8 @@ class Rooms{
 	 */
 	public static function getSessionData(){
 		$sessionData = [];
-		if(Session::has('rooms_show_level')){
-			$sessionData['rooms_show_level'] = Session::get('rooms_show_level');
+		if(session()->has('rooms_show_level')){
+			$sessionData['rooms_show_level'] = session()->get('rooms_show_level');
 		}
 		return $sessionData;
 	}

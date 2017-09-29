@@ -10,7 +10,7 @@ use App\Classes\Logger;
 use App\Exceptions\ValueMismatchException;
 use App\Exceptions\DatabaseException;
 use App\Classes\Database;
-use Illuminate\Support\Facades\Session;
+use Illuminate\Contracts\Session\Session;
 
 /** Class name: EcnetData
  *
@@ -119,9 +119,9 @@ class EcnetData extends User{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function filterUsers(){
-		if(Session::has('ecnet_username_filter') && Session::has('ecnet_name_filter')){
-			$username = Session::get('ecnet_username_filter');
-			$name = Session::get('ecnet_name_filter');
+		if(session()->has('ecnet_username_filter') && session()->has('ecnet_name_filter')){
+			$username = session()->get('ecnet_username_filter');
+			$name = session()->get('ecnet_name_filter');
 			if($username === ""){
 				$username = null;
 			}
@@ -143,14 +143,14 @@ class EcnetData extends User{
 	 */
 	public static function setFilterUsers($username, $name){
 		if($username === null){
-			Session::put('ecnet_username_filter', '');
+			session()->put('ecnet_username_filter', '');
 		}else{
-			Session::put('ecnet_username_filter', $username);
+			session()->put('ecnet_username_filter', $username);
 		}
 		if($name === null){
-			Session::put('ecnet_name_filter', '');
+			session()->put('ecnet_name_filter', '');
 		}else{
-			Session::put('ecnet_name_filter',$name);
+			session()->put('ecnet_name_filter',$name);
 		}
 	}
 	
@@ -162,8 +162,8 @@ class EcnetData extends User{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public static function resetFilterUsers(){
-		Session::forget('ecnet_username_filter');
-		Session::forget('ecnet_name_filter');
+		session()->forget('ecnet_username_filter');
+		session()->forget('ecnet_name_filter');
 	}
 	
 	/** Function name: ecnetUsers
@@ -624,12 +624,12 @@ class EcnetData extends User{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public static function checkUserCount($count){
-		if(($count === null && !Session::has('ecnet_admin_paging')) || ($count !== null && ($count < 1 || 500 < $count))){
+		if(($count === null && !session()->has('ecnet_admin_paging')) || ($count !== null && ($count < 1 || 500 < $count))){
 			$count = 50;
 		}else if($count === null){
-			$count = Session::get('ecnet_admin_paging');
+			$count = session()->get('ecnet_admin_paging');
 		}
-		Session::put('ecnet_admin_paging', $count);
+		session()->put('ecnet_admin_paging', $count);
 		return $count;
 	}
 	
@@ -644,14 +644,14 @@ class EcnetData extends User{
 	 */
 	public static function getSessionData(){
 		$sessionData = [];
-		if(Session::has('ecnet_username_filter')){
-			$sessionData['ecnet_username_filter'] = Session::get('ecnet_username_filter');
+		if(session()->has('ecnet_username_filter')){
+			$sessionData['ecnet_username_filter'] = session()->get('ecnet_username_filter');
 		}
-		if(Session::has('ecnet_name_filter')){
-			$sessionData['ecnet_name_filter'] = Session::get('ecnet_name_filter');
+		if(session()->has('ecnet_name_filter')){
+			$sessionData['ecnet_name_filter'] = session()->get('ecnet_name_filter');
 		}
-		if(Session::has('ecnet_admin_paging')){
-			$sessionData['ecnet_admin_paging'] = Session::get('ecnet_admin_paging');
+		if(session()->has('ecnet_admin_paging')){
+			$sessionData['ecnet_admin_paging'] = session()->get('ecnet_admin_paging');
 		}
 		return $sessionData;
 	}

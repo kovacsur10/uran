@@ -7,7 +7,7 @@ use App\Classes\LayoutData;
 use App\Classes\Logger;
 use App\Persistence\P_User;
 use App\Classes\Layout\User as MU;
-use Illuminate\Support\Facades\Session;
+use Illuminate\Contracts\Session\Session;
 use App\Exceptions\UserNotFoundException;
 use App\Exceptions\ValueMismatchException;
 use App\Exceptions\DatabaseException;
@@ -36,7 +36,7 @@ class Auth{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public static function isLoggedIn(){
-		return Session::has('user');
+		return session()->has('user');
 	}
 	
 	/** Function name: user
@@ -49,7 +49,7 @@ class Auth{
 	 */
 	public static function user(){
 		if(Auth::isLoggedIn()){
-			return Session::get('user');
+			return session()->get('user');
 		}else{
 			return null;
 		}
@@ -64,8 +64,8 @@ class Auth{
 	public static function logout(){
 		LayoutData::saveSession();
 		$lang = LayoutData::lang();
-		Session::flush();
-		Session::put('lang', $lang);
+		session()->flush();
+		session()->put('lang', $lang);
 	}
 	
 	/** Function name: login
@@ -90,7 +90,7 @@ class Auth{
 				Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 				throw new DatabaseException("User login time could not be updated!");
 			}
-			Session::put('user', $user);
+			session()->put('user', $user);
 			LayoutData::setLanguage($user->language());
 			LayoutData::loadSession();
 		}else{ //password doesn't match			
@@ -146,9 +146,9 @@ class Auth{
 
 		$day = Carbon::now()->dayOfYear;
 		$string = sha1($username.$user->registrationDate().$user->name().$day);
-		if(Session::has('lang')){
-			if(Session::get('lang') == "hu_HU" || Session::get('lang') == "en_US"){
-				$lang = Session::get('lang');
+		if(session()->has('lang')){
+			if(session()->get('lang') == "hu_HU" || session()->get('lang') == "en_US"){
+				$lang = session()->get('lang');
 			}else{
 				$lang = "hu_HU";
 			}

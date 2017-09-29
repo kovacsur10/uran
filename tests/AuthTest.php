@@ -5,7 +5,7 @@
 use App\Classes\Data\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use App\Classes\Auth;
-use Illuminate\Support\Facades\Session;
+use Illuminate\Contracts\Session\Session;
 use App\Exceptions\ValueMismatchException;
 use App\Exceptions\UserNotFoundException;
 use Carbon\Carbon;
@@ -31,22 +31,22 @@ class AuthTest extends BrowserKitTestCase
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function test_isLoggedIn(){
-		Session::flush();
-		$this->assertFalse(Session::has('user'));
+		session()->flush();
+		$this->assertFalse(session()->has('user'));
 		$this->assertFalse(Auth::isLoggedIn());
-		$this->assertFalse(Session::has('user'));
+		$this->assertFalse(session()->has('user'));
 		
-		Session::flush();
-		Session::put('user', null);
-		$this->assertFalse(Session::has('user'));
+		session()->flush();
+		session()->put('user', null);
+		$this->assertFalse(session()->has('user'));
 		$this->assertFalse(Auth::isLoggedIn());
-		$this->assertFalse(Session::has('user'));
+		$this->assertFalse(session()->has('user'));
 		
-		Session::flush();
-		Session::put('user', 'dummy');
-		$this->assertTrue(Session::has('user'));
+		session()->flush();
+		session()->put('user', 'dummy');
+		$this->assertTrue(session()->has('user'));
 		$this->assertTrue(Auth::isLoggedIn());
-		$this->assertTrue(Session::has('user'));
+		$this->assertTrue(session()->has('user'));
 	}
 	
 	/** Function name: test_user
@@ -58,22 +58,22 @@ class AuthTest extends BrowserKitTestCase
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function test_user(){
-		Session::flush();
-		$this->assertFalse(Session::has('user'));
+		session()->flush();
+		$this->assertFalse(session()->has('user'));
 		$this->assertNull(Auth::user());
-		$this->assertFalse(Session::has('user'));
+		$this->assertFalse(session()->has('user'));
 		
-		Session::flush();
-		Session::put('user', null);
-		$this->assertFalse(Session::has('user'));
+		session()->flush();
+		session()->put('user', null);
+		$this->assertFalse(session()->has('user'));
 		$this->assertNull(Auth::user());
-		$this->assertFalse(Session::has('user'));
+		$this->assertFalse(session()->has('user'));
 		
-		Session::flush();
-		Session::put('user', 'dummy');
-		$this->assertTrue(Session::has('user'));
+		session()->flush();
+		session()->put('user', 'dummy');
+		$this->assertTrue(session()->has('user'));
 		$this->assertEquals('dummy', Auth::user());
-		$this->assertTrue(Session::has('user'));
+		$this->assertTrue(session()->has('user'));
 	}
 	
 	/** Function name: test_logout
@@ -88,32 +88,32 @@ class AuthTest extends BrowserKitTestCase
 	 */
 	public function test_logout(){
 		$user = new User(41, "", "", "", "", "", new StatusCode(1, ""), "", true, true, "", "", "", "", "", "", "", "", null, null, "", true);
-		Session::put('user', $user);
-		Session::put('lang', 'hu_HU');
-		$this->assertTrue(Session::has('user'), "Session variable 'user' is not set!");
-		$this->assertTrue(Session::has('lang'));
+		session()->put('user', $user);
+		session()->put('lang', 'hu_HU');
+		$this->assertTrue(session()->has('user'), "Session variable 'user' is not set!");
+		$this->assertTrue(session()->has('lang'));
 		Auth::logout();
-		$this->assertFalse(Session::has('user'), "Session variable 'user' is set!");
-		$this->assertTrue(Session::has('lang'));
+		$this->assertFalse(session()->has('user'), "Session variable 'user' is set!");
+		$this->assertTrue(session()->has('lang'));
 		Auth::logout();
-		$this->assertFalse(Session::has('user'), "Session variable 'user' is set!");
-		$this->assertTrue(Session::has('lang'));
+		$this->assertFalse(session()->has('user'), "Session variable 'user' is set!");
+		$this->assertTrue(session()->has('lang'));
 		
 		//null value test
-		Session::put('user', null);
-		$this->assertFalse(Session::has('user'), "Session variable 'user' is not set!");
-		$this->assertTrue(Session::has('lang'));
+		session()->put('user', null);
+		$this->assertFalse(session()->has('user'), "Session variable 'user' is not set!");
+		$this->assertTrue(session()->has('lang'));
 		Auth::logout();
-		$this->assertFalse(Session::has('user'), "Session variable 'user' is not set!");
-		$this->assertTrue(Session::has('lang'));
+		$this->assertFalse(session()->has('user'), "Session variable 'user' is not set!");
+		$this->assertTrue(session()->has('lang'));
 		
-		Session::flush();
-		Session::put('user', $user);
-		$this->assertTrue(Session::has('user'), "Session variable 'user' is not set!");
-		$this->assertFalse(Session::has('lang'));
+		session()->flush();
+		session()->put('user', $user);
+		$this->assertTrue(session()->has('user'), "Session variable 'user' is not set!");
+		$this->assertFalse(session()->has('lang'));
 		Auth::logout();
-		$this->assertFalse(Session::has('user'), "Session variable 'user' is not set!");
-		$this->assertTrue(Session::has('lang'));
+		$this->assertFalse(session()->has('user'), "Session variable 'user' is not set!");
+		$this->assertTrue(session()->has('lang'));
 	}
 	
 	/** Function name: test_login_success
@@ -127,19 +127,19 @@ class AuthTest extends BrowserKitTestCase
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function test_login_success(){
-		Session::flush();
-		$this->assertFalse(Session::has('user'), "Session variable 'user' is set!");
-		$this->assertCount(0, Session::all());
+		session()->flush();
+		$this->assertFalse(session()->has('user'), "Session variable 'user' is set!");
+		$this->assertCount(0, session()->all());
 		try{
 			Auth::login('forUnitTest','forUnittest');
 		}catch(\Exception $ex){
 			$this->fail("Login exception: ".$ex->getMessage());
 		}
-		$this->assertTrue(Session::has('user'), "Session variable 'user' is not set!");
-		$this->assertCount(4, Session::all());
+		$this->assertTrue(session()->has('user'), "Session variable 'user' is not set!");
+		$this->assertCount(4, session()->all());
 		
 		//cleanup
-		Session::forget('user');
+		session()->forget('user');
 	}
 	
 	/** Function name: test_login_failUsername
@@ -153,7 +153,7 @@ class AuthTest extends BrowserKitTestCase
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function test_login_failUsername(){
-		$this->assertFalse(Session::has('user'), "Session variable 'user' is set!");
+		$this->assertFalse(session()->has('user'), "Session variable 'user' is set!");
 		try{
 			Auth::login('invalidUser','invalid_password');
 			$this->fail("Exception was expected!");
@@ -161,10 +161,10 @@ class AuthTest extends BrowserKitTestCase
 		}catch(\Exception $ex){
 			$this->fail("Not the expected exception: ".$ex->getMessage());
 		}
-		$this->assertFalse(Session::has('user'), "Session variable 'user' is set!");
+		$this->assertFalse(session()->has('user'), "Session variable 'user' is set!");
 	
 		//cleanup
-		Session::forget('user');
+		session()->forget('user');
 	}
 	
 	/** Function name: test_login_failPassword
@@ -179,7 +179,7 @@ class AuthTest extends BrowserKitTestCase
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function test_login_failPassword(){
-		$this->assertFalse(Session::has('user'), "Session variable 'user' is set!");
+		$this->assertFalse(session()->has('user'), "Session variable 'user' is set!");
 		try{
 			Auth::login('forUnitTest','invalid_password');
 			$this->fail("Exception was expected!");
@@ -187,10 +187,10 @@ class AuthTest extends BrowserKitTestCase
 		}catch(\Exception $ex){
 			$this->fail("Not the expected exception: ".$ex->getMessage());
 		}
-		$this->assertFalse(Session::has('user'), "Session variable 'user' is set!");
+		$this->assertFalse(session()->has('user'), "Session variable 'user' is set!");
 	
 		//cleanup
-		Session::forget('user');
+		session()->forget('user');
 	}
 	
 	/** Function name: test_updatePassword_success

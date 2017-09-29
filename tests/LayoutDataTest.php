@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Illuminate\Support\Facades\Session;
+use Illuminate\Contracts\Session\Session;
 use App\Classes\LayoutData;
 use App\Classes\Layout\BaseData;
 use App\Classes\Layout\Errors;
@@ -80,7 +80,7 @@ class LayoutDataTest extends BrowserKitTestCase
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function test_constructor_logged(){
-		Session::set('user', \App\Classes\Layout\User::getUserData(1));
+		session(['user' => \App\Classes\Layout\User::getUserData(1)]);
 		$layout = new LayoutData();
 		$this->assertInstanceOf(BaseData::class, $layout->base());
 		$this->assertInstanceOf(Errors::class, $layout->errors());
@@ -104,7 +104,7 @@ class LayoutDataTest extends BrowserKitTestCase
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function test_setUser(){
-		Session::set('user', \App\Classes\Layout\User::getUserData(1));
+		session(['user' => \App\Classes\Layout\User::getUserData(1)]);
 		$layout = new LayoutData();
 		$this->assertInstanceOf(\App\Classes\Layout\User::class, $layout->user());
 		$layout->setUser(new EcnetData(1));
@@ -151,19 +151,19 @@ class LayoutDataTest extends BrowserKitTestCase
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function test_setLanguage(){
-		if(Session::has('lang')){
-			Session::forget('lang');
+		if(session()->has('lang')){
+			session()->forget('lang');
 		}
-		$this->assertFalse(Session::has('lang'));
+		$this->assertFalse(session()->has('lang'));
 		LayoutData::setLanguage('hu_HU');
-		$this->assertTrue(Session::has('lang'));
-		$this->assertEquals(Session::get('lang'), 'hu_HU');
+		$this->assertTrue(session()->has('lang'));
+		$this->assertEquals(session()->get('lang'), 'hu_HU');
 		LayoutData::setLanguage('en_US');
-		$this->assertTrue(Session::has('lang'));
-		$this->assertEquals(Session::get('lang'), 'en_US');
+		$this->assertTrue(session()->has('lang'));
+		$this->assertEquals(session()->get('lang'), 'en_US');
 		LayoutData::setLanguage(null);
-		$this->assertTrue(Session::has('lang'));
-		$this->assertEquals(Session::get('lang'), 'en_US');
+		$this->assertTrue(session()->has('lang'));
+		$this->assertEquals(session()->get('lang'), 'en_US');
 	}
 	
 	/** Function name: test_lang
@@ -175,12 +175,12 @@ class LayoutDataTest extends BrowserKitTestCase
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function test_lang(){
-		if(Session::has('lang')){
-			Session::forget('lang');
+		if(session()->has('lang')){
+			session()->forget('lang');
 		}
-		$this->assertFalse(Session::has('lang'));
-		Session::put('lang', 'en_US');
-		$this->assertEquals('en_US', Session::get('lang'));
+		$this->assertFalse(session()->has('lang'));
+		session(['lang' => 'en_US']);
+		$this->assertEquals('en_US', session()->get('lang'));
 		$this->assertEquals(LayoutData::lang(), 'en_US');
 	}
 	
@@ -195,36 +195,36 @@ class LayoutDataTest extends BrowserKitTestCase
 	public function test_saveSession(){
 		//user fake "login"
 		$user = new User(34, "", "", "", "", "", new StatusCode(1, ""), "", true, true, "", "", "", "", "", "", "", "", null, null, "", true);
-		Session::put('user', $user);
+		session()->put('user', $user);
 		//test session data to save
-		Session::flush();
-		Session::put('user', $user);
+		session()->flush();
+		session()->put('user', $user);
 		
 		Database::transaction(function(){
 			LayoutData::loadSession(); //ensure that it's empty
-			$this->assertCount(1, Session::all());
+			$this->assertCount(1, session()->all());
 			LayoutData::saveSession();
-			$this->assertCount(1, Session::all());
+			$this->assertCount(1, session()->all());
 			LayoutData::loadSession(); //ensure that it was okay
-			$this->assertCount(1, Session::all());
+			$this->assertCount(1, session()->all());
 		});
 			
-		Session::flush();
-		Session::put('user', $user);
-		Session::put('tasks_caption_filter', 'asd');
-		Session::put('sajt', 'asd');
-		Session::put('ecnet_username_filter', 'omg');
+		session()->flush();
+		session()->put('user', $user);
+		session()->put('tasks_caption_filter', 'asd');
+		session()->put('sajt', 'asd');
+		session()->put('ecnet_username_filter', 'omg');
 		Database::transaction(function() use($user){
-			$this->assertCount(4, Session::all());
+			$this->assertCount(4, session()->all());
 			LayoutData::loadSession(); //ensure that it's empty
-			$this->assertCount(4, Session::all());
+			$this->assertCount(4, session()->all());
 			LayoutData::saveSession();
-			$this->assertCount(4, Session::all());
-			Session::flush();
-			Session::put('user', $user);
-			$this->assertCount(1, Session::all());
+			$this->assertCount(4, session()->all());
+			session()->flush();
+			session()->put('user', $user);
+			$this->assertCount(1, session()->all());
 			LayoutData::loadSession(); //ensure that it was okay
-			$this->assertCount(3, Session::all());
+			$this->assertCount(3, session()->all());
 		});
 	}
 	
@@ -237,21 +237,21 @@ class LayoutDataTest extends BrowserKitTestCase
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function test_loadSession(){
-		Session::flush();
+		session()->flush();
 		//user fake "login"
-		Session::put('user', new User(41, "", "", "", "", "", new StatusCode(1, ""), "", true, true, "", "", "", "", "", "", "", "", null, null, "", true));
+		session()->put('user', new User(41, "", "", "", "", "", new StatusCode(1, ""), "", true, true, "", "", "", "", "", "", "", "", null, null, "", true));
 		
-		$this->assertCount(1, Session::all());
+		$this->assertCount(1, session()->all());
 		LayoutData::loadSession();
-		$this->assertCount(3, Session::all());
+		$this->assertCount(3, session()->all());
 		
-		Session::flush();
+		session()->flush();
 		//user fake "login"
-		Session::put('user', new User(20, "", "", "", "", "", new StatusCode(1, ""), "", true, true, "", "", "", "", "", "", "", "", null, null, "", true));
+		session()->put('user', new User(20, "", "", "", "", "", new StatusCode(1, ""), "", true, true, "", "", "", "", "", "", "", "", null, null, "", true));
 		
-		$this->assertCount(1, Session::all());
+		$this->assertCount(1, session()->all());
 		LayoutData::loadSession();
-		$this->assertCount(1, Session::all());
+		$this->assertCount(1, session()->all());
 	}
 	
 }

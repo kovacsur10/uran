@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Illuminate\Support\Facades\Session;
+use Illuminate\Contracts\Session\Session;
 use App\Classes\Layout\EcnetData;
 use App\Classes\Data\EcnetUser;
 use App\Exceptions\UserNotFoundException;
@@ -729,29 +729,29 @@ class EcnetDataTest extends BrowserKitTestCase
 		$this->assertNull($user->getNameFilter());
 		$this->assertNull($user->getUsernameFilter());
 		
-		Session::flush();
+		session()->flush();
 		$this->filterUsers();
 		$this->assertCount(8, $user->ecnetUsers(0,1000));
 		$this->assertNull($user->getNameFilter());
 		$this->assertNull($user->getUsernameFilter());
 		
-		Session::flush();
-		Session::put('ecnet_username_filter', 'a');
+		session()->flush();
+		session()->put('ecnet_username_filter', 'a');
 		$this->filterUsers();
 		$this->assertCount(8, $user->ecnetUsers(0,1000));
 		$this->assertNull($user->getNameFilter());
 		$this->assertNull($user->getUsernameFilter());
 		
-		Session::flush();
-		Session::put('ecnet_name_filter', 'a');
+		session()->flush();
+		session()->put('ecnet_name_filter', 'a');
 		$this->filterUsers();
 		$this->assertCount(8, $user->ecnetUsers(0,1000));
 		$this->assertNull($user->getNameFilter());
 		$this->assertNull($user->getUsernameFilter());
 		
-		Session::flush();
-		Session::put('ecnet_username_filter', 'a');
-		Session::put('ecnet_name_filter', '');
+		session()->flush();
+		session()->put('ecnet_username_filter', 'a');
+		session()->put('ecnet_name_filter', '');
 		$this->filterUsers();
 		$this->assertCount(3, $user->ecnetUsers(0,1000));
 		$this->assertEquals('ecnet_name_filter', $user->getNameFilter());
@@ -767,43 +767,43 @@ class EcnetDataTest extends BrowserKitTestCase
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	function test_setFilterUsers(){
-		$this->assertFalse(Session::has('ecnet_username_filter'));
-		$this->assertFalse(Session::has('ecnet_name_filter'));
+		$this->assertFalse(session()->has('ecnet_username_filter'));
+		$this->assertFalse(session()->has('ecnet_name_filter'));
 		EcnetData::setFilterUsers(null, null);
-		$this->assertTrue(Session::has('ecnet_username_filter'));
-		$this->assertTrue(Session::has('ecnet_name_filter'));
-		$this->assertEquals("", Session::get('ecnet_username_filter'));
-		$this->assertEquals("", Session::get('ecnet_name_filter'));
+		$this->assertTrue(session()->has('ecnet_username_filter'));
+		$this->assertTrue(session()->has('ecnet_name_filter'));
+		$this->assertEquals("", session()->get('ecnet_username_filter'));
+		$this->assertEquals("", session()->get('ecnet_name_filter'));
 		
-		Session::flush();
+		session()->flush();
 		
-		$this->assertFalse(Session::has('ecnet_username_filter'));
-		$this->assertFalse(Session::has('ecnet_name_filter'));
+		$this->assertFalse(session()->has('ecnet_username_filter'));
+		$this->assertFalse(session()->has('ecnet_name_filter'));
 		EcnetData::setFilterUsers("alma", null);
-		$this->assertTrue(Session::has('ecnet_username_filter'));
-		$this->assertTrue(Session::has('ecnet_name_filter'));
-		$this->assertEquals("alma", Session::get('ecnet_username_filter'));
-		$this->assertEquals("", Session::get('ecnet_name_filter'));
+		$this->assertTrue(session()->has('ecnet_username_filter'));
+		$this->assertTrue(session()->has('ecnet_name_filter'));
+		$this->assertEquals("alma", session()->get('ecnet_username_filter'));
+		$this->assertEquals("", session()->get('ecnet_name_filter'));
 		
-		Session::flush();
+		session()->flush();
 		
-		$this->assertFalse(Session::has('ecnet_username_filter'));
-		$this->assertFalse(Session::has('ecnet_name_filter'));
+		$this->assertFalse(session()->has('ecnet_username_filter'));
+		$this->assertFalse(session()->has('ecnet_name_filter'));
 		EcnetData::setFilterUsers(null, "hal");
-		$this->assertTrue(Session::has('ecnet_username_filter'));
-		$this->assertTrue(Session::has('ecnet_name_filter'));
-		$this->assertEquals("", Session::get('ecnet_username_filter'));
-		$this->assertEquals("hal", Session::get('ecnet_name_filter'));
+		$this->assertTrue(session()->has('ecnet_username_filter'));
+		$this->assertTrue(session()->has('ecnet_name_filter'));
+		$this->assertEquals("", session()->get('ecnet_username_filter'));
+		$this->assertEquals("hal", session()->get('ecnet_name_filter'));
 		
-		Session::flush();
+		session()->flush();
 		
-		$this->assertFalse(Session::has('ecnet_username_filter'));
-		$this->assertFalse(Session::has('ecnet_name_filter'));
+		$this->assertFalse(session()->has('ecnet_username_filter'));
+		$this->assertFalse(session()->has('ecnet_name_filter'));
 		EcnetData::setFilterUsers("alma", "hal");
-		$this->assertTrue(Session::has('ecnet_username_filter'));
-		$this->assertTrue(Session::has('ecnet_name_filter'));
-		$this->assertEquals("alma", Session::get('ecnet_username_filter'));
-		$this->assertEquals("hal", Session::get('ecnet_name_filter'));
+		$this->assertTrue(session()->has('ecnet_username_filter'));
+		$this->assertTrue(session()->has('ecnet_name_filter'));
+		$this->assertEquals("alma", session()->get('ecnet_username_filter'));
+		$this->assertEquals("hal", session()->get('ecnet_name_filter'));
 	}
 	
 	/** Function name: test_resetFilterUsers
@@ -815,26 +815,26 @@ class EcnetDataTest extends BrowserKitTestCase
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	function test_resetFilterUsers(){
-		Session::flush();
+		session()->flush();
 		
-		$this->assertFalse(Session::has('ecnet_username_filter'));
-		$this->assertFalse(Session::has('ecnet_name_filter'));
+		$this->assertFalse(session()->has('ecnet_username_filter'));
+		$this->assertFalse(session()->has('ecnet_name_filter'));
 		EcnetData::resetFilterUsers();
-		$this->assertFalse(Session::has('ecnet_username_filter'));
-		$this->assertFalse(Session::has('ecnet_name_filter'));
+		$this->assertFalse(session()->has('ecnet_username_filter'));
+		$this->assertFalse(session()->has('ecnet_name_filter'));
 		
-		Session::flush();
-		Session::put('ecnet_username_filter', 'alma');
-		Session::put('ecnet_name_filter', 'alma2');
-		Session::put('no_key_like_this', 'alma2');
+		session()->flush();
+		session()->put('ecnet_username_filter', 'alma');
+		session()->put('ecnet_name_filter', 'alma2');
+		session()->put('no_key_like_this', 'alma2');
 		
-		$this->assertTrue(Session::has('ecnet_username_filter'));
-		$this->assertTrue(Session::has('ecnet_name_filter'));
-		$this->assertTrue(Session::has('no_key_like_this'));
+		$this->assertTrue(session()->has('ecnet_username_filter'));
+		$this->assertTrue(session()->has('ecnet_name_filter'));
+		$this->assertTrue(session()->has('no_key_like_this'));
 		EcnetData::resetFilterUsers();
-		$this->assertFalse(Session::has('ecnet_username_filter'));
-		$this->assertFalse(Session::has('ecnet_name_filter'));
-		$this->assertTrue(Session::has('no_key_like_this'));
+		$this->assertFalse(session()->has('ecnet_username_filter'));
+		$this->assertFalse(session()->has('ecnet_name_filter'));
+		$this->assertTrue(session()->has('no_key_like_this'));
 	}
 	
 	/** Function name: test_checkUserCount
@@ -846,35 +846,35 @@ class EcnetDataTest extends BrowserKitTestCase
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	function test_checkUserCount(){
-		Session::flush();
-		$this->assertFalse(Session::has('ecnet_admin_paging'));
+		session()->flush();
+		$this->assertFalse(session()->has('ecnet_admin_paging'));
 		$this->assertEquals(50, EcnetData::checkUserCount(null));
 		
-		Session::flush();
-		Session::put('ecnet_admin_paging', 20);
-		$this->assertTrue(Session::has('ecnet_admin_paging'));
+		session()->flush();
+		session()->put('ecnet_admin_paging', 20);
+		$this->assertTrue(session()->has('ecnet_admin_paging'));
 		$this->assertEquals(20, EcnetData::checkUserCount(null));
 		
-		Session::flush();
-		$this->assertFalse(Session::has('ecnet_admin_paging'));
+		session()->flush();
+		$this->assertFalse(session()->has('ecnet_admin_paging'));
 		$this->assertEquals(50, EcnetData::checkUserCount(0));
 		
-		Session::flush();
-		$this->assertFalse(Session::has('ecnet_admin_paging'));
+		session()->flush();
+		$this->assertFalse(session()->has('ecnet_admin_paging'));
 		$this->assertEquals(50, EcnetData::checkUserCount(501));
 		
-		Session::flush();
-		Session::put('ecnet_admin_paging', 20);
-		$this->assertTrue(Session::has('ecnet_admin_paging'));
+		session()->flush();
+		session()->put('ecnet_admin_paging', 20);
+		$this->assertTrue(session()->has('ecnet_admin_paging'));
 		$this->assertEquals(50, EcnetData::checkUserCount(0));
 		
-		Session::flush();
-		$this->assertFalse(Session::has('ecnet_admin_paging'));
+		session()->flush();
+		$this->assertFalse(session()->has('ecnet_admin_paging'));
 		$this->assertEquals(40, EcnetData::checkUserCount(40));
 		
-		Session::flush();
-		Session::put('ecnet_admin_paging', 20);
-		$this->assertTrue(Session::has('ecnet_admin_paging'));
+		session()->flush();
+		session()->put('ecnet_admin_paging', 20);
+		$this->assertTrue(session()->has('ecnet_admin_paging'));
 		$this->assertEquals(60, EcnetData::checkUserCount(60));
 	}
 	
@@ -887,13 +887,13 @@ class EcnetDataTest extends BrowserKitTestCase
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	function test_getSessionData(){
-		Session::flush();
+		session()->flush();
 		$this->assertCount(0, EcnetData::getSessionData());
 		
-		Session::flush();
-		Session::put('ecnet_username_filter', 20);
-		Session::put('ecnet_name_filter', 15);
-		Session::put('no_key_like_this', 40);
+		session()->flush();
+		session()->put('ecnet_username_filter', 20);
+		session()->put('ecnet_name_filter', 15);
+		session()->put('no_key_like_this', 40);
 		$this->assertEquals(['ecnet_username_filter' => 20, 'ecnet_name_filter' => 15], EcnetData::getSessionData());
 	}
 	

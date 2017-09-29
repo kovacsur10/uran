@@ -10,7 +10,7 @@ use App\Classes\Interfaces\Pageable;
 use App\Exceptions\ValueMismatchException;
 use App\Exceptions\DatabaseException;
 use App\Classes\Database;
-use Illuminate\Support\Facades\Session;
+use Illuminate\Contracts\Session\Session;
 
 /** Class name: Tasks
  *
@@ -159,12 +159,12 @@ class Tasks extends Pageable{
 	public function filterTasks(){
 		$layout = new LayoutData();
 		
-		if(Session::has('tasks_status_filter') || Session::has('tasks_caption_filter') || Session::has('tasks_priority_filter') || Session::has('tasks_hide_closed_filter') || Session::has('tasks_mytasks_filter')){
-			$statusId = Session::get('tasks_status_filter');
-			$caption = Session::get('tasks_caption_filter');
-			$priority = Session::get('tasks_priority_filter');
-			$myTasks = Session::get('tasks_mytasks_filter');
-			$hideClosed = Session::get('tasks_hide_closed_filter');
+		if(session()->has('tasks_status_filter') || session()->has('tasks_caption_filter') || session()->has('tasks_priority_filter') || session()->has('tasks_hide_closed_filter') || session()->has('tasks_mytasks_filter')){
+			$statusId = session()->get('tasks_status_filter');
+			$caption = session()->get('tasks_caption_filter');
+			$priority = session()->get('tasks_priority_filter');
+			$myTasks = session()->get('tasks_mytasks_filter');
+			$hideClosed = session()->get('tasks_hide_closed_filter');
 			
 			if($statusId === null || $statusId === ''){
 				$this->filters['status'] = null;
@@ -210,23 +210,23 @@ class Tasks extends Pageable{
 	 */
 	public static function setFilterTasks($status, $caption, $priority, $myTasks, $hide_closed){
 		if($caption !== null){
-			Session::put('tasks_caption_filter', $caption);
+			session()->put('tasks_caption_filter', $caption);
 		}
 		if($status !== null && $status !== ""){
-			Session::put('tasks_status_filter', $status);
+			session()->put('tasks_status_filter', $status);
 		}
 		if($priority !== null && $priority !== ""){
-			Session::put('tasks_priority_filter', $priority);
+			session()->put('tasks_priority_filter', $priority);
 		}
 		if($myTasks === null || $myTasks !== true){
-			Session::put('tasks_mytasks_filter', false);
+			session()->put('tasks_mytasks_filter', false);
 		}else{
-			Session::put('tasks_mytasks_filter', true);
+			session()->put('tasks_mytasks_filter', true);
 		}
 		if($hide_closed === null || $hide_closed !== true){
-			Session::put('tasks_hide_closed_filter', false);
+			session()->put('tasks_hide_closed_filter', false);
 		}else{
-			Session::put('tasks_hide_closed_filter', true);
+			session()->put('tasks_hide_closed_filter', true);
 		}
 	}
 	
@@ -248,11 +248,11 @@ class Tasks extends Pageable{
 				'hideClosed'	=> false,
 		];
 		if($hardReset){
-			Session::forget('tasks_status_filter');
-			Session::forget('tasks_caption_filter');
-			Session::forget('tasks_priority_filter');
-			Session::forget('tasks_mytasks_filter');
-			Session::forget('tasks_hide_closed_filter');
+			session()->forget('tasks_status_filter');
+			session()->forget('tasks_caption_filter');
+			session()->forget('tasks_priority_filter');
+			session()->forget('tasks_mytasks_filter');
+			session()->forget('tasks_hide_closed_filter');
 		}
 		$this->getTasks();
 	}
@@ -605,12 +605,12 @@ class Tasks extends Pageable{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public static function checkTaskCount($count){
-		if(($count === null && !Session::has('tasks_paging')) || ($count !== null && ($count < 1 || 100 < $count || !is_numeric($count)))){
+		if(($count === null && !session()->has('tasks_paging')) || ($count !== null && ($count < 1 || 100 < $count || !is_numeric($count)))){
 			$count = 10;
 		}else if($count === null){
-			$count = Session::get('tasks_paging');
+			$count = session()->get('tasks_paging');
 		}
-		Session::put('tasks_paging', $count);
+		session()->put('tasks_paging', $count);
 		return $count;
 	}
 	
@@ -625,23 +625,23 @@ class Tasks extends Pageable{
 	 */
 	public static function getSessionData(){
 		$sessionData = [];
-		if(Session::has('tasks_status_filter')){
-			$sessionData['tasks_status_filter'] = Session::get('tasks_status_filter');
+		if(session()->has('tasks_status_filter')){
+			$sessionData['tasks_status_filter'] = session()->get('tasks_status_filter');
 		}
-		if(Session::has('tasks_caption_filter')){
-			$sessionData['tasks_caption_filter'] = Session::get('tasks_caption_filter');
+		if(session()->has('tasks_caption_filter')){
+			$sessionData['tasks_caption_filter'] = session()->get('tasks_caption_filter');
 		}
-		if(Session::has('tasks_priority_filter')){
-			$sessionData['tasks_priority_filter'] = Session::get('tasks_priority_filter');
+		if(session()->has('tasks_priority_filter')){
+			$sessionData['tasks_priority_filter'] = session()->get('tasks_priority_filter');
 		}
-		if(Session::has('tasks_mytasks_filter')){
-			$sessionData['tasks_mytasks_filter'] = Session::get('tasks_mytasks_filter');
+		if(session()->has('tasks_mytasks_filter')){
+			$sessionData['tasks_mytasks_filter'] = session()->get('tasks_mytasks_filter');
 		}
-		if(Session::has('tasks_hide_closed_filter')){
-			$sessionData['tasks_hide_closed_filter'] = Session::get('tasks_hide_closed_filter');
+		if(session()->has('tasks_hide_closed_filter')){
+			$sessionData['tasks_hide_closed_filter'] = session()->get('tasks_hide_closed_filter');
 		}
-		if(Session::has('tasks_paging')){
-			$sessionData['tasks_paging'] = Session::get('tasks_paging');
+		if(session()->has('tasks_paging')){
+			$sessionData['tasks_paging'] = session()->get('tasks_paging');
 		}
 		return $sessionData;
 	}

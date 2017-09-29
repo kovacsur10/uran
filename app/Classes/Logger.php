@@ -2,7 +2,7 @@
 
 namespace App\Classes;
 
-use Illuminate\Support\Facades\Session;
+use Illuminate\Contracts\Session\Session;
 use Carbon\Carbon;
 use App\Persistence\P_General;
 

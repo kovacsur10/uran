@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Language;
 
 use App\Classes\LayoutData;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Session;
+use Illuminate\Contracts\Session\Session;
 
 /** Class name: LanguageController
  *

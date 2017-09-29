@@ -2,7 +2,7 @@
 
 namespace App\Classes;
 
-use Illuminate\Support\Facades\Session;
+use Illuminate\Contracts\Session\Session;
 use Illuminate\Support\Facades\Route;
 use App\Classes\Layout\BaseData;
 use App\Classes\Layout\Errors;
@@ -52,12 +52,12 @@ class LayoutData{
 	 */
 	public function __construct(){
 		$this->logged = Auth::isLoggedIn();
-		$this->user = new User(Session::get('user') === null ? null : Session::get('user')->id());
+		$this->user = new User(session()->get('user') === null ? null : session()->get('user')->id());
 		$this->room = new Rooms();
 		$this->modules = new Modules();
 		$this->permissions = new Permissions();
 		$this->base = new BaseData();
-		$this->language = Session::has('lang') ? Session::get('lang') : "hu_HU";
+		$this->language = session()->has('lang') ? session()->get('lang') : "hu_HU";
 		$this->registrations = new Registrations();
 		$this->tasks = new Tasks();
 		$this->errors = new Errors();
@@ -194,7 +194,7 @@ class LayoutData{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public static function lang(){
-		return Session::has('lang') ? Session::get('lang') : "hu_HU";
+		return session()->has('lang') ? session()->get('lang') : "hu_HU";
 	}
 	
 	/** Function name: getRoute
@@ -277,10 +277,10 @@ class LayoutData{
 	 */
 	public static function setLanguage($language){
 		if($language !== null){
-			if(Session::has('lang')){
-				Session::forget('lang');
+			if(session()->has('lang')){
+				session()->forget('lang');
 			}
-			Session::put('lang', $language);
+			session()->put('lang', $language);
 		}
 	}
 	
@@ -334,7 +334,7 @@ class LayoutData{
 						}
 						break;
 				}
-				Session::put($key, $value);
+				session()->put($key, $value);
 			}
 		}catch(\Exception $ex){
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). Could not load session data. ".$ex->getMessage());
