@@ -224,6 +224,45 @@ class NotificationsTest extends TestCase
 		$this->assertTrue(true); //No exceptions, so pass it. - from PHPUnit 6, no assertion is reported as a risk
 	}
 	
+	/** Function name: test_setReadAll
+	 *
+	 * This function is testing the setReadAll function of the Notifications model.
+	 *
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	public function test_setReadAll(){
+		$this->assertEquals(Notifications::getUnreadNotificationCount(25), 2);
+		$this->assertEquals(Notifications::getUnreadNotificationCount(1), 3);
+		try{
+			Notifications::setReadAll(25);
+		}catch(\Exception $ex){
+			$this->fail("setReadAll exception: ".$ex->getMessage());
+		}
+		$this->assertEquals(Notifications::getUnreadNotificationCount(25), 0);
+		$this->assertEquals(Notifications::getUnreadNotificationCount(1), 3);
+	}
+	
+	/** Function name: test_setReadAll_null
+	 *
+	 * This function is testing the setReadAll function of the Notifications model.
+	 *
+	 * @return void
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	public function test_setReadAll_null(){
+		try{
+			Notifications::setReadAll(null);
+			$this->fail("An exception was expected!");
+		}catch(UserNotFoundException $ex){
+		}catch(\Exception $ex){
+			$this->fail("Unexpected exception! ".$ex->getMessage());
+		}
+		$this->assertTrue(true); //No exceptions, so pass it. - from PHPUnit 6, no assertion is reported as a risk
+	}
+	
 	/** Function name: test_notify_success
 	 *
 	 * This function is testing the notify function of the Notifications model.
