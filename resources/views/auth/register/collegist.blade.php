@@ -7,7 +7,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">{{ $layout->language('registration') }}</div>
                 <div class="panel-body">
-                    <form class="form-horizontal" role="form" method="POST" action="{{ url('/register/collegist') }}">
+                    <form class="form-horizontal" role="form" method="POST" action="{{ url('/register/member') }}">
 						<input type="hidden" name="_method" value="PUT">
                         {!! csrf_field() !!}
 

@@ -7,7 +7,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">{{ $layout->language('registration') }}</div>
                 <div class="panel-body">
-                    <a href="{{ url('register/collegist') }}">
+                    <a href="{{ url('register/member') }}">
 						<div class="jumbotron">
 							<p><b>{{ $layout->language('registration_for_collegists') }}</b></p>
 						</div>

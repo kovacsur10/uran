@@ -110,10 +110,10 @@ Route::group(['middleware' => 'web', 'middleware' => 'auth.notlogged'], function
 
 	// Registration Routes...
 	Route::get('register', 'Auth\RegisterController@showRegistrationChooserForm');
-	Route::get('register/collegist', 'Auth\RegisterController@showCollegistRegistrationForm');
+	Route::get('register/member', 'Auth\RegisterController@showCollegistRegistrationForm');
 	Route::get('register/guest', 'Auth\RegisterController@showGuestRegistrationForm');
 	Route::get('register/{code}', 'Auth\RegisterController@verify');
-	Route::put('register/collegist', 'Auth\RegisterController@registerCollegist');
+	Route::put('register/member', 'Auth\RegisterController@registerCollegist');
 	Route::put('register/guest', 'Auth\RegisterController@registerGuest');
 
 	// Password Reset Routes...
