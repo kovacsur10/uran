@@ -54,4 +54,25 @@ class NotificationController extends Controller{
 				return redirect($notification->route());
 		}
 	}
+	
+	/** Function name: showNotification
+	 *
+	 * This function shows a notification.
+	 *
+	 * @param int $notificationId - the notification identifier
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	public function readAll(){
+		$layout = new LayoutData();
+		if($layout->user()->permitted('notifications_readall')){
+			try{
+				Notifications::setReadAll($layout->user()->user()->id());
+			}catch(\Exception $ex){
+			}
+			return redirect('notification/list/0');
+		}else{
+			return view('errors.authentication', ["layout" => $layout]);
+		}
+	}
 }

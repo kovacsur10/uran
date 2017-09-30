@@ -233,6 +233,28 @@ class Notifications{
 		}
 	}
 	
+	/** Function name: setReadAll
+	 *
+	 * This function sets the status of all
+	 * notifiation of a single user as read.
+	 *
+	 * @param int $userId - user's identifier
+	 *
+	 * @throws DatabaseException when the update is not successful!
+	 * @throws UserNotFoundException when the user id is null!
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	public static function setReadAll($userId){
+		\App\Classes\Layout\User::getUserData($userId); //check the user
+		try{
+			P_General::setNotificationsAsSeen($userId);
+		}catch(Exception $ex){
+			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
+			throw new DatabaseException("Could not set the notifications as seen!");
+		}
+	}
+	
 // PRIVATE FUNCTIONS
 	
 }

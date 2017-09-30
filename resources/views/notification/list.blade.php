@@ -5,7 +5,12 @@
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
             <div class="panel panel-default">
-                <div class="panel-heading">{{ $layout->language('notifications') }}</div>
+                <div class="panel-heading">
+                	<div class="row">
+	                	<div class="col-md-6">{{ $layout->language('notifications') }}</div>
+	                	<div class="col-md-6 text-right"><a href="{{ url('/notification/readall') }}">{{ $layout->language('read_all_notifications') }}</a></div>
+                	</div>
+                </div>
                 <div class="panel-body">
                     <ul class="notifications">	
 						@if($layout->user()->notifications($notificationId, 10) === null)

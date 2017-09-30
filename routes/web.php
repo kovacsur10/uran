@@ -84,6 +84,7 @@ Route::group(['middleware' => 'web', 'middleware' => 'auth.logged'], function ()
 	// Notification routes
 	Route::get('notification/list/{first}', 'Notification\NotificationController@listNotifications');
 	Route::get('notification/show/{id}', 'Notification\NotificationController@showNotification');
+	Route::get('notification/readall', 'Notification\NotificationController@readAll');
 	
 	// Tasks routes
 	Route::get('tasks/list', 'Tasks\TaskController@show')->middleware('modules.tasks');

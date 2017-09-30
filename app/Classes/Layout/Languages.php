@@ -150,6 +150,7 @@ class Languages{
 			'show_all' => 'Mutasd mindet',
 			'system_no_problem' => 'Rendszer: Semmi probléma',
 			'unread_notifications' => 'Olvasatlan értesítések',
+			'read_all_notifications' => 'Összes olvasása',
 		//rooms
 			'back_to_the_rooms_list' => 'Vissza a szobák listájához',
 			'basement' => 'Alagsor',
@@ -753,6 +754,7 @@ class Languages{
 			'show_all' => 'Show all',
 			'system_no_problem' => 'System: No problem',
 			'unread_notifications' => 'Unread notifications',
+			'read_all_notifications' => 'Read all',
 		//rooms
 			'back_to_the_rooms_list' => 'Back to the rooms list',
 			'basement' => 'Basement',

@@ -138,6 +138,23 @@ class P_General{
 			']);
 	}
 	
+	/** Function name: setNotificationsAsSeen
+	 *
+	 * This function sets the 'seen' property of
+	 * the notifications of a single user as seen (true).
+	 *
+	 * @param int $user - user's identifier
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	static function setNotificationsAsSeen($userId){
+		DB::table('notifications')
+			->where('user_id', '=', $userId)
+			->update([
+					'seen' => 'true
+				']);
+	}
+	
 	/** Function name: getNotification
 	 *
 	 * This function returns the requested notification.
