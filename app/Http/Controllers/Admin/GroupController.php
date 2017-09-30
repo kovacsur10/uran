@@ -76,7 +76,7 @@ class GroupController extends Controller{
 		$layout = new LayoutData();
 		if($layout->user()->permitted('permission_admin')){
 			try{
-				$layout->permissions()->setGroupPersmissions($request->group, $request->permissions);
+				$layout->permissions()->setGroupPermissions($request->group, $request->permissions);
 			}catch(\Exception $ex){
 				return view('errors.error', ["layout" => $layout,
 						"message" => $layout->language('error_at_setting_the_group_permissions'),
