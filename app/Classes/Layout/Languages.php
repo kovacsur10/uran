@@ -338,6 +338,10 @@ class Languages{
 			'new_user_registered' => 'Új regisztráció',
 			'new_user_registered_description' => 'Bíráld el a regisztrációs kérelmet!',
 			'registration_user_not_found' => 'Nincsen ilyen regisztrálni vágyó felhasználó!',
+			'registration_todos' => 'A regisztráció folyamata',
+			'registration_users_have_to_fill_in_description' => 'Ki kell tölteni az egyik regisztrációs űrlapot.',
+			'registration_users_have_to_verify_email_description' => 'Az e-mail címedre kapott levél segítségével meg kell erősítened a regisztrációdat.',
+			'registration_admins_have_to_accept_description' => 'Várni kell addig, amíg egy adminisztrátor el nem fogadja a regisztrációdat.',
 		//countries
 			'HUN' => 'Magyarország',
 			'AFG' => 'Afganisztán',
@@ -944,6 +948,10 @@ class Languages{
 			'new_user_registered' => 'New registration',
 			'new_user_registered_description' => 'Please accept or reject the registration order!',
 			'registration_user_not_found' => 'Cannot find the user in the registration state!',
+			'registration_todos' => 'The registration process',
+			'registration_users_have_to_fill_in_description' => 'Fill in one of the registration forms.',
+			'registration_users_have_to_verify_email_description' => 'Verify the registration with the help of the link you got via e-mail.',
+			'registration_admins_have_to_accept_description' => 'Wait until an administrator accepts your registration.',
 		//countries
 			'HUN' => 'Hungary',
 			'AFG' => 'Afghanistan',
