@@ -374,7 +374,9 @@
 		$('#datepicker_add_new_task').datepicker({
 			format: 'yyyy.mm.dd.',
 			autoclose: true,
-			clearBtn: true
+			clearBtn: true,
+			weekStart: 1,
+			startView: "century"
 		})
 		.on('hide', function(e) {
 			collegistValidator.performCheck(['#date_of_birth']);
