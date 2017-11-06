@@ -337,6 +337,7 @@ class Languages{
 			'accept_rules_with_submit_description' => 'A Regisztrálok gomb megnyomásával a szabályzat tartalmát elfogadom.',
 			'new_user_registered' => 'Új regisztráció',
 			'new_user_registered_description' => 'Bíráld el a regisztrációs kérelmet!',
+			'registration_user_not_found' => 'Nincsen ilyen regisztrálni vágyó felhasználó!',
 		//countries
 			'HUN' => 'Magyarország',
 			'AFG' => 'Afganisztán',
@@ -942,6 +943,7 @@ class Languages{
 			'accept_rules_with_submit_description' => 'I accept the terms and conditions.',
 			'new_user_registered' => 'New registration',
 			'new_user_registered_description' => 'Please accept or reject the registration order!',
+			'registration_user_not_found' => 'Cannot find the user in the registration state!',
 		//countries
 			'HUN' => 'Hungary',
 			'AFG' => 'Afghanistan',

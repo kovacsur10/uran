@@ -43,7 +43,13 @@ class RegistrationController extends Controller{
 		$layout = new LayoutData();
 		$layout->registrations()->setRegistrationUser($id);
 		if($layout->user()->permitted('accept_user_registration')){
-			return view('admin.registration.show', ["layout" => $layout]);
+			if($layout->registrations()->getRegistrationUser() === null){
+				return view('errors.error', ["layout" => $layout,
+						"message" => $layout->language('registration_user_not_found'),
+						"url" => '/admin/registration/show']);
+			}else{
+				return view('admin.registration.show', ["layout" => $layout]);
+			}
 		}else{
 			return view('errors.authentication', ["layout" => $layout]);
 		}
