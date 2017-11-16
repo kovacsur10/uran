@@ -4,6 +4,7 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Contracts\Session\Session;
 use App\Classes\Layout\EcnetData;
 use App\Classes\Data\EcnetUser;
+use App\Classes\Data\FreePage;
 use App\Exceptions\UserNotFoundException;
 use App\Exceptions\DatabaseException;
 use App\Exceptions\ValueMismatchException;
@@ -200,7 +201,7 @@ class EcnetDataTest extends TestCase
 		}
 		
 		try{
-			EcnetData::setMoneyForUser(null, 200, "");
+			EcnetData::addFreePagesForUser(null, 200, "");
 			$this->fail("An exception was expected!");
 		}catch(ValueMismatchException $ex){
 		}catch(\Exception $ex){
@@ -208,7 +209,7 @@ class EcnetDataTest extends TestCase
 		}
 		
 		try{
-			EcnetData::setMoneyForUser(1, null, "");
+			EcnetData::addFreePagesForUser(1, null, "");
 			$this->fail("An exception was expected!");
 		}catch(ValueMismatchException $ex){
 		}catch(\Exception $ex){
@@ -216,29 +217,28 @@ class EcnetDataTest extends TestCase
 		}
 		
 		try{
-			EcnetData::setMoneyForUser(1, 200, null);
+			EcnetData::addFreePagesForUser(1, 200, null);
 			$this->fail("An exception was expected!");
 		}catch(ValueMismatchException $ex){
 		}catch(\Exception $ex){
 			$this->fail("Not the expected exception: ".$ex->getMessage());
 		}
-		//TODO: from here
-		$ecnetUser = new EcnetData(1);
-		$this->assertEquals(0, $ecnetUser->ecnetUser()->money());
+		$ecnetUser = new EcnetData(18);
+		$this->assertEquals([], $ecnetUser->ecnetUser()->freePages());
 		try{
-			EcnetData::setMoneyForUser(1, 120, null);
+			EcnetData::addFreePagesForUser(18, 120, "9999-01-01");
 		}catch(\Exception $ex){
 			$this->fail("Unexpected exception: ".$ex->getMessage());
 		}
-		$ecnetUser = new EcnetData(1);
-		$this->assertEquals(120, $ecnetUser->ecnetUser()->money());
+		$ecnetUser = new EcnetData(18);
+		$this->assertEquals([new FreePage(120, "9999-01-01 00:00:00")], $ecnetUser->ecnetUser()->freePages());
 		try{
-			EcnetData::setMoneyForUser(0, 200);
+			EcnetData::addFreePagesForUser(1, 200, "9999-01-01");
 		}catch(\Exception $ex){
 			$this->fail("Unexpected exception: ".$ex->getMessage());
 		}
-		$ecnetUser = new EcnetData(1);
-		$this->assertEquals(120, $ecnetUser->ecnetUser()->money());
+		$ecnetUser = new EcnetData(18);
+		$this->assertEquals([new FreePage(120, "9999-01-01 00:00:00")], $ecnetUser->ecnetUser()->freePages());
 	}
 	
 	/** Function name: test_changeDefaultValidDate_null

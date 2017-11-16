@@ -273,7 +273,7 @@ class EcnetData extends User{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public static function addFreePagesForUser($userId, $pages, $valid_date){ //TODO: test it
-		if($userId === null || $money === null || $valid_date === null){
+		if($userId === null || $pages=== null || $valid_date === null){
 			throw new ValueMismatchException("Parameter values cannot be null!");
 		}
 		try{

@@ -355,13 +355,13 @@ class P_Ecnet{
 	static function addFreePagesToUser($userId, $pages, $valid_date){
 		$already = DB::table('ecnet_free_pages')
 			->where('user_id', '=', $userId)
-			->where('valid_until', '>=', $valid_date)
+			->where('valid_until', '=', $valid_date)
 			->get()
 			->toArray();
 		if($already !== []){
 			DB::table('ecnet_free_pages')
 				->where('user_id', '=', $userId)
-				->where('valid_until', '>=', $valid_date)
+				->where('valid_until', '=', $valid_date)
 				->update([
 					'pages_left' => ($pages+$already[0]->pages_left)
 				]);

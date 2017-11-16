@@ -125,7 +125,7 @@
 									<label class="col-md-4 control-label">{{ $layout->language('pages_to_add') }}</label>
 
 									<div class="col-md-6">
-										<input type="number" class="form-control" min="0" step="1" value="0" name="pages" required="true" value="{{ old('pages') }}">
+										<input type="number" class="form-control" step="1" value="0" name="pages" required="true" value="{{ old('pages') }}">
 
 										@if ($errors->has('pages'))
 											<span class="help-block">
@@ -133,6 +133,10 @@
 											</span>
 										@endif
 									</div>
+								</div>'
+								
+								<div class="alert alert-info">
+									<strong>{{ $layout->language('note') }}:</strong> {{ $layout->language('free_pages_can_be_negative_count') }}
 								</div>
 									
 								<div class="form-group{{ $errors->has('valid_date') ? ' has-error' : '' }}">
