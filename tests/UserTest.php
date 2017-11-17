@@ -30,7 +30,7 @@ class UserTest extends TestCase
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	function test_permission(){
-		$user = new User(1, "user", "username", "pazzword", "e@mail", "2016 date", new StatusCode(1, "stat"), "2016-11-11", "hu_HU", true, true, "2010-12-11 23:11:23", "thisistheregcode", "Hungary", "Veszprém1", "Veszprém2", "Budapest út 11-13.", "8200", "reason", null, "0036123456", true);
+		$user = new User(1, "user", "username", "pazzword", "e@mail", "2016 date", new StatusCode(1, "stat"), "2016-11-11", "hu", true, true, "2010-12-11 23:11:23", "thisistheregcode", "Hungary", "Veszprém1", "Veszprém2", "Budapest út 11-13.", "8200", "reason", null, "0036123456", true);
 		$this->assertEquals(1, $user->id());
 		$this->assertEquals("user", $user->name());
 		$this->assertEquals("username", $user->username());
@@ -39,7 +39,7 @@ class UserTest extends TestCase
 		$this->assertEquals("2016 date", $user->registrationDate());
 		$this->assertInstanceOf(StatusCode::class, $user->status());
 		$this->assertEquals("2016-11-11", $user->lastOnline());
-		$this->assertEquals("hu_HU", $user->language());
+		$this->assertEquals("hu", $user->language());
 		$this->assertTrue($user->registered());
 		$this->assertTrue($user->verified());
 		$this->assertEquals("2010-12-11 23:11:23", $user->verificationDate());
@@ -61,7 +61,7 @@ class UserTest extends TestCase
 		$this->assertNull($user->getLanguageExam(2));
 		$this->assertNull($user->getLanguageExam("2"));
 		
-		$user = new User(1, "user", "username", "pazzword", "e@mail", "2016 date", new StatusCode(1, "stat"), null, "hu_HU", true, true, "2010-12-11 23:11:23", "thisistheregcode", "Hungary", "Veszprém1", "Veszprém2", "Budapest út 11-13.", "8200", null, new PersonalData("123456", "Budapest", "2007-01-01", "anyuka", "HS", "2013", "2015", [new Faculty(1, "asd")], [new Workshop(2, "qwe")], [new LanguageExam(0, "angol", "B2"), new LanguageExam(10, "angol", "B2"), new LanguageExam(2, "német", "C1")]), "0036123456", false);
+		$user = new User(1, "user", "username", "pazzword", "e@mail", "2016 date", new StatusCode(1, "stat"), null, "hu", true, true, "2010-12-11 23:11:23", "thisistheregcode", "Hungary", "Veszprém1", "Veszprém2", "Budapest út 11-13.", "8200", null, new PersonalData("123456", "Budapest", "2007-01-01", "anyuka", "HS", "2013", "2015", [new Faculty(1, "asd")], [new Workshop(2, "qwe")], [new LanguageExam(0, "angol", "B2"), new LanguageExam(10, "angol", "B2"), new LanguageExam(2, "német", "C1")]), "0036123456", false);
 		$this->assertEquals(1, $user->id());
 		$this->assertEquals("user", $user->name());
 		$this->assertEquals("username", $user->username());
@@ -70,7 +70,7 @@ class UserTest extends TestCase
 		$this->assertEquals("2016 date", $user->registrationDate());
 		$this->assertInstanceOf(StatusCode::class, $user->status());
 		$this->assertNull($user->lastOnline());
-		$this->assertEquals("hu_HU", $user->language());
+		$this->assertEquals("hu", $user->language());
 		$this->assertTrue($user->registered());
 		$this->assertTrue($user->verified());
 		$this->assertEquals("2010-12-11 23:11:23", $user->verificationDate());

@@ -313,10 +313,10 @@ class Registrations{
 					}
 					// ECNET PART END
 					//set up the language for the e-mail
-					if($layout->lang() == "hu_HU" || $layout->lang() == "en_US"){
+					if($layout->lang() == "hu" || $layout->lang() == "en"){
 						$lang = $layout->lang();
 					}else{
-						$lang = "hu_HU";
+						$lang = "hu";
 					}
 					//send e-mail
 					Mail::send('mails.verification_'.$lang, ['name' => $name, 'link' => url('/register/'.$registrationCode)], function ($m) use ($email, $name, $layout) {

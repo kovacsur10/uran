@@ -133,10 +133,10 @@ class RegistrationController extends Controller{
 											 "url" => '/admin/registration/show']);
 			}					
 			// send e-mail notification to the user
-			if($layout->lang() == "hu_HU" || $layout->lang() == "en_US")
+			if($layout->lang() == "hu" || $layout->lang() == "en")
 				$lang = $layout->lang();
 			else
-				$lang = "hu_HU";
+				$lang = "hu";
 			Mail::send('mails.accept_'.$lang, ['name' => $request->input('name')], function ($m) use ($request, $layout) {
 				$m->to($request->input('email'), $request->input('name'));
 				$m->subject($layout->language('registration_accepted'));

@@ -5,11 +5,11 @@
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
             <div class="panel panel-default">
-                <div class="panel-heading"><a href="{{ url('/admin/groups/list') }}">{{ $layout->language('permission_group_handling') }}</a></div>
+                <div class="panel-heading"><a href="{{ url('/admin/groups/list') }}">@lang('permissions.permission_group_handling')</a></div>
                 <div class="panel-body">
 				@if($layout->user()->permitted('permission_admin'))
 					<div class="panel panel-default">
-						<div class="panel-heading">{{ $layout->language('assign_permission_groups') }}</div>
+						<div class="panel-heading">@lang('permissions.assign_permission_groups')</div>
 						<div class="panel-body">
 							<form class="form-horizontal" role="form" method="POST" action="{{ url('admin/groups/user_modification') }}">
 								{!! csrf_field() !!}
@@ -38,9 +38,7 @@
 								
 								<div class="form-group">
 									<div class="col-md-6 col-md-offset-3">
-										<button type="submit" class="btn btn-primary">
-											{{ $layout->language('set_permission_groups') }}
-										</button>
+										<button type="submit" class="btn btn-primary">@lang('permissions.set_permission_groups')</button>
 									</div>
 								</div>
 							</form>

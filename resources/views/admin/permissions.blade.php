@@ -5,11 +5,11 @@
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
             <div class="panel panel-default">
-                <div class="panel-heading">{{ $layout->language('permissions_handling') }}</div>
+                <div class="panel-heading">@lang('permissions.permissions_handling')</div>
                 <div class="panel-body">
 				@if($layout->user()->permitted('permission_admin'))
 					<div class="panel panel-default">
-						<div class="panel-heading">{{ $layout->language('assign_permissions') }}</div>
+						<div class="panel-heading">@lang('permissions.assign_permissions')</div>
 						<div class="panel-body">
 							<form class="form-horizontal" role="form" method="POST" action="{{ url('/admin/permissions') }}">
 								{!! csrf_field() !!}
@@ -43,7 +43,7 @@
 					</div>
 					
 					<div class="panel panel-default">
-						<div class="panel-heading">{{ $layout->language('list_permissions') }}</div>
+						<div class="panel-heading">@lang('permissions.list_permissions')</div>
 						<div class="panel-body">
 							<form class="form-horizontal" role="form" method="POST" action="{{ url('/admin/permissions/list') }}">
 								{!! csrf_field() !!}

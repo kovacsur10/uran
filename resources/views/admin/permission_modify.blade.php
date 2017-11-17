@@ -5,11 +5,11 @@
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
             <div class="panel panel-default">
-                <div class="panel-heading"><a href="{{ url('/admin/permissions') }}">{{ $layout->language('permissions_handling') }}</a></div>
+                <div class="panel-heading"><a href="{{ url('/admin/permissions') }}">@lang('permissions.permissions_handling')</a></div>
                 <div class="panel-body">
 				@if($layout->user()->permitted('permission_admin'))
 					<div class="panel panel-default">
-						<div class="panel-heading">{{ $layout->language('assign_permissions') }}</div>
+						<div class="panel-heading">@lang('permissions.assign_permissions')</div>
 						<div class="panel-body">
 							<form class="form-horizontal" role="form" method="POST" action="{{ url('/admin/permissions/set') }}">
 								{!! csrf_field() !!}
@@ -41,9 +41,7 @@
 								
 								<div class="form-group">
 									<div class="col-md-6 col-md-offset-3">
-										<button type="submit" class="btn btn-primary">
-											{{ $layout->language('set_permissions') }}
-										</button>
+										<button type="submit" class="btn btn-primary">@lang('permissions.set_permissions')</button>
 									</div>
 								</div>
 							</form>

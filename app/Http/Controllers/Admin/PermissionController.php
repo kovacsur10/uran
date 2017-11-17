@@ -63,11 +63,11 @@ class PermissionController extends Controller{
 				});
 			}catch(\Exception $ex){
 				return view('errors.error', ["layout" => $layout,
-						"message" => $layout->language('error_at_setting_the_permissions'),
+						"message_indicator" => 'permissions.error_at_setting_the_permissions',
 						"url" => '/admin/permissions']);
 			}
 			return view('success.success', ["layout" => $layout,
-					"message" => $layout->language('success_at_setting_the_permissions'),
+					"message_indicator" => 'permissions.success_at_setting_the_permissions',
 					"url" => '/admin/permissions']);
 		}else{
 			return view('errors.authentication', ["layout" => $layout]);

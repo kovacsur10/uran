@@ -5,17 +5,17 @@
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
             <div class="panel panel-default">
-                <div class="panel-heading">{{ $layout->language('permission_group_handling') }}</div>
+                <div class="panel-heading">@lang('permissions.permission_group_handling')</div>
                 <div class="panel-body">
 				@if($layout->user()->permitted('permission_admin'))
 					<div class="panel panel-default">
-		                <div class="panel-heading">{{ $layout->language('permission_group_handling') }}</div>
+		                <div class="panel-heading">@lang('permissions.permission_group_handling')</div>
 		                <div class="panel-body">
 							<form class="form-horizontal" role="form" method="POST" action="{{ url('/admin/groups/modify') }}">
 								{!! csrf_field() !!}
 										
 								<div class="form-group{{ $errors->has('group') ? ' has-error' : '' }}">
-									<label  class="col-md-4 control-label" for="group">{{ $layout->language('permission_group') }}</label>
+									<label  class="col-md-4 control-label" for="group">@lang('permissions.permission_group')</label>
 									<div class="col-md-6">
 										<select class="form-control"  name="group"  id="group">
 											@foreach($layout->permissions()->getPermissionGroups() as $group)
@@ -42,7 +42,7 @@
 					</div>
 					
 					<div class="panel panel-default">
-		                <div class="panel-heading">{{ $layout->language('assign_permission_groups') }}</div>
+		                <div class="panel-heading">@lang('permissions.assign_permission_groups')</div>
 		                <div class="panel-body">
 							<form class="form-horizontal" role="form" method="POST" action="{{ url('/admin/groups/user') }}">
 								{!! csrf_field() !!}
@@ -76,13 +76,13 @@
 					</div>
 					
 					<div class="panel panel-default">
-						<div class="panel-heading">{{ $layout->language('list_permission_groups') }}</div>
+						<div class="panel-heading">@lang('permissions.list_permission_groups')</div>
 						<div class="panel-body">
 							<form class="form-horizontal" role="form" method="POST" action="{{ url('/admin/groups/users') }}">
 								{!! csrf_field() !!}
 								
 								<div class="form-group">
-									<label  class="col-md-4 control-label" for="permission">{{ $layout->language('permission_group') }}</label>
+									<label  class="col-md-4 control-label" for="permission">@lang('permissions.permission_group')</label>
 									<div class="col-md-6">
 										<select class="form-control" name="group" id="group">
 											@foreach($layout->permissions()->getPermissionGroups() as $group)

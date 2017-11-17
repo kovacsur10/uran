@@ -59,7 +59,7 @@ class GroupController extends Controller{
 			]);
 		}catch(\Exception $ex){
 			return view('errors.error', ["layout" => $layout,
-				"message" => $layout->language('error_at_showing_permission_group_modification_page'),
+				"message_indicator" => 'error_at_showing_permission_group_modification_page',
 				"url" => '/admin/groups/list']);
 		}
 	}
@@ -79,11 +79,11 @@ class GroupController extends Controller{
 				$layout->permissions()->setGroupPermissions($request->group, $request->permissions);
 			}catch(\Exception $ex){
 				return view('errors.error', ["layout" => $layout,
-						"message" => $layout->language('error_at_setting_the_group_permissions'),
+						"message_indicator" => 'error_at_setting_the_group_permissions',
 						"url" => '/admin/groups/list']);
 			}
 			return view('success.success', ["layout" => $layout,
-					"message" => $layout->language('success_at_setting_the_group_permissions'),
+					"message_indicator" => 'success_at_setting_the_group_permissions',
 					"url" => '/admin/groups/list']);
 		}else{
 			return view('errors.authentication', ["layout" => $layout]);
@@ -105,11 +105,11 @@ class GroupController extends Controller{
 				$layout->permissions()->saveUserPermissionGroups($request->user, $request->groups);
 			}catch(\Exception $ex){
 				return view('errors.error', ["layout" => $layout,
-						"message" => $layout->language('error_at_setting_the_group_permissions'),
+						"message_indicator" => 'error_at_setting_the_group_permissions',
 						"url" => '/admin/groups/list']);
 			}
 			return view('success.success', ["layout" => $layout,
-					"message" => $layout->language('success_at_setting_the_group_permissions'),
+					"message_indicator" => 'success_at_setting_the_group_permissions',
 					"url" => '/admin/groups/list']);
 		}else{
 			return view('errors.authentication', ["layout" => $layout]);

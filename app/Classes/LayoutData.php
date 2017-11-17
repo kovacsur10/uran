@@ -35,7 +35,6 @@ class LayoutData{
 	private $logged; // the user is logged or not (bool)
 	private $modules;
 	private $permissions;
-	private $language;
 	private $base;
 	private $registrations;
 	private $tasks;
@@ -56,8 +55,7 @@ class LayoutData{
 		$this->room = new Rooms();
 		$this->modules = new Modules();
 		$this->permissions = new Permissions();
-		$this->base = new BaseData();
-		$this->language = session()->has('lang') ? session()->get('lang') : "hu_HU";
+		$this->base = new BaseData();		
 		$this->registrations = new Registrations();
 		$this->tasks = new Tasks();
 		$this->errors = new Errors();
@@ -194,7 +192,7 @@ class LayoutData{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public static function lang(){
-		return session()->has('lang') ? session()->get('lang') : "hu_HU";
+		return \App::getLocale();
 	}
 	
 	/** Function name: getRoute
@@ -219,10 +217,11 @@ class LayoutData{
 	 * 
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
+	// @Deprecated
 	public function language($key){
-		if($this->language === 'hu_HU'){
+		if(\App::isLocale('hu')){
 			$lang =  Languages::hungarian();
-		}else if($this->language == 'en_US'){
+		}else if(\App::isLocale('en')){
 			$lang =  Languages::english();
 		}else{
 			$lang =  Languages::getDefault();
@@ -252,13 +251,13 @@ class LayoutData{
 	 */
 	public function formatDate($date, $onlyDate = false){
 		$returnedDateTime = "";
-		if($this->language === 'hu_HU'){
+		if(\App::isLocale('hu')){
 			if(strstr($date, ". ") !== FALSE){
 				$returnedDateTime = str_replace("-", ". ", $date);
 			}else{
 				$returnedDateTime = str_replace("-", ". ", str_replace(" ", ". ", $date));
 			}
-		}else if($this->language === 'en_US'){
+		}else if(\App::isLocale('en')){
 			$returnedDateTime = str_replace("-", ". ", str_replace(" ", ". ", $date));
 		}else{
 			$returnedDateTime = str_replace("-", ". ", str_replace(" ", ". ", $date));
@@ -277,10 +276,8 @@ class LayoutData{
 	 */
 	public static function setLanguage($language){
 		if($language !== null){
-			if(session()->has('lang')){
-				session()->forget('lang');
-			}
-			session()->put('lang', $language);
+			\App::setLocale($language);
+			session()->put('locale', $language);
 		}
 	}
 	

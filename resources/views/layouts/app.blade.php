@@ -34,7 +34,7 @@
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="/js/view/layout/app.js" charset="UTF-8"></script>
 	<script type="text/javascript">
-		@if($layout->lang() === 'en_US')
+		@if($layout->lang() === 'en')
 			var language = english;
 		@else
 			var language = hungarian;
@@ -135,8 +135,8 @@
 	                            </a>
 								<ul class="dropdown-menu" role="menu">
 									@if($data->user()->permitted('permission_admin'))
-									<li><a href="{{ url('/admin/permissions') }}">{{ $layout->language('permissions_handling') }}</a></li>
-									<li><a href="{{ url('/admin/groups/list') }}">{{ $layout->language('permission_group_handling') }}</a></li>
+									<li><a href="{{ url('/admin/permissions') }}">@lang('permissions.permissions_handling')</a></li>
+									<li><a href="{{ url('/admin/groups/list') }}">@lang('permissions.permission_group_handling')</a></li>
 									@endif
 									@if($data->user()->permitted('module_admin'))
 									<li><a href="{{ url('/admin/modules') }}">{{ $layout->language('modules_handling') }}</a></li>
@@ -228,8 +228,8 @@
                                 {{ $layout->language('choose_language') }} <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu" role="menu">
-								<li><a href="{{ url('lang/set/hu_HU').'?page='.$layout->getRoute() }}">{{ $layout->language('language_hu_HU') }}</a></li>
-                                <li><a href="{{ url('lang/set/en_US').'?page='.$layout->getRoute() }}">{{ $layout->language('language_en_US') }}</a></li>
+								<li><a href="{{ url('lang/set/hu').'?page='.$layout->getRoute() }}">{{ $layout->language('language_hu') }}</a></li>
+                                <li><a href="{{ url('lang/set/en').'?page='.$layout->getRoute() }}">{{ $layout->language('language_en') }}</a></li>
                             </ul>
                         </li>
 					</li>

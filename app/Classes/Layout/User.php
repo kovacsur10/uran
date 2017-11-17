@@ -238,7 +238,7 @@ class User extends Pageable{
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function saveUserLanguage($lang){
-		if($lang == 'hu_HU' || $lang == 'en_US'){
+		if($lang == 'hu' || $lang == 'en'){
 			try{
 				P_User::updateUserLanguage($this->user->id(), $lang);
 			}catch(\Exception $ex){

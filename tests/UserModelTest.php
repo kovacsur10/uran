@@ -289,7 +289,7 @@ class UserModelTest extends TestCase
 	function test_saveUserLanguage(){
 		//fail cases
 		$user = new User(1);
-		$this->assertEquals('hu_HU', $user->user()->language());
+		$this->assertEquals('hu', $user->user()->language());
 		try{
 			$user->saveUserLanguage('en_GB');
 			$this->fail("Expected an exception!");
@@ -298,10 +298,10 @@ class UserModelTest extends TestCase
 			$this->fail("Not the expected exception: ".$ex->getMessage());
 		}
 		$user = new User(1);
-		$this->assertEquals('hu_HU', $user->user()->language());
+		$this->assertEquals('hu', $user->user()->language());
 		
 		$user = new User(1);
-		$this->assertEquals('hu_HU', $user->user()->language());
+		$this->assertEquals('hu', $user->user()->language());
 		try{
 			$user->saveUserLanguage(null);
 			$this->fail("Expected an exception!");
@@ -310,38 +310,38 @@ class UserModelTest extends TestCase
 			$this->fail("Not the expected exception: ".$ex->getMessage());
 		}
 		$user = new User(1);
-		$this->assertEquals('hu_HU', $user->user()->language());
+		$this->assertEquals('hu', $user->user()->language());
 		
 		//success cases
 		$user = new User(0);
-		$this->assertEquals('hu_HU', $user->user()->language());
+		$this->assertEquals('hu', $user->user()->language());
 		try{
-			$user->saveUserLanguage('hu_HU');
+			$user->saveUserLanguage('hu');
 		}catch(\Exception $ex){
 			$this->fail("Not expected exception: ".$ex->getMessage());
 		}
 		$user = new User(1);
-		$this->assertEquals('hu_HU', $user->user()->language());
+		$this->assertEquals('hu', $user->user()->language());
 		
 		$user = new User(1);
-		$this->assertEquals('hu_HU', $user->user()->language());
+		$this->assertEquals('hu', $user->user()->language());
 		try{
-			$user->saveUserLanguage('hu_HU');
+			$user->saveUserLanguage('hu');
 		}catch(\Exception $ex){
 			$this->fail("Not expected exception: ".$ex->getMessage());
 		}
 		$user = new User(1);
-		$this->assertEquals('hu_HU', $user->user()->language());
+		$this->assertEquals('hu', $user->user()->language());
 		
 		$user = new User(1);
-		$this->assertEquals('hu_HU', $user->user()->language());
+		$this->assertEquals('hu', $user->user()->language());
 		try{
-			$user->saveUserLanguage('en_US');
+			$user->saveUserLanguage('en');
 		}catch(\Exception $ex){
 			$this->fail("Not expected exception: ".$ex->getMessage());
 		}
 		$user = new User(1);
-		$this->assertEquals('en_US', $user->user()->language());
+		$this->assertEquals('en', $user->user()->language());
 	}
 	
 	/** Function name: test_getForMembraMailingList

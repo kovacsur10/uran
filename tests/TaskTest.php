@@ -30,7 +30,7 @@ class TaskTest extends TestCase
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	function test_task(){
-		$user = new User(1, '1', '1', '1', '1', '1', new StatusCode(1, 'stat'), null, 'hu_HU', true, true, '1994', 'alma', 'addr1', 'addr2', 'addr3', 'addr4', 'addr5', "reason", null, "0036123456", false);
+		$user = new User(1, '1', '1', '1', '1', '1', new StatusCode(1, 'stat'), null, 'hu', true, true, '1994', 'alma', 'addr1', 'addr2', 'addr3', 'addr4', 'addr5', "reason", null, "0036123456", false);
 		$task = new Task(1, 'almafa', 'alma', '1994-05-27 12:12:02', new TaskStatus(2, 'closed'), new TaskPriority(1, 'urgent'), new TaskType(5, 'task'), $user, $user, null, '1995', 120, false);
 		$this->assertEquals(1, $task->id());
 		$this->assertEquals("almafa", $task->caption());
@@ -46,7 +46,7 @@ class TaskTest extends TestCase
 		$this->assertFalse($task->deleted());
 		$this->assertNull($task->deadline());
 		
-		$user = new User(1, '1', '1', '1', '1', '1', new StatusCode(1, 'stat'), null, 'hu_HU', true, true, '1994', 'alma', 'addr1', 'addr2', 'addr3', 'addr4', 'addr5', "reason", null, "0036123456", false);
+		$user = new User(1, '1', '1', '1', '1', '1', new StatusCode(1, 'stat'), null, 'hu', true, true, '1994', 'alma', 'addr1', 'addr2', 'addr3', 'addr4', 'addr5', "reason", null, "0036123456", false);
 		$task = new Task(1, 'almafa', 'alma', '1994', new TaskStatus(2, 'closed'), new TaskPriority(1, 'urgent'), new TaskType(5, 'task'), $user, $user, '1994-05-27 12:12:02', '1995', 120, false);
 		$this->assertEquals(1, $task->id());
 		$this->assertEquals("almafa", $task->caption());

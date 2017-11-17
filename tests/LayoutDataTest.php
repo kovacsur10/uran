@@ -114,20 +114,6 @@ class LayoutDataTest extends TestCase
 	
 	/** Function name: test_language
 	 *
-	 * This function is testing the language function of the LayoutData model.
-	 *
-	 * @return void
-	 *
-	 * @author Máté Kovács <kovacsur10@gmail.com>
-	 */
-	public function test_language(){
-		$layout = new LayoutData();
-		$this->assertNotEquals($layout->language('user'), 'missing tag');
-		$this->assertEquals($layout->language('this_key_is_obviously_not_a_valid_key'), 'missing tag');
-	}
-	
-	/** Function name: test_language
-	 *
 	 * This function is testing the formatDate function of the LayoutData model.
 	 *
 	 * @return void
@@ -152,19 +138,12 @@ class LayoutDataTest extends TestCase
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function test_setLanguage(){
-		if(session()->has('lang')){
-			session()->forget('lang');
-		}
-		$this->assertFalse(session()->has('lang'));
-		LayoutData::setLanguage('hu_HU');
-		$this->assertTrue(session()->has('lang'));
-		$this->assertEquals(session()->get('lang'), 'hu_HU');
-		LayoutData::setLanguage('en_US');
-		$this->assertTrue(session()->has('lang'));
-		$this->assertEquals(session()->get('lang'), 'en_US');
+		LayoutData::setLanguage('hu');
+		$this->assertEquals('hu', \App::getLocale());
+		LayoutData::setLanguage('en');
+		$this->assertEquals('en', \App::getLocale());
 		LayoutData::setLanguage(null);
-		$this->assertTrue(session()->has('lang'));
-		$this->assertEquals(session()->get('lang'), 'en_US');
+		$this->assertEquals('en', \App::getLocale());
 	}
 	
 	/** Function name: test_lang
@@ -176,13 +155,9 @@ class LayoutDataTest extends TestCase
 	 * @author Máté Kovács <kovacsur10@gmail.com>
 	 */
 	public function test_lang(){
-		if(session()->has('lang')){
-			session()->forget('lang');
-		}
-		$this->assertFalse(session()->has('lang'));
-		session(['lang' => 'en_US']);
-		$this->assertEquals('en_US', session()->get('lang'));
-		$this->assertEquals(LayoutData::lang(), 'en_US');
+		$this->assertEquals('hu', LayoutData::lang());
+		LayoutData::setLanguage('en');
+		$this->assertEquals('en', LayoutData::lang());
 	}
 	
 	/** Function name: test_saveSession

@@ -89,7 +89,7 @@ class AuthTest extends TestCase
 	public function test_logout(){
 		$user = new User(41, "", "", "", "", "", new StatusCode(1, ""), "", true, true, "", "", "", "", "", "", "", "", null, null, "", true);
 		session()->put('user', $user);
-		session()->put('lang', 'hu_HU');
+		session()->put('lang', 'hu');
 		$this->assertTrue(session()->has('user'), "Session variable 'user' is not set!");
 		$this->assertTrue(session()->has('lang'));
 		Auth::logout();

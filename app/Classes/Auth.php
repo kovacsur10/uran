@@ -146,15 +146,7 @@ class Auth{
 
 		$day = Carbon::now()->dayOfYear;
 		$string = sha1($username.$user->registrationDate().$user->name().$day);
-		if(session()->has('lang')){
-			if(session()->get('lang') == "hu_HU" || session()->get('lang') == "en_US"){
-				$lang = session()->get('lang');
-			}else{
-				$lang = "hu_HU";
-			}
-		}else{
-			$lang = "hu_HU";
-		}
+		$lang = \App::getLocale();
 		Mail::send('mails.resetpwd_'.$lang, ['name' => $user->name(), 'link' => url('/password/reset/'.$user->username().'/'.$string)], function ($m) use ($user, $layout) {
 			$m->to($user->email(), $user->name());
 			$m->subject($layout->language('forgotten_password'));
