@@ -5,17 +5,17 @@
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
             <div class="panel panel-default">
-                <div class="panel-heading">{{ $layout->language('modules_handling') }}</div>
+                <div class="panel-heading">@lang('modules.modules_handling')</div>
                 <div class="panel-body">
 				@if($layout->user()->permitted('module_admin'))
 					<div class="panel panel-default">
-						<div class="panel-heading">{{ $layout->language('module_activate') }}</div>
+						<div class="panel-heading">@lang('modules.module_activate')</div>
 						<div class="panel-body">
 							<form class="form-horizontal" role="form" method="POST" action="{{ url('/admin/modules/activate') }}">
 								{!! csrf_field() !!}
 								
 								<div class="form-group{{ $errors->has('module') ? ' has-error' : '' }}">
-									<label  class="col-md-4 control-label" for="module">{{ $layout->language('module') }}</label>
+									<label  class="col-md-4 control-label" for="module">@lang('modules.module')</label>
 									<div class="col-md-6">
 										<select class="form-control"  name="module"  id="module">
 											@foreach($layout->modules()->getInactives() as $module)
@@ -43,13 +43,13 @@
 					</div>
 					
 					<div class="panel panel-default">
-						<div class="panel-heading">{{ $layout->language('module_deactivate') }}</div>
+						<div class="panel-heading">@lang('modules.module_deactivate')</div>
 						<div class="panel-body">
 							<form class="form-horizontal" role="form" method="POST" action="{{ url('/admin/modules/deactivate') }}">
 								{!! csrf_field() !!}
 								
 								<div class="form-group{{ $errors->has('module') ? ' has-error' : '' }}">
-									<label  class="col-md-4 control-label" for="module">{{ $layout->language('module') }}</label>
+									<label  class="col-md-4 control-label" for="module">@lang('modules.module')</label>
 									<div class="col-md-6">
 										<select class="form-control"  name="module"  id="module">
 											@foreach($layout->modules()->getActives() as $module)
@@ -77,7 +77,7 @@
 					</div>
 					
 					<div class="panel panel-default">
-						<div class="panel-heading">{{ $layout->language('modules') }}</div>
+						<div class="panel-heading">@lang('modules.modules')</div>
 						<div class="panel-body">
 							<ul class="list-group">
 								@foreach($layout->modules()->get() as $module)

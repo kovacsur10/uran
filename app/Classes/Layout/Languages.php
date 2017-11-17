@@ -118,13 +118,6 @@ class Languages{
 			'actions' => 'Műveletek',
 			'upload' => 'Feltölt',
 			'image' => 'Kép',
-		//modules
-			'error_at_module_activation' => 'Hiba a modul aktiválásakor!',
-			'module' => 'Modul',
-			'module_activate' => 'Modul aktiválása',
-			'module_deactivate' => 'Modul deaktiválása',
-			'modules' => 'Modulok',
-			'modules_handling' => 'Modulok kezelése',
 		//notifications
 			'error_notification_view_insufficient_permission' => 'Nincsen jogod ezt az értesítést megtekinteni!',
 			'newer_notifications' => 'Frissebb értesítések',
@@ -712,13 +705,6 @@ class Languages{
 			'actions' => 'Actions',
 			'upload' => 'Upload',
 			'image' => 'Image',
-		//modules
-			'error_at_module_activation' => 'Error at activating the modul!',
-			'module' => 'Module',
-			'module_activate' => 'Module activation',
-			'module_deactivate' => 'Module deactivation',
-			'modules' => 'Modules',
-			'modules_handling' => 'Module handler',
 		//notifications	
 			'error_notification_view_insufficient_permission' => 'You do not have the permissions to view this notification!',
 			'newer_notifications' => 'Newer notifications',

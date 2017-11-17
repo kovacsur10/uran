@@ -43,7 +43,7 @@ class ModuleController extends Controller{
 				$layout->modules()->activate($request->module);
 			}catch(\Exception $e){
 				return view('errors.error', ["layout" => $layout,
-											 "message" => $layout->language('error_at_module_activation'),
+											 "message_indicator" => 'error_at_module_activation',
 											 "url" => '/admin/modules']);
 			}
 			$module = $layout->modules()->getById($request->module);
