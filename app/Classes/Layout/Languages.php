@@ -118,16 +118,6 @@ class Languages{
 			'actions' => 'Műveletek',
 			'upload' => 'Feltölt',
 			'image' => 'Kép',
-		//notifications
-			'error_notification_view_insufficient_permission' => 'Nincsen jogod ezt az értesítést megtekinteni!',
-			'newer_notifications' => 'Frissebb értesítések',
-			'no_notification_to_show' => 'Nincsen megjeleníthető értesítés!',
-			'notifications' => 'Értesítések',
-			'older_notifications' => 'Régebbi értesítések',
-			'show_all' => 'Mutasd mindet',
-			'system_no_problem' => 'Rendszer: Semmi probléma',
-			'unread_notifications' => 'Olvasatlan értesítések',
-			'read_all_notifications' => 'Összes olvasása',
 		//rooms
 			'back_to_the_rooms_list' => 'Vissza a szobák listájához',
 			'basement' => 'Alagsor',
@@ -705,16 +695,6 @@ class Languages{
 			'actions' => 'Actions',
 			'upload' => 'Upload',
 			'image' => 'Image',
-		//notifications	
-			'error_notification_view_insufficient_permission' => 'You do not have the permissions to view this notification!',
-			'newer_notifications' => 'Newer notifications',
-			'no_notification_to_show' => 'No notifications to show!',
-			'notifications' => 'Notifications',
-			'older_notifications' => 'Older notifications',
-			'show_all' => 'Show all',
-			'system_no_problem' => 'System: No problem',
-			'unread_notifications' => 'Unread notifications',
-			'read_all_notifications' => 'Read all',
 		//rooms
 			'back_to_the_rooms_list' => 'Back to the rooms list',
 			'basement' => 'Basement',

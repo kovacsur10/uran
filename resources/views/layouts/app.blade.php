@@ -154,7 +154,7 @@
 				<ul class="nav navbar-nav navbar-right">
 					@if (!$data->logged())
                     @else
-                    	<li class="hidden-sm hidden-md hidden-lg"><a href="{{ url('/notification/list/0') }}">{{ $layout->language('notifications') }}</a></li>
+                    	<li class="hidden-sm hidden-md hidden-lg"><a href="{{ url('/notification/list/0') }}">@lang('notifications.notifications')</a></li>
 						<li class="hidden-xs dropdown">
 							<div class="btn-group dropdown-notifications sw-open">
 								<button style="margin-top:8px;" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
@@ -169,9 +169,9 @@
 								<div class="dropdown-container">
 									<div class="dropdown-toolbar">
 										<div class="dropdown-toolbar-actions">
-											<a href="{{ url('/notification/list/0') }}"><i class="glyphicon glyphicon-search"></i> {{ $layout->language('show_all') }}</a>
+											<a href="{{ url('/notification/list/0') }}"><i class="glyphicon glyphicon-search"></i> @lang('notifications.show_all')</a>
 										</div>
-										<h3 class="dropdown-toolbar-title" data-toggle="dropdown">{{ $layout->language('unread_notifications') }} ({{ $data->user()->unreadNotificationCount() }})</h3>
+										<h3 class="dropdown-toolbar-title" data-toggle="dropdown">@lang('notifications.unread') ({{ $data->user()->unreadNotificationCount() }})</h3>
 									</div><!-- /dropdown-toolbar -->
 	
 									<ul class="dropdown-menu notifications">
@@ -180,8 +180,8 @@
 											<li class="notification">
 												<div class="media">
 													<div class="media-body">
-														<strong class="notification-title">{{ $layout->language('system_no_problem') }}</strong>
-														<p class="notification-desc">{{ $layout->language('no_notification_to_show') }}</p>
+														<strong class="notification-title">@lang('notifications.system_no_problem')</strong>
+														<p class="notification-desc">@lang('notifications.no_notification_to_show')</p>
 	
 														<div class="notification-meta">
 															<small class="timestamp"></small>
