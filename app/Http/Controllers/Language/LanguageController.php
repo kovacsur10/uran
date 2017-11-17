@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Language;
 
 use App\Classes\LayoutData;
 use App\Http\Controllers\Controller;
-use Illuminate\Contracts\Session\Session;
 
 /** Class name: LanguageController
  *
@@ -24,7 +23,7 @@ class LanguageController extends Controller{
 	 */
 	public function set($language){
 		$layout = new LayoutData();
-		$layout->setLanguage($language);
+		LayoutData::setLanguage($language);
 		if($layout->logged()){
 			$layout->user()->saveUserLanguage($language);
 		}

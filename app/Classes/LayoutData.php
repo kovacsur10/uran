@@ -277,6 +277,7 @@ class LayoutData{
 	public static function setLanguage($language){
 		if($language !== null){
 			\App::setLocale($language);
+			session()->forget('locale');
 			session()->put('locale', $language);
 		}
 	}
