@@ -10,7 +10,7 @@
 				@if($layout->user()->permitted('mailing_lists_handling'))
 					@if($members['alreadyMember'] !== [])
 						<div class="panel panel-default">
-							<div class="panel-heading">{{ $layout->language('members') }}</div>
+							<div class="panel-heading">@lang('ecadmin.members')</div>
 							<div class="panel-body">
 								<ul class="list-group">
 									@foreach($members['alreadyMember'] as $member)
@@ -22,7 +22,7 @@
 					@endif
 					@if($members['new'] !== [])
 						<div class="panel panel-default">
-							<div class="panel-heading">{{ $layout->language('newMembers') }}</div>
+							<div class="panel-heading">@lang('ecadmin.newMembers')</div>
 							<div class="panel-body">
 								<ul class="list-group">
 									@foreach($members['new'] as $member)
@@ -34,7 +34,7 @@
 					@endif
 					@if($members['remove'] !== [])
 						<div class="panel panel-default">
-							<div class="panel-heading">{{ $layout->language('removableMembers') }}</div>
+							<div class="panel-heading">@lang('ecadmin.removableMembers')</div>
 							<div class="panel-body">
 								<ul class="list-group">
 									@foreach($members['remove'] as $member)

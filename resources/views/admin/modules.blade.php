@@ -33,9 +33,7 @@
 								
 								<div class="form-group">
 									<div class="col-md-6 col-md-offset-4">
-										<button type="submit" class="btn btn-primary">
-											{{ $layout->language('activate') }}
-										</button>
+										<button type="submit" class="btn btn-primary">@lang('modules.activate')</button>
 									</div>
 								</div>
 							</form>
@@ -67,9 +65,7 @@
 								
 								<div class="form-group">
 									<div class="col-md-6 col-md-offset-4">
-										<button type="submit" class="btn btn-primary">
-											{{ $layout->language('deactivate') }}
-										</button>
+										<button type="submit" class="btn btn-primary">@lang('modules.deactivate')</button>
 									</div>
 								</div>
 							</form>

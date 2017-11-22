@@ -45,7 +45,7 @@ class RegistrationController extends Controller{
 		if($layout->user()->permitted('accept_user_registration')){
 			if($layout->registrations()->getRegistrationUser() === null){
 				return view('errors.error', ["layout" => $layout,
-						"message" => $layout->language('registration_user_not_found'),
+						"message_indicator" => 'admin.registration_user_not_found',
 						"url" => '/admin/registration/show']);
 			}else{
 				return view('admin.registration.show', ["layout" => $layout]);
@@ -70,11 +70,11 @@ class RegistrationController extends Controller{
 				$layout->registrations()->reject($id);
 			}catch(\Expcetion $ex){
 				return view('errors.error', ["layout" => $layout,
-											 "message" => $layout->language('reject_user_registration_failure'),
+											 "message_indicator" => 'admin.reject_user_registration_failure',
 											 "url" => '/admin/registration/show']);
 			}	
 			return view('success.success', ["layout" => $layout,
-											"message" => $layout->language('reject_user_registration_success'),
+											"message_indicator" => 'admin.reject_user_registration_success',
 											"url" => '/admin/registration/show']);
 		}else{
 			return view('errors.authentication', ["layout" => $layout]);
@@ -129,7 +129,7 @@ class RegistrationController extends Controller{
 				}
 			}catch(\Exception $ex){
 				return view('errors.error', ["layout" => $layout,
-											 "message" => $layout->language('accept_user_registration_failure'),
+											 "message_indicator" => 'admin.accept_user_registration_failure',
 											 "url" => '/admin/registration/show']);
 			}					
 			// send e-mail notification to the user
@@ -139,11 +139,11 @@ class RegistrationController extends Controller{
 				$lang = "hu";
 			Mail::send('mails.accept_'.$lang, ['name' => $request->input('name')], function ($m) use ($request, $layout) {
 				$m->to($request->input('email'), $request->input('name'));
-				$m->subject($layout->language('registration_accepted'));
+				$m->subject(__('admin.registration_accepted'));
 			});
 			
 			return view('success.success', ["layout" => $layout,
-											"message" => $layout->language('accept_user_registration_success'),
+											"message_indicator" => 'admin.accept_user_registration_success',
 											"url" => '/admin/registration/show']);
 		}else{
 			return view('errors.authentication', ["layout" => $layout]);

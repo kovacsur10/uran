@@ -56,7 +56,7 @@ class PrintingController extends Controller{
 			}
 			if($money === null){
 				Logger::warning('At ecnet money modification for user #'.$request->account.'. No money for that user. Maybe that user does not exist!', $oldmoney, $money, 'ecnet/account');
-				$layout->errors()->add('add_money', $layout->language('error_at_money_adding'));
+				$layout->errors()->add('add_money', __('ecnet.error_at_money_adding'));
 				return view('ecnet.account', ["layout" => $layout,
 						"users" => $layout->user()->users(0, -1)]);
 			}
@@ -69,13 +69,13 @@ class PrintingController extends Controller{
 			try{
 				$layout->user()->setMoneyForUser($request->account, $money);
 				Logger::log('Ecnet money was modified for user #'.$request->account.'.', $oldmoney, $money, 'ecnet/account');
-				Notifications::notify($layout->user()->user(), $request->account, $layout->language('balance_was_modified'), $layout->language('balance_was_modified_description').' '.$oldmoney.' '.$layout->language('from_forint').' '.$money.' '.$layout->language('to_forint').'!', 'ecnet/account');
-				$layout->errors()->add('success_add_money', $layout->language('success_set_money'));
+				Notifications::notify($layout->user()->user(), $request->account, __('ecnet.balance_was_modified'), __('ecnet.balance_was_modified_description').' '.$oldmoney.' '.__('ecnet.from_forint').' '.$money.' '.__('ecnet.to_forint').'!', 'ecnet/account');
+				$layout->errors()->add('success_add_money', __('ecnet.success_set_money'));
 				return view('ecnet.account', ["layout" => $layout,
 						"users" => $layout->user()->users(0, -1)]);
 			}catch(\Exception $ex){
 				Logger::warning('At ecnet money modification for user #'.$request->account.'. Database error occured!', $oldmoney, $money, 'ecnet/account');
-				$layout->errors()->add('add_money', $layout->language('error_at_money_adding'));
+				$layout->errors()->add('add_money', __('ecnet.error_at_money_adding'));
 				return view('ecnet.account', ["layout" => $layout,
 						"users" => $layout->user()->users(0, -1)]);
 			}
@@ -106,20 +106,20 @@ class PrintingController extends Controller{
     		}
     		if($freePages=== null){
     			Logger::warning('At ecnet free pages modification for user #'.$request->account.'. No free pages for that user. Maybe that user does not exist!', $request->pages, $request->valid_date, 'ecnet/account');
-    			$layout->errors()->add('add_freepages', $layout->language('error_at_freepages_adding'));
+    			$layout->errors()->add('add_freepages', __('ecnet.error_at_freepages_adding'));
     			return view('ecnet.account', ["layout" => $layout,
     					"users" => $layout->user()->users(0, -1)]);
     		}
     		try{
     			$layout->user()->addFreePagesForUser($request->account, $request->pages, $request->valid_date);
     			Logger::log('Ecnet free printing pages was modified for user #'.$request->account.'.', $request->pages, $request->valid_date, 'ecnet/account');
-    			Notifications::notify($layout->user()->user(), $request->account, $layout->language('freeprinting_balance_was_modified'), $layout->language('freeprinting_balance_was_modified_description').'!', 'ecnet/account');
-    			$layout->errors()->add('success_add_freepages', $layout->language('success_add_freepages'));
+    			Notifications::notify($layout->user()->user(), $request->account, __('ecnet.freeprinting_balance_was_modified'), __('ecnet.freeprinting_balance_was_modified_description').'!', 'ecnet/account');
+    			$layout->errors()->add('success_add_freepages', __('ecnet.success_add_freepages'));
     			return view('ecnet.account', ["layout" => $layout,
     					"users" => $layout->user()->users(0, -1)]);
     		}catch(\Exception $ex){
     			Logger::warning('At ecnet free pages modification for user #'.$request->account.'. Database error occured!', $request->pages, $request->valid_date, 'ecnet/account');
-    			$layout->errors()->add('add_freepages', $layout->language('error_at_freepages_adding'));
+    			$layout->errors()->add('add_freepages', __('ecnet.error_at_freepages_adding'));
     			return view('ecnet.account', ["layout" => $layout,
     					"users" => $layout->user()->users(0, -1)]);
     		}

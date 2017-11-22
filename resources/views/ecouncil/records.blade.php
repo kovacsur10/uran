@@ -6,7 +6,7 @@
         <div class="col-md-12">
 				
             <div class="panel panel-default">
-                <div class="panel-heading">{{ $layout->language('TODOMISSINGTETEBUZSI') }}</div>
+                <div class="panel-heading">@lang('TODOMISSINGTETEBUZSI')</div>
                 <div class="panel-body">
 					
 						

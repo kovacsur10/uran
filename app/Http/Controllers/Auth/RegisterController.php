@@ -78,12 +78,12 @@ class RegisterController extends Controller{
         	$layout->registrations()->register($request->input('username'), $request->input('password'), $request->input('email'), $request->input('name'), $request->input('country'), $request->input('shire'), $request->input('postalcode'), $request->input('address'), $request->input('city'), $request->input('reason'), $request->input('phone'), $layout->lang(), null, null, null, null, null, null, null, null, null);
         }catch(\Exception $ex){
         	return view('errors.error', ["layout" => $layout,
-        			"message" => $layout->language('error_at_sending_registration_verification_email'),
+        			"message_indicator" => 'auth.error_at_sending_registration_verification_email',
         			"url" => '/register']);
         }
-		Notifications::notifyAdminFromServer('accept_user_registration', $layout->language('new_user_registered'), $layout->language('new_user_registered_description'), 'admin/registration/show');
+		Notifications::notifyAdminFromServer('accept_user_registration', __('auth.new_user_registered'), __('auth.new_user_registered_description'), 'admin/registration/show');
 		return view('success.success', ["layout" => $layout,
-			"message" => $layout->language('success_at_sending_registration_verification_email'),
+			"message_indicator" => 'auth.success_at_sending_registration_verification_email',
 			"url" => '/register']);
     }
 	
@@ -127,12 +127,12 @@ class RegisterController extends Controller{
 			$layout->registrations()->register($request->input('username'), $request->input('password'), $request->input('email'), $request->input('name'), $request->input('country'), $request->input('shire'), $request->input('postalcode'), $request->input('address'), $request->input('city'), null, $request->input('phone'), $layout->lang(), $request->input('city_of_birth'), $request->input('date_of_birth'), $request->input('name_of_mother'), $request->input('year_of_leaving_exam'), $request->input('high_school'), $request->input('neptun'), $request->input('from_year'), $request->input('faculties'), $request->input('workshops'));
 		}catch(\Exception $ex){
 			return view('errors.error', ["layout" => $layout,
-					"message" => $layout->language('error_at_sending_registration_verification_email'),
+					"message_indicator" => 'auth.error_at_sending_registration_verification_email',
 					"url" => '/register']);
 		}
-		Notifications::notifyAdminFromServer('accept_user_registration', $layout->language('new_user_registered'), $layout->language('new_user_registered_description'), 'admin/registration/show');
+		Notifications::notifyAdminFromServer('accept_user_registration', __('auth.new_user_registered'), __('auth.new_user_registered_description'), 'admin/registration/show');
 		return view('success.success', ["layout" => $layout,
-			"message" => $layout->language('success_at_sending_registration_verification_email'),
+			"message_indicator" => 'auth.success_at_sending_registration_verification_email',
 			"url" => '/register']);
     }
 	
@@ -151,13 +151,13 @@ class RegisterController extends Controller{
 		}catch(\Exception $ex){
 			return view('errors.error', [
 					"layout" => $layout,
-					"message" => $layout->language('error_at_verifying_the_registration'),
+					"message_indicator" => 'auth.error_at_verifying_the_registration',
 					"url" => '/register'
 				]);
 		}
 		return view('success.success', [
 				"layout" => $layout,
-				"message" => $layout->language('success_at_verifying_the_registration'),
+				"message_indicator" => 'auth.success_at_verifying_the_registration',
 				"url" => '/register'
 		]);
 	}

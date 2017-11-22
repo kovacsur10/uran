@@ -15,7 +15,7 @@
 								{!! csrf_field() !!}
 								
 								<div class="form-group">
-									<label  class="col-md-4 control-label" for="user">{{ $layout->language('user') }}</label>
+									<label  class="col-md-4 control-label" for="user">@lang('user.user')</label>
 									<div class="col-md-6">
 										<select class="form-control" name="user" id="user">
 											<option value="{{ $userid }}" selected>{{ $layout->user()->getUserData($userid)->name() }} ({{ $layout->user()->getUserData($userid)->username() }})</option>

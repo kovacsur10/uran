@@ -5,11 +5,11 @@
     <div class="row">
         <div class="col-md-12">
             <div class="panel panel-default">
-                <div class="panel-heading">{{ $layout->language('room_assignment') }}</div>
+                <div class="panel-heading">@lang('rooms.room_assignment')</div>
                 <div class="panel-body">
 					@if($layout->user()->permitted('rooms_assign'))
 					<div class="panel panel-default">
-						<div class="panel-heading">{{ $layout->language('admin_panel') }}</div>
+						<div class="panel-heading">@lang('general.admin_panel')</div>
 						<div class="panel-body">
 							<form class="form-horizontal" role="form" method="POST" action="{{ url('/rooms/assign/'.$layout->room()->getGuard()) }}">
 								{!! csrf_field() !!}
@@ -22,7 +22,7 @@
 										<label  class="col-md-4 control-label" for="resident_select{{ $j }}">Lakó</label>
 										<div class="col-md-6">
 											<select class="form-control"  name="resident{{ $j }}"  id="resident_select{{ $j }}">
-												<option value="0">{{ $layout->language('free_spot') }}</option>
+												<option value="0">@lang('rooms.free_spot')</option>
 												@foreach($layout->user()->users() as $user)
 													@if(!$layout->room()->userHasResidence($user->id()) || $user->name() == $resident->name())
 														<option value="{{ $user->id() }}"
@@ -48,10 +48,10 @@
 								
 								@for($i = 0; $i < $layout->room()->getFreePlaceCount($room); $i++)
 									<div class="form-group{{ $errors->has('resident'.$i+$j) ? ' has-error' : '' }}">
-										<label  class="col-md-4 control-label" for="resident_select{{ $i+$j }}">{{ $layout->language('resident') }}</label>
+										<label  class="col-md-4 control-label" for="resident_select{{ $i+$j }}">@lang('rooms.resident')</label>
 										<div class="col-md-6">
 											<select class="form-control"  name="resident{{ $i+$j }}"  id="resident_select{{ $i+$j }}">
-												<option value="0" selected>{{ $layout->language('free_spot') }}</option>
+												<option value="0" selected>@lang('rooms.free_spot')</option>
 												@foreach($layout->user()->users() as $user)
 													@if(!$layout->room()->userHasResidence($user->id()))
 														<option value="{{ $user->id() }}">{{ $user->name() }} ({{ $user->username() }})</option>
@@ -73,16 +73,14 @@
 								
 								<div class="form-group">
 									<div class="col-md-6 col-md-offset-4">
-										<button type="submit" class="btn btn-primary">
-											{{ $layout->language('modify') }}
-										</button>
+										<button type="submit" class="btn btn-primary">@lang('rooms.modify')</button>
 									</div>
 								</div>
 							</form>
 						</div>
 					</div>
 					
-					<a href="{{ url('rooms/map/'.substr(strval($room),0,1)) }}">{{ $layout->language('back_to_the_rooms_list') }}</a>
+					<a href="{{ url('rooms/map/'.substr(strval($room),0,1)) }}">@lang('rooms.back_to_the_rooms_list')</a>
 					@endif
                 </div>
             </div>

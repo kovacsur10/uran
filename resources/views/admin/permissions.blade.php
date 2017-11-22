@@ -15,7 +15,7 @@
 								{!! csrf_field() !!}
 								
 								<div class="form-group{{ $errors->has('user') ? ' has-error' : '' }}">
-									<label  class="col-md-4 control-label" for="user">{{ $layout->language('user') }}</label>
+									<label  class="col-md-4 control-label" for="user">@lang('user.user')</label>
 									<div class="col-md-6">
 										<select class="form-control"  name="user"  id="user">
 											@foreach($layout->user()->users() as $user)
@@ -33,9 +33,7 @@
 								
 								<div class="form-group">
 									<div class="col-md-6 col-md-offset-4">
-										<button type="submit" class="btn btn-primary">
-											{{ $layout->language('start_of_modification') }}
-										</button>
+										<button type="submit" class="btn btn-primary">@lang('permissions.start_of_modification')</button>
 									</div>
 								</div>
 							</form>
@@ -49,7 +47,7 @@
 								{!! csrf_field() !!}
 								
 								<div class="form-group">
-									<label  class="col-md-4 control-label" for="permission">{{ $layout->language('permission') }}</label>
+									<label  class="col-md-4 control-label" for="permission">@lang('permissions.permission')</label>
 									<div class="col-md-6">
 										<select class="form-control" name="permission" id="permission">
 											@foreach($layout->permissions()->getAllPermissions() as $permission)
@@ -61,9 +59,7 @@
 								
 								<div class="form-group">
 									<div class="col-md-6 col-md-offset-4">
-										<button type="submit" class="btn btn-primary">
-											{{ $layout->language('list') }}
-										</button>
+										<button type="submit" class="btn btn-primary">@lang('permissions.list')</button>
 									</div>
 								</div>
 							</form>

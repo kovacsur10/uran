@@ -5,14 +5,14 @@
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default">
-                <div class="panel-heading">{{ $layout->language('modify_password') }}</div>
+                <div class="panel-heading">@lang('auth.modify_password')</div>
 
                 <div class="panel-body">
                     <form class="form-horizontal" role="form" method="POST" action="{{ url('/password/reset') }}">
                         {!! csrf_field() !!}
 
                         <div class="form-group{{ $errors->has('username') ? ' has-error' : '' }}">
-                            <label class="col-md-4 control-label">{{ $layout->language('username') }}</label>
+                            <label class="col-md-4 control-label">@lang('user.username')</label>
 
                             <div class="col-md-6">
                                 <input type="username" class="form-control" name="username" value="{{ $username or old('username') }}">
@@ -28,9 +28,7 @@
 
                         <div class="form-group">
                             <div class="col-md-6 col-md-offset-4">
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="fa fa-btn fa-refresh"></i>{{ $layout->language('reset_password') }}
-                                </button>
+                                <button type="submit" class="btn btn-primary"><i class="fa fa-btn fa-refresh"></i>@lang('auth.reset_password')</button>
                             </div>
                         </div>
                     </form>

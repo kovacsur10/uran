@@ -16,5 +16,8 @@ return [
 	'set_permission_groups' => 'Set groups',
 	'error_at_showing_permission_group_modification_page' => 'Error at showing the permissions group\'s modification page!',
 	'list_permission_groups' => 'List permission groups',
+	'start_of_modification' => 'Start modifying',
+	'list' => 'List',
+	'permission' => 'Permission',
 		
 ];

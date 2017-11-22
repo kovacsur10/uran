@@ -41,7 +41,7 @@ class NotificationController extends Controller{
 		if($notification === null){
 			$layout = new LayoutData();
 			return view('errors.error', ["layout" => $layout,
-										 "message_indicator" => 'error_notification_view_insufficient_permission',
+										 "message_indicator" => 'notifications.error_notification_view_insufficient_permission',
 										 "url" => '/notification/list/0']);
 		}else{
 			try{

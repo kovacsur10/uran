@@ -5,20 +5,20 @@
     <div class="row">
         <div class="col-md-12">
             <div class="panel panel-default">
-                <div class="panel-heading">{{ $layout->language('room_assignment') }}</div>
+                <div class="panel-heading">@lang('rooms.room_assignment')</div>
                 <div class="panel-body">
 					@if($layout->user()->permitted('rooms_assign'))
 						<div class="panel panel-default">
-							<div class="panel-heading" style="cursor: pointer;" data-toggle="collapse" data-target="#selectTableBody">{{ $layout->language('admin_panel') }} - {{ $layout->language('choose_table') }}</div>
+							<div class="panel-heading" style="cursor: pointer;" data-toggle="collapse" data-target="#selectTableBody">@lang('general.admin_panel') - @lang('rooms.choose_table')</div>
 							<div class="panel-body collapse" id="selectTableBody">
 								<div class="well">
-									{{ $layout->language('current_rooms_active_table') }}: {{ $layout->room()->activeTable() }}
+									@lang('rooms.current_rooms_active_table'): {{ $layout->room()->activeTable() }}
 								</div>
 								<form class="form-horizontal" role="form" method="POST" action="{{ url('/rooms/tables/select/'.$level) }}">
 									{!! csrf_field() !!}
 
 									<div class="form-group{{ $errors->has('table_version') ? ' has-error' : '' }}">
-										<label  class="col-md-4 control-label" for="table_version_select">{{ $layout->language('table_version') }}</label>
+										<label  class="col-md-4 control-label" for="table_version_select">@lang('rooms.table_version')</label>
 										<div class="col-md-6">
 											<select class="form-control"  name="table_version"  id="table_version_select" required="true">
 												@foreach($layout->room()->getTablesEX() as $table)
@@ -36,22 +36,20 @@
 									
 									<div class="form-group">
 										<div class="col-md-6 col-md-offset-4">
-											<button type="submit" class="btn btn-primary">
-												<i class="fa fa-btn fa-user"></i>{{ $layout->language('activate') }}
-											</button>
+											<button type="submit" class="btn btn-primary"><i class="fa fa-btn fa-user"></i>@lang('rooms.activate')</button>
 										</div>
 									</div>
 								</form>
 							</div>
 						</div>
 						<div class="panel panel-default">
-							<div class="panel-heading" style="cursor: pointer;" data-toggle="collapse" data-target="#removeTableBody">{{ $layout->language('admin_panel') }} - {{ $layout->language('delete_table') }}</div>
+							<div class="panel-heading" style="cursor: pointer;" data-toggle="collapse" data-target="#removeTableBody">@lang('general.admin_panel') - @lang('rooms.delete_table')</div>
 							<div class="panel-body collapse" id="removeTableBody">
 								<form class="form-horizontal" role="form" method="POST" action="{{ url('/rooms/tables/remove/'.$level) }}">
 									{!! csrf_field() !!}
 
 									<div class="form-group{{ $errors->has('table_version') ? ' has-error' : '' }}">
-										<label  class="col-md-4 control-label" for="table_version_select">{{ $layout->language('table_version') }}</label>
+										<label  class="col-md-4 control-label" for="table_version_select">@lang('rooms.table_version')</label>
 										<div class="col-md-6">
 											<select class="form-control"  name="table_version"  id="table_version_select" required="true">
 												@foreach($layout->room()->getTablesEX() as $table)
@@ -69,26 +67,24 @@
 									
 									<div class="form-group">
 										<div class="col-md-6 col-md-offset-4">
-											<button type="submit" class="btn btn-primary">
-												<i class="fa fa-btn fa-user"></i>{{ $layout->language('delete_table') }}
-											</button>
+											<button type="submit" class="btn btn-primary"><i class="fa fa-btn fa-user"></i>@lang('rooms.delete_table')</button>
 										</div>
 									</div>
 									
 									<div class="alert alert-warning">
-										{{ $layout->language('last_table_cannot_be_deleted_description') }}
+										@lang('rooms.last_table_cannot_be_deleted_description')
 									</div>
 								</form>
 							</div>
 						</div>
 						<div class="panel panel-default">
-							<div class="panel-heading" style="cursor: pointer;" data-toggle="collapse" data-target="#addNewTableBody">{{ $layout->language('admin_panel') }} - {{ $layout->language('add_new_table') }}</div>
+							<div class="panel-heading" style="cursor: pointer;" data-toggle="collapse" data-target="#addNewTableBody">@lang('general.admin_panel') - @lang('rooms.add_new_table')</div>
 							<div class="panel-body collapse" id="addNewTableBody">
 								<form class="form-horizontal" role="form" method="POST" action="{{ url('/rooms/tables/add/'.$level) }}">
 									{!! csrf_field() !!}
 
 									<div class="form-group{{ $errors->has('newTableName') ? ' has-error' : '' }}">
-			                            <label class="col-md-4 control-label">{{ $layout->language('new_table_identifier') }}</label>
+			                            <label class="col-md-4 control-label">@lang('rooms.new_table_identifier')</label>
 			
 			                            <div class="col-md-6">
 			                                <input type="text" class="form-control" id="newTableName" name="newTableName" value="{{ old('newTableName') }}" required="true">
@@ -103,9 +99,7 @@
 									
 									<div class="form-group">
 										<div class="col-md-6 col-md-offset-4">
-											<button type="submit" class="btn btn-primary">
-												<i class="fa fa-btn fa-user"></i>{{ $layout->language('add') }}
-											</button>
+											<button type="submit" class="btn btn-primary"><i class="fa fa-btn fa-user"></i>@lang('rooms.add')</button>
 										</div>
 									</div>
 								</form>
@@ -193,7 +187,7 @@
 								@if($layout->user()->permitted('rooms_assign'))
 								<a href="{{ url('rooms/room/'.$roomNumber) }}">
 								@endif
-									<div data-toggle="tooltip" data-html="true" title="{{ $layout->room()->getRoomResidentListText($roomNumber, $layout->language('free_spot')) }}" data-placement="{{ substr($roomNumber,1,2) > 15 ? 'right' : 'left' }}"  style="position:absolute;{{ $roomPosition }}"></div>
+									<div data-toggle="tooltip" data-html="true" title="{{ $layout->room()->getRoomResidentListText($roomNumber, __('rooms.free_spot')) }}" data-placement="{{ substr($roomNumber,1,2) > 15 ? 'right' : 'left' }}"  style="position:absolute;{{ $roomPosition }}"></div>
 								@if($layout->user()->permitted('rooms_assign'))
 								</a>
 								@endif
@@ -201,46 +195,46 @@
 								
 							<div style="text-align:right;position:absolute;left:314px;top:233px;width:100px;height:80px;">
 								@if($level == -2)
-									{{ $layout->language('cellar') }}
+									@lang('rooms.cellar')
 								@else
-									<a href="{{ url('rooms/map/-2') }}">{{ $layout->language('cellar') }}</a>
+									<a href="{{ url('rooms/map/-2') }}">@lang('rooms.cellar')</a>
 								@endif
 								<br>
 								@if($level == -1)
-									{{ $layout->language('basement') }}
+									@lang('rooms.basement')
 								@else
-									<a href="{{ url('rooms/map/-1') }}">{{ $layout->language('basement') }}</a>
+									<a href="{{ url('rooms/map/-1') }}">@lang('rooms.basement')</a>
 								@endif
 								<br>
 								@if($level == 0)
-									{{ $layout->language('ground_floor') }}
+									@lang('rooms.ground_floor')
 								@else
-									<a href="{{ url('rooms/map/0') }}">{{ $layout->language('ground_floor') }}</a>
+									<a href="{{ url('rooms/map/0') }}">@lang('rooms.ground_floor')</a>
 								@endif
 							</div>
 							<div style="position:absolute;left:550px;top:233px;width:100px;height:80px;">
 								@if($level == 1)
-									1. {{ $layout->language('floor') }}
+									1. @lang('rooms.floor')
 								@else
-									<a href="{{ url('rooms/map/1') }}">1. {{ $layout->language('floor') }}</a>
+									<a href="{{ url('rooms/map/1') }}">1. @lang('rooms.floor')</a>
 								@endif
 								<br>
 								@if($level == 2)
-									2. {{ $layout->language('floor') }}
+									2. @lang('rooms.floor')
 								@else
-									<a href="{{ url('rooms/map/2') }}">2. {{ $layout->language('floor') }}</a>
+									<a href="{{ url('rooms/map/2') }}">2. @lang('rooms.floor')</a>
 								@endif
 								<br>
 								@if($level == 3)
-									3. {{ $layout->language('floor') }}
+									3. @lang('rooms.floor')
 								@else
-									<a href="{{ url('rooms/map/3') }}">3. {{ $layout->language('floor') }}</a>
+									<a href="{{ url('rooms/map/3') }}">3. @lang('rooms.floor')</a>
 								@endif
 							</div>
 						</div>
 						
 						<div class="panel panel-default">
-							<div class="panel-heading text-right"><a href="{{ url('/rooms/download') }}" target="_blank">{{ $layout->language('download_table_as_csv') }}</a></div>
+							<div class="panel-heading text-right"><a href="{{ url('/rooms/download') }}" target="_blank">@lang('rooms.download_table_as_csv')</a></div>
 							<div class="panel-body">
 								<table class="table table-bordered">
 									<thead>

@@ -329,7 +329,7 @@ class User{
 	 * @param int $examId - a language exam identifier
 	 * @return bool - If the user has the searched language exam.
 	 */
-	public function hasLanguageExam($examId) : bool{
+	public function hasLanguageExam(int $examId) : bool{
 		if($this->personal_data !== null && $examId !== null){
 			foreach($this->personal_data->languageExams() as $exam){
 				if($exam->id() === $examId){
@@ -348,7 +348,7 @@ class User{
 	 * @param int $examId - a language exam identifier
 	 * @return LanguageExam|null - The searched language exam.
 	 */
-	public function getLanguageExam($examId){
+	public function getLanguageExam(int $examId){
 		if($this->hasLanguageExam($examId)){
 			foreach($this->personal_data->languageExams() as $exam){
 				if($exam->id() === $examId){

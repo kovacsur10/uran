@@ -5,25 +5,25 @@
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
             <div class="panel panel-default">
-                <div class="panel-heading">{{ $layout->language('internet_access') }}</div>
+                <div class="panel-heading">@lang('ecnet.internet_access')</div>
                 <div class="panel-body">
 					@if($active)
 					<div class="alert alert-success">
-						<p>{{ $layout->language('internet_is_active') }}</p>
-						<p>{{ $layout->language('expiration_date') }}: {{ $layout->formatDate($layout->user()->ecnetUser()->valid()) }}</p>
+						<p>@lang('ecnet.internet_is_active')</p>
+						<p>@lang('ecnet.expiration_date'): {{ $layout->formatDate($layout->user()->ecnetUser()->valid()) }}</p>
 					</div>
 					@else
 					<div class="alert alert-danger">
-						<p>{{ $layout->language('internet_in_not_active') }}</p>
+						<p>@lang('ecnet.internet_in_not_active')</p>
 					</div>
 					@endif
 					<div class="alert alert-info">
-						<strong>{{ $layout->language('note') }}:</strong> {{ $layout->language('internet_registartion_description') }}
+						<strong>@lang('general.note'):</strong> @lang('ecnet.internet_registartion_description')
 					</div>
 					
 					@if($layout->user()->permitted('ecnet_set_valid_time'))
 					<div class="panel panel-default">
-						<div class="panel-heading">{{ $layout->language('admin_panel') }} - {{ $layout->language('validation') }}</div>
+						<div class="panel-heading">@lang('general.admin_panel') - @lang('ecnet.validation')</div>
 						<div class="panel-body">
 							@if($layout->errors()->has('activate'))
 		                		<div class="alert alert-danger">
@@ -38,7 +38,7 @@
 								{!! csrf_field() !!}
 								
 								<div class="form-group{{ $errors->has('custom_valid_date') ? ' has-error' : '' }}">
-									<label class="col-md-4 control-label">{{ $layout->language('custom_validation_date') }}</label>
+									<label class="col-md-4 control-label">@lang('ecnet.custom_validation_date')</label>
 									
 									<div class="col-md-6">
 										<div class='input-group date' data-date-format="yyyy.mm.dd." id='datepicker_custom_valid_date'>
@@ -57,7 +57,7 @@
 								</div>
 																
 								<div class="form-group{{ $errors->has('account') ? ' has-error' : '' }}">
-									<label  class="col-md-4 control-label" for="user_select">{{ $layout->language('user') }}</label>
+									<label  class="col-md-4 control-label" for="user_select">@lang('user.user')</label>
 									<div class="col-md-6">
 										<select class="form-control"  name="account"  id="user_select" required="true">
 											@foreach($users as $us)
@@ -75,21 +75,19 @@
 								
 								<div class="form-group">
 									<div class="col-md-6 col-md-offset-4">
-										<button type="submit" class="btn btn-primary">
-											{{ $layout->language('validate') }}
-										</button>
+										<button type="submit" class="btn btn-primary">@lang('ecnet.validate')</button>
 									</div>
 								</div>
 							</form>
 							
 							<div class="alert alert-warning">
-								<p>{{ $layout->language('validation_time_set_admin_description') }}</p>
-								<p>{{ $layout->language('default_time_set_note_description') }}</p>
-								<p>{{ $layout->language('default_time_now_description') }}: <strong>
+								<p>@lang('ecnet.validation_time_set_admin_description')</p>
+								<p>@lang('ecnet.default_time_set_note_description')</p>
+								<p>@lang('ecnet.default_time_now_description'): <strong>
 								@if($layout->user()->validationTime() !== null)
 									{{ $layout->formatDate($layout->user()->validationTime()) }}
 								@else
-									{{ $layout->language('error_no_default_time_description') }}
+									@lang('ecnet.error_no_default_time_description')
 								@endif
 								</strong></p>
 							</div>
@@ -97,7 +95,7 @@
 					</div>
 					
 					<div class="panel panel-default">
-						<div class="panel-heading">{{ $layout->language('admin_panel') }} - {{ $layout->language('default_time') }}</div>
+						<div class="panel-heading">@lang('general.admin_panel') - @lang('ecnet.default_time')</div>
 						<div class="panel-body">
 							@if($layout->errors()->has('update_validation_time'))
 		                		<div class="alert alert-danger">
@@ -112,7 +110,7 @@
 								{!! csrf_field() !!}
 								
 								<div class="form-group{{ $errors->has('new_valid_date') ? ' has-error' : '' }}">
-									<label class="col-md-4 control-label">{{ $layout->language('validation_date') }}</label>
+									<label class="col-md-4 control-label">@lang('ecnet.validation_date')</label>
 
 									<div class="col-md-6">
 										<div class='input-group date' data-date-format="yyyy.mm.dd." id='datepicker_new_valid_date'>
@@ -132,28 +130,26 @@
 								
 								<div class="form-group">
 									<div class="col-md-6 col-md-offset-4">
-										<button type="submit" class="btn btn-primary">
-											{{ $layout->language('modify') }}
-										</button>
+										<button type="submit" class="btn btn-primary">@lang('ecnet.modify')</button>
 									</div>
 								</div>
 							</form>
 							<div class="alert alert-warning">
-								<p>{{ $layout->language('default_time_now_description') }}: <strong>
+								<p>@lang('ecnet.default_time_now_description'): <strong>
 								@if($layout->user()->validationTime() !== null)
 									{{ $layout->formatDate($layout->user()->validationTime()) }}
 								@else
-									{{ $layout->language('error_no_default_time_description') }}
+									@lang('ecnet.error_no_default_time_description')
 								@endif
 								</strong></p>
-								<p>{{ $layout->language('default_time_set_note_description') }}</p>
+								<p>@lang('ecnet.default_time_set_note_description')</p>
 							</div>
 						</div>
 					</div>
 					@endif
 					
 					<div class="panel panel-default">
-						<div class="panel-heading">{{ $layout->language('mac_addresses') }}</div>
+						<div class="panel-heading">@lang('ecnet.mac_addresses')</div>
 						<div class="panel-body">
 							@if($layout->errors()->has('setmac'))
 		                		<div class="alert alert-danger">
@@ -170,7 +166,7 @@
 								<?php $i = 0; ?>
 								@foreach($layout->user()->ecnetUser()->macAddresses() as $address)
 								<div class="form-group{{ $errors->has('mac_address_'.$i) ? ' has-error' : '' }}">
-									<label class="col-md-4 control-label">{{ $layout->language('mac_address') }}</label>
+									<label class="col-md-4 control-label">@lang('ecnet.mac_address')</label>
 
 									<div class="col-md-6">
 										<input type="text" class="form-control mac-address-check" name="mac_address_{{ $i }}" value="{{ old('mac_address_'.$i) !== null ? old('mac_address_'.$i) : $address->address() }}">
@@ -187,7 +183,7 @@
 								
 								@for(; $i < $layout->user()->ecnetUser()->maximumMacSlots(); $i++)
 								<div class="form-group{{ $errors->has('mac_address_'.$i) ? ' has-error' : '' }}">
-									<label class="col-md-4 control-label">{{ $layout->language('mac_address') }}</label>
+									<label class="col-md-4 control-label">@lang('ecnet.mac_address')</label>
 
 									<div class="col-md-6">
 										<input type="text" class="form-control mac-address-check" name="mac_address_{{ $i }}" value="{{ old('mac_address_'.$i) }}">
@@ -203,9 +199,7 @@
 								
 								<div class="form-group">
 									<div class="col-md-6 col-md-offset-4">
-										<button type="submit" id="setMacAddressesButton" class="btn btn-primary">
-											{{ $layout->language('set_mac_address') }}
-										</button>
+										<button type="submit" id="setMacAddressesButton" class="btn btn-primary">@lang('ecnet.set_mac_address')</button>
 									</div>
 								</div>
 							</form>

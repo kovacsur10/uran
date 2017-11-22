@@ -85,36 +85,36 @@ class TaskController extends Controller{
 			//validation
 			if($request->type === null || !$this->inArray($request->type, $layout->tasks()->taskTypes())){
 				$error = true;
-				$layout->errors()->add('type', $layout->language('not_specified_value'));
+				$layout->errors()->add('type', __('tasks.not_specified_value'));
 			}
 			if($request->text === null || trim($request->text) === ''){
 				$error = true;
-				$layout->errors()->add('text', $layout->language('empty_value_is_forbidden'));
+				$layout->errors()->add('text', __('tasks.empty_value_is_forbidden'));
 			}
 			if($request->working_hours === null || !is_numeric($request->working_hours)){
 				$error = true;
-				$layout->errors()->add('working_hours', $layout->language('not_specified_value'));
+				$layout->errors()->add('working_hours', __('tasks.not_specified_value'));
 			}
 			if($request->caption === null || trim($request->caption) === ''){
 				$error = true;
-				$layout->errors()->add('caption', $layout->language('empty_value_is_forbidden'));
+				$layout->errors()->add('caption', __('tasks.empty_value_is_forbidden'));
 			}
 			if($request->priority === null || !$this->inArray($request->priority, $layout->tasks()->priorities())){
 				$error = true;
-				$layout->errors()->add('priority', $layout->language('not_specified_value'));
+				$layout->errors()->add('priority', __('tasks.not_specified_value'));
 			}
 			if($request->assigned_username !== null && $assignedUser === null && $request->assigned_username !== "admin"){
 				$error = true;
-				$layout->errors()->add('assigned_username', $layout->language('not_specified_value'));
+				$layout->errors()->add('assigned_username', __('tasks.not_specified_value'));
 			}
 			if($request->status === null || !$this->inArray($request->status, $layout->tasks()->statusTypes())){
 				$error = true;
-				$layout->errors()->add('status', $layout->language('not_specified_value'));
+				$layout->errors()->add('status', __('tasks.not_specified_value'));
 			}
 			preg_match("/^[1-9]\d\d\d. (?:1[012]|0[1-9]). (?:0[1-9]|[12][0-9]|3[01])$/", $request->deadline, $matched_values);
 			if(trim($request->deadline) !== '' && $matched_values === []){
 				$error = true;
-				$layout->errors()->add('deadline', $layout->language('not_specified_value'));
+				$layout->errors()->add('deadline', __('tasks.not_specified_value'));
 			}
 			//add task or return the errors
 			if(!$error){
@@ -133,10 +133,10 @@ class TaskController extends Controller{
 				$newStatus = $layout->tasks()->getStatusById($request->status)->name();
 				if($newStatus !== $layout->tasks()->getTask()->status()->name()){
 					if($layout->tasks()->getTask()->creator()->id() !== $layout->user()->user()->id()){
-						Notifications::notify($layout->user()->user(), $layout->tasks()->getTask()->creator()->id(), 'Feladat státusz változás', 'Egy általad létrehozott feladat státusza megváltozott ('.$layout->language($layout->tasks()->getTask()->status()->name()).' -> '.$layout->language($newStatus).')!', 'tasks/task/'.$taskId);
+						Notifications::notify($layout->user()->user(), $layout->tasks()->getTask()->creator()->id(), 'Feladat státusz változás', 'Egy általad létrehozott feladat státusza megváltozott ('.__('tasks.'.$layout->tasks()->getTask()->status()->name()).' -> '.__('tasks.'.$newStatus).')!', 'tasks/task/'.$taskId);
 					}
 					if($assignedUser !== null && $assignedUser !== $layout->tasks()->getTask()->creator()->id()){
-						Notifications::notify($layout->user()->user(), $assignedUser, 'Feladat státusz változás', 'Egy feladat - amin éppen dolgozol - státusza megváltozott ('.$layout->language($layout->tasks()->getTask()->status()->name()).' -> '.$layout->language($newStatus).')!', 'tasks/task/'.$taskId);
+						Notifications::notify($layout->user()->user(), $assignedUser, 'Feladat státusz változás', 'Egy feladat - amin éppen dolgozol - státusza megváltozott ('.__('tasks.'.$layout->tasks()->getTask()->status()->name()).' -> '.__('tasks.'.$newStatus).')!', 'tasks/task/'.$taskId);
 					}
 				}
 				//alert for assignment
@@ -187,11 +187,11 @@ class TaskController extends Controller{
 				}
 			}else{
 				return view('errors.error', ["layout" => $layout,
-											 "message" => $layout->language('task_not_found'),
+											 "message_indicator" => 'tasks.task_not_found',
 											 "url" => '/tasks/list']);
 			}
 		}else{
-			$layout->errors()->add('permission', $layout->language('permission'));
+			$layout->errors()->add('permission', __('general.permission'));
 			$layout->tasks()->setTask($taskId);
 		}
 		return view('tasks.task', ["layout" => $layout]);
@@ -212,10 +212,10 @@ class TaskController extends Controller{
 			if($layout->tasks()->getComment($commentId)->authorUsername() === $layout->user()->user()->username() || $layout->user()->permitted('tasks_admin')){
 				$layout->tasks()->removeComment($commentId);
 			}else{
-				$layout->errors()->add('permission', $layout->language('insufficient_permissions'));
+				$layout->errors()->add('permission', __('error.insufficient_permissions'));
 			}
 		}else{
-			$layout->errors()->add('comment_not_exists', $layout->language('comment_not_exists'));
+			$layout->errors()->add('comment_not_exists', __('tasks.comment_not_exists'));
 		}
 		$layout->tasks()->setTask($taskId);
 		return view('tasks.task', ["layout" => $layout]);
@@ -237,24 +237,24 @@ class TaskController extends Controller{
 			//validation
 			if($request->type === null || !$this->inArray($request->type, $layout->tasks()->taskTypes())){
 				$error = true;
-				$layout->errors()->add('type', $layout->language('not_specified_value'));
+				$layout->errors()->add('type', __('tasks.not_specified_value'));
 			}
 			if($request->text === null || trim($request->text) === ''){
 				$error = true;
-				$layout->errors()->add('text', $layout->language('empty_value_is_forbidden'));
+				$layout->errors()->add('text', __('tasks.empty_value_is_forbidden'));
 			}
 			if($request->caption === null || trim($request->caption) === ''){
 				$error = true;
-				$layout->errors()->add('caption', $layout->language('empty_value_is_forbidden'));
+				$layout->errors()->add('caption', __('tasks.empty_value_is_forbidden'));
 			}
 			if($request->priority === null || !$this->inArray($request->priority, $layout->tasks()->priorities())){
 				$error = true;
-				$layout->errors()->add('priority', $layout->language('not_specified_value'));
+				$layout->errors()->add('priority', __('tasks.not_specified_value'));
 			}
 			preg_match("/^[1-9]\d\d\d. (?:1[012]|0[1-9]). (?:0[1-9]|[12][0-9]|3[01])$/", $request->deadline, $matched_values);
 			if(trim($request->deadline) !== '' && $matched_values === []){
 				$error = true;
-				$layout->errors()->add('deadline', $layout->language('not_specified_value'));
+				$layout->errors()->add('deadline', __('tasks.not_specified_value'));
 			}
 			//add task or return the errors
 			if(!$error){
@@ -273,7 +273,7 @@ class TaskController extends Controller{
 				return view('tasks.add', ["layout" => $layout]);
 			}
 		}else{
-			$layout->errors()->add('permission', $layout->language('insufficient_permissions'));
+			$layout->errors()->add('permission', __('error.insufficient_permissions'));
 		}
 		return view('tasks.tasks', ["layout" => $layout,
 									"tasksToShow" => 10,

@@ -51,11 +51,11 @@ class PasswordController extends Controller{
 		}catch(\Exception $ex){
 			$layout = new LayoutData();
 			return view('errors.error', ["layout" => $layout,
-					"message" => $layout->language('error_at_reseting_password'),
+					"message_indicator" => 'auth.error_at_reseting_password',
 					"url" => '/password/reset']);
 		}
 		return view('success.success', ["layout" => $layout,
-										"message" => $layout->language('success_send_email_about_what_to_do'),
+										"message_indicator" => 'auth.success_send_email_about_what_to_do',
 										"url" => '/']);
 	}
 	
@@ -81,7 +81,7 @@ class PasswordController extends Controller{
 		}else{
 			$layout = new LayoutData();
 			return view('errors.error', ["layout" => $layout,
-										 "message" => $layout->language('error_at_reseting_password'),
+										 "message_indicator" => 'auth.error_at_reseting_password',
 										 "url" => '/password/reset']);
 		}
     }
@@ -106,11 +106,11 @@ class PasswordController extends Controller{
 			Auth::updatePassword($request->input('username'), $request->input('password'));
 		}catch(\Exception $ex){
 			return view('errors.error', ["layout" => $layout,
-					"message" => $layout->language('error_at_reseting_password'),
+					"message_indicator" => 'auth.error_at_reseting_password',
 					"url" => '/password/reset']);
 		}
 		return view('success.success', ["layout" => $layout,
-										"message" => $layout->language('success_at_reset_password'),
+										"message_indicator" => 'auth.success_at_reset_password',
 										"url" => '/']);
 	}
 }

@@ -6,7 +6,7 @@
         <div class="col-md-12">
 				
             <div class="panel panel-default">
-                <div class="panel-heading">{{ $layout->language('task_manager') }}</div>
+                <div class="panel-heading">@lang('tasks.task_manager')</div>
                 <div class="panel-body">
 					@if($layout->errors()->has('permission'))
 						<div class="alert alert-danger">
@@ -15,13 +15,13 @@
 					@endif
 					
 					<div class="panel panel-default">
-						<div class="panel-heading" style="cursor: pointer;" data-toggle="collapse" data-target="#filterPanelBody">{{ $layout->language('data_filtering') }} - {{ $layout->language('openable') }}</div>
+						<div class="panel-heading" style="cursor: pointer;" data-toggle="collapse" data-target="#filterPanelBody">@lang('tasks.data_filtering') - @lang('tasks.openable')</div>
 						<div class="panel-body collapse" id="filterPanelBody">
 							<form class="form-horizontal" role="form" method="POST" action="{{ url('/tasks/tasks') }}">
 							{!! csrf_field() !!}
 							
 								<div class="form-group{{ $errors->has('caption') ? ' has-error' : '' }}">
-									<label class="col-md-4 control-label">{{ $layout->language('task') }}</label>
+									<label class="col-md-4 control-label">@lang('tasks.task')</label>
 
 									<div class="col-md-6">
 										<input type="text" class="form-control" name="caption" value="{{ $layout->tasks()->getFilter('caption') }}">
@@ -35,13 +35,13 @@
 								</div>
 											
 								<div class="form-group{{ $errors->has('status') ? ' has-error' : '' }}">
-									<label class="col-md-4 control-label">{{ $layout->language('status') }}</label>
+									<label class="col-md-4 control-label">@lang('tasks.status')</label>
 
 									<div class="col-md-6">
 										<select class="form-control" name="status"> 	
 											<option class="form-control" name="status" value=""></option>
 											@foreach($layout->tasks()->statusTypes() as $status)
-												<option class="form-control" name="status" value="{{ $status->id() }}" {{ $layout->tasks()->getFilter('status') == $status->id() ? "selected" : "" }}>{{ $layout->language($status->name()) }}</option>
+												<option class="form-control" name="status" value="{{ $status->id() }}" {{ $layout->tasks()->getFilter('status') == $status->id() ? "selected" : "" }}>@lang('tasks.'.$status->name())</option>
 											@endforeach
 										</select>
 										
@@ -54,13 +54,13 @@
 								</div>
 								
 								<div class="form-group{{ $errors->has('priority') ? ' has-error' : '' }}">
-									<label class="col-md-4 control-label">{{ $layout->language('priority') }}</label>
+									<label class="col-md-4 control-label">@lang('tasks.priority')</label>
 
 									<div class="col-md-6">
 										<select class="form-control" name="priority"> 	
 											<option class="form-control" name="priority" value=""></option>
 											@foreach($layout->tasks()->priorities() as $priority)
-												<option class="form-control" name="priority" value="{{ $priority->id() }}"  {{ $layout->tasks()->getFilter('priority') == $priority->id() ? "selected" : "" }}>{{ $layout->language($priority->name()) }}</option>
+												<option class="form-control" name="priority" value="{{ $priority->id() }}"  {{ $layout->tasks()->getFilter('priority') == $priority->id() ? "selected" : "" }}>@lang('tasks.'.$priority->name())</option>
 											@endforeach
 										</select>
 										
@@ -73,7 +73,7 @@
 								</div>
 								
 								<div class="form-group{{ $errors->has('myTasks') ? ' has-error' : '' }}">
-									<label class="col-md-4 control-label">{{ $layout->language('myTasks') }}</label>
+									<label class="col-md-4 control-label">@lang('tasks.myTasks')</label>
 
 									<div class="col-md-6">
 										<input type="checkbox" name="myTasks" value="myTasks" {{ $layout->tasks()->getFilter('myTasks') == 1 ? "checked" : "" }}>
@@ -87,7 +87,7 @@
 								</div>
 								
 								<div class="form-group{{ $errors->has('hide_closed') ? ' has-error' : '' }}">
-									<label class="col-md-4 control-label">{{ $layout->language('hide_closed') }}</label>
+									<label class="col-md-4 control-label">@lang('tasks.hide_closed')</label>
 
 									<div class="col-md-6">
 										<input type="checkbox" name="hide_closed" value="hide_closed" {{ $layout->tasks()->getFilter('hideClosed') == 1 ? "checked" : "" }}>
@@ -102,10 +102,8 @@
 								
 								<div class="form-group">
 									<div class="col-md-6 col-md-offset-4">
-										<button type="submit" class="btn btn-primary">
-											{{ $layout->language('find') }}
-										</button>
-										<a href="{{ url('tasks/resetfilter') }}" class="btn btn-danger" role="button">{{ $layout->language('delete_filter') }}</a>
+										<button type="submit" class="btn btn-primary">@lang('tasks.find')</button>
+										<a href="{{ url('tasks/resetfilter') }}" class="btn btn-danger" role="button">@lang('tasks.delete_filter')</a>
 									</div>
 								</div>
 							</form>
@@ -115,7 +113,7 @@
 					<div class="row">
 						<div class="col-sm-3" style="margin: 20px 0px;">
 							<div class="dropdown">
-								<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">{{ $layout->language('choose_visible_row_count') }}
+								<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">@lang('tasks.choose_visible_row_count')
 									<span class="caret"></span>
 								</button>
 								<ul class="dropdown-menu">
@@ -152,7 +150,7 @@
 						<div class="col-sm-3" style="margin: 20px 0px;">
 							@if($layout->user()->permitted('tasks_add'))
 							<div class="pull-right">
-								<a href="{{ url('tasks/new') }}" class="btn btn-primary">{{ $layout->language('create_new_task') }}</a>
+								<a href="{{ url('tasks/new') }}" class="btn btn-primary">@lang('tasks.create_new_task')</a>
 							</div>
 							@endif
 						</div>
@@ -160,10 +158,10 @@
 					
 					<div class="well well-sm">
 						<div class="row">
-							<div class="col-sm-6">{{ $layout->language('caption') }}</div>
-							<div class="col-sm-2">{{ $layout->language('user') }}</div>
-							<div class="col-sm-2">{{ $layout->language('status') }}</div>
-							<div class="col-sm-2">{{ $layout->language('date') }}</div>
+							<div class="col-sm-6">@lang('tasks.caption')</div>
+							<div class="col-sm-2">@lang('tasks.user')</div>
+							<div class="col-sm-2">@lang('tasks.status')</div>
+							<div class="col-sm-2">@lang('tasks.date')</div>
 						</div>
 					</div>
 					@if($layout->tasks()->tasksToPages($firstTask, $tasksToShow) != null)
@@ -184,7 +182,7 @@
 								<div class="row" style="margin-right:20px;">
 									<div class="col-sm-6">{{ $task->caption() }}</div>
 									<div class="col-sm-2">{{ $task->creator()->name() }}</div>
-									<div class="col-sm-2">{{ $layout->language($task->status()->name()) }}</div>
+									<div class="col-sm-2">@lang('tasks.'.$task->status()->name())</div>
 									<div class="col-sm-2">{{ $layout->formatDate($task->createdOn()) }}</div>
 								</div>
 							</a>
@@ -195,7 +193,7 @@
 					<div class="row">
 						<div class="col-sm-3" style="margin: 20px 0px;">
 							<div class="dropdown">
-								<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">{{ $layout->language('choose_visible_row_count') }}
+								<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">@lang('tasks.choose_visible_row_count')
 									<span class="caret"></span>
 								</button>
 								<ul class="dropdown-menu">
@@ -232,7 +230,7 @@
 						<div class="col-sm-3" style="margin: 20px 0px;">
 							@if($layout->user()->permitted('tasks_add'))
 							<div class="pull-right">
-								<a href="{{ url('tasks/new') }}" class="btn btn-primary">{{ $layout->language('create_new_task') }}</a>
+								<a href="{{ url('tasks/new') }}" class="btn btn-primary">@lang('tasks.create_new_task')</a>
 							</div>
 							@endif
 						</div>

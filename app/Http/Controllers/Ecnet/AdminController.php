@@ -50,7 +50,7 @@ class AdminController extends Controller{
 		}else{
 			Logger::warning('Error at showActiveUsers, type mismatch (expected: name, username or both; given: '.print_r($type ,true).').', null, null, 'ecnet/users');
 			return view('errors.error', ["layout" => $layout,
-										 "message" => $layout->language('error_page_not_found'),
+										 "message_indicator" => 'ecnet.error_page_not_found',
 										 "url" => '/ecnet/users']);
 		}
 	}

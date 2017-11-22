@@ -69,7 +69,7 @@ class MailListController extends Controller{
 	    		}
     		}catch(\Exception $ex){
     			return view('errors.error', ["layout" => $layout,
-    				"message" => $layout->language('error_at_getting_users'),
+    				"message_indicator" => 'ecadmin.error_at_getting_users',
     				"url" => '/ecadmin/maillist/list']);
     		}
     	}else{
@@ -118,7 +118,7 @@ class MailListController extends Controller{
     			}
     		}catch(\Exception $ex){
     			return view('errors.error', ["layout" => $layout,
-    					"message" => $layout->language('error_at_getting_users'),
+    					"message_indicator" => 'ecadmin.error_at_getting_users',
     					"url" => '/ecadmin/maillist/list']);
     		}
     	}else{

@@ -16,5 +16,8 @@ return [
 	'set_permission_groups' => 'Jogkörök mentése',
 	'error_at_showing_permission_group_modification_page' => 'Hiba a jogkörök módosítása oldal megnyitásakor!',
 	'list_permission_groups' => 'Jogkörök listázása',
+	'start_of_modification' => 'Módosítás kezdése',
+	'list' => 'Listázás',
+	'permission' => 'Jog',
 
 ];

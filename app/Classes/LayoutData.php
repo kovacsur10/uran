@@ -6,7 +6,6 @@ use Illuminate\Contracts\Session\Session;
 use Illuminate\Support\Facades\Route;
 use App\Classes\Layout\BaseData;
 use App\Classes\Layout\Errors;
-use App\Classes\Layout\Languages;
 use App\Classes\Layout\Modules;
 use App\Classes\Layout\Permissions;
 use App\Classes\Layout\Registrations;
@@ -205,37 +204,6 @@ class LayoutData{
 	 */
 	public function getRoute(){
 		return $this->route;
-	}
-	
-	/** Function name: language
-	 *
-	 * This function returns the text
-	 * for the requested text key.
-	 * 
-	 * @param text $key - word text identifier 
-	 * @return text - word/phrase in the selected language
-	 * 
-	 * @author Máté Kovács <kovacsur10@gmail.com>
-	 */
-	// @Deprecated
-	public function language($key){
-		if(\App::isLocale('hu')){
-			$lang =  Languages::hungarian();
-		}else if(\App::isLocale('en')){
-			$lang =  Languages::english();
-		}else{
-			$lang =  Languages::getDefault();
-		}
-		if(array_key_exists($key, $lang)){
-			return $lang[$key];
-		}else{
-			$lang =  Languages::getDefault();
-			if(array_key_exists($key, $lang)){
-				return $lang[$key];
-			}else{
-				return 'missing tag';
-			}
-		}
 	}
 	
 	/** Function name: formatDate

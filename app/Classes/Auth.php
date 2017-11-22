@@ -149,7 +149,7 @@ class Auth{
 		$lang = \App::getLocale();
 		Mail::send('mails.resetpwd_'.$lang, ['name' => $user->name(), 'link' => url('/password/reset/'.$user->username().'/'.$string)], function ($m) use ($user, $layout) {
 			$m->to($user->email(), $user->name());
-			$m->subject($layout->language('forgotten_password'));
+			$m->subject(__('auth.forgotten_password'));
 		});
 	}
 	

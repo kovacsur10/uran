@@ -72,7 +72,7 @@ class UserController extends Controller{
 					"exam" => $layout->user()->user()->getLanguageExam($examid)
 			]);
 		}else{
-			$layout->errors()->add('upload', $layout->language('error_at_getting_the_language_exam'));
+			$layout->errors()->add('upload', __('languageexams.error_at_getting_the_language_exam'));
 			return view('user.languageexams.show', ["layout" => $layout,
 					"exam" => $layout->user()->user()->getLanguageExam($examid)
 			]);
@@ -100,13 +100,13 @@ class UserController extends Controller{
 				$layout->user()->uploadLanguageExamPicture($examid, $image);
 				return redirect('data/languageexam/upload');
 			}catch(\Exception $ex){
-				$layout->errors()->add('upload', $layout->language('error_at_getting_the_language_exam'));
+				$layout->errors()->add('upload', __('languageexams.error_at_uploading_the_language_exam'));
 				return view('user.languageexams.show', ["layout" => $layout,
 						"exam" => $layout->user()->user()->getLanguageExam($examid)
 				]);
 			}
 		}else{
-			$layout->errors()->add('upload', $layout->language('error_at_getting_the_language_exam'));
+			$layout->errors()->add('upload', __('languageexams.error_at_getting_the_language_exam'));
 			return view('user.languageexams.show', ["layout" => $layout,
 					"exam" => $layout->user()->user()->getLanguageExam($examid)
 			]);

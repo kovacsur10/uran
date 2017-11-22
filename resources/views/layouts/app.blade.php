@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>{{ $layout->language('uran') }} - {{ $layout->language('ejc') }}</title>
+    <title>@lang('menu.uran') - @lang('menu.ejc')</title>
 
     <!-- Fonts -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" rel='stylesheet' type='text/css'>
@@ -58,9 +58,7 @@
 					<span class="icon-bar"></span>
 				</button>
                 <!-- Branding Image -->
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ $layout->language('uran') }}
-                </a>
+                <a class="navbar-brand" href="{{ url('/') }}">@lang('menu.uran')</a>
             </div>
 
             <div class="collapse navbar-collapse" id="app-navbar-collapse">
@@ -68,33 +66,29 @@
                 <ul class="nav navbar-nav">
                     <!-- Authentication Links -->
                     @if(!$data->logged())
-                        <li><a href="{{ url('/login') }}">{{ $layout->language('login') }}</a></li>
-                        <li><a href="{{ url('/register') }}">{{ $layout->language('registration') }}</a></li>
+                        <li><a href="{{ url('/login') }}">@lang('menu.login')</a></li>
+                        <li><a href="{{ url('/register') }}">@lang('menu.registration')</a></li>
                     @else
 						@if($data->modules()->isActivatedByName('ecnet'))
                         <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                {{ $layout->language('ecnet') }} <span class="caret"></span>
-                            </a>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">@lang('menu.ecnet') <span class="caret"></span></a>
 							<ul class="dropdown-menu" role="menu">
-                                <li><a href="{{ url('/ecnet/account') }}">{{ $layout->language('printing_account') }}</a></li>
-								<li><a href="{{ url('/ecnet/access') }}">{{ $layout->language('internet_access') }}</a></li>
-								<li><a href="{{ url('/ecnet/order') }}">{{ $layout->language('mac_slot_ordering') }}</a></li>
+                                <li><a href="{{ url('/ecnet/account') }}">@lang('menu.printing_account')</a></li>
+								<li><a href="{{ url('/ecnet/access') }}">@lang('menu.internet_access')</a></li>
+								<li><a href="{{ url('/ecnet/order') }}">@lang('menu.mac_slot_ordering')</a></li>
 								@if($data->user()->permitted('ecnet_user_handling'))
-								<li><a href="{{ url('/ecnet/users') }}">{{ $layout->language('user_administration') }}</a></li>
+								<li><a href="{{ url('/ecnet/users') }}">@lang('menu.user_administration')</a></li>
 								@endif
                             </ul>
                         </li>
 						@endif
 						@if($layout->user()->isLivingIn())
 							<li class="dropdown">
-	                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-	                                {{ $layout->language('interns') }} <span class="caret"></span>
-	                            </a>
+	                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">@lang('menu.interns') <span class="caret"></span></a>
 								<ul class="dropdown-menu" role="menu">
 									@if($data->modules()->isActivatedByName('rooms'))
 										@if($data->user()->permitted('rooms_observe_assignment'))
-										<li><a href="{{ url('/rooms/map') }}">{{ $layout->language('room_assignment') }}</a></li>
+										<li><a href="{{ url('/rooms/map') }}">@lang('menu.room_assignment')</a></li>
 										@endif
 									@endif
 	                            </ul>
@@ -102,47 +96,42 @@
 	                    @endif
 						@if($layout->user()->isCollegist())
 							<li class="dropdown">
-	                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-								{{ $layout->language('collegist') }} <span class="caret"></span>
+	                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">@lang('menu.collegist') <span class="caret"></span>
 	                            </a>
 								<ul class="dropdown-menu" role="menu">
 									@if($layout->modules()->isActivatedByName('tasks'))
-									<li><a href="{{ url('/tasks/list') }}">{{ $layout->language('task_manager') }}</a></li>
+									<li><a href="{{ url('/tasks/list') }}">@lang('menu.task_manager')</a></li>
 									@endif
 									@if($layout->modules()->isActivatedByName('ecouncil') && $data->user()->permitted('record_read'))
-									<li><a href="{{ url('/ecouncil/records/list') }}">{{ $layout->language('TODO') }}</a></li>
+									<li><a href="{{ url('/ecouncil/records/list') }}">@lang('TODO')</a></li>
 									@endif
 	                            </ul>
 	                        </li>
 	                    @endif
 						<li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-							{{ $layout->language('ecadmin') }} <span class="caret"></span>
-                            </a>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">@lang('menu.ecadmin') <span class="caret"></span></a>
 							<ul class="dropdown-menu" role="menu">
 								@if($data->user()->permitted('user_handling'))
-								<li><a href="{{ url('/ecadmin/user/list') }}">{{ $layout->language('user_administration') }}</a></li>
+								<li><a href="{{ url('/ecadmin/user/list') }}">@lang('menu.user_administration')</a></li>
 								@endif
 								@if($data->user()->permitted('mailing_lists_handling'))
-								<li><a href="{{ url('/ecadmin/maillist/list') }}">{{ $layout->language('mailing_lists') }}</a></li>
+								<li><a href="{{ url('/ecadmin/maillist/list') }}">@lang('menu.mailing_lists')</a></li>
 								@endif
                             </ul>
                         </li>
                         @if($data->user()->permitted('permission_admin') || $data->user()->permitted('module_admin'))
 							<li class="dropdown">
-	                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-	                                {{ $layout->language('admin') }} <span class="caret"></span>
-	                            </a>
+	                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">@lang('menu.admin') <span class="caret"></span></a>
 								<ul class="dropdown-menu" role="menu">
 									@if($data->user()->permitted('permission_admin'))
-									<li><a href="{{ url('/admin/permissions') }}">@lang('permissions.permissions_handling')</a></li>
-									<li><a href="{{ url('/admin/groups/list') }}">@lang('permissions.permission_group_handling')</a></li>
+									<li><a href="{{ url('/admin/permissions') }}">@lang('menu.permissions_handling')</a></li>
+									<li><a href="{{ url('/admin/groups/list') }}">@lang('menu.permission_group_handling')</a></li>
 									@endif
 									@if($data->user()->permitted('module_admin'))
-									<li><a href="{{ url('/admin/modules') }}">@lang('modules.modules_handling')</a></li>
+									<li><a href="{{ url('/admin/modules') }}">@lang('menu.modules_handling')</a></li>
 									@endif
 									@if($data->user()->permitted('accept_user_registration'))
-									<li><a href="{{ url('/admin/registration/show') }}">{{ $layout->language('accept_user_registration') }}</a></li>
+									<li><a href="{{ url('/admin/registration/show') }}">@lang('menu.accept_user_registration')</a></li>
 									@endif
 	                            </ul>
 	                        </li>
@@ -212,24 +201,20 @@
 						</li>				
 					
                         <li class="dropdown">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                {{ $layout->language('my_profile') }} <span class="caret"></span>
-                            </a>
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">@lang('menu.my_profile') <span class="caret"></span></a>
                             <ul class="dropdown-menu" role="menu">
-								<li><a href="{{ url('/data/show') }}">{{ $layout->language('my_data') }}</a></li>
-								<li><a href="{{ url('/data/languageexam/upload') }}">{{ $layout->language('upload_language_exam') }}</a></li>
-                                <li><a href="{{ url('/logout') }}"><i class="fa fa-btn fa-sign-out"></i>{{ $layout->language('logout') }}</a></li>
+								<li><a href="{{ url('/data/show') }}">@lang('menu.my_data')</a></li>
+								<li><a href="{{ url('/data/languageexam/upload') }}">@lang('menu.upload_language_exam')</a></li>
+                                <li><a href="{{ url('/logout') }}"><i class="fa fa-btn fa-sign-out"></i>@lang('menu.logout')</a></li>
                             </ul>
                         </li>
                     @endif
 					<li>
 						<li class="dropdown">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                {{ $layout->language('choose_language') }} <span class="caret"></span>
-                            </a>
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">@lang('menu.choose_language') <span class="caret"></span></a>
                             <ul class="dropdown-menu" role="menu">
-								<li><a href="{{ url('lang/set/hu').'?page='.$layout->getRoute() }}">{{ $layout->language('language_hu') }}</a></li>
-                                <li><a href="{{ url('lang/set/en').'?page='.$layout->getRoute() }}">{{ $layout->language('language_en') }}</a></li>
+								<li><a href="{{ url('lang/set/hu').'?page='.$layout->getRoute() }}">@lang('menu.language_hu')</a></li>
+                                <li><a href="{{ url('lang/set/en').'?page='.$layout->getRoute() }}">@lang('menu.language_en')</a></li>
                             </ul>
                         </li>
 					</li>

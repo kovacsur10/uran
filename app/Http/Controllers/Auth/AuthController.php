@@ -45,7 +45,7 @@ class AuthController extends Controller{
 			return view('home', ["layout" => new LayoutData()]);
 		}catch(\Exception $ex){
 			$layout = new LayoutData();
-			$layout->errors()->add('form', $layout->language('unsuccessful_login'));
+			$layout->errors()->add('form', 'auth.unsuccessful_login');
 			return view('auth.login', ["layout" => $layout]);
 		}
 	}

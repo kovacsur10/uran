@@ -5,9 +5,9 @@
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default">
-                <div class="panel-heading">{{ $layout->language('error') }}</div>
+                <div class="panel-heading">@lang('error.error')</div>
                 <div class="panel-body">
-                    <p>{{ $layout->language('insufficient_permissions') }}</p>
+                    <p>@lang('error.insufficient_permissions')</p>
                 </div>
             </div>
         </div>

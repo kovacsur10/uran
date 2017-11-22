@@ -321,7 +321,7 @@ class Registrations{
 					//send e-mail
 					Mail::send('mails.verification_'.$lang, ['name' => $name, 'link' => url('/register/'.$registrationCode)], function ($m) use ($email, $name, $layout) {
 						$m->to($email, $name);
-						$m->subject($layout->language('confirm_registration'));
+						$m->subject(__('auth.confirm_registration'));
 					});
 				}
 			});

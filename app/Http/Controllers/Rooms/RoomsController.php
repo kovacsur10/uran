@@ -100,11 +100,11 @@ class RoomsController extends Controller{
 						"room" => $request->room]);
 			}catch(ValueMismatchException $ex){
 				return view('errors.error', ["layout" => $layout,
-						"message" => $layout->language('error_already_lives_somewhere'),
+						"message_indicator" => 'rooms.error_already_lives_somewhere',
 						"url" => '/rooms/room/'.$request->room]);
 			}catch(\Exception $ex){
 				return view('errors.error', ["layout" => $layout,
-						"message" => $layout->language('error_rooms_guard_mismatch'),
+						"message_indicator" => 'rooms.error_rooms_guard_mismatch',
 						"url" => '/rooms/room/'.$request->room]);
 			}
 		}else{
@@ -128,7 +128,7 @@ class RoomsController extends Controller{
 			return redirect('rooms/map/'.$level);
 		}catch(\Exception $ex){
 			return view('errors.error', ["layout" => $layout,
-					"message" => $layout->language('error_at_selecting_rooms_table'),
+					"message_indicator" => 'rooms.error_at_selecting_rooms_table',
 					"url" => '/rooms/map/2']);
 		}
 	}
@@ -149,7 +149,7 @@ class RoomsController extends Controller{
 			return redirect('rooms/map/'.$level);
 		}catch(\Exception $ex){
 			return view('errors.error', ["layout" => $layout,
-				"message" => $layout->language('error_at_adding_new_rooms_table'),
+				"message_indicator" => 'rooms.error_at_adding_new_rooms_table',
 				"url" => '/rooms/map/2']);
 		}
 	}
@@ -170,7 +170,7 @@ class RoomsController extends Controller{
 			return redirect('rooms/map/'.$level);
 		}catch(\Exception $ex){
 			return view('errors.error', ["layout" => $layout,
-				"message" => $layout->language('error_at_removing_new_rooms_table'),
+				"message_indicator" => 'rooms.error_at_removing_new_rooms_table',
 				"url" => '/rooms/map/2']);
 		}
 	}
