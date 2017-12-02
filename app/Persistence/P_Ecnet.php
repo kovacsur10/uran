@@ -78,10 +78,10 @@ class P_Ecnet{
 		$rawUsers = DB::table('ecnet_user_data')
 			->join('users', 'users.id', '=', 'ecnet_user_data.user_id')
 			->when($name !== null, function($query) use($name){
-				return $query->where('users.name', 'LIKE', '%'.$name.'%');
+				return $query->where('users.name', 'ILIKE', '%'.$name.'%');
 			})
 			->when($username !== null, function($query) use($username){
-				return $query->where('users.username', 'LIKE', '%'.$username.'%');
+				return $query->where('users.username', 'ILIKE', '%'.$username.'%');
 			})
 			->where('users.registered', '=', 1)
 			->select('users.id as id', 'users.username as username', 'users.name as name', 'ecnet_user_data.money as money', 'ecnet_user_data.valid_time as valid_time', 'ecnet_user_data.mac_slots as mac_slots')
