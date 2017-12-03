@@ -115,7 +115,7 @@
 													<label  class="control-label" for="assigned_username">{{ $layout->language('assigned_to') }}:</label>
 													<select class="form-control"  name="assigned_username"  id="type" required="true" autocomplete="off">
 														<option value="admin" {{ ($layout->errors()->getOld('assigned_username') === null && $task->assignedTo() === null) ? 'selected' : '' }}>{{ $layout->language('no_one_is_assigned') }}</option>
-														@foreach($layout->user()->users() as $user)
+														@foreach($layout->user(0, -1)->users() as $user)
 															<option value="{{ $user->username() }}" {{ ($layout->errors()->getOld('assigned_username') === $user->username() || ($layout->errors()->getOld('assigned_username') === null && ($task->assignedTo() !== null && $task->assignedTo()->username() === $user->username()))) ? 'selected' : '' }}>{{ $user->name() }} ({{ $user->username() }})</option>
 														@endforeach
 													</select>

@@ -18,7 +18,7 @@
 									<label  class="col-md-4 control-label" for="user">{{ $layout->language('user') }}</label>
 									<div class="col-md-6">
 										<select class="form-control"  name="user"  id="user">
-											@foreach($layout->user()->users() as $user)
+											@foreach($layout->user()->users(0, -1) as $user)
 												<option value="{{ $user->id() }}">{{ $user->name() }} ({{ $user->username() }})</option>
 											@endforeach
 										</select>
