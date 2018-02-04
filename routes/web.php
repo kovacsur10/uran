@@ -101,7 +101,11 @@ Route::group(['middleware' => 'web', 'middleware' => 'auth.logged'], function ()
 	Route::get('tasks/tasks/{count}/{first}', 'Tasks\TaskController@show')->middleware('modules.tasks');
 	
 	// ECouncil routes
-	Route::get('ecouncil/records/list', 'ECouncil\RecordController@show')->middleware('modules.ecouncil');
+	Route::get('ecouncil/records', 'ECouncil\RecordController@show')->middleware('modules.ecouncil');
+	Route::put('ecouncil/records', 'ECouncil\RecordController@add')->middleware('modules.ecouncil');
+	Route::get('ecouncil/records/view/{id}', 'ECouncil\RecordController@showRecord')->middleware('modules.ecouncil');
+	Route::get('ecouncil/records/{count}', 'ECouncil\RecordController@show')->middleware('modules.ecnet');
+	Route::get('ecouncil/records/{count}/{first}', 'ECouncil\RecordController@show')->middleware('modules.ecnet');
 });
 
 Route::group(['middleware' => 'web', 'middleware' => 'auth.notlogged'], function () {

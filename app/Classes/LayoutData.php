@@ -12,6 +12,7 @@ use App\Classes\Layout\Registrations;
 use App\Classes\Layout\Rooms;
 use App\Classes\Layout\Tasks;
 use App\Classes\Layout\User;
+use App\Classes\Layout\Records;
 use App\Classes\Auth;
 use App\Persistence\P_User;
 use App\Classes\Layout\EcnetData;
@@ -39,6 +40,7 @@ class LayoutData{
 	private $tasks;
 	private $errors;
 	private $route;
+	private $records;
 	
 // PUBLIC FUNCTIONS
 	
@@ -58,6 +60,7 @@ class LayoutData{
 		$this->registrations = new Registrations();
 		$this->tasks = new Tasks();
 		$this->errors = new Errors();
+		$this->records = new Records();
 		$this->route = $this->getRouteWithParams();
 	}
 	
@@ -181,6 +184,19 @@ class LayoutData{
 	public function registrations(){
 		return $this->registrations;
 	}
+	
+	/** Function name: records
+	 *
+	 * Getter function for records.
+	 * 
+	 * @return records
+	 * 
+	 * @author Norbert Luksa <norbert.luksa@gmail.com>
+	 */
+	public function records(){
+		return $this->records;
+	}
+	
 	
 	/** Function name: lang
 	 *
