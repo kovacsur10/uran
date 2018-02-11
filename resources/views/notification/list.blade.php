@@ -8,7 +8,9 @@
                 <div class="panel-heading">
                 	<div class="row">
 	                	<div class="col-md-6">@lang('notifications.notifications')</div>
+	                	@if($layout->user()->permitted('notifications_readall'))
 	                	<div class="col-md-6 text-right"><a href="{{ url('/notification/readall') }}">@lang('notifications.read_all')</a></div>
+	                	@endif
                 	</div>
                 </div>
                 <div class="panel-body">

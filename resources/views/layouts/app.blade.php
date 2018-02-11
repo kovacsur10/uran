@@ -103,7 +103,7 @@
 									<li><a href="{{ url('/tasks/list') }}">@lang('menu.task_manager')</a></li>
 									@endif
 									@if($layout->modules()->isActivatedByName('ecouncil') && $data->user()->permitted('record_read'))
-									<li><a href="{{ url('/ecouncil/records/list') }}">@lang('TODO')</a></li>
+									<li><a href="{{ url('/ecouncil/records/list') }}">@lang('ecouncil.record_list')</a></li>
 									@endif
 	                            </ul>
 	                        </li>

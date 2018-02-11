@@ -116,7 +116,7 @@
 					</ul>
 				</div>
 			</div>
-			@if($layout->user()->permitted('tasks_admin'))
+			@if($layout->user()->permitted('record_admin'))
             <div class="panel panel-default">
 				<div class="panel-heading">@lang('ecouncil.add_new_record')  </div>
                 <div class="panel-body">

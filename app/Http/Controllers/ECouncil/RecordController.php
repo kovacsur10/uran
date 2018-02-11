@@ -67,10 +67,15 @@ class RecordController extends Controller{
 		]);
 		
 		$layout = new LayoutData();
-		$layout->records()->addRecord($layout->user()->user()->id(), $request->file_to_upload, $request->file_name, $request->committee, $request->meeting_date);
-		return view('ecouncil.records', ["layout" => $layout,
-									"recordsToShow" => 10,
-									"firstRecord" => 0]);
+		if($layout->user()->permitted('record_admin')){
+			$layout->records()->addRecord($layout->user()->user()->id(), $request->file_to_upload, $request->file_name, $request->committee, $request->meeting_date);
+			return view('ecouncil.records', ["layout" => $layout,
+										"recordsToShow" => 10,
+										"firstRecord" => 0]);
+		}else{
+			Logger::warning('At record upload. PERMISSIONS NEEDED!', null, null, 'ecouncil/record');
+			return view('errors.authentication', ["layout" => $layout]);
+		}
 	}
 
 	
