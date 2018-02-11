@@ -302,6 +302,7 @@ class Registrations{
 					Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). The registration user was not found!");
 					throw new UserNotFoundException();
 				}else{
+					P_User::insertOrUpdateRadiusPassword($userId, $username, $password);
 					P_User::addRegistrationCodeEntry($userId, $registrationCode);
 					Registrations::addUserDefaultPermissionsGroups($userType, $userId);
 

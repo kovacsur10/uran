@@ -5,6 +5,7 @@ namespace App\Classes;
 use Carbon\Carbon;
 use App\Classes\LayoutData;
 use App\Classes\Logger;
+use App\Classes\Database;
 use App\Persistence\P_User;
 use App\Classes\Layout\User as MU;
 use Illuminate\Contracts\Session\Session;
@@ -117,9 +118,12 @@ class Auth{
 			throw new ValueMismatchException("Password cannot be null!");
 		}
 		$username = strtolower($username);
-		MU::getUserDataByUsername($username); //throws exception when user was not found
+		$user = MU::getUserDataByUsername($username); //throws exception when user was not found
 		try{
-			P_User::updateUserPassword($username, password_hash($password, PASSWORD_DEFAULT));
+			Database::transaction(function() use($user, $username, $password){
+				P_User::updateUserPassword($username, password_hash($password, PASSWORD_DEFAULT));
+				P_User::insertOrUpdateRadiusPassword($user->id(), $username, $password);
+			});
 		}catch(Exception $ex){
 			Logger::error_log("Error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ".$ex->getMessage());
 			throw new DatabaseException("Password update failed!");

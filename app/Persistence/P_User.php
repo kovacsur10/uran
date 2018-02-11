@@ -517,6 +517,39 @@ class P_User{
 			]);
 	}
 	
+	/** Function name: insertOrUpdateRadiusPassword
+	 *
+	 * This function inserts or updates the requested user's
+	 * password for the given value in the Radius
+	 * service integration table.
+	 *
+	 * @param int $userid - user's identifier
+	 * @param text $username - user text identifier
+	 * @param text $password - new password
+	 *
+	 * @author Máté Kovács <kovacsur10@gmail.com>
+	 */
+	static function insertOrUpdateRadiusPassword($userid, $username, $password){
+		$encoded = hash('sha512', $password);
+		$already_exist = (DB::table('radius')
+			->where('user_id', '=', $userid)
+			->first()) !== null;
+		if($already_exist){
+			DB::table('radius')
+				->join('users', 'users.id', '=', 'radius.user_id')
+				->where('users.username', 'LIKE', $username)
+				->update([
+						'radius_password' => $encoded
+				]);
+		}else{
+			DB::table('radius')
+				->insert([
+						'user_id' => $userid,
+						'radius_password' => $encoded
+				]);
+		}
+	}
+	
 	/** Function name: updateUserLanguage
 	 *
 	 * This function updates the requested user's
