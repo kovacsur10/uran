@@ -207,8 +207,8 @@ class Languages{
 			'ecadmin' => 'Adminisztráció',
 			'upload_language_exam' => 'Nyelvvizsga feltöltése',
 		//home
-			'logged_in_home_message' => 'TODO',
-			'not_logged_in_home_message' => 'TODO',
+			'logged_in_home_message' => 'Üdvözlünk az Uránban!',
+			'not_logged_in_home_message' => 'Üdvözlünk az Uránban!',
 		//ecnet
 			'available_money' => 'Rendelkezésre álló összeg',
 			'balance_was_modified' => 'Egyenleg módosítva!',
@@ -800,8 +800,8 @@ class Languages{
 			'ecadmin' => 'Administration',
 			'upload_language_exam' => 'Upload a language exam',
 		//home
-			'logged_in_home_message' => 'TODO',
-			'not_logged_in_home_message' => 'TODO',
+			'logged_in_home_message' => 'Welcome to Hollywood!',
+			'not_logged_in_home_message' => 'Welcome to Urán!',
 		//ecnet
 			'available_money' => 'Available money',
 			'balance_was_modified' => 'Balance was modified!',
