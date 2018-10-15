@@ -16,7 +16,7 @@ return [
 	'mac_slot_ordering' => 'MAC slot igénylése',
 	'my_data' => 'Adataim',
 	'my_profile' => 'Profilom',
-	'printing_account' => 'Nyomtatószámla',
+	'printing_account' => 'Nyomtatás',
 	'registration' => 'Regisztráció',
 	'user_administration' => 'Felhasználók kezelése',
 	'collegist' => 'Collegista',

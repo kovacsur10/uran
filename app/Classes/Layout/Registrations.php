@@ -320,10 +320,10 @@ class Registrations{
 						$lang = "hu";
 					}
 					//send e-mail
-					Mail::send('mails.verification_'.$lang, ['name' => $name, 'link' => url('/register/'.$registrationCode)], function ($m) use ($email, $name, $layout) {
-						$m->to($email, $name);
-						$m->subject(__('auth.confirm_registration'));
-					});
+					//Mail::send('mails.verification_'.$lang, ['name' => $name, 'link' => url('/register/'.$registrationCode)], function ($m) use ($email, $name, $layout) {
+					//	$m->to($email, $name);
+					//	$m->subject(__('auth.confirm_registration'));
+					//});
 				}
 			});
 		}catch(\Exception $ex){

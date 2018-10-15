@@ -2,6 +2,7 @@
 
 namespace App\Classes;
 
+use App\Classes\Layout\PrintJobs;
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Support\Facades\Route;
 use App\Classes\Layout\BaseData;
@@ -41,7 +42,8 @@ class LayoutData{
 	private $errors;
 	private $route;
 	private $records;
-	
+	private $print_jobs;
+
 // PUBLIC FUNCTIONS
 	
 	/** Function name: __construct
@@ -61,6 +63,10 @@ class LayoutData{
 		$this->tasks = new Tasks();
 		$this->errors = new Errors();
 		$this->records = new Records();
+		if($this->user->permitted('ecnet_set_print_account'))
+            $this->print_jobs = new PrintJobs(-1);
+		else
+		    $this->print_jobs = new PrintJobs(session()->get('user') === null ? 0 : session()->get('user')->id());
 		$this->route = $this->getRouteWithParams();
 	}
 	
@@ -195,8 +201,11 @@ class LayoutData{
 	 */
 	public function records(){
 		return $this->records;
-	}
-	
+    }
+
+    public function printJobs(){
+        return $this->print_jobs;
+    }
 	
 	/** Function name: lang
 	 *

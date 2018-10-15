@@ -82,6 +82,7 @@
                             </ul>
                         </li>
 						@endif
+<?php /*
 						@if($layout->user()->isLivingIn())
 							<li class="dropdown">
 	                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">@lang('menu.interns') <span class="caret"></span></a>
@@ -119,6 +120,7 @@
 								@endif
                             </ul>
                         </li>
+*/ ?>
                         @if($data->user()->permitted('permission_admin') || $data->user()->permitted('module_admin'))
 							<li class="dropdown">
 	                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">@lang('menu.admin') <span class="caret"></span></a>
@@ -204,7 +206,7 @@
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">@lang('menu.my_profile') <span class="caret"></span></a>
                             <ul class="dropdown-menu" role="menu">
 								<li><a href="{{ url('/data/show') }}">@lang('menu.my_data')</a></li>
-								<li><a href="{{ url('/data/languageexam/upload') }}">@lang('menu.upload_language_exam')</a></li>
+								<?php /* <li><a href="{{ url('/data/languageexam/upload') }}">@lang('menu.upload_language_exam')</a></li> */ ?>
                                 <li><a href="{{ url('/logout') }}"><i class="fa fa-btn fa-sign-out"></i>@lang('menu.logout')</a></li>
                             </ul>
                         </li>

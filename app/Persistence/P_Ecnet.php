@@ -332,6 +332,7 @@ class P_Ecnet{
 			->where('user_id', '=', $userId)
 			->where('valid_until', '>=', $today.' 00:00:00')
 			->where('pages_left', '>', 0)
+            ->orderBy('valid_until', 'ASC')
 			->get()
 			->toArray();
 		$freePages = [];
@@ -340,6 +341,45 @@ class P_Ecnet{
 		}
 		return $freePages;
 	}
+
+    static function getNumberOfFreePagesForUser($userId){
+        $freePages = getFreePagesForUser($userId);
+        $sum = 0;
+        foreach($freePages as $freePage){
+            $sum += $freePage->count();
+        }
+        return $sum;
+    }
+
+    static function useUpFreePages($userId, $amount){
+        $sum = 0;
+        while($amount > 0){
+            $today = Carbon::now()->toDateString();
+            $freePages = DB::table('ecnet_free_pages')
+                ->where('user_id', '=', $userId)
+                ->where('valid_until', '>=', $today.' 00:00:00')
+                ->where('pages_left', '>', 0)
+                ->orderBy('valid_until', 'ASC')
+                ->limit(1)
+                ->get()
+                ->toArray();
+            if(count($freePages) == 0){
+                return $sum;
+            }
+            $freePages = $freePages[0];
+            $pages_left = max($freePages->pages_left - $amount, 0);
+            $sum += min($amount, $freePages->pages_left);
+            $amount -= min($amount, $freePages->pages_left);
+
+            DB::table('ecnet_free_pages')
+                ->where('user_id', '=', $userId)
+                ->where('valid_until', '=', $freePages->valid_until)
+                ->where('pages_left', '=', $freePages->pages_left)
+                ->update(['pages_left' => $pages_left]);
+
+        }
+        return $sum;
+    }
 	
 	/** Function name: addFreePagesToUser
 	 *
