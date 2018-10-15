@@ -52,6 +52,8 @@ Route::group(['middleware' => 'web', 'middleware' => 'auth.logged'], function ()
 	
 	// ECNET routes
 	Route::get('ecnet/account', 'Ecnet\PrintingController@showAccount')->middleware('modules.ecnet');
+	Route::get('ecnet/account/{count}', 'Ecnet\PrintingController@showAccount')->middleware('modules.ecnet');
+	Route::get('ecnet/account/{count}/{first}', 'Ecnet\PrintingController@showAccount')->middleware('modules.ecnet');
 	Route::post('ecnet/addmoney', 'Ecnet\PrintingController@addMoney')->middleware('modules.ecnet');
 	Route::post('ecnet/addfreepages', 'Ecnet\PrintingController@addFreePages')->middleware('modules.ecnet');
 	
@@ -70,6 +72,8 @@ Route::group(['middleware' => 'web', 'middleware' => 'auth.logged'], function ()
 	Route::get('ecnet/users/{count}', 'Ecnet\AdminController@showUsers')->middleware('modules.ecnet');
 	Route::get('ecnet/users/{count}/{first}', 'Ecnet\AdminController@showUsers')->middleware('modules.ecnet');
 	Route::post('ecnet/users', 'Ecnet\AdminController@filterUsers')->middleware('modules.ecnet');
+
+	Route::put('ecnet/print', 'Ecnet\PrintingController@printPDF')->middleware('modules.ecnet');
 	
 	// Rooms routes
 	Route::get('rooms/map', 'Rooms\RoomsController@showDefaultMap')->middleware('modules.rooms');
@@ -106,6 +110,8 @@ Route::group(['middleware' => 'web', 'middleware' => 'auth.logged'], function ()
 	Route::get('ecouncil/records/view/{id}', 'ECouncil\RecordController@showRecord')->middleware('modules.ecouncil');
 	Route::get('ecouncil/records/{count}', 'ECouncil\RecordController@show')->middleware('modules.ecnet');
 	Route::get('ecouncil/records/{count}/{first}', 'ECouncil\RecordController@show')->middleware('modules.ecnet');
+
+
 });
 
 Route::group(['middleware' => 'web', 'middleware' => 'auth.notlogged'], function () {

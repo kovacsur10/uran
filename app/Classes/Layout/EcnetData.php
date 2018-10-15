@@ -2,6 +2,7 @@
 
 namespace App\Classes\Layout;
 
+use App\Persistence\P_PrintJobs;
 use Carbon\Carbon;
 use App\Persistence\P_Ecnet;
 use App\Classes\Data\EcnetUser;
@@ -257,6 +258,47 @@ class EcnetData extends User{
 			throw new DatabaseException("Could not set the account.");
 		}
 	}
+
+	public static function printPDF($userId, $file, $two_sided){
+		if($userId === null || $file === null){
+			throw new ValueMismatchException("A parameter is null!");
+		}
+        if($file->getClientOriginalExtension() != "pdf"){
+            throw new ValueMismatchException("Invalid file format! It should be pdf!");
+        }
+		$money = EcnetData::getEcnetUserData($userId)->money();
+
+		$pages = exec("pdfinfo " . $file->getPathName() . " | grep '^Pages' | awk '{print $2}' 2>&1");
+
+		if($pages == "" || !is_numeric($pages)){
+		    Logger::error_log("Can not get number of pages for uploaded file!" . print_r($pages, true));
+            throw new ValueMismatchException("Can not get number of pages for uploaded file!");
+        }
+
+        $freePages =  P_Ecnet::useUpFreePages($userId, $pages);
+        $pages -= $freePages;
+        if($freePages) $costExplanation = $freePages . "*0+";
+        else $costExplanation = "";
+
+        if(!$two_sided) {
+            $cost = 8 * $pages;
+            $costExplanation .= $pages . "*8 HUF";
+        }
+        else{
+		    $cost = 12 * floor($pages / 2) + ($pages % 2 ? 8 : 0);
+            $costExplanation .=  floor($pages / 2) . "*12" . ($pages % 2 ? "+8" : "") . " HUF";
+        }
+		if($money - $cost < 0){
+			throw new ValueMismatchException("Not enough money!");
+		}
+
+        if(P_PrintJobs::addPrintJob($userId, 'QUEUED', $file, $two_sided, $cost, $costExplanation)) {
+            EcnetData::setMoneyForUser($userId, $money - $cost);
+            return true;
+		}
+		return false;
+	}
+
 	
 	/** Function name: addFreePagesForUser
 	 *

@@ -16,7 +16,7 @@ return [
 	'mac_slot_ordering' => 'MAC slot ordering',
 	'my_data' => 'My data',
 	'my_profile' => 'My profile',
-	'printing_account' => 'Printing account',
+	'printing_account' => 'Printing',
 	'registration' => 'Registration',
 	'user_administration' => 'Manage users',
 	'collegist' => 'Member',
