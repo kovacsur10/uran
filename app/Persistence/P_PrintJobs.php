@@ -27,6 +27,7 @@ class P_PrintJobs{
             Logger::error_log("Printing error at line: ".__FILE__.":".__LINE__." (in function ".__FUNCTION__."). ". $e->getMessage());
             $state = "ERROR";
             $job_id = "";
+            $path = "";
         }
         DB::table('print_jobs')
             ->insert([

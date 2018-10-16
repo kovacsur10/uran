@@ -2,6 +2,7 @@
 
 namespace App\Classes\Layout;
 
+use App\Exceptions\NotEnoughMoneyException;
 use App\Persistence\P_PrintJobs;
 use Carbon\Carbon;
 use App\Persistence\P_Ecnet;
@@ -275,7 +276,8 @@ class EcnetData extends User{
             throw new ValueMismatchException("Can not get number of pages for uploaded file!");
         }
 
-        $freePages =  P_Ecnet::useUpFreePages($userId, $pages);
+        $freePages =  min(P_Ecnet::getNumberOfFreePagesForUser($userId), $pages);
+
         $pages -= $freePages;
         if($freePages) $costExplanation = $freePages . "*0+";
         else $costExplanation = "";
@@ -289,11 +291,12 @@ class EcnetData extends User{
             $costExplanation .=  floor($pages / 2) . "*12" . ($pages % 2 ? "+8" : "") . " HUF";
         }
 		if($money - $cost < 0){
-			throw new ValueMismatchException("Not enough money!");
+			throw new NotEnoughMoneyException("User has not enough money for printing.", 0, $cost);
 		}
 
         if(P_PrintJobs::addPrintJob($userId, 'QUEUED', $file, $two_sided, $cost, $costExplanation)) {
             EcnetData::setMoneyForUser($userId, $money - $cost);
+            P_Ecnet::useUpFreePages($userId, $freePages);
             return true;
 		}
 		return false;

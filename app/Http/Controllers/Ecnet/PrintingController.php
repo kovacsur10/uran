@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Ecnet;
 use App\Classes\Auth;
 use App\Classes\Logger;
 use App\Classes\Notifications;
+use App\Exceptions\NotEnoughMoneyException;
 use App\Persistence\P_PrintJobs;
 use Validator;
 use App\Http\Controllers\Controller;
@@ -80,11 +81,14 @@ class PrintingController extends Controller{
 		]);
 		$layout = SharedController::getEcnetLayout();
 
-		if($layout->user()->printPDF($layout->user()->user()->id(), $request->file_to_upload, $request->two_sided)){
-            return redirect()->back()->withErrors(['success_print' => __('ecnet.success_printing')]);
-        }
-		else {
-            return redirect()->back()->withErrors(['print' => __('ecnet.error_printing')]);
+		try {
+            if ($layout->user()->printPDF($layout->user()->user()->id(), $request->file_to_upload, $request->two_sided)) {
+                return redirect()->back()->withErrors(['success_print' => __('ecnet.success_printing')]);
+            } else {
+                return redirect()->back()->withErrors(['print' => __('ecnet.error_printing')]);
+            }
+        } catch (NotEnoughMoneyException $e){
+            return redirect()->back()->withErrors(['print' => __('ecnet.error_not_enough_money', ["cost" => $e->needed_amount])]);
         }
     }
 	
