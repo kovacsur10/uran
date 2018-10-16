@@ -92,7 +92,7 @@ return [
     'pdf_description' => 'You can only print pdf files. Price: 8 HUF / page, or 12 HUF / 2 pages when printing on both sides',
     'print_queue' => 'Printing queue',
     'filename' => 'Filename',
-    'use' => 'User',
+    'user' => 'User',
     'date' => 'Time',
     'state' => 'State',
     'cost' => 'Cost',
@@ -105,4 +105,5 @@ return [
     'success_printing' => 'Your document was added to the printing queue.',
     'error_printing' => 'Printing probably failed.',
     'error_pdf_needed' => 'You must upload a valid .pdf file! Maximum file size is 100MB.',
+    'error_not_enough_money' => "You do not have enough money for printing! :cost HUF would be needed.",
 ];

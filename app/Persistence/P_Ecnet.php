@@ -343,7 +343,7 @@ class P_Ecnet{
 	}
 
     static function getNumberOfFreePagesForUser($userId){
-        $freePages = getFreePagesForUser($userId);
+        $freePages = self::getFreePagesForUser($userId);
         $sum = 0;
         foreach($freePages as $freePage){
             $sum += $freePage->count();

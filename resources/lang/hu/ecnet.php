@@ -105,4 +105,5 @@ return [
     'success_printing' => 'A dokumentum bekerült a nyomtatási sorba.',
     'error_printing' => 'A nyomtatás valószínűleg nem sikerült.',
     'error_pdf_needed' => 'Csak .pdf fájlt lehet nyomtatni. Legfeljebb 100MB lehet a fájl mérete.',
+    'error_not_enough_money' => "Nincs elég pénz a számládon! A nyomtatás :cost forintba kerülne.",
 ];
